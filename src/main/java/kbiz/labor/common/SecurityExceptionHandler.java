@@ -35,7 +35,7 @@ public class SecurityExceptionHandler {
      * @return ResponseEntity
      */
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Map<String, Object>> handleException(AccessDeniedException e) {
+    public ResponseEntity<Map<String, Object>> accessDeniedException(AccessDeniedException e) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", new Date());
         body.put("status", HttpStatus.FORBIDDEN);
