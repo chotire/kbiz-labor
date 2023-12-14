@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			</w2:dataCollection>
+		</xf:model>
+		<script type="text/javascript"><![CDATA[
+		/**************************************************************************
+		 * [1] 초기화
+		 **************************************************************************/
+		
+		scwin.initScreen = function() {		
+			imgResult.setSrc(JSON.parse($w.getPopupParam()).data.img);
+		};
+		
+		
+		/**************************************************************************
+		 * [2] 전역변수 선언
+		 **************************************************************************/
+		
+		
+		/**************************************************************************
+		 * [3] Event 정의
+		 **************************************************************************/
+	
+		
+		/**************************************************************************
+		 * [4] Callback 
+		 **************************************************************************/
+		
+		
+		/**************************************************************************
+		 * [5] 사용자정의 함수
+		 **************************************************************************/
+		scwin.initScreen();
+		
+		
+	scwin.imgResult_onclick = function(e) {
+		com.popup_close("");
+	};
+	scwin.btnClose_onclick = function(e) {
+		com.popup_close("");
+	};
+	]]></script>
+	</head>
+	<body>
+		<!-- <xf:group class="pop_contentsbox">
+			<xf:group class="pgtbox">
+				<w2:textbox class="pgt_tit" label="HTML2CANVAS" />
+			</xf:group>
+		</xf:group> -->
+		<xf:group class="content_body popup">
+			<xf:image id="imgResult" ev:onclick="scwin.imgResult_onclick"/>
+		</xf:group>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnClose_onclick" id="btnClose"
+					outerDiv="false" style="">
+					<xf:label><![CDATA[창닫기]]></xf:label>
+				</w2:anchor>
+
+			</xf:group>		
+	</body>
+</html>

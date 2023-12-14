@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList id="dataList1" baseNode="list" style="" saveRemovedData="true" repeatNode="map">
+					<w2:columnInfo>
+						<w2:column id="title" name="title" dataType="text"></w2:column>
+						<w2:column id="frDt" name="start" dataType="text"></w2:column>
+						<w2:column id="toDt" name="end" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="false">
+					</w2:data>	
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection>
+			</w2:workflowCollection>
+        	<xf:submission id="submission1" ref="data:json" target='data:json,{"id":"dataList1","key":"test"}'
+        		action="test.json" method="post" mediatype="application/json" encoding="UTF-8" instance="" replace=""
+        		errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit="" ev:submitdone="scwin.submission1_submitdone" ev:submiterror="" abortTrigger="">
+        	</xf:submission>
+		</xf:model>
+		<script type="javascript" lazy="false"><![CDATA[
+		var _data = 
+		[{"id":"test1", "title":"test1", "frDt":"20181101", "toDt":"20181103"}, 
+		 {"id":"test2", "title":"test2", "frDt":"20181103", "toDt":"20181105"},
+		 {"id":"test3", "title":"test3", "frDt":"20181105", "toDt":"20181107"}, 
+		 {"id":"test4", "title":"test4", "frDt":"20181107", "toDt":"20181109"}, 
+		 {"id":"test5", "title":"test5", "frDt":"20181109", "toDt":"20181111"}, 
+		 {"id":"test6", "title":"test6", "frDt":"20181111", "toDt":"20181113"}
+		];
+		scwin.onpageload = function() {
+		debugger;
+		/*
+		dataList1.insertRow();dataList1.insertRow();dataList1.insertRow();dataList1.insertRow();
+		dataList1.insertRow();dataList1.insertRow();dataList1.insertRow();dataList1.insertRow();
+		*/
+		dataList1.setJSON(_data);
+		var scheuleArr = $('#'+schdule1.id).fullCalendar('clientEvents');	
+		retjson = _data;
+		if(scheuleArr.length === 0) {
+			for (var i = 0; i < retjson.length; i++) {
+				schdule1.addSchedule(retjson[i]);						
+			};			
+		};
+		
+		};
+		
+	/*$w.executeSubmission( "submission1" );
+	
+	scwin.submission1_submitdone = function(e) {
+
+		var retjson = e.responseJSON.test;
+		
+		var scheuleArr = $('#'+schdule1.id).fullCalendar('clientEvents');	
+		
+		if(scheuleArr.length === 0) {
+			for (var i = 0; i < retjson.length; i++) {
+				schdule1.addSchedule(retjson[i]);						
+			};			
+		};
+//		for (var j = 0; j < retjson.length; j++) {		
+//			schdule1.removeschedule(retjson[i].id);						
+//		}
+	};
+	*/
+	]]></script>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group id="" style="" class="cont_wrap type1">
+			<xf:group class="w2tb tbl_lo" id="" style="width:100%;" tagname="table">
+				<w2:attributes>
+					<w2:summary></w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:100.00%" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<xf:group class="grpbox" id="" style="">
+							<xf:group class="stit_01" id="" style="">
+								<w2:textbox id="" label="ScheduleCalendar" style="" tagname="h3"></w2:textbox>
+							</xf:group>
+							<xf:group class="sub_cont" id="" style="">
+								<w2:scheduleCalendar id="schdule1" style="height:360px; width: 800px;" defaultDate="" editable="true" eventLimit="true"
+									selectable="true" dataList="dataList1" titleColumn="title" startColumn="frDt" endColumn="toDt">
+								</w2:scheduleCalendar>
+							</xf:group>
+							<xf:group class="btnbox" id="" style="">
+								<xf:group class="lta" id="">
+								</xf:group>
+								<xf:group class="rta" id="" style="">
+								</xf:group>
+							</xf:group>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

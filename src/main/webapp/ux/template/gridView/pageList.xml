@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>DEFAULT</w2:type>
+    	<w2:buildDate />
+    	<xf:model>
+    		<xf:instance>
+    			<data xmlns="" />
+    		</xf:instance>
+    		<w2:dataCollection baseNode="map">
+    			<w2:dataList id="dlt_PageToGrid" baseNode="list" style="" saveRemovedData="true" repeatNode="map">
+    				<w2:columnInfo>
+    					<w2:column id="seq" name="No" dataType="text"></w2:column><w2:column id="curName" name="통화명" dataType="text"></w2:column>
+    					<w2:column id="curUnit" name="통화단위" dataType="text"></w2:column>
+    					<w2:column id="rateSale" name="매매기준율" dataType="text"></w2:column>
+    					<w2:column id="buy" name="사실 때" dataType="text"></w2:column>
+    					<w2:column id="sell" name="파실 때" dataType="text"></w2:column>
+    					<w2:column id="send" name="보내실 때" dataType="text"></w2:column>
+    					<w2:column id="receive" name="받으실 때" dataType="text"></w2:column>
+    					<w2:column id="conversionUSD" name="미화환산율" dataType="text"></w2:column>
+    					<w2:column id="inputDate" name="기준일" dataType="text"></w2:column>
+    					
+    				</w2:columnInfo>
+    				<w2:data use="false"></w2:data>
+    			</w2:dataList>
+    			<w2:dataMap baseNode="map" id="dma_Search">
+    				<w2:keyInfo>
+    					<w2:key id="start" name="name1" dataType="text"></w2:key>
+    					<w2:key id="end" name="name2" dataType="text"></w2:key>
+    				</w2:keyInfo>
+    			</w2:dataMap>
+    		</w2:dataCollection>
+    		<w2:workflowCollection></w2:workflowCollection>
+    		<xf:submission id="sbm_Paging" ref="data:json,dma_Search" target="" action="/Template/gridview/Currency.do" method="post" mediatype="application/json"
+    			encoding="UTF-8" instance="" replace="" errorHandler="" customHandler="" mode="asynchronous" processMsg="" ev:submit=""
+    			ev:submitdone="scwin.sbm_Paging_submitdone" ev:submiterror="" abortTrigger="">
+    		</xf:submission>
+    	</xf:model>
+    	<script type="text/javascript" lazy="false"><![CDATA[
+    //초기화   
+	scwin.onpageload = function() {
+		
+	};
+	
+	//조회버튼 클릭
+	scwin.btn_sch_onclick = function(e) {
+		pgl_Page.setSelectedIndex( 1 ); //1페이지로 돌아가기 
+		scwin.pageMove(1);
+	};
+	
+	scwin.sbm_Paging_submitdone = function(e) {
+	
+		var json = e.responseJSON.dlt_PageToGrid.data;
+		var count = Math.ceil(e.responseJSON.dlt_PageToGrid.count / 10);
+		dlt_PageToGrid.setJSON( json );
+		pgl_Page.setCount( count, true );		
+	};
+	
+	//페이지리스트 컴포넌트 조작함수
+	scwin.pageMove = function(current){
+		var end = sbx_SelectCount.getValue();
+		var start = Math.abs( (current-1) ) * end;
+		dma_Search.set( "start" , start );
+		dma_Search.set( "end" , end );
+		scwin.$w.executeSubmission( "sbm_Paging" );
+		scwin.serverStart = new Date();
+	};
+	
+	//페이지리스트 컴포넌트 화살표 클릭
+	scwin.pgl_Page_onviewchange = function(info) {
+		scwin.pageMove(info.newSelectedIndex);
+	};
+	
+	//페이지리스트 컴포넌트 입력값 변경
+	scwin.pgl_Page_oninputblur = function(Blur) {
+		scwin.pageMove(Blur);
+	};	
+	
+	scwin.sbx_SelectCount_onviewchange = function(info) {
+		if(info.oldValue != info.newValue) {
+			grd_Page.options.visibleRowNum = sbx_SelectCount.getValue();
+		}
+	};
+	
+	
+	scwin.curSearchIdx = 0; 
+	
+	//결과내 검색 버튼 클릭
+	scwin.btn_SearchInResult_onclick = function(e) {
+
+		var txt = ibx_SelectKeyword.getValue();
+		scwin.tmpIdxArr;
+		scwin.tmLength;
+		
+		if(txt){
+			if(scwin.SelectFlag){
+				scwin.tmpIdxArr = dlt_PageToGrid.getMatchedIndex( sbx_SelectColumn.getValue() , txt , false);
+				scwin.tmLength = scwin.tmpIdxArr.length;
+				grd_Page.setCustomFormatter( grd_Page.getColumnIndex( sbx_SelectColumn.getValue() ) , "scwin.formatterD" );
+				scwin.SelectFlag = false;
+			}
+			if(scwin.tmLength > 0 ){
+				if( scwin.tmLength === scwin.curSearchIdx){
+					scwin.curSearchIdx = 0;	
+				}
+				grd_Page.setFocusedCell( scwin.tmpIdxArr[scwin.curSearchIdx] , sbx_SelectColumn.getValue() , false );
+				scwin.curSearchIdx ++;
+			}
+		}else{
+			alert("검색할 단어를 입력하세요");
+			scwin.searchArr = [];
+			ibx_SelectKeyword.focus();
+		}
+	};
+	
+	//결과내 검색 컬럼조건(셀렉트박스)
+	scwin.sbx_SelectColumn_onviewchange = function(info) {
+		info.oldValue != info.newValue ? scwin.SelectFlag = true : scwin.SelectFlag = false; 
+	};
+	
+	//결과내 검색 컬럼조건(인풋박스)
+	scwin.ibx_SelectKeyword_onviewchange = function(info) {
+		info.oldValue != info.newValue ? scwin.SelectFlag = true : scwin.SelectFlag = false;
+	};
+	
+	//검색된 셀 포메터 적용
+	scwin.formatterD = function(data, format, row, col) {
+	
+		var txt = ibx_SelectKeyword.getValue();
+		var result = "";
+		if( format.indexOf(txt) != -1 ) {
+			result = format.replace(txt, '<span style="color:red;margin:0;">'+txt+'</span>');
+		}else{
+			result = format;
+		}
+		return result;
+	};
+	
+	scwin.btn_shbox_hide_onclick = function() {
+		var shbox1 = shbox_hide.getID();
+    	var shbox2 = shbox_show.getID();
+    	
+		$("#"+shbox1).toggleClass("hide");
+		$("#"+shbox2).toggleClass("bb0");
+		if( !btn_shbox_hide.hasClass('show') ){ 
+			btn_shbox_hide.addClass('show');
+		}
+		else { 
+			btn_shbox_hide.removeClass('show');
+		}
+	};
+	
+	
+	
+	
+	
+	
+		
+	]]></script>
+    	<style type="text/css"><![CDATA[
+			
+    	]]></style>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+    	<xf:group class="sub_contents" id="" style="padding:20px;">
+    		<xf:group class="pgtbox" id="" style="">
+    			<w2:textbox class="pgt_tit" id="" label="페이징"></w2:textbox>
+    			<xf:group class="location_inner" id="" style="">
+    				<w2:textbox class="location_tit location_home" id="" label="Home" style=""></w2:textbox>
+    				<w2:textbox class="location_tit" id="" label="기능" style=""></w2:textbox>
+    				<w2:textbox class="location_tit" id="" label="그리드" style=""></w2:textbox>
+    			</xf:group>
+    		</xf:group>
+    		<xf:group class="shbox" id="shbox_show" style="">
+    			<xf:group class="shbox_inner" id="" style="">
+    				<xf:group adaptive="layout" adaptiveThreshold="600" class="w2tb tb" id="" style="width:100%;" tagname="table">
+    					<w2:attributes>
+    						<w2:summary></w2:summary>
+    					</w2:attributes>
+    					<xf:group tagname="colgroup">
+    						<xf:group style="width:120px;" tagname="col"></xf:group>
+    						<xf:group style="" tagname="col"></xf:group>
+    						<xf:group style="width:120px;" tagname="col"></xf:group>
+    						<xf:group style="" tagname="col"></xf:group>
+    					</xf:group>
+    					<xf:group style="" tagname="tr">
+    						<xf:group class="w2tb_th pt" style="" tagname="th">*&amp;nbsp;검색&amp;nbsp;갯수</xf:group>
+    						<xf:group class="w2tb_td" style="" tagname="td">
+    							<xf:group class="" id="" style="">
+    								<xf:select1 allOption="" appearance="minimal" chooseOption="" direction="auto" disabled="false"
+    									disabledClass="w2selectbox_disabled" displayMode="label" id="sbx_SelectCount" optionOrder="false" selectedData="true"
+    									style="width: 40%;height: 21px;" submenuSize="auto" ref="" ev:onviewchange="scwin.sbx_SelectCount_onviewchange">
+    									<xf:choices>
+    										<xf:item>
+    											<xf:label><![CDATA[10건씩 조회]]></xf:label>
+    											<xf:value><![CDATA[10]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[20건씩 조회]]></xf:label>
+    											<xf:value><![CDATA[20]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[30건씩 조회]]></xf:label>
+    											<xf:value><![CDATA[30]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[40건씩 조회]]></xf:label>
+    											<xf:value><![CDATA[40]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[50건씩 조회]]></xf:label>
+    											<xf:value><![CDATA[50]]></xf:value>
+    										</xf:item>
+    									</xf:choices>
+    								</xf:select1>
+    							</xf:group>
+    						</xf:group>
+    						<xf:group class="w2tb_th" style="" tagname="th"></xf:group>
+    						<xf:group class="w2tb_td" style="" tagname="td"></xf:group>
+    					</xf:group>
+    				</xf:group>
+    			</xf:group>
+    			<xf:group class="btn_shbox" id="">
+    				<xf:trigger class="btn_cm ico_search" ev:onclick="scwin.btn_sch_onclick" id="btn_sch" style="" type="button">
+    					<xf:label><![CDATA[조회]]></xf:label>
+    				</xf:trigger>
+    			</xf:group>
+    		</xf:group>
+    		<xf:group class="shbox mt0 bt0 hide" id="shbox_hide" style="">
+    			<xf:group class="shbox_inner" id="" style="">
+    				<xf:group adaptive="layout" adaptiveThreshold="600" class="w2tb tb" id="" style="width:100%;" tagname="table">
+    					<w2:attributes>
+    						<w2:summary></w2:summary>
+    					</w2:attributes>
+    					<xf:group tagname="colgroup">
+    						<xf:group style="width:120px;" tagname="col"></xf:group>
+    						<xf:group style="" tagname="col"></xf:group>
+    						<xf:group style="width:120px;" tagname="col"></xf:group>
+    						<xf:group style="" tagname="col"></xf:group>
+    					</xf:group>
+    					<xf:group style="" tagname="tr">
+    						<xf:group class="w2tb_th" style="" tagname="th">결과내&amp;nbsp;검색</xf:group>
+    						<xf:group class="w2tb_td" style="" tagname="td">
+    							<xf:group class="" id="" style="">
+    								<xf:select1 allOption="" appearance="minimal" chooseOption="" direction="auto" disabled="false"
+    									disabledClass="w2selectbox_disabled" displayMode="label" ev:onviewchange="scwin.sbx_SelectColumn_onviewchange"
+    									id="sbx_SelectColumn" optionOrder="false" ref="" selectedData="true" style="width: 40%;height: 21px;" submenuSize="auto">
+    									<xf:choices>
+    										<xf:item>
+    											<xf:label><![CDATA[No]]></xf:label>
+    											<xf:value><![CDATA[seq]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[통화명]]></xf:label>
+    											<xf:value><![CDATA[curName]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[통화단위]]></xf:label>
+    											<xf:value><![CDATA[curUnit]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[매매기준율]]></xf:label>
+    											<xf:value><![CDATA[rateSale]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[사실 때]]></xf:label>
+    											<xf:value><![CDATA[buy]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[파실 때]]></xf:label>
+    											<xf:value><![CDATA[sell]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[보내실 때]]></xf:label>
+    											<xf:value><![CDATA[send]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[받으실 때]]></xf:label>
+    											<xf:value><![CDATA[receive]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[미화환산율]]></xf:label>
+    											<xf:value><![CDATA[conversionUSD]]></xf:value>
+    										</xf:item>
+    										<xf:item>
+    											<xf:label><![CDATA[기준일]]></xf:label>
+    											<xf:value><![CDATA[inputDate]]></xf:value>
+    										</xf:item>
+    									</xf:choices>
+    								</xf:select1>
+    								<xf:input id="ibx_SelectKeyword" style="width: 120px;height: 21px;" ev:onviewchange="" ev:onblur="" ev:onkeydown=""></xf:input>
+    								<xf:trigger style="left:0px;top:0px;" id="btn_SearchInResult" type="button" class="btn_cm" ev:onclick="scwin.btn_SearchInResult_onclick">
+    									<xf:label><![CDATA[검색]]></xf:label>
+    								</xf:trigger>
+    							</xf:group>
+    						</xf:group>
+    						<xf:group class="w2tb_th" style="" tagname="th"></xf:group>
+    						<xf:group class="w2tb_td" style="" tagname="td"></xf:group>
+    					</xf:group>
+    				</xf:group>
+    			</xf:group>
+    			<xf:group class="btn_shbox" id=""></xf:group>
+    		</xf:group>
+    		<w2:anchor class="btn_shbox_hide" id="btn_shbox_hide" outerDiv="true" style="" ev:onclick="scwin.btn_shbox_hide_onclick">
+    			<xf:label><![CDATA[검색영역 숨기기]]></xf:label>
+    		</w2:anchor>
+    		<xf:group class="dfbox" id="" style="">
+    			<w2:textbox class="df_tit fl" id="" label="페이지 방식" style=""></w2:textbox>
+    			<xf:group class="fr" id="" style=""></xf:group>
+    		</xf:group>
+    		<xf:group class="gvwbox" id="" style="">
+    			<w2:gridView autoFit="allColumn" class="wq_gvw" dataList="data:dlt_PageToGrid" id="grd_Page" ignoreCellClick="false"
+    				ignoreToggleOnDisabled="false" keepDefaultColumnWidth="true" rowNumHeaderValue="" rowNumStatusUniqueId="true" rowNumVisible=""
+    				rowNumWidth="50" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="" scrollByColumn="false" scrollByColumnAdaptive="false"
+    				showSortableUseFilter="false" style="height: 100px;" summaryAuto="false" summaryOnlyAuto="false" useFilterList="false"
+    				useShiftKey="true" visibleRowNum="10" dataDragSelect="true" defaultCellHeight="30">
+    				<w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
+    				<w2:header style="" id="header2">
+    					<w2:row style="" id="row3">
+    						<w2:column width="40" inputType="text" style="" id="column37" value="No" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="column35" value="통화명" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="column33" value="통화단위" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="column31" value="매매기준율" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="column29" value="사실 때" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="column27" value="파실 때" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="column25" value="보내실 때" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="column23" value="받으실 때" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="column21" value="미화환산율" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="column19" value="기준일" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    					</w2:row>
+    				</w2:header>
+    				<w2:gBody style="" id="gBody2">
+    					<w2:row style="" id="row4">
+    						<w2:column width="40" inputType="text" style="background-color: #edeef3" id="seq" value="" blockSelect="false" displayMode="label"></w2:column>
+    						<w2:column width="70" inputType="text" style="" id="curName" value="" blockSelect="false" displayMode="label"></w2:column>
+    						<w2:column width="70" inputType="text" style="" id="curUnit" value="" blockSelect="false" displayMode="label"></w2:column>
+    						<w2:column width="70" inputType="text" style="" id="rateSale" value="" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="buy" value="" blockSelect="false" displayMode="label"></w2:column>
+    						<w2:column width="70" inputType="text" style="" id="sell" value="" blockSelect="false" displayMode="label"></w2:column>
+    						<w2:column width="70" inputType="text" style="" id="send" value="" blockSelect="false" displayMode="label"></w2:column>
+    						<w2:column width="70" inputType="text" style="" id="receive" value="" blockSelect="false" displayMode="label"></w2:column>
+    						<w2:column width="70" inputType="text" style="" id="conversionUSD" value="" blockSelect="false"
+    							displayMode="label">
+    						</w2:column>
+    						<w2:column width="70" inputType="text" style="" id="inputDate" value="" blockSelect="false"
+    							displayMode="label" dataType="date" displayFormat="yyyy-MM-dd">
+    						</w2:column>
+    					</w2:row>
+    				</w2:gBody>
+    			</w2:gridView>
+    		</xf:group>
+    		<w2:pageList class="wq_pglist" displayButtonType="display" displayFormat="#" id="pgl_Page" pageSize="10" style=""
+    			displaySelectedIndex="true" ev:onviewchange="scwin.pgl_Page_onviewchange" ev:oninputblur="scwin.pgl_Page_oninputblur">
+    		</w2:pageList>
+    	</xf:group>
+    </body>
+</html>

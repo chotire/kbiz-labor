@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="list" repeatNode="map" style="" id="dsTcfIntAprv" saveRemovedData="true">
+					<w2:keyInfo>
+						<w2:key id="intAprvNo" name="내부결재번호" dataType="text"></w2:key>
+						<w2:key id="intAprvTtl" name="내부결재제목" dataType="text"></w2:key>
+						<w2:key id="intAprvStusCd" name="내부결재상태코드" dataType="text"></w2:key>
+						<w2:key id="sbmprEmpno" name="제출자사번" dataType="text"></w2:key>
+						<w2:key id="sbmprEmpNm" name="제출자명" dataType="text"></w2:key>
+						<w2:key id="sbmtDtm" name="제출일시" dataType="text"></w2:key>
+						<w2:key id="intAprvReqOpinCn" name="내부_결재_요청_의견_내용" dataType="text"></w2:key>
+						<w2:key id="apprEmpno" name="승인자사번" dataType="text"></w2:key>
+						<w2:key id="apprEmpNm" name="승인자명" dataType="text"></w2:key>
+						<w2:key id="aproDtm" name="승인일시" dataType="text"></w2:key>
+						<w2:key id="intAprvAproOpinCn" name="내부_결재_승인_의견_내용" dataType="text"></w2:key>
+						<w2:key id="jobGbCd" name="업무구분코드" dataType="text"></w2:key>
+						<w2:key id="menuId" name="메뉴ID" dataType="text"></w2:key>
+						<w2:key id="scrUrl" name="화면_URL" dataType="text"></w2:key>
+						<w2:key id="refN1ItmlNm" name="참조_1_항목_명" dataType="text"></w2:key>
+						<w2:key id="refN2ItmlNm" name="참조_2_항목_명" dataType="text"></w2:key>
+						<w2:key id="refN3ItmlNm" name="참조_3_항목_명" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00350502P.xml 
+     * Program Name : 내부결재 
+     * Author : 주홍원 (tpjhw)
+     * Date : 2019.03.28
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     * 2019.03.28   주홍원   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    var svcId = ""; //callback 처리용 서비스ID
+    var sStatus = "";
+    var sGubunCd = ""; // 처리구분코드
+    var sIntAprvNo = ""; // 내부결재번호
+    var sCancelYn = ""; // 취소가능여부
+
+    // 내부결재 Parameter
+    var sIntAprvTtl = ""; // 내부결재제목
+    var sIntAprvReqOpinCn = ""; // 내부_결재_요청_의견_내용
+    var sApprEmpno = ""; // 승인자사번
+    var sApprEmpNm = ""; // 승인자명
+    var sIntAprvAproOpinCn = ""; // 내부_결재_승인_의견_내용
+    var sJobGbCd = ""; // 업무구분코드
+    var sMenuId = ""; // 메뉴ID
+    var sScrUrl = ""; // 화면_URL
+
+    /************************************************************************************
+     *  [2] 초기화 
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        
+        if ($p.getPopupParam() != "") {
+            sGubunCd = JSON.parse($p.getPopupParam()).data.gubunCd; // 처리구분코드
+            sIntAprvNo = JSON.parse($p.getPopupParam()).data.intAprvNo; // 내부결재번호
+            sCancelYn = JSON.parse($p.getPopupParam()).data.cancelYn; // 취소가능여부
+
+            sIntAprvTtl = JSON.parse($p.getPopupParam()).data.intAprvTtl; // 내부결재제목
+            sIntAprvReqOpinCn = JSON.parse($p.getPopupParam()).data.intAprvReqOpinCn; // 내부_결재_요청_의견_내용
+            sApprEmpno = JSON.parse($p.getPopupParam()).data.apprEmpno; // 승인자사번
+            sApprEmpNm = JSON.parse($p.getPopupParam()).data.apprEmpNm; // 승인자명
+            sIntAprvAproOpinCn = JSON.parse($p.getPopupParam()).data.intAprvAproOpinCn; // 내부_결재_승인_의견_내용
+            sJobGbCd = JSON.parse($p.getPopupParam()).data.jobGbCd; // 업무구분코드
+            sMenuId = JSON.parse($p.getPopupParam()).data.menuId; // 메뉴ID
+            sScrUrl = JSON.parse($p.getPopupParam()).data.scrUrl; // 화면_URL
+        } else {
+            sGubunCd = gcm.APPR_REQUEST;
+        }
+
+        // 상태에 따른 화면 처리
+        if (sGubunCd == gcm.APPR_REQUEST) { // 승인요청 시
+            dsTcfIntAprv.set("sbmprEmpno", sessionStorage.getItem("userEmpno"));
+            dsTcfIntAprv.set("sbmprEmpNm", sessionStorage.getItem("userNm"));
+			//참조항목명(1~3) MOVE
+            dsTcfIntAprv.set("refN1ItmlNm", JSON.parse($p.getPopupParam()).data.refN1ItmlNm);
+            dsTcfIntAprv.set("refN2ItmlNm", JSON.parse($p.getPopupParam()).data.refN2ItmlNm);
+            dsTcfIntAprv.set("refN3ItmlNm", JSON.parse($p.getPopupParam()).data.refN3ItmlNm);
+
+            // 내부결재제목을 파라미터로 받은 경우	    	
+            if (!com.isEmpty(sIntAprvTtl)) {
+                dsTcfIntAprv.set("intAprvTtl", sIntAprvTtl);
+            }
+
+            // 내부_결재_요청_의견_내용을 파라미터로 받은 경우	    	
+            if (!com.isEmpty(sIntAprvReqOpinCn)) {
+                dsTcfIntAprv.set("intAprvReqOpinCn", sIntAprvReqOpinCn);
+            }
+
+            // 승인자사번을 파라미터로 받은 경우	    	
+            if (!com.isEmpty(sApprEmpno)) {
+                dsTcfIntAprv.set("apprEmpno", sApprEmpno);
+                com.setUdcValue("udcUserSrch", "userEmpno", sApprEmpno);
+            } 
+            
+            // 승인자명을 파라미터로 받은 경우
+            if (!com.isEmpty(sApprEmpNm)) {
+                dsTcfIntAprv.set("apprEmpNm", sApprEmpNm);
+                com.setUdcValue("udcUserSrch", "userNm", sApprEmpNm);
+                
+                if (sApprEmpno == "") {
+	                com.udcSelNm("UserSelNm", {
+	                    comp: [com.getUdcComp("udcUserSrch",  "userNm"), com.getUdcComp("udcUserSrch",  "userEmpno")]
+	                }, "", sApprEmpNm, "");
+	            }
+            }
+
+            // 업무구분코드를 파라미터로 받은 경우	    	
+            if (!com.isEmpty(sJobGbCd)) {
+                dsTcfIntAprv.set("jobGbCd", sJobGbCd);
+            }
+
+            // 메뉴ID를 파라미터로 받은 경우	    	
+            if (!com.isEmpty(sMenuId)) {
+                dsTcfIntAprv.set("menuId", sMenuId);
+            }
+
+            // 화면_URL을 파라미터로 받은 경우	    	
+            if (!com.isEmpty(sScrUrl)) {
+                dsTcfIntAprv.set("scrUrl", sScrUrl);
+            }
+
+            grpProc.show(); // 등록영역 보임
+            grpSrch.hide(); // 조회영역 숨김
+        } else { // 승인요청 이외
+            grpSrch.show(); // 조회영역 보임
+            grpProc.hide(); // 등록영역 숨김
+
+            if (com.isEmpty(sIntAprvNo)) {
+                alert("승인 아이디가 없습니다.");
+                //com.showMessage("CFW0010", "승인 아이디가 없습니다.");
+                com.popup_close();
+            } else {
+                dsTcfIntAprv.set("intAprvNo", sIntAprvNo);
+                scwin.fnSearch();
+            }
+        }
+    };
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function () {
+
+    };
+
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * Event: scwin.fnSave
+     * 기 능: 승인처리상태 저장
+     **************************************************************************/
+    scwin.fnSave = function () {
+
+        var sStatusTxt = "";
+        var sEmpNo = "";
+
+        if (svcId == "insertTcfIntAprv") { // 등록
+
+            sEmpNo = com.getUdcValue("udcUserSrch", "userEmpno");
+
+            if (sEmpNo != "") {
+                dsTcfIntAprv.set("apprEmpno", sEmpNo); // 승인자 사번
+            } else {
+            
+                //alert('승인자는 필수 입니다.');
+                //com.getUdcComp("udcUserSrch", "userEmpno").focus();
+                var userNm = com.getUdcComp("udcUserSrch", "userNm").id;
+                com.showMessage("CFW0010","승인자는 필수 입니다.", "", "", userNm);
+                return false;
+            }
+
+            if (confirm("승인요청 하시겠습니까?")) {
+                dsTcfIntAprv.set("intAprvStusCd", sStatus); // 내부결제 상태 코드
+
+                ajaxLib.ajax("/cf/CF00350502P/insertTcfIntAprv", {
+                    mode: "asynchronous",
+                    method: "POST",
+                    requestData: dsTcfIntAprv.getJSON(),
+                    callback: "fnCallback",
+                    errCallback: "fnErrCallBack"
+                });
+            }
+
+        } else if (svcId == "updateTcfIntAprv") { // 상태변경
+
+            if (sStatus == gcm.APPR_APR) {
+                sStatusTxt = "승인 하시겠습니까?";
+            } else if (sStatus == gcm.APPR_REJ) {
+                sStatusTxt = "반려 하시겠습니까?";
+            } else if (sStatus == gcm.APPR_CAN) {
+                sStatusTxt = "승인취소 하시겠습니까?";
+            }
+
+            if (confirm(sStatusTxt)) {
+                dsTcfIntAprv.set("intAprvStusCd", sStatus);
+
+                ajaxLib.ajax("/cf/CF00350502P/updateTcfIntAprv", {
+                    mode: "asynchronous",
+                    method: "POST",
+                    requestData: dsTcfIntAprv.getJSON(),
+                    callback: "fnCallback",
+                    errCallback: "fnErrCallBack"
+                });
+            }
+
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.fnSearch
+     * 기 능: 승인처리상태 조회
+     **************************************************************************/
+    scwin.fnSearch = function () {
+
+        svcId = "selectTcfIntAprv";
+
+        //서비스 호출
+        ajaxLib.ajax("/cf/CF00350502P/selectTcfIntAprv", {
+            mode: "asynchronous",
+            method: "Post",
+            requestData: dsTcfIntAprv.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallback"
+        });
+
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+
+        var data = "";
+
+        dsTcfIntAprv.setJSON(result.data.dsTcfIntAprv);
+
+        if (svcId == "selectTcfIntAprv") {
+
+            if (sGubunCd == gcm.APPR_FIND) { // 조회
+                txaOpinion.setReadOnly(true);
+
+                if (dsTcfIntAprv.get("intAprvStusCd") == gcm.APPR_APR) {
+                    tbxApprRej.setValue("[ 승인 ]");
+                } else if (dsTcfIntAprv.get("intAprvStusCd") == gcm.APPR_REJ) {
+                    tbxApprRej.setValue("[ 반려 ]");
+                } else {
+                    tbxApprRej.hide();
+                }
+
+                btnApproval.hide(); // 승인버튼 숨김
+                btnApprReject.hide(); // 반려버튼 숨김
+
+                // 현재 사용자가 승인권자이고, 승인취소가 가능한 경우
+                if (dsTcfIntAprv.get("apprEmpno") != sessionStorage.getItem("userEmpno") ||
+                    sCancelYn != "Y") {
+                    btnApprCancel.hide(); // 취소버튼 숨김
+                }
+
+            } else {
+                tbxApprRej.hide();
+
+	            // 내부_결재_승인_의견_내용을 파라미터로 받은 경우	    	
+	            if (sIntAprvAproOpinCn != "") {
+	                dsTcfIntAprv.set("intAprvAproOpinCn", sIntAprvAproOpinCn);
+	            }
+	            
+	            if ( dsTcfIntAprv.get( "aproDtm" ) != "" &&  dsTcfIntAprv.get( "aproDtm" ).substr(0, 4) <= "2000") {
+			        //var nowDate = $w.getCurrentServerDate("yyyy-MM-dd hh:mm:ss");
+                    var dd = new Date();
+                    var mons = dd.getMonth() + 1;
+                    var days = dd.getDate();
+                    datetext = dd.toTimeString();
+                    datetext = datetext.split(' ')[0];
+                    var nowDate = dd.getFullYear() + "-" + ((""+mons).length != 1 ? mons : "0" + mons) + "-" + ((""+days).length != 1 ? days : "0" + days) + " " + datetext;
+	            	dsTcfIntAprv.set( "aproDtm" , nowDate );
+	            }
+
+                // 현재 사용자가 승인권자인 경우
+                if (dsTcfIntAprv.get("apprEmpno") == sessionStorage.getItem("userEmpno") &&
+                    dsTcfIntAprv.get("intAprvStusCd") == gcm.APPR_REQ) { // 승인 요청 상태인 경우
+
+                    dsTcfIntAprv.set("apprEmpno", sessionStorage.getItem("userEmpno"));
+                    dsTcfIntAprv.set("apprEmpNm", sessionStorage.getItem("userNm"));
+
+                    btnApprCancel.hide(); // 취소버튼 숨김
+
+                } else {
+                    btnApproval.hide(); // 승인버튼 숨김
+                    btnApprReject.hide(); // 반려버튼 숨김
+                    btnApprCancel.hide(); // 취소버튼 숨김
+                }
+            }
+
+        } else if (svcId == "insertTcfIntAprv") {
+            intAprvNo = result.data; // 내부결재번호
+
+            //alert("승인요청 되었습니다. : [" + intAprvNo + "]");
+            //com.showMessage("CFW0010", "승인요청 되었습니다. : [" + intAprvNo + "]");
+
+            data = {
+                intAprvNo: intAprvNo,
+                intAprvStusCd: ""
+            };
+
+            com.popup_close(data);
+        } else if (svcId == "updateTcfIntAprv") {
+            if (sStatus == gcm.APPR_APR) {
+                intAprvNo = dsTcfIntAprv.get("intAprvNo"); // 내부결재번호
+                intAprvStusCd = dsTcfIntAprv.get("intAprvStusCd"); // 내부결재상태코드
+
+                //alert("승인 되었습니다. : [" + intAprvNo + "], [" + intAprvStusCd + "]");
+                //com.showMessage("CFW0010", "승인 되었습니다. : [" + intAprvNo + "], [" + intAprvStusCd + "]");
+
+                data = {
+                    intAprvNo: intAprvNo,
+                    intAprvStusCd: intAprvStusCd
+                };
+
+                com.popup_close(data);
+            } else if (sStatus == gcm.APPR_REJ) {
+                intAprvNo = dsTcfIntAprv.get("intAprvNo"); // 내부결재번호
+                intAprvStusCd = dsTcfIntAprv.get("intAprvStusCd"); // 내부결재상태코드
+
+                //alert("반려 되었습니다. : [" + intAprvNo + "], [" + intAprvStusCd + "]");
+                //com.showMessage("CFW0010", "반려 되었습니다. : [" + intAprvNo + "], [" + intAprvStusCd + "]");
+
+                data = {
+                    intAprvNo: intAprvNo,
+                    intAprvStusCd: intAprvStusCd
+                };
+
+                com.popup_close(data);
+            } else if (sStatus == gcm.APPR_CAN) {
+                intAprvNo = dsTcfIntAprv.get("intAprvNo"); // 내부결재번호
+
+                //alert("승인취소 되었습니다. : [" + intAprvNo + "]");
+                //com.showMessage("CFW0010", "승인취소 되었습니다. : [" + intAprvNo + "]");
+
+                data = {
+                    intAprvNo: intAprvNo,
+                    intAprvStusCd: ""
+                };
+
+                com.popup_close(data);
+            }
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function (e) {
+        console.log(e);
+    };
+
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnApprRequest_onclick
+     * 기 능: 승인요청
+     **************************************************************************/
+    scwin.btnApprRequest_onclick = function () {
+        svcId = "insertTcfIntAprv";
+        sStatus = gcm.APPR_REQ;
+
+        scwin.fnSave();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnApprRequestCancel_onclick
+     * 기 능: 승인요청 취소
+     **************************************************************************/
+    scwin.btnApprRequestCancel_onclick = function () {
+        com.popup_close();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnApproval_onclick
+     * 기 능: 결재요청 승인
+     **************************************************************************/
+    scwin.btnApproval_onclick = function () {
+        svcId = "updateTcfIntAprv";
+        sStatus = gcm.APPR_APR;
+
+        scwin.fnSave();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnApprReject_onclick
+     * 기 능: 결재요청 반려
+     **************************************************************************/
+    scwin.btnApprReject_onclick = function () {
+        svcId = "updateTcfIntAprv";
+        sStatus = gcm.APPR_REJ;
+
+        scwin.fnSave();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnApprCancel_onclick
+     * 기 능: 결재요청 반려
+     **************************************************************************/
+    scwin.btnApprCancel_onclick = function () {
+        svcId = "updateTcfIntAprv";
+        sStatus = gcm.APPR_CAN;
+
+        scwin.fnSave();
+    };
+
+	]]></script>
+		<w2:require src="/ux/common/udc/udcUserPopup.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcUserPopup.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="" id="" class="content_body popup">
+        <xf:group style="" id="grpProc">
+            <xf:group style="" id="" class="pop_cont_title">
+                <xf:input style="width:100%;" id="ibxProcTitle" placeholder="제목입력" class="" ref="data:dsTcfIntAprv.intAprvTtl">
+                    <w2:attributes>
+                        <w2:value></w2:value>
+                    </w2:attributes>
+                </xf:input>
+            </xf:group>
+            <xf:group adaptive="" adaptiveThreshold="" tagname="table" style="" id="" class="w2tb noline">
+                <w2:attributes>
+                    <w2:summary></w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group tagname="col" style="width:130px;"></xf:group>
+                    <xf:group tagname="col" style=""></xf:group>
+                </xf:group>
+                <xf:group tagname="tr" style="">
+                    <xf:group tagname="th" style="" class="w2tb_th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span style="" id="" label="승인요청자"></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" style="" class="w2tb_td">
+                        <xf:group style="" id="" class="user_info_wrap">
+                            <xf:group style="" id="" class="fl">
+                                <w2:textbox tagname="strong" style="" label="홍길동" id="" class="em_txt" ref="data:dsTcfIntAprv.sbmprEmpNm"></w2:textbox>
+                            </xf:group>
+                            <w2:span style="" id="" label="" class="fr sm_txt" ref="data:dsTcfIntAprv.sbmtDtm"></w2:span>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr" style="">
+                    <xf:group tagname="th" style="" class="w2tb_th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span style="" id="" label="요청의견"></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" style="" class="w2tb_td">
+                        <xf:textarea style="" id="" ref="data:dsTcfIntAprv.intAprvReqOpinCn"></xf:textarea>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr">
+                    <xf:group tagname="th" class="w2tb_th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span style="" id="" label="승인자"></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                    	<w2:attributes></w2:attributes>
+                    	<w2:udc_userpopup style="margin-left:0px;" id="udcUserSrch" class="req"></w2:udc_userpopup>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group style="" id="" class="bottombox">
+                <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnApprRequest" class="btn_gcm" ev:onclick="scwin.btnApprRequest_onclick">
+                    <xf:label>
+                        <![CDATA[승인요청]]>
+                    </xf:label>
+                </w2:anchor>
+                <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnApprRequestCancel" class="btn_gcm" ev:onclick="scwin.btnApprRequestCancel_onclick">
+                    <xf:label>
+                        <![CDATA[취소]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <xf:group id="grpSrch" style="">
+            <xf:group class="pop_cont_title" id="" style="">
+                <w2:textbox label="제목" style="" id="tbxSrchTitle" tagname="h2" ref="data:dsTcfIntAprv.intAprvTtl"></w2:textbox>
+            </xf:group>
+            <xf:group class="defaultbox" id="" style="">
+                <w2:textbox class="df_tt" id="tbxApprRej" label=".." style="" tagname="h3"></w2:textbox>
+            </xf:group>
+            <xf:group adaptive="" adaptiveThreshold="" class="w2tb noline" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary></w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:130px;" tagname="col"></xf:group>
+                    <xf:group style="" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="승인요청자" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:group class="user_info_wrap" id="" style="">
+                            <xf:group class="fl" id="" style="">
+                                <w2:textbox class="em_txt" id="" label="홍길동" style="" tagname="strong" ref="data:dsTcfIntAprv.sbmprEmpNm">
+                                </w2:textbox>
+                            </xf:group>
+                            <w2:span class="fr sm_txt" id="" label="" style="" ref="data:dsTcfIntAprv.sbmtDtm">
+                            </w2:span>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="요청의견" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:textarea id="" style="" readOnly="" placeholder="" invalidMessage="" disabled="true" ref="data:dsTcfIntAprv.intAprvReqOpinCn">
+                        </xf:textarea>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr">
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="승인/반려의견" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:textarea id="txaOpinion" style="margin-left:0px;" ref="data:dsTcfIntAprv.intAprvAproOpinCn">
+                        </xf:textarea>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr">
+                    <xf:group tagname="th" class="w2tb_th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="승인자" style=""></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                        <w2:attributes></w2:attributes>
+                        <xf:group class="user_info_wrap" id="" style="margin-left:0px;">
+                            <xf:group class="fl" id="" style="">
+                                <w2:textbox class="em_txt" id="" label="김길동" style="" tagname="strong" ref="data:dsTcfIntAprv.apprEmpNm">
+                                </w2:textbox>
+                            </xf:group>
+                            <w2:span class="fr sm_txt" id="" label="" style="" ref="data:dsTcfIntAprv.aproDtm">
+                            </w2:span>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="bottombox" id="" style="">
+                <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnApproval" outerDiv="false" style="" ev:onclick="scwin.btnApproval_onclick">
+                    <xf:label>
+                        <![CDATA[승인]]>
+                    </xf:label>
+                </w2:anchor>
+                <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnApprReject" outerDiv="false" style="" ev:onclick="scwin.btnApprReject_onclick">
+                    <xf:label>
+                        <![CDATA[반려]]>
+                    </xf:label>
+                </w2:anchor>
+                <w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnApprCancel_onclick" id="btnApprCancel" outerDiv="false" style="">
+                    <xf:label>
+                        <![CDATA[취소]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

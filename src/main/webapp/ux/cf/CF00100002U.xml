@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataMap baseNode="list" repeatNode="map" style="" id="dsScrListMngtMap" saveRemovedData="true">
+                <w2:keyInfo>
+                    <w2:key id="scrId" name="화면ID" dataType="text"></w2:key>
+                    <w2:key id="scrNm" name="화면명" dataType="text"></w2:key>
+                    <w2:key id="scrPathNm" name="화면경로명" dataType="text"></w2:key>
+                    <w2:key id="scrDesc" name="화면설명" dataType="text"></w2:key>
+                    <w2:key id="jobGbCd" name="업무구분코드" dataType="text"></w2:key>
+                    <w2:key id="jobGbCdNm" name="업무구분코드명" dataType="text"></w2:key>
+                    <w2:key id="useYn" name="사용여부" dataType="text"></w2:key>
+                    <w2:key id="rowStatus" name="상태코드" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+            <w2:dataMap baseNode="map" id="dsSearchMap">
+                <w2:keyInfo>
+                    <w2:key id="scrId" name="화면ID" dataType="text"></w2:key>
+                    <w2:key id="scrNm" name="화면명" dataType="text"></w2:key>
+                    <w2:key id="jobGbCd" name="업무구분코드" dataType="text"></w2:key>
+                    <w2:key id="useYn" name="사용여부" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+            <w2:dataList baseNode="list" repeatNode="map" id="dsScrListMngList" saveRemovedData="true">
+                <w2:columnInfo>
+                    <w2:column id="scrId" name="화면ID" dataType="text"></w2:column>
+                    <w2:column id="scrNm" name="화면명" dataType="text"></w2:column>
+                    <w2:column id="scrPathNm" name="화면경로명" dataType="text"></w2:column>
+                    <w2:column id="scrDesc" name="화면설명" dataType="text"></w2:column>
+                    <w2:column id="jobGbCd" name="업무구분코드" dataType="text"></w2:column>
+                    <w2:column id="jobGbCdNm" name="업무구분코드명" dataType="text"></w2:column>
+                    <w2:column id="useYn" name="사용여부" dataType="text"></w2:column>
+                </w2:columnInfo>
+            </w2:dataList>
+            <w2:dataList baseNode="map" id="dsUseYnList">
+                <w2:columnInfo>
+                    <w2:column id="cd" name="코드" dataType="text"></w2:column>
+                    <w2:column id="cdNm" name="코드명" dataType="text"></w2:column>
+                </w2:columnInfo>
+                <w2:data use="true">
+                    <w2:row>
+                        <cd>
+                            <![CDATA[Y]]>
+                        </cd>
+                        <cdNm>
+                            <![CDATA[Y]]>
+                        </cdNm>
+                    </w2:row>
+                    <w2:row>
+                        <cd>
+                            <![CDATA[N]]>
+                        </cd>
+                        <cdNm>
+                            <![CDATA[N]]>
+                        </cdNm>
+                    </w2:row>
+                </w2:data>
+            </w2:dataList>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[
+     /***************************************************************************
+     * Program ID : CF00100002U.xml 
+     * Program Name : 화면목록관리 
+     * Author : 남상열 (tpnsr)
+     * Date : 2019.02.20
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     *     
+     **************************************************************************/
+
+    /************************************************************************************ 
+     *  [1] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        scwin.initScreen();
+        // 업무구분[CF035]
+        var opt = [{"CF035": ["sbxKeyJobGbCd", "sbxJobGbCd"]}];
+        com.setCdComp(opt);
+    };
+
+    scwin.onpageunload = function () {
+    };
+
+    /** 화면초기화 **/
+    scwin.initScreen = function () {
+        grpScrSearchInfo.init();
+        grdScrList.initGrid();
+        grpScrInfo.init();
+        ibxScrId.setReadOnly(true);
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수 
+     ************************************************************************************/
+    scwin.svcId = "";
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnSearchList
+     * 기 능: 조회
+     **************************************************************************/
+    scwin.fnSearchList = function () {
+
+        scwin.svcId = "selectTcfScrListMngList";
+        ajaxLib.ajax("/cf/CF00100002U/selectTcfScrListMngList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnUpdate
+     * 기 능: 등록/수정
+     **************************************************************************/
+    scwin.fnUpdate = function () {
+
+        
+        if (!com.validateGroup([grpScrInfo])) {
+            return;
+        }
+
+        if (dsScrListMngtMap.get("rowStatus") != "C" && dsScrListMngtMap.get("rowStatus") == "R") { // 상태값 U 수정으로 상태변경
+            dsScrListMngtMap.set("rowStatus", "U");
+        }
+
+        scwin.svcId = "saveTcfScrListMng";
+
+        if (confirm("저장 하시겠습니까?")) {
+            ajaxLib.ajax("/cf/CF00100002U/saveTcfScrListMng", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsScrListMngtMap.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnDelete
+     * 기 능: 삭제
+     **************************************************************************/
+    scwin.fnDelete = function () {
+
+        scwin.svcId = "deleteTcfScrListMng";
+
+        if (dsScrListMngList.getRowCount() == 0 || ibxScrId.getValue() == "") {
+            com.showMessage('CFW0010','삭제할내역이 없습니다.');
+            return;
+        }
+
+
+        dsScrListMngtMap.set("rowStatus", "D"); //상태값 D
+
+        if (confirm("삭제 하시겠습니까?")) {
+            ajaxLib.ajax("/cf/CF00100002U/deleteTcfScrListMng", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsScrListMngtMap.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+
+    };
+
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function (result, e) {
+        switch (scwin.svcId) {
+            case "selectTcfScrListMngList":
+                dsScrListMngList.setJSON(result.data.scrList);
+                com.setUdcValue("scrListMngCount", "udcListCount", dsScrListMngList.getRowCount());
+                break;
+            case "saveTcfScrListMng":
+                
+                com.showMessage("SCN0002", "저장");			//$1 되었습니다.
+         		
+                dsScrListMngtMap.setEmptyValue();
+
+                //화면ID readOnly 활성화
+                ibxScrId.setReadOnly(true);
+
+                scwin.fnSearchList();
+                break;
+            case "deleteTcfScrListMng":
+                com.showMessage("SCN0002", "삭제");			//$1 되었습니다.
+                
+                dsScrListMngtMap.setEmptyValue();
+                scwin.fnSearchList();
+                break;
+
+        }
+    };
+
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function (e) {
+        console.log(e);
+
+        switch (scwin.svcId) {
+            case "selectTcfScrListMngList":
+                console.log('search Error!!!!!!!!!!!');
+                break;
+            case "deleteTcfScrListMng":
+                console.log('delete Error!!!!!!!!!!!');
+                break;
+        }
+    };
+
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 조회버튼 선택시
+     **************************************************************************/
+    scwin.btnFind_onclick = function () {
+
+        grdScrList.initGrid();
+        grpScrInfo.init();
+        ibxScrId.setReadOnly(true);
+
+        scwin.fnSearchList();
+    };
+
+    /**************************************************************************
+     * Event: scwin.grdScrList_oncellclick
+     * 기 능: 화면프로그램 그리드 선택시
+     **************************************************************************/
+    scwin.grdScrList_oncellclick = function (row, col) {
+
+        var rowData = dsScrListMngList.getRowJSON(row);
+
+        dsScrListMngtMap.setJSON(rowData);
+
+        //화면ID readOnly 활성화
+        ibxScrId.setReadOnly(true);
+
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnNew_onclick
+     * 기 능: 신규버튼 선택시
+     **************************************************************************/
+    scwin.btnNew_onclick = function () {
+        //데이터set 빈값으로 초기화
+        dsScrListMngtMap.setEmptyValue();
+
+        dsScrListMngtMap.set("useYn", "Y"); //사용유무 
+        dsScrListMngtMap.set("rowStatus", "C"); //상태값 C
+
+        //화면ID readOnly 비활성화
+        ibxScrId.setReadOnly(false);
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnSave_onclick
+     * 기 능: 저장버튼 선택시
+     **************************************************************************/
+    scwin.btnSave_onclick = function () {
+        scwin.fnUpdate();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnDel_onclick
+     * 기 능: 삭제버튼 선택시
+     **************************************************************************/
+    scwin.btnDel_onclick = function () {
+        scwin.fnDelete();
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxKeyScrId_onkeyup
+     * 기 능: 화면ID enter onKeyUp
+     **************************************************************************/
+    scwin.ibxKeyScrId_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnFind.trigger("onClick");
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxKeyScrNm_onkeyup
+     * 기 능: 화면명 enter onKeyUp
+     **************************************************************************/
+    scwin.ibxKeyScrNm_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnFind.trigger("onClick");
+        }
+    };
+
+	]]></script>
+    <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+</head>
+<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="wfrTitle" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>
+        </xf:group>
+        <xf:group class="tbl_search" id="" style="">
+            <xf:group class="tb_list" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:96px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:82px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:82px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:96px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr" id="grpScrSearchInfo">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="업무구분" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxKeyJobGbCd" ref="data:dsSearchMap.jobGbCd" style="width:140px;" submenuSize="auto" textAlign="left" mandatory="" chooseOptionLabel="전체">
+                            <xf:choices></xf:choices>
+                        </xf:select1>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="화면ID" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="ibxKeyScrId" style="width: 140px;" ref="data:dsSearchMap.scrId" ev:onkeyup="scwin.ibxKeyScrId_onkeyup" allowChar="0-9A-Z" maxlength="11"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="화면명" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="ibxKeyScrNm" style="width: 140px;" ref="data:dsSearchMap.scrNm" ev:onkeyup="scwin.ibxKeyScrNm_onkeyup" maxByteLength="50"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="사용여부" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxKeyUseYn" ref="data:dsSearchMap.useYn" style="width:140px;" submenuSize="auto" textAlign="left" chooseOptionLabel="전체">
+                            <xf:choices>
+                                <xf:itemset nodeset="data:dsUseYnList">
+                                    <xf:label ref="cdNm"></xf:label>
+                                    <xf:value ref="cd"></xf:value>
+                                </xf:itemset>
+                            </xf:choices>
+                        </xf:select1>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <xf:group class="defaultbox" id="" style="">
+            <w2:textbox class="df_tt" id="" label="화면프로그램 목록" style="" tagname="h3"></w2:textbox>
+            <w2:udc_list_count id="scrListMngCount"></w2:udc_list_count>
+        </xf:group>
+        <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsScrListMngList" fixedColumnWithHidden="true" focusMode="row" id="grdScrList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" ev:onrowindexchange="" ev:oncellclick="scwin.grdScrList_oncellclick" readOnly="true">
+            <w2:header id="header1" style="">
+                <w2:row id="row2" style="">
+                    <w2:column blockSelect="false" id="column23" inputType="text" style="height:24px;" value="NO" width="40">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column21" inputType="text" style="height:24px;" value="업무구분" width="100">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column19" inputType="text" style="height:24px;" value="화면ID" width="130">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column17" inputType="text" style="height:24px;" value="화면명" width="170">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column15" inputType="text" style="height:24px;" value="사용여부" width="80">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column37" inputType="text" removeBorderStyle="false" style="height:24px;" value="화면경로" width="300">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column35" inputType="text" removeBorderStyle="false" style="height:24px;" value="비고" width="400">
+                    </w2:column>
+                </w2:row>
+            </w2:header>
+            <w2:gBody id="gBody4" style="">
+                <w2:row id="row5" style="">
+                    <w2:column blockSelect="false" expression="rowindex()+1" id="column24" inputType="expression" style="height:24px;" textAlign="" value="" width="40">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="jobGbCdNm" inputType="text" style="height:24px;" textAlign="" value="&lt;br/&gt;" width="100">
+                    </w2:column>
+                    <w2:column blockSelect="false" class="" id="scrId" inputType="text" style="height:24px;" textAlign="" value="&lt;br/&gt;" width="130">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="scrNm" inputType="text" style="height:24px;" textAlign="left" value="&lt;br/&gt;" width="170">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="useYn" inputType="text" style="height:24px;" textAlign="" value="&lt;br/&gt;&lt;br/&gt;" width="80">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="scrPathNm" inputType="text" removeBorderStyle="false" style="height:24px;" textAlign="left" value="&lt;br/&gt;&lt;br/&gt;" width="300">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="scrDesc" inputType="text" removeBorderStyle="false" style="height:24px;" textAlign="left" value="" width="400">
+                    </w2:column>
+                </w2:row>
+            </w2:gBody>
+        </w2:gridView>
+        <xf:group class="defaultbox" id="" style="">
+            <w2:textbox class="df_tt" id="" label="화면프로그램 정보" style="" tagname="h3"></w2:textbox>
+            <xf:group class="fr" id="" style="">
+                <xf:group class="right_wrap" id="" style="">
+                    <xf:group id="" style="">
+                        <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnNew" outerDiv="false" style="" ev:onclick="scwin.btnNew_onclick">
+                            <xf:label>
+                                <![CDATA[신규]]>
+                            </xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+                            <xf:label>
+                                <![CDATA[저장]]>
+                            </xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnDel" outerDiv="false" style="" ev:onclick="scwin.btnDel_onclick">
+                            <xf:label>
+                                <![CDATA[삭제]]>
+                            </xf:label>
+                        </w2:anchor>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+        <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpScrInfo" style="" tagname="table">
+            <w2:attributes>
+                <w2:summary>배치프로그램 정보 입력 테이블 입니다.</w2:summary>
+            </w2:attributes>
+            <xf:group tagname="colgroup">
+                <xf:group style="width:100.00px;" tagname="col"></xf:group>
+                <xf:group style="" tagname="col"></xf:group>
+                <xf:group style="width:100.00px;" tagname="col"></xf:group>
+                <xf:group style="" tagname="col"></xf:group>
+                <xf:group style="width:100.00px;" tagname="col"></xf:group>
+                <xf:group style="" tagname="col"></xf:group>
+                <xf:group style="width:100px;" tagname="col"></xf:group>
+                <xf:group style="" tagname="col"></xf:group>
+            </xf:group>
+            <xf:group style="" tagname="tr">
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="업무구분" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:select1 allOption="" appearance="minimal" chooseOption="true" class="req" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxJobGbCd" ref="data:dsScrListMngtMap.jobGbCd" style="width:100%" submenuSize="auto" textAlign="left" chooseOptionLabel="" mandatory="true">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[선택]]></xf:label>
+                                <xf:value><![CDATA[]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[new row]]></xf:label>
+                                <xf:value><![CDATA[]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[new row]]></xf:label>
+                                <xf:value><![CDATA[]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="화면ID" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="ibxScrId" style="width:100%" ref="data:dsScrListMngtMap.scrId" readOnly="true" class="req" mandatory="true" allowChar="0-9A-Z" maxlength="11"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="화면명" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="ibxScrNm" style="width:100%" ref="data:dsScrListMngtMap.scrNm" class="req" mandatory="true" minByteLength="" maxByteLength="50"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th req" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="사용여부" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" tagname="td">
+                    <w2:attributes></w2:attributes>
+                    <xf:select1 appearance="full" class="req" cols="3" id="rdxUseYn" renderType="radiogroup" rows="" selectedIndex="-1" style="" ref="data:dsScrListMngtMap.useYn" mandatory="true">
+                        <xf:choices>
+                            <xf:itemset nodeset="data:dsUseYnList">
+                                <xf:label ref="cdNm"></xf:label>
+                                <xf:value ref="cd"></xf:value>
+                            </xf:itemset>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+            </xf:group>
+            <xf:group class="" style="" tagname="tr">
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="화면경로" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:input id="ibxScrPathNm" style="width:100%" ref="data:dsScrListMngtMap.scrPathNm" class="req" mandatory="true" minByteLength="" maxByteLength="250"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="비고" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:input id="ibxScrDesc" style="width:100%" ref="data:dsScrListMngtMap.scrDesc" minByteLength="" maxByteLength="100"></xf:input>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

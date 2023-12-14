@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+        		<w2:dataMap baseNode="map" id="dsSearchParam">
+        			<w2:keyInfo>
+        				<w2:key id="keyNewUserId" name="신규 아이디" dataType="text"></w2:key>
+        				<w2:key id="keyNewPwEnc" name="신규 새 비밀번호" dataType="text"></w2:key>
+        				<w2:key id="keyNewPwEncConfirm" name="신규 새 비밀번호 확인" dataType="text"></w2:key>
+        				<w2:key id="keyExpiUserId" name="변경시 아이디" dataType="text"></w2:key>
+        				<w2:key id="keyExpiCurPwEnc" name="변경시 현재 비밀번호" dataType="text"></w2:key>
+        				<w2:key id="keyExpiPwEnc" name="변경시 새 비밀번호" dataType="text"></w2:key>
+        				<w2:key id="keyExpiPwEncConfirm" name="변경시 새 비밀번호 확인" dataType="text"></w2:key>
+        				<w2:key id="keyPwType" name="비밀번호 변경방식" dataType="text"></w2:key>
+        				<w2:key id="userEmpno" name="사용자사번" dataType="text"></w2:key>
+        			</w2:keyInfo>
+        		</w2:dataMap>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[
+	    /***************************************************************************
+     * Program ID : CF00050001U.xml 
+     * Program Name : 비밀번호 변경 관리 
+     * Author : 강상국 (tpksg)
+     * Date : 2019.02.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.02.15   강상국   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    scwin.svcId = "";
+    scwin.pwType = "";
+    scwin.userId = "";
+    scwin.svcId = "";
+    scwin.all = "";
+	scwin.userEmpno = sessionStorage.getItem("userEmpno");
+	
+    /************************************************************************************
+     *  [2] 초기화 
+     ************************************************************************************/
+    // 페이지 OnLoad
+    scwin.onpageload = function () {
+    	
+        scwin.pwType = $w.getParameter("pwType");
+        scwin.userId = $w.getParameter("userId");
+        scwin.all = $w.getAllParameter();
+        
+        // 비밀번호 변경 시 
+        if (scwin.pwType == '2') {
+            ibxExpiUserId.setDisabled(false);
+            ibxExpiUserId.setValue(scwin.userId);
+            ibxExpiUserId.setDisabled(true);
+            newGp.hide();
+        } else {	// 비밀번호 신규등록시
+            ibxNewUserId.setDisabled(false);
+            ibxNewUserId.setValue(scwin.userId);
+            ibxNewUserId.setDisabled(true);
+            expiGp.hide();
+        }
+        dsSearchParam.set("keyPwType", scwin.pwType);
+        dsSearchParam.set("userEmpno", scwin.userEmpno);
+    };
+
+    /************************************************************************************
+     *  [3] Event 함수 
+     ************************************************************************************/
+
+    /**************************************************************************
+     * Event: scwin.btnFindNew_onclick
+     * 기 능: 신규 비밀번호 확인 버튼
+     **************************************************************************/
+    scwin.btnFindNew_onclick = function () {
+        if (!scwin.fnValid()) {
+            return;
+        }
+        scwin.fnNewPwEnc();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnCancel_onclick
+     * 기 능: 신규 비밀번호 취소 버튼
+     **************************************************************************/
+    scwin.btnCancel_onclick = function () {
+        scwin.fnNewCancel();
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxNewPwEnc_onkeyup
+     * 기 능: 신규 비밀번호 새비밀번호 입력 박스에 키 눌렀을 때 이벤트
+     **************************************************************************/
+    scwin.ibxNewPwEnc_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            if (!scwin.fnValid()) {
+                return;
+            }
+            scwin.fnNewPwEnc();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxNewPwEncConfirm_onkeyup
+     * 기 능: 신규 비밀번호 새비밀번호 확인 입력 박스에 키 눌렀을 때 이벤트
+     **************************************************************************/
+    scwin.ibxNewPwEncConfirm_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            if (!scwin.fnValid()) {
+                return;
+            }
+            scwin.fnNewPwEnc();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxExpiCurPwEnc_onkeyup
+     * 기 능: 비밀번호 변경시 현재 비밀번호 입력 박스에 키 눌렀을 때 이벤트
+     **************************************************************************/
+    scwin.ibxExpiCurPwEnc_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            if (!scwin.fnValid()) {
+                return;
+            }
+            scwin.fnExpiPwEnc();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxExpiPwEnc_onkeyup
+     * 기 능: 비밀번호 변경시 새 비밀번호 입력 박스에 키 눌렀을 때 이벤트
+     **************************************************************************/
+    scwin.ibxExpiPwEnc_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            if (!scwin.fnValid()) {
+                return;
+            }
+            scwin.fnExpiPwEnc();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxExpiPwEncConfirm_onkeyup
+     * 기 능: 비밀번호 변경시 새 비밀번호 확인 입력 박스에 키 눌렀을 때 이벤트
+     **************************************************************************/
+    scwin.ibxExpiPwEncConfirm_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            if (!scwin.fnValid()) {
+                return;
+            }
+            scwin.fnExpiPwEnc();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnFindChang_onclick
+     * 기 능: 비밀번호 변경 확인 버튼
+     **************************************************************************/
+    scwin.btnFindChang_onclick = function () {
+        if (!scwin.fnValid()) {
+            return;
+        }
+        scwin.fnExpiPwEnc();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnExpiCancel_onclick
+     * 기 능: 비밀번호 변경 취소 버튼
+     **************************************************************************/
+    scwin.btnExpiCancel_onclick = function () {
+        scwin.fnExpiCancel();
+    };
+    
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+        var Backlen = history.length;        
+        switch (scwin.svcId) {
+            case "newPwEnc":
+                alert(result.data.rstVO.rstMsg);
+                if (result.data.rstVO.rstCode == "O") {
+                    history.go(-Backlen);
+                    window.location.replace("/");
+                }
+                break;
+            case "expiPwEnc":
+                alert(result.data.rstVO.rstMsg);
+                if (result.data.rstVO.rstCode == "O") {
+					history.go(-Backlen);
+					window.location.replace("/");                
+                }
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function (e) {
+        switch (scwin.svcId) {
+            case "logInTcfUserInfo":
+                console.log('logIn Error');
+                break;
+        }
+    };
+
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * Event: scwin.fnNewPwEnc
+     * 기 능: 신규비밀번호 확인
+     **************************************************************************/
+    scwin.fnNewPwEnc = function () {
+        if (confirm("비밀번호를 변경 하시겠습니까?")) {
+            scwin.svcId = "newPwEnc";
+            ajaxLib.ajax("/cf/CF00050001U/putTcfTmpUserPwMng", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsSearchParam.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.fnNewCancel
+     * 기 능: 신규비밀번호 취소
+     **************************************************************************/
+    scwin.fnNewCancel = function () {
+        ibxNewPwEnc.setValue("");
+        ibxNewPwEncConfirm.setValue("");
+    };
+
+    /**************************************************************************
+     * Event: scwin.fnExpiPwEnc
+     * 기 능: 비밀번호 변경 확인
+     **************************************************************************/
+    scwin.fnExpiPwEnc = function () {
+        if (confirm("비밀번호를 변경 하시겠습니까?")) {
+            scwin.svcId = "expiPwEnc";
+            ajaxLib.ajax("/cf/CF00050001U/putTcfTmpUserPwMng", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsSearchParam.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.fnExpiCancel
+     * 기 능: 비밀번호 변경 취소
+     **************************************************************************/
+    scwin.fnExpiCancel = function () {
+        ibxExpiCurPwEnc.setValue("");
+        ibxExpiPwEnc.setValue("");
+        ibxExpiPwEncConfirm.setValue("");
+    };
+    
+    /**************************************************************************
+     * Event: scwin.fnPutTokenSearch
+     * 기 능: 토근 또는 세션에 정보를 담는다.
+     **************************************************************************/    
+    scwin.fnPutTokenSearch = function() {
+    };
+
+    /**************************************************************************
+     * Event: scwin.fnValid
+     * 기 능: Valid 검사
+     **************************************************************************/
+    scwin.fnValid = function () {
+        var pwEnc;
+        if (scwin.pwType == '1') {
+            pwEnc = ibxNewPwEnc.getValue();
+            if (strLib.isEmpty(ibxNewUserId.getValue(), false)) {
+                alert('아이디를 입력 하세요.');
+                ibxNewUserId.focus();
+                return false;
+            }
+            if (strLib.isEmpty(pwEnc, false)) {
+                alert('새 비밀번호를 입력 하세요.');
+                ibxNewPwEnc.focus();
+                return false;
+            }
+            if (strLib.isEmpty(ibxNewPwEncConfirm.getValue(), false)) {
+                alert('새 비밀번호 확인을 입력 하세요.');
+                ibxNewPwEncConfirm.focus();
+                return false;
+            }
+            if (ibxNewPwEncConfirm.getValue() != pwEnc) {
+                alert('새 비밀번호와 새 비밀번호 확인이 같지 않습니다.');
+                ibxNewPwEnc.focus();
+                return false;
+            }
+            if (pwEnc == '12345') {
+                alert('초기 비밀번호를 사용 할 수 없습니다.');
+                ibxNewPwEnc.focus();
+                ibxNewPwEnc.setValue("");
+                ibxNewPwEncConfirm.setValue("");
+                return false;
+            }
+        } else {
+            pwEnc = ibxExpiPwEnc.getValue();
+            if (strLib.isEmpty(ibxExpiUserId.getValue(), false)) {
+                alert('아이디를 입력 하세요.');
+                ibxExpiUserId.focus();
+                return false;
+            }
+            if (strLib.isEmpty(ibxExpiCurPwEnc.getValue(), false)) {
+                alert('현재 비밀번호를 입력 하세요.');
+                ibxExpiCurPwEnc.focus();
+                return false;
+            }
+            if (strLib.isEmpty(pwEnc, false)) {
+                alert('새 비밀번호를 입력 하세요.');
+                ibxExpiPwEnc.focus();
+                return false;
+            }
+            if (strLib.isEmpty(ibxExpiPwEncConfirm.getValue(), false)) {
+                alert('새 비밀번호 확인을 입력 하세요.');
+                ibxExpiPwEncConfirm.focus();
+                return false;
+            }
+            if (ibxExpiCurPwEnc.getValue() == pwEnc) {
+                alert('현재 비밀번호와 새 비밀번호가 같으면 안됩니다.');
+                ibxExpiPwEnc.focus();
+                return false;
+            }
+            if (pwEnc != ibxExpiPwEncConfirm.getValue()) {
+                alert('새 비밀번호와 새 비밀번호 확인이 같지 않습니다.');
+                ibxExpiPwEnc.focus();
+                return false;
+            }
+            if (pwEnc == '12345') {
+                alert('초기 비밀번호를 사용 할 수 없습니다.');
+                ibxExpiPwEnc.setValue("");
+                ibxExpiPwEncConfirm.setValue("");
+                ibxNewPwEnc.focus();
+                return false;
+            }
+        }
+
+        if (pwEnc.length < 8) {
+            alert("비밀번호는 영문(대소문자구분),숫자,특수문자(!~@#$%^&*()-_? 만 허용)를 혼용하여 8~16자를 입력해주세요.");
+            return false;
+        }
+        if (pwEnc.length > 16) {
+            alert("비밀번호는 영문(대소문자구분),숫자,특수문자(!~@#$%^&*()-_? 만 허용)를 혼용하여 8~16자를 입력해주세요.");
+            return false;
+        }
+
+        if (!pwEnc.match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~,-])|([!,@,#,$,%,^,&,*,?,_,~,-].*[a-zA-Z0-9])/)) {
+            alert("비밀번호는 영문(대소문자구분),숫자,특수문자(!~@#$%^&*()-_? 만 허용)를 혼용하여 8~16자를 입력해주세요.");
+            return false;
+        }
+        return true;
+    };	    
+	]]></script>
+</head>
+<body id="pw" ev:onpageload="scwin.onpageload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group style="" id="newGp" class="">
+            <xf:group class="defaultbox" id="" style="">
+                <w2:textbox class="df_tt" id="" label="비밀번호 신규등록시" style="" tagname="h3"></w2:textbox>
+            </xf:group>
+            <xf:group adaptive="" adaptiveThreshold="" tagname="table" style="width:Infinity%;" id="" class="w2tb">
+                <w2:attributes>
+                    <w2:summary>비밀번호 신규등록 정보 입력 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group tagname="col" style="width:150.00px;"></xf:group>
+                    <xf:group tagname="col" style=""></xf:group>
+                </xf:group>
+                <xf:group tagname="tr" style="">
+                    <xf:group tagname="th" style="" class="w2tb_th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span style="" id="" label="아이디"></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" style="" class="w2tb_td">
+                        <xf:input style="width:230px;margin-left:2px;" id="ibxNewUserId" disabled="true" ref="data:dsSearchParam.keyNewUserId"></xf:input>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr" style="" class="">
+                    <xf:group tagname="th" style="" class="w2tb_th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span style="" id="" label="새 비밀번호"></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" style="" class="w2tb_td">
+                        <w2:attributes>
+                            <w2:colspan>1</w2:colspan>
+                            <w2:rowspan>1</w2:rowspan>
+                        </w2:attributes>
+                        <xf:input style="width:230px;" id="ibxNewPwEnc" ref="data:dsSearchParam.keyNewPwEnc" ev:onkeyup="scwin.ibxNewPwEnc_onkeyup" type="password"></xf:input>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr">
+                    <xf:group tagname="th" class="w2tb_th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="새 비밀번호 확인" style=""></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                        <w2:attributes></w2:attributes>
+                        <xf:input id="ibxNewPwEncConfirm" style="width:230px;" ref="data:dsSearchParam.keyNewPwEncConfirm" ev:onkeyup="scwin.ibxNewPwEncConfirm_onkeyup" type="password"></xf:input>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group style="" id="" class="bottombox">
+                <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnFindNew" class="btn_gcm" ev:onclick="scwin.btnFindNew_onclick">
+                    <xf:label>
+                        <![CDATA[확인]]>
+                    </xf:label>
+                </w2:anchor>
+                <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancel_onclick">
+                    <xf:label>
+                        <![CDATA[취소]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <xf:group class="" id="expiGp" style="">
+            <xf:group class="defaultbox" id="" style="">
+                <w2:textbox class="df_tt" id="" label="비밀번호 변경시" style="" tagname="h3"></w2:textbox>
+            </xf:group>
+            <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="width:Infinity%;" tagname="table">
+                <w2:attributes>
+                    <w2:summary>비밀번호 변경 정보 입력 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:150px;" tagname="col"></xf:group>
+                    <xf:group style="" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="아이디" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input disabled="true" id="ibxExpiUserId" style="width:230px;" ref="data:dsSearchParam.keyExpiUserId"></xf:input>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="" style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="현재 비밀번호" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:attributes>
+                            <w2:colspan>1</w2:colspan>
+                            <w2:rowspan>1</w2:rowspan>
+                        </w2:attributes>
+                        <xf:input id="ibxExpiCurPwEnc" style="width:230px;" ref="data:dsSearchParam.keyExpiCurPwEnc" ev:onkeyup="scwin.ibxExpiCurPwEnc_onkeyup" type="password"></xf:input>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr">
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="새 비밀번호" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:input id="ibxExpiPwEnc" style="width:230px;" ref="data:dsSearchParam.keyExpiPwEnc" ev:onkeyup="scwin.ibxExpiPwEnc_onkeyup" type="password"></xf:input>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr">
+                    <xf:group tagname="th" class="w2tb_th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="새 비밀번호 확인" style=""></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                        <w2:attributes></w2:attributes>
+                        <xf:input id="ibxExpiPwEncConfirm" style="width:230px;" ref="data:dsSearchParam.keyExpiPwEncConfirm" ev:onkeyup="scwin.ibxExpiPwEncConfirm_onkeyup" type="password"></xf:input>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="bottombox" id="" style="">
+                <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnFindChang" outerDiv="false" style="" ev:onclick="scwin.btnFindChang_onclick">
+                    <xf:label>
+                        <![CDATA[확인]]>
+                    </xf:label>
+                </w2:anchor>
+                <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnExpiCancel" outerDiv="false" style="" ev:onclick="scwin.btnExpiCancel_onclick">
+                    <xf:label>
+                        <![CDATA[취소]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+
+</html>

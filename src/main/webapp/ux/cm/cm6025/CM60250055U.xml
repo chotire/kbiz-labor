@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataMap baseNode="map" id="dsSearchParam" ev:onmodelchange="" ev:onsetdata="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드" />
+			            <w2:key dataType="text" id="siteNm" name="현장명" />
+			            <w2:key dataType="text" id="chargeName" name="고용관리책임자-성명" />
+			            <w2:key dataType="text" id="chargeNo" name="고용관리책임자-주민번호" />
+			            <w2:key id="chargePosition" name="고용관리책임자-직위" dataType="text"></w2:key>
+			            <w2:key id="chargeJob" name="고용관리책임자-직무내용" dataType="text"></w2:key>
+			            <w2:key id="chargePlace" name="고용관리책임자-근무지" dataType="text"></w2:key>
+			            <w2:key id="hpNo" name="전화번호-이동전화" dataType="text"></w2:key>
+			            <w2:key id="faxNo" name="FAX번호" dataType="text"></w2:key>
+			            <w2:key id="telNo" name="전화번호-유선" dataType="text"></w2:key>
+			            <w2:key id="deptAddress" name="소재지" dataType="text"></w2:key>
+			            <w2:key id="compInfo" name="명칭" dataType="text"></w2:key>
+			            <w2:key id="workYyMm" name="작업년월" dataType="text"></w2:key>
+			            <w2:key id="deptNo" name="사업장관리번호" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" repeatNode="map" id="dsSiteInfo" saveRemovedData="true">
+			        <w2:columnInfo>
+			            <w2:column id="siteNm" name="현장명" dataType="text"></w2:column>
+			            <w2:column id="address" name="주소" dataType="text"></w2:column>
+			            <w2:column id="telNo" name="전화번호" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			    </w2:dataList>
+			    <w2:dataList baseNode="list" repeatNode="map" id="dsUserInfo" saveRemovedData="true">
+			        <w2:columnInfo>
+			            <w2:column id="telNo" name="연락처" dataType="text"></w2:column>
+			            <w2:column id="userNm" name="이름" dataType="text"></w2:column>
+			            <w2:column id="jbposGbNm" name="직위명" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap">
+			        <w2:keyInfo>
+			            <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+			            <w2:key id="siteNm" name="현장명" dataType="text"></w2:key>
+			            <w2:key id="workYyMm" name="작업년월" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" repeatNode="map" id="dsReportChkInfo" saveRemovedData="true">
+			        <w2:columnInfo>
+			            <w2:column id="cnt" name="건수" dataType="number"></w2:column>
+			        </w2:columnInfo>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CM60250055U.xml 
+     * Program Name : 근로내역확인신고서
+     * Author : LEEJIHUN 
+     * Date : 2022.07.05
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     *     
+     **************************************************************************/
+	/************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    /************************************************************************************ 
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    // 화면 초기화(필수)
+    scwin.fnInitial = function () {
+        //조회년월 set
+        com.setUdcValue("udcStdYearMon", "calYearMonth", $p.getCurrentServerDate( "yyyyMM" ));  //년월
+        scwin.fnDsYymmSet();
+        
+        //세션의 현장코드 set
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+        com.commonUI();
+        // 현장 정보
+        scwin.fnDeptInfo();
+        // 사원 정보
+        scwin.fnEmpInfo();
+    };
+    
+    scwin.onpageload = function() {
+        scwin.fnInitial();
+    };
+    
+    /**************************************************************************
+     * [3] 사용자정의 함수
+     **************************************************************************/
+     /**************************************************************************
+     * 함 수 명: scwin.fnDsYymmSet
+     * 기 능: 년월정보 데이터맵에 세팅
+     **************************************************************************/
+    scwin.fnDsYymmSet = function() {
+        dsSearchParam.set( "workYyMm" , com.getUdcValue("udcStdYearMon", "calYearMonth")); //조회년월 세팅
+    };     
+
+    //현장 정보 셋팅
+    scwin.fnDeptInfo = function()
+    {
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());            
+        dsSearchMap.set("siteNm", wfmKeySiteInfo.getWindow().ibxKeySiteNm.getValue());
+    
+        // 소재지
+        dsSearchParam.set("deptAddress","");
+        // 전화번호-유선
+        dsSearchParam.set("telNo","");
+        // 전화번호-이동전화
+        dsSearchParam.set("hpNo","");
+        // FAX번호
+        dsSearchParam.set("faxNo","");
+        
+        ajaxLib.ajax("/cm/cm6025/CM60250000U/selectSiteInfo", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e) {
+                        dsSiteInfo.setJSON(result.data.dsSiteInfo);
+                        if(dsSiteInfo.getRowCount() > 0)
+                        {
+                            dsSearchParam.set("deptAddress",dsSiteInfo.getCellData( 0 , "address"));
+                            dsSearchParam.set("telNo",dsSiteInfo.getCellData( 0 , "telNo"));
+                            dsSearchParam.set("siteNm",dsSiteInfo.getCellData( 0 , "siteNm"));
+                        }
+                       },
+            errCallback : function(result, e) {}
+        });
+    }
+    
+    //사원 정보 셋팅
+    scwin.fnEmpInfo = function()
+    {
+        dsSearchParam.set( "compInfo" , "(주)소노인터내셔널" );
+        // 고용관리책임자-성명
+        dsSearchParam.set( "chargeName" , "" );
+        // 고용관리책임자-주민번호
+        dsSearchParam.set( "chargeNo" , "" );
+        // 고용관리책임자-직위
+        dsSearchParam.set( "chargePosition" , "" );
+        // 고용관리책임자-직무내용
+        dsSearchParam.set( "chargeJob" , "" );
+        // 고용관리책임자-근무지
+        dsSearchParam.set( "chargePlace" , "1" );
+    
+        ajaxLib.ajax("/cm/cm6025/CM60250000U/selectUserInfo", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e) {
+                        dsUserInfo.setJSON(result.data.dsUserInfo);
+                        if(dsUserInfo.getRowCount() > 0)
+                        {
+                            dsSearchParam.set("hpNo",dsUserInfo.getCellData( 0 , "telNo"));
+                            dsSearchParam.set("chargeName",dsUserInfo.getCellData( 0 , "userNm"));
+                            dsSearchParam.set("chargePosition", dsUserInfo.getCellData( 0 , "jbposGbNm") );
+                        }
+                       },
+            errCallback : function(result, e) {}
+        });
+    }
+    
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    //현장코드 변경 이벤트
+    scwin.WFrameSiteInfo_change_callback = function(){
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());            //현장 코드
+        dsSearchMap.set("siteNm", wfmKeySiteInfo.getWindow().ibxKeySiteNm.getValue());
+        scwin.fnDeptInfo();
+    };
+	
+    /*인쇄 클릭 이벤트*/
+	scwin.btnPrint_onclick = function() {
+        dsSearchParam.set( "workYyMm" , com.getUdcValue("udcStdYearMon", "calYearMonth")); //조회년월 세팅
+        
+        if(com.isEmpty(dsSearchParam.get("workYyMm")))
+        {
+            com.showMessage("CMW0025", "조회기간");    //$1은(는) 필수입력입니다.
+            return false;
+        }
+                
+        let lsWorkDate = dsSearchParam.get("workYyMm") + "01";
+        
+
+        dsSearchMap.set( "workYyMm" , lsWorkDate);
+        
+        //데이터가 있으면 CM60250055R.jrf 호출 
+        //데이터가 없으면 CM60250055R_EMPTY.jrf 호출
+         ajaxLib.ajax("/cm/cm6025/CM60250000U/selectReportCheckInfo", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e) {
+                        dsReportChkInfo.setJSON(result.data.dsReportChkInfo);
+                        let reportCnt = dsReportChkInfo.getCellData(0, "cnt");
+                        
+                        let conPlaceCodeVal = rboPlaceCodeType.getValue();
+                        //근무지
+                        if(conPlaceCodeVal == "0")      //본사
+                        {
+                            conPlaceCodeVal = "[■]본사 [□]해당 사업장 [□]다른 사업장";
+                        } 
+                        else if(conPlaceCodeVal == "1") //해당 사업장(현장)
+                        {
+                            conPlaceCodeVal = "[□]본사 [■]해당 사업장 [□]다른 사업장";
+                        }
+                        else
+                        {
+                            conPlaceCodeVal = "[□]본사 [□]해당 사업장 [■]다른 사업장";
+                        }
+                        let sYyyyMM = "[■]고용보험 [  ]산재보험 근로내용 확인신고서(일용근로자)(" + lsWorkDate.substring(0,4) + "  년  " + lsWorkDate.substring(4,6) + "  월분)";
+                        let reportParam = { 
+                                            FROM               : lsWorkDate                     // 2-작업일자
+                                          , SITE_CD            : dsSearchMap.get("siteCd")      // 1-현장코드
+                                          , CHARGE_NAME        : ibxChargeName.getValue()       // 9-고용관리책임자-성명
+                                          , DEPT_NO            : ibxDeptNo.getValue()           // 3-사업장관리번호
+                                          , DEPT_ADDRESS       : ibxDeptAddress.getValue()      // 4-소재지
+                                          , TEL_NO             : ibxTelNo.getValue()            // 5-전화번호-유선
+                                          , HP_NO              : ibxHpNo.getValue()             // 6-전화번호-이동전화
+                                          , FAX_NO             : ibxFaxNo.getValue()            // 7-FAX번호
+                                          , BIGO_SITE_NM       : txaBigoSiteNm.getValue()       // 8-공사명
+                                          , CHARGE_NO          : ibxChargeNo.getValue()         // 10-고용관리책임자-주민번호
+                                          , CHARGE_POSITION    : ibxChargePosition.getValue()   // 11-고용관리책임자-직위
+                                          , CHARGE_JOB         : ibxChageJob.getValue()         // 12-고용관리책임자-직무내용
+                                          , PLACE_CODE_TYPE    : conPlaceCodeVal                // 13-고용관리책임자-근무지
+                                          , COMP_INFO          : ibxCompInfo.getValue()         // 14-명칭
+                                          , YYYY_MM            : sYyyyMM                        // 15-년월분
+                                          , BUSINESS_NO        : "223-81-08341"                 // 16-사업장등록번호
+                                          };
+                        if(reportCnt == 0)
+                        {
+                            reportParam.YYYY_MM = "[■]고용보험 [  ]산재보험 근로내용 확인신고서(일용근로자)(       년        월분)";
+                            com.ubiReportPopup("CM60250056R_EMPTY.jrf", reportParam, "CM", "");   
+                        }
+                        else
+                        {
+                            com.ubiReportPopup("CM60250056R.jrf", reportParam, "CM", "");   
+                        }
+                       },
+            errCallback : function(result, e) {}
+        });
+	};
+	]]></script>		
+        <w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+        <w2:require src="/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>		
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+            <xf:group class="navigator_wrap" id="" style="">
+                <xf:group class="navigator" id="" style="">
+                    <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+                </xf:group>
+            </xf:group>
+		   <!--  <xf:group class="right_wrap" id="" style="">
+		        <xf:group id="" style=""></xf:group>
+		    </xf:group> -->
+		    <xf:group class="defaultbox" id="" style="">
+		        <xf:group class="right_wrap" id="" style="">
+		            <w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnPrint_onclick" id="btnPrint" outerDiv="false"
+		                style="">
+		                <xf:label><![CDATA[인쇄]]></xf:label>
+		            </w2:anchor>
+		        </xf:group>
+		    </xf:group>
+			<xf:group class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>사용자 정보 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:120px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+					<xf:group style="width:140.00px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+					<xf:group style="width:230.00px;" tagname="col"></xf:group>
+					<xf:group style="width:230.00px;" tagname="col"></xf:group>
+					<xf:group tagname="col" style="width:230.00px;"></xf:group>
+					<xf:group tagname="col" style="width:230.00px;"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="text-align:right;" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="현장명" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:attributes>
+                            <w2:colspan>9</w2:colspan>
+                        </w2:attributes>
+                        <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+					</xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th req" style="text-align:right;" tagname="th"><w2:attributes>
+						<w2:scope>row</w2:scope>
+						</w2:attributes><w2:span id="" label="조회년월" style=""></w2:span></xf:group>
+					<xf:group class="w2tb_td  req" style="" tagname="td">
+                        <w2:attributes>
+                            <w2:colspan>8</w2:colspan>
+                        </w2:attributes>
+                        <w2:udc_yearMonthcalendar id="udcStdYearMon" style=""></w2:udc_yearMonthcalendar>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr" style="">
+					<xf:group tagname="th" class="w2tb_th" style="text-align:right;">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="사업장관리번호" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes>
+                            <w2:colspan>4</w2:colspan>
+                        </w2:attributes>
+						<xf:input allowChar="0-9-" id="ibxDeptNo" autocomplete="off" initValue="" style="width: 200px;" ref="data:dsSearchParam.deptNo"></xf:input>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th" style="text-align:right;">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="명칭" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes>
+                            <w2:colspan>4</w2:colspan>
+                        </w2:attributes>
+						<xf:input allowChar="" id="ibxCompInfo" initValue="" autocomplete="off" style="width: 200px;" ref="data:dsSearchParam.compInfo" readOnly="true"></xf:input>				
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group tagname="th" class="w2tb_th" style="text-align:right;">
+						<w2:attributes>
+								<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="소재지" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes>
+                            <w2:colspan>9</w2:colspan>
+                        </w2:attributes>
+						<xf:input allowChar="" id="ibxDeptAddress" initValue="" autocomplete="off" style="width: 900px;" ref="data:dsSearchParam.deptAddress"></xf:input>
+					</xf:group>
+				</xf:group>
+                <xf:group tagname="tr" style="">
+                    <xf:group tagname="th" class="w2tb_th" style="text-align:right;">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="전화번호" style=""></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                        <w2:attributes>
+                          	<w2:colspan>2</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+                        </w2:attributes>
+                        <w2:span id="" label="(유선)" style=""></w2:span>
+                        <xf:input allowChar="0-9-" autocomplete="off" id="ibxTelNo" initValue="" style="width: 110px;" ref="data:dsSearchParam.telNo"></xf:input>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                        <w2:attributes>
+                            <w2:colspan>2</w2:colspan>
+                            <w2:rowspan>1</w2:rowspan>
+                        </w2:attributes>
+                        <w2:span id="" label="(이동전화)" style=""></w2:span>
+                        <xf:input allowChar="0-9-" autocomplete="off" id="ibxHpNo" initValue="" style="width: 130px;" ref="data:dsSearchParam.hpNo"></xf:input>
+                    </xf:group>                    
+                    <xf:group tagname="th" class="w2tb_th" style="text-align:right;">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="FAX번호" style=""></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                        <w2:attributes>
+                            <w2:colspan>4</w2:colspan>
+                        </w2:attributes>
+                        <xf:input allowChar="0-9-" autocomplete="off" id="ibxFaxNo" initValue="" style="width: 130px;" ref="data:dsSearchParam.faxNo"></xf:input>                
+                    </xf:group>
+                </xf:group>
+			 <xf:group class="" style="height:118.00px;" tagname="tr">
+				<xf:group class="w2tb_th" style="text-align:right;" tagname="th"><w2:attributes>
+					<w2:scope>row</w2:scope>
+					</w2:attributes><w2:span id="" label="공사명" style=""></w2:span>
+				</xf:group>
+				<xf:group class="w2tb_td" style="" tagname="td">
+					<w2:attributes>
+                        <w2:colspan>2</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:textarea id="txaBigoSiteNm" style="height:95px;"
+                        ref="data:dsSearchParam.siteNm" readOnly="false" autocomplete="off">
+                    </xf:textarea>
+				</xf:group>
+				<xf:group class="w2tb_th" style="text-align:right;" tagname="th">
+				    <w2:attributes>
+				        <w2:scope>row</w2:scope>
+				    </w2:attributes>
+				    <w2:span id="" label="고용관리&lt;br/&gt;책임자" style=""></w2:span>
+				</xf:group>
+				<xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>1</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <w2:span id="" label="(성명)" style=""></w2:span>
+                    <xf:input allowChar="" id="ibxChargeName" autocomplete="off" initValue="" style="width: 200px;" ref="data:dsSearchParam.chargeName"></xf:input>
+                    <w2:span id="" label="(직무내용)" style=""></w2:span>
+                    <xf:input allowChar="" id="ibxChageJob" initValue="" autocomplete="off" style="width: 200px;" ref="data:dsSearchParam.chargeJob"></xf:input>                            
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>1</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <w2:span id="" label="(주민번호)" style=""></w2:span>
+                    <xf:input allowChar="0-9-" autocomplete="off" id="ibxChargeNo" initValue="" style="width: 200px;" ref="data:dsSearchParam.chargeNo"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>4</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <w2:span id="" label="(근무지)" style="height:30px;"></w2:span>
+                    <xf:select1 appearance="full" class="" cols="1" id="rboPlaceCodeType" ref="data:dsSearchParam.chargePlace" renderType="radiogroup" rows="" selectedIndex="1"
+                        style="width:595px;height:30px;margin-top:5px;">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label>본사</xf:label>
+                                <xf:value><![CDATA[0]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label>해당사업장(현장)</xf:label>
+                                <xf:value><![CDATA[1]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label>다른사업장(현장)</xf:label>
+                                <xf:value><![CDATA[2]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select1>
+                    <w2:span id="" label="(직위)" style=""></w2:span>
+                    <xf:input allowChar="" id="ibxChargePosition" initValue="" style="width: 100px;margin-left:20px;" autocomplete="off"
+                        ref="data:dsSearchParam.chargePosition">
+                    </xf:input>
+                </xf:group>
+			 </xf:group>
+		</xf:group>
+	</xf:group>
+	</body>
+</html>

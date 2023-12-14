@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcmSiteMngctChgAproList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="siteNm" name="현장명" dataType="text"></w2:column>
+						<w2:column id="chgDgr" name="차수" dataType="text"></w2:column>
+						<w2:column id="ctrdAllBgtAmt" name="전체예산" dataType="text"></w2:column>
+						<w2:column id="ctrdLtyrPfmcAmt" name="전년누계실적" dataType="text"></w2:column>
+						<w2:column id="ctrdBfQtrBgtAmt" name="당년_기집행_예산" dataType="text"></w2:column>
+						<w2:column id="ctrdBfQtrPfmcAmt" name="당년_기집행_실적" dataType="text"></w2:column>
+						<w2:column id="ctrdThfqCnsltBfBgtAmt" name="금회품의예산_변경전" dataType="text"></w2:column>
+						<w2:column id="ctrdThfqSumAmt" name="금회품의예산_변경후" dataType="text"></w2:column>
+						<w2:column id="exctAsum" name="집행누계" dataType="text"></w2:column>
+						<w2:column id="asumExctRt" name="누계집행율" dataType="text"></w2:column>
+						<w2:column id="aproDtm" name="요청일자" dataType="text"></w2:column>
+						<w2:column id="dirmgExctAproCdNm" name="진행상태" dataType="text"></w2:column>
+						<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+						<w2:column id="exeYy" name="실행년도" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="exeYy" name="기준연도" dataType="text"></w2:key>
+						<w2:key id="dirmgExctAproCd" name="진행상태" dataType="text"></w2:key>
+						<w2:key id="listBack" name="목록화면 이동 FLAG" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsStdYyList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="cd" name="코드" dataType="text"></w2:column>
+						<w2:column id="cdNm" name="코드명" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM15152005U.xml
+ * Program Name : 현장관리비이력조회
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+     /************************************************************************************
+        DataCollection description
+
+        dsStdYyList: 조회조건 기준년도
+        dsTcmSiteMngctChgAproList: 현장별 차수현황 GRID
+        dsSearchMap: 검색조건 parameter
+     ************************************************************************************/
+
+	 /************************************************************************************
+	 	결재상태
+
+		CM00401301	[미요청]		현장_결재상신
+		CM00401302	[요청]			현장_결재승인, 공무팀_기안취소
+		CM00401303	[공무팀결재중]	공무팀_결재상신
+		CM00401304	[완료]			공무팀_결재승인
+		CM00401305	[공무팀_반송]
+		CM00401306	[공무팀_부결]
+     ************************************************************************************/
+
+    /************************************************************************************
+    *  [1] 전역변수
+    ************************************************************************************/
+
+    /************************************************************************************
+    *  [2] onpageload(초기화포함)
+    ************************************************************************************/
+	scwin.onpageload = function() {
+	    //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+        if($w.getParameter("paramKeyListBack") == "Y"){
+        	wfmKeySiteInfo.getWindow().ibxKeySiteCd.setValue( $w.getParameter("paramKeySiteCd") );	//현장코드
+        	wfmKeySiteInfo.getWindow().ibxKeySiteNm.setValue( $w.getParameter("paramKeySiteNm") );	//현장명
+        	dsSearchMap.set( "siteCd" , $w.getParameter("paramKeySiteCd") );  //현장 코드
+        	dsSearchMap.set( "listBack" , "Y" );//목록화면 이동 FLAG
+        }else{
+	        //세션의 현장코드를 셋팅
+	        cmCom.setSite(wfmKeySiteInfo.getWindow());
+        }
+
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+     //기준연도 조회
+    scwin.fnStdYyList = function() {
+    	grdTcmSiteMngctChgAproList.initGrid();	//현장관리비 내역 GRID 초기화
+        ajaxLib.ajax("/cm/cm1515/CM15150000U/selectStdYyList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : //"fnCallback",
+                function(result, e){
+                	dsStdYyList.removeAll();
+	                dsStdYyList.setJSON(result.data);
+
+	                if(dsSearchMap.get( "listBack" ) == "Y"){//목록화면 이동 FLAG
+	                	sbxStdYy.setValue( $w.getParameter("paramKeyExeYy") );//기준년도
+	                	dsSearchMap.set( "listBack" , "N" );
+	                	scwin.btnFind_onclick();
+	                }else{
+	                	scwin.fnStdYySet();//기준년도 default 셋팅
+	                }
+
+            	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+	//기준년도 default 셋팅
+	scwin.fnStdYySet = function() {
+		var nowYy = scwin.$w.getCurrentServerDate( "yyyy" );//현재년도
+		var _idx = dsStdYyList.getMatchedIndex( "cd" , nowYy , true );
+		if(_idx == ""){//현재년도와 매칭되는 값이 존재 하지 않으면.
+			sbxStdYy.setValue( dsStdYyList.getCellData( dsStdYyList.getTotalRow()-1 , "cd" ) );//마지막 년도로 셋팅
+		}else{
+			sbxStdYy.setValue( nowYy );//현재 년도로 셋팅
+		}
+	};
+
+	//조회
+    scwin.fnSearch = function() {
+        ajaxLib.ajax("/cm/cm1515/CM15152005U/selectHistDgrList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : //"fnCallback",
+                function(result, e){
+	                dsTcmSiteMngctChgAproList.setJSON(result.data.dsTcmSiteMngctChgAproList);
+	                com.setUdcValue("dsTotalCount","udcListCount",dsTcmSiteMngctChgAproList.getTotalRow());   //GRID ROW COUNT
+
+	                if(sbxStdYy.getValue() != ""){
+		               	grdTcmSiteMngctChgAproList.setHeaderValue( "column72" , sbxStdYy.getValue() + "년도 기집행 금액" );//헤더 TITLE변경
+		               	var bfYear = parseInt(sbxStdYy.getValue(), 10)-1;//전년도
+		               	grdTcmSiteMngctChgAproList.setHeaderValue( "column90" , "전년(" + bfYear + ")<br/>누계실적" );//헤더 TITLE변경
+	                }
+            	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//조회 클릭 이벤트
+	scwin.btnFind_onclick = function() {
+		if(dsSearchMap.get( "siteCd" ) == ""){
+			com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+			return;
+		}
+       	scwin.fnSearch();
+	};
+
+	//기준연도 SELECT BOX 변경 이벤트
+	scwin.sbxStdYy_onchange = function() {
+		//scwin.fnSearch();
+	};
+
+	/* 현장코드 변경 이벤트 */
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsStdYyList.removeAll();//기준년도
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+		dsSearchMap.set( "exeYy" , "" );//기준년도
+		//기준연도 조회
+        scwin.fnStdYyList();
+	};
+
+	//현장별 차수현황 GRID 클릭 이벤트
+	scwin.grdTcmSiteMngctChgAproList_oncellclick = function(row,col) {
+		var _columnID = grdTcmSiteMngctChgAproList.getColumnID( col );
+		if(_columnID == "siteNm") {//현장명
+        	var sData = {
+        					 "paramKeySiteCd" : dsTcmSiteMngctChgAproList.getCellData( row , "siteCd" )	//현장코드
+        					,"paramKeySiteNm" : dsTcmSiteMngctChgAproList.getCellData( row , "siteNm" )	//현장명
+        					,"paramKeyExeYy" : dsTcmSiteMngctChgAproList.getCellData( row , "exeYy" )	//기준년도
+        					,"paramKeyChgDgr" : dsTcmSiteMngctChgAproList.getCellData( row , "chgDgr" ) + ""	//차수
+        				};
+        	com.detailOpen("현장관리비이력조회(상세)", "CM15152000U", "/ux/cm/cm1515/CM15152000U.xml", "1", sData);
+		}
+	};
+	
+	//엑셀다운로드
+	scwin.btnExcelDwn_onclick = function() {
+		var result = [];
+		var totalCol = grdTcmSiteMngctChgAproList.getTotalCol();
+		for(var i = 0; i < totalCol; i++) {
+			if (!grdTcmSiteMngctChgAproList.getColumnVisible(i)) {
+				result.push(i);
+			}
+		}
+		var excelOpt = {
+			 fileName: "현장관리비이력조회.xlsx"    //또는 xlsx 확장자 사용
+			,removeColumns: result.join(",")
+		    ,useSubTotal: true    			//colMerge된 컬럼을 Merge해서 출력 할 지 여부
+		    ,colMergeTextAlign: "center"    //colMerge된 컬럼의 textAlign설정 (bottom, center, top 설정)
+			,colMerge : true
+            ,headerFontColor : "#FFFFFF"    // Header Font Color
+            ,headerColor : "#D9D9D9"        // Header Back Color
+            ,subTotalColor : "#FCE4D6"      // SubTotal Back Color
+            ,footerColor : "#BDD7EE"        // Footer Color
+		};  //excel download 옵션
+		grdTcmSiteMngctChgAproList.advancedExcelDownload( excelOpt );		
+	};
+	]]></script>
+
+
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				</xf:group><xf:group class="tbl_search" id="" style="">
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:94.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기준년도" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxStdYy"
+								ref="data:dsSearchMap.exeYy" style="width:100px;" submenuSize="auto" textAlign="left"
+								ev:onchange="scwin.sbxStdYy_onchange">
+								<xf:choices>
+									<xf:itemset nodeset="data:dsStdYyList">
+										<xf:label ref="cdNm"></xf:label>
+										<xf:value ref="cd"></xf:value>
+									</xf:itemset>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+
+			</xf:group>
+
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="현장별 차수현황" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm excel_down" clickEventElement=""
+							ev:onclick="scwin.btnExcelDwn_onclick" id="btnExcelDwn" localeRef="" outerDiv="false" style=""
+							toolTip="엑셀다운로드">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+				<w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+			</xf:group>
+			<w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight"
+				dataList="data:dsTcmSiteMngctChgAproList" fixedColumnWithHidden="true" focusMode="row"
+				id="grdTcmSiteMngctChgAproList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+				rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdTcmSiteMngctChgAproList_oncellclick" sortable="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column21" inputType="text" style="" value="현장명" width="170"
+							sortable="true" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column hidden="false" removeBorderStyle="false" width="60" inputType="text" style=""
+							id="column87" value="차수" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="\;" id="column78"
+							value="전체예산" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column hidden="false" removeBorderStyle="false" width="120" inputType="text" style=""
+							id="column90" value="전년&lt;br/&gt;누계실적" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="240" inputType="text" style="" id="column72"
+							value="당년도 기집행 금액" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="240" inputType="text" style="" id="column66"
+							value="금회품의예산" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column60"
+							value="집행누계" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column57"
+							value="누계집행율" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column84"
+							value="요청일자" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column81"
+							value="진행상태" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="height:68px;"
+							id="column94" value="현장코드" blockSelect="false" displayMode="label" colSpan="" rowSpan="2" hidden="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="height:68px;"
+							id="column91" value="실행년월" blockSelect="false" displayMode="label" colSpan="" rowSpan="2" hidden="true">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column73"
+							value="예산" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column70"
+							value="실적" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column67"
+							value="변경전" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column64"
+							value="변경후" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" id="siteNm" inputType="link" style="" textAlign="left" value=""
+							width="170" class="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="60" inputType="text" style="" id="chgDgr" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="ctrdAllBgtAmt"
+							value="" blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,##0" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="ctrdLtyrPfmcAmt"
+							value="" blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,##0" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="ctrdBfQtrBgtAmt"
+							value="" blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,##0" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="ctrdBfQtrPfmcAmt"
+							value="" blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,##0" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style=""
+							id="ctrdThfqCnsltBfBgtAmt" value="" blockSelect="false" displayMode="label" textAlign="right"
+							displayFormat="#,##0" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="ctrdThfqSumAmt"
+							value="" blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,##0" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="exctAsum"
+							value="" blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,##0" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="asumExctRt"
+							value="" blockSelect="false" displayMode="label" displayFormat="" dataType="" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="calendar" style="" id="aproDtm"
+							value="" blockSelect="false" displayMode="label" displayFormat="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style=""
+							id="dirmgExctAproCdNm" value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="siteCd" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="exeYy" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

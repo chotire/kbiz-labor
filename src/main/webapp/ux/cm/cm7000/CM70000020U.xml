@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" id="dsTcmEqpmVendrList" repeatNode="map" saveRemovedData="true" style="">
+			    	<w2:columnInfo>
+			    		<w2:column dataType="text" id="tradeCd" name="업체코드"></w2:column>
+			    		<w2:column dataType="text" id="hireTradeNm" name="거래처명"></w2:column>
+			    		<w2:column dataType="text" id="reprNm" name="대표자"></w2:column>
+			    		<w2:column id="addr" name="주소" dataType="text"></w2:column>
+                        <w2:column dataType="text" id="telNo" name="전화번호"></w2:column>
+			    		<w2:column dataType="text" id="corpRegNo" name="등록번호"></w2:column>
+			    		<w2:column dataType="text" id="rmkCn" name="참고사항"></w2:column>
+			    	</w2:columnInfo>
+			    	<w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="hireTradeNm" name="거래처명"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM700000020U.xml
+ * Program Name : 임차업체 목록
+ * Author : dslee 
+ * Date : 2022.06.10
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ * 2022.06.10   dslee    최초작성
+ **************************************************************************/
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/ 
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {
+       scwin.btnFind_onclick(); //추가 코드값 맵핑 호출
+       com.commonUI();
+    };
+/**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/	
+/**************************************************************************
+ * [4] Callback
+ **************************************************************************/
+/************************************************************************************
+ * [5] Event 함수
+ ************************************************************************************/
+	//조회 클릭
+	scwin.btnFind_onclick = function() {
+        ajaxLib.ajax("/cm/cm7000/CM70000020U/selectTcmEqpmVendrList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e) {
+                        dsTcmEqpmVendrList.setJSON(result.data);
+                        com.setUdcValue("dsTotalCount","udcListCount",dsTcmEqpmVendrList.getTotalRow());
+            },
+            errCallback : function(result, e) {}
+        });       
+	};
+
+    //엑셀다운
+	scwin.btnExcelDwn_onclick = function() {
+        grdTcmEqpmVendrList.advancedExcelDownload({
+            fileName:"임차업체목록.xlsx",
+            useSubTotal : true,             // Sub-Total 표시 
+            headerFontColor : "#FFFFFF",    // Header Font Color
+            headerColor : "#D9D9D9",        // Header Back Color
+            subTotalColor : "#FCE4D6",      // SubTotal Back Color
+            footerColor : "#BDD7EE"         // Footer Color
+        });
+	};
+    
+    //회사명 엔터 이벤트
+	scwin.ibxKeyTradeNm_onkeydown = function(e) {
+		if (e.keyCode == 13){
+            dsSearchMap.set("hireTradeNm", ibxKeyTradeNm.getValue());
+            scwin.btnFind_onclick();
+        }
+	};
+	]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+		    <xf:group class="navigator_wrap" id="" style="">
+		        <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+		    </xf:group>
+		    <xf:group class="tbl_search" id="grpSearch" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:120.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+					    <xf:group class="w2tb_th" style="" tagname="th">
+					        <w2:attributes>
+					            <w2:scope>row</w2:scope>
+					        </w2:attributes>
+					        <w2:span class="" id="" label="회사명" style=""></w2:span>
+					    </xf:group>
+					    <xf:group class="w2tb_td" style="" tagname="td">
+					        <xf:input allowChar="" class="" dataType="" disabled="" id="ibxKeyTradeNm" mandatory=""
+					            ref="data:dsSearchMap.hireTradeNm" style="width:250px;" ev:onkeydown="scwin.ibxKeyTradeNm_onkeydown">
+					            <w2:attributes>
+					                <w2:value></w2:value>
+					            </w2:attributes>
+					        </xf:input>
+					    </xf:group>
+					</xf:group>
+				</xf:group><xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+		    <xf:group class="defaultbox" id="" style="">
+		        <w2:textbox class="df_tt" id="" label="임차업체 목록" style="" tagname="h3"></w2:textbox>
+                <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+		        <xf:group class="right_wrap" id="" style="">
+		            <xf:group id="" style="">
+		                <w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+		                    outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+		                    <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+		                </w2:anchor>
+		            </xf:group>
+		        </xf:group>
+		    </xf:group>
+		    <w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsTcmEqpmVendrList" fixedColumnWithHidden="true"
+		        focusMode="row" id="grdTcmEqpmVendrList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+		        rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" checkReadOnlyOnPaste="true"
+		        enterKeyMove="down" keyMoveEditMode="true" preventAddRowOnPaste="true" ev:oncellclick="scwin.grdTcmEqpmCdList_oncellclick">
+		        <w2:header id="header1" style="">
+		            <w2:row id="row2" style="">
+		                <w2:column blockSelect="false" id="column23" inputType="text" rowSpan="2" value="No." width="50"
+		                    style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column106" value="업체코드" blockSelect="false"
+		                    displayMode="label" rowSpan="2" class="" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" style="height:68px;" id="column111" value="거래처명"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column107" value="대표자" blockSelect="false"
+		                    displayMode="label" rowSpan="2" class="" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="300" inputType="text" id="column66" value="주소" blockSelect="false"
+		                    displayMode="label" rowSpan="2" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:68px;" id="column114" value="전화번호"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:68px;" id="column117" value="등록번호"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:68px;" id="column118" value="참고사항"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+		                </w2:column>
+		            </w2:row>
+		            <w2:row id="row6" style=""></w2:row>
+		        </w2:header>
+		        <w2:gBody id="gBody4" style="">
+		            <w2:row id="row5" style="">
+		                <w2:column blockSelect="false" expression="rowindex()+1" id="column24" inputType="expression" width="40">
+		                </w2:column>
+		                <w2:column blockSelect="false" id="tradeCd" inputType="text" removeBorderStyle="false" style="" textAlign="center"
+		                    value="" width="100" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="hireTradeNm" value=""
+		                    textAlign="left" blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="reprNm" blockSelect="false" textAlign="left"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="300" inputType="text" id="addr" blockSelect="false" textAlign="left"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="telNo" value="" textAlign="left"
+		                    displayFormatter="com.phoneFormat" maxByteLength="" maxlength="13" blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="corpRegNo" value="" textAlign="left"
+		                    blockSelect="false" displayMode="label" displayFormat="######-#######">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="rmkCn" value="" textAlign="left"
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		            </w2:row>
+		        </w2:gBody>
+		    </w2:gridView>
+		</xf:group>
+	</body>
+</html>

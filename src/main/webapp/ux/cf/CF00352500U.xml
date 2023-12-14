@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00352500U.xml
+     * Program Name : 메일테스트
+     * Author : 남상열 (tpnsr)
+     * Date : 2019.03.18
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     *     
+     **************************************************************************/
+    /************************************************************************************ 
+     *  [1] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        scwin.initScreen();
+    };
+
+    scwin.onpageunload = function () {
+    };
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function () {
+    	var userId = sessionStorage.getItem("userId") || '';
+    	var userNm = sessionStorage.getItem("userNm") || '';
+    	
+    	ibxSenderAccount.setValue(userId+"@sdcit.sdcitGroup.com");
+    	ibxSenderMailAddress.setValue(userId+"@sdcit.sdcitGroup.com");
+    	ibxSenderName.setValue(userNm);
+    	ibxMailCn.setValue("<p>&nbsp;메일내용을 입력해 주세요</p><table border='1' cellpadding='1' cellspacing='1' style='width:500px'><tbody><tr>	<td style='background-color:blue'>a1</td><td>d2</td></tr><tr><td>b3</td><td>e4</td></tr><tr><td>c5</td><td>f6</td></tr></tbody></table><p>메일내용을 입력해 주세요</p>");
+    	receiverTo.setValue(userId+"@sdcit.co.kr");
+    	receiverToName.setValue(userNm);
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수 
+     ************************************************************************************/
+    scwin.svcId = "";
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnSendMail
+     * 기 능: 메일전송
+     **************************************************************************/
+    scwin.fnSendMail = function () {
+
+        scwin.svcId = "sendMail";
+        var tmpIbxMailCn="";
+        tmpIbxMailCn = ibxMailCn.getValue();
+        tmpIbxMailCn = tmpIbxMailCn.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+ 
+        if (confirm("메일전송 하시겠습니까?")) {
+            ajaxLib.ajax("/cf/CFTelepia/sendMail", {
+                mode: "asynchronous",
+                method: "POST", 
+                requestData: {
+                    title:  ibxTitle.getValue(),
+                    content: "<html><body><table border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr align=\"center\"><td nowrap height=\"11\">"+ tmpIbxMailCn +"</td></tr></table></body></html>",
+                    senderAccount: ibxSenderAccount.getValue(), //보낸이계정
+                    senderMailAddress: ibxSenderMailAddress.getValue(), //보낸이 메일 주소
+                    senderName: ibxSenderName.getValue(), //보낸이 성명
+                    receiverTos: scwin.fnMakeReceiveTosList(), //받는이 이메일 , 받는이 이름 세팅
+                    aflId: ibxAflId.getValue(), //파일첨부 aflId
+                    lockContent: cbxLockContent.getValue(), //내용변경금지 Y/N
+                    isScheduled: cbxIsScheduled.getValue(), //예약전송여부 Y/N
+                    isSaveInSent: cbxIsSaveInSent.getValue(), //보낸메일저장 Y/N
+                    isUi: cbxIsUi.getValue() //Y : UI가있는 메일발송 , N: 다이렉트 메일발송
+                    //,senderPassword      : ibxSenderPassword.getValue()      //패스워드 (사용안함) 
+                    //,isNotified          : cbxIsNotified.getValue()          //수신확인 메일전송 여부 (사용안함)
+                    //,isNotifyDelivered   : cbxIsNotifyDelivered.getValue()   //배달되었을때알림 (사용안함)
+                    //,isNotifyRead        : cbxIsNotifyRead.getValue()        //읽을을때 알림 (사용안함) 
+                },
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnMakeReceiveTosList
+     * 기 능: 수신자 정보 set
+     **************************************************************************/
+    scwin.fnMakeReceiveTosList = function () {
+        var array = new Array();
+        var vo = new Object();
+        vo.mailAddress = receiverTo.getValue();
+        vo.name = receiverToName.getValue();
+        array.push(vo);
+
+        return array;
+    };
+    
+    // 싱글첨부파일 다운로드 매핑 : 첨부파일ID입력 후 클릭(aflId를 미리 입력해 놓으면 미리 보여준다)
+	/**************************************************************************
+	* 함 수 명: scwin.fnFileLink
+	* 기 능: 파일다운로드
+	**************************************************************************/
+    scwin.fnFileLink = function(){
+    	
+        var aflId   = ibxAflId.getValue(); // 아이디 매핑
+        var aflData = com.udcAflSingle(aflId); // 싱글 데이터 불러오기
+        
+        if(aflId == "" || aflData == null)
+        {
+        	ibxAflId.setValue("");
+        	ibxDownFile.setValue("");
+         	return;
+        }
+        
+        ibxDownFile.setValue(aflData.aflNm); // 파일명 입력
+        // 클릭이벤트 입력
+        var href = "/cf/CF00350000P/downloadMAV?aflp="+aflData.aflp;
+        $("#"+ibxDownFile.getID()).off("click").on("click", function() {
+            $.fileDownload(href);
+        });
+    };
+
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    /* 결과 후처리*/
+    scwin.fnCallback = function (result, e) {
+        switch (scwin.svcId) {
+            case "sendMail":
+                var data = result.data.mailData;
+                var isUi = data.isUi;
+                var xml = data.xml;
+                var url = data.url;
+                if ("Y" == isUi) {
+                    var $form = $("<form></form>");
+
+                    var newwin = window.open('about:blank', 'gw_mail', 'top=0, left=0, width=1014, height=694, status=yes, toolbar=no,location=no,directories=no,menubar=no,scrollbars=yes,resizable=no');
+                    newwin.focus(); //새창을 띄울때 항상 위
+
+                    $form.attr("target", "gw_mail");
+                    $form.attr("action", url);
+                    $form.attr("method", "post")
+                    $form.attr("accept-language", "ko")
+                    $form.appendTo('body');
+                    var $input = $("<input></input>");
+                    $input.attr({
+                        type: "hidden",
+                        name: "Message",
+                        id: "Message",
+                        value: xml
+                    });
+                    $input.appendTo($form);
+                    $form.submit();
+                } else {
+                    alert("다이렉트 메일 발송완료");
+                }
+
+                break;
+        }
+    };
+
+    /* 에러 후처리 */
+    scwin.fnErrCallBack = function (e) {
+        switch (scwin.svcId) {
+            case "sendMail":
+                console.log('search Error!!!!!!!!!!!');
+                break;
+        }
+    };
+
+    /*파일업로드 팝업 callBack method*/
+    scwin.fnSingleUploadCallBack = function (result) {
+    	ibxAflId.setValue(result.aflId);
+        ibxJobGbCd.setValue(result.jobGbCd);
+        ibxMenuId.setValue(result.menuId);
+        scwin.fnFileLink(); // 파일보기 및 다운로드 매핑
+    };
+
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnTrsmMail_onclick
+     * 기 능: 전송버튼 onClick 이벤트
+     **************************************************************************/
+    scwin.btnTrsmMail_onclick = function () {
+
+        if (!com.validateGroup([grpMailArea])) {
+            return;
+        }
+
+        scwin.fnSendMail();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnFileUlpd_onclick
+     * 기 능: 파일업로드 onClick 이벤트
+     **************************************************************************/
+    scwin.btnFileUlpd_onclick = function () {
+
+        var sAflId = ibxAflId.getValue();
+        var sJobGbCd = ibxJobGbCd.getValue();
+        var sMenuId = ibxMenuId.getValue();
+
+        var popOps = {
+
+            pid: "AflPopup" + "_" + new Date().getTime(),
+            url: "/ux/cf/CF00350002P.xml",
+            modal: true //true || false
+                ,
+            popup_name: "파일 첨부",
+            callbackFn: "scwin.fnSingleUploadCallBack",
+            widType: "M",
+            height: 270,
+            data: {
+                aflId: sAflId,
+                jobGbCd: sJobGbCd,
+                menuId: sMenuId,
+                fileExt: "txt,xlsx,doc,pdf",
+                usage: "INS"
+            }
+        };
+        com.popup_open(popOps);
+    };
+
+	]]></script>
+</head>
+<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="navigator_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>
+        </xf:group>
+        <xf:group class="defaultbox" id="" style="">
+            <w2:textbox class="df_tt" id="" label="메일정보" style="" tagname="h3"></w2:textbox>
+            <xf:group class="fr" id="" style="">
+                <xf:group class="right_wrap" id="" style="">
+                    <xf:group style="" id="">
+                        <w2:anchor class="btn_gcm" id="btnTrsmMail" outerDiv="false" style="" ev:onclick="scwin.btnTrsmMail_onclick">
+                            <xf:label>
+                                <![CDATA[전송]]>
+                            </xf:label>
+                        </w2:anchor>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+        <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpMailArea" style="" tagname="table">
+            <w2:attributes>
+                <w2:summary>메일정보 입력 테이블 입니다.</w2:summary>
+            </w2:attributes>
+            <xf:group tagname="colgroup">
+                <xf:group style="width:155px;" tagname="col"></xf:group>
+                <xf:group style="width: auto;" tagname="col"></xf:group>
+                <xf:group style="width:141px;" tagname="col"></xf:group>
+                <xf:group style="width: auto;" tagname="col"></xf:group>
+                <xf:group style="width:123px;" tagname="col"></xf:group>
+                <xf:group style="width: auto;" tagname="col"></xf:group>
+                <xf:group tagname="col" style="width:155px;"></xf:group>
+                <xf:group tagname="col" style="width: auto;"></xf:group>
+            </xf:group>
+            <xf:group style="" tagname="tr">
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="보내는사람 계정" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="ibxSenderAccount" style="width:100%;" ref="" class="req" mandatory="true" initValue=""></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th  req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="보내는사람 메일" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="ibxSenderMailAddress" style="width:100%;" ref="" class="req" mandatory="true" initValue=""></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="보내는사람명" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="ibxSenderName" style="width:100%;" ref="" mandatory="true" class="req" initValue="">
+                    </xf:input>
+                </xf:group>
+                <xf:group tagname="th" class="w2tb_th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="보내는사람 비밀번호" style=""></w2:span>
+                </xf:group>
+                <xf:group tagname="td" class="w2tb_td">
+                    <w2:attributes></w2:attributes>
+                    <xf:input id="ibxSenderPassword" style="width:100%;" ref=""></xf:input>
+                </xf:group>
+            </xf:group>
+            <xf:group style="" tagname="tr">
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="받는사람 메일" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="receiverTo" style="width:100%;" class="req" mandatory="true" initValue=""></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="받는사람명" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="receiverToName" style="width:100%;" class="req" mandatory="true" initValue=""></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="첨부파일" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                    </w2:attributes>
+                    <w2:anchor outerDiv="false" id="ibxDownFile">
+                           <xf:label><![CDATA[파일링크위치]]></xf:label>
+                        </w2:anchor>
+    					<xf:trigger id="btnFileUlpd" style="" type="button" ev:onclick="scwin.btnFileUlpd_onclick">
+    					   <xf:label><![CDATA[단건첨부]]></xf:label>
+    					</xf:trigger>
+                    <xf:input adjustMaxLength="false" id="ibxJobGbCd" style="display:none;width:50px" initValue="CF"></xf:input>
+                    <xf:input adjustMaxLength="false" id="ibxMenuId" style="display:none;width:50px" initValue="CF00352500U"></xf:input>
+                    <xf:input adjustMaxLength="false" id="ibxAflId" style="display:none;width:50px" initValue=""></xf:input>
+                </xf:group>
+            </xf:group>
+            <xf:group style="" tagname="tr">
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="본문 변경금지" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:select appearance="full" class="" cols="3" id="cbxLockContent" renderType="checkboxgroup" rows="" selectedindex="-1" style="" ref="" falseValue="N">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[]]></xf:label>
+                                <xf:value><![CDATA[Y]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="예약 전송여부" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:select appearance="full" class="" cols="3" id="cbxIsScheduled" ref="" renderType="checkboxgroup" rows="" selectedindex="-1" style="" falseValue="N">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[]]></xf:label>
+                                <xf:value><![CDATA[Y]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="보낸편지함에&lt;br&gt;저장여부" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:select appearance="full" class="" cols="3" id="cbxIsSaveInSent" ref="" renderType="checkboxgroup" rows="" selectedindex="-1" style="" falseValue="N">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[]]></xf:label>
+                                <xf:value><![CDATA[Y]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select>
+                </xf:group>
+                <xf:group class="w2tb_th" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="수신확인&lt;br/&gt;메일전송 여부" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" tagname="td">
+                    <w2:attributes></w2:attributes>
+                    <xf:select appearance="full" class="" cols="3" id="cbxIsNotified" ref="" renderType="checkboxgroup" rows="" selectedindex="-1" style="" falseValue="N">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[]]></xf:label>
+                                <xf:value><![CDATA[Y]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select>
+                </xf:group>
+            </xf:group>
+            <xf:group style="" tagname="tr">
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="배달되었을때 알림" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:select appearance="full" class="" cols="3" id="cbxIsNotifyDelivered" ref="" renderType="checkboxgroup" rows="" selectedindex="-1" style="" falseValue="N">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[]]></xf:label>
+                                <xf:value><![CDATA[Y]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="읽었을때 알림" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:select appearance="full" class="" cols="3" id="cbxIsNotifyRead" ref="" renderType="checkboxgroup" rows="" selectedindex="-1" style="" falseValue="N">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[]]></xf:label>
+                                <xf:value><![CDATA[Y]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="UI" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:select appearance="full" class="" cols="3" id="cbxIsUi" ref="" renderType="checkboxgroup" rows="" selectedindex="-1" style="" falseValue="N">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[]]></xf:label>
+                                <xf:value><![CDATA[Y]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" tagname="td">
+                </xf:group>
+            </xf:group>
+	        <xf:group style="" tagname="tr">
+	                <xf:group class="w2tb_th req" style="" tagname="th">
+	                    <w2:attributes>
+	                        <w2:scope>row</w2:scope>
+	                    </w2:attributes>
+	                    <w2:span id="" label="제목" style=""></w2:span>
+	                </xf:group>
+	                <xf:group class="w2tb_td" style="" tagname="td">
+	                    <w2:attributes>
+	                        <w2:colspan>7</w2:colspan>
+	                    </w2:attributes>                
+	                    <xf:input id="ibxTitle" style="width:100%;" ref="" mandatory="true" class="req" initValue="메일 테스트입니다."></xf:input>
+	                </xf:group>        
+	        </xf:group>              
+	        <xf:group style="" tagname="tr">
+	                <xf:group class="w2tb_th req" style="" tagname="th">
+	                    <w2:attributes>
+	                        <w2:scope>row</w2:scope>
+	                    </w2:attributes>
+	                    <w2:span id="" label="본문" style=""></w2:span>
+	                </xf:group>
+	                <xf:group class="w2tb_td" style="" tagname="td">
+	                    <w2:attributes>
+	                        <w2:colspan>7</w2:colspan>
+	                    </w2:attributes>                
+	                    <xf:textarea id="ibxMailCn"  style="width:100%;"  initValue="메일 테스트" ></xf:textarea>
+	                </xf:group>        
+	        </xf:group>            
+        </xf:group>
+    </xf:group>
+</body>
+</html>

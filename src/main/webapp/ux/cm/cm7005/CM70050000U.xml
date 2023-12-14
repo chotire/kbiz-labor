@@ -1,0 +1,963 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataMap baseNode="map" id="dsSearchMap">
+			        <w2:keyInfo>
+			            <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+			            <w2:key id="frmRunDt" name="운행_일자_from" dataType="text"></w2:key>
+			            <w2:key id="toRunDt" name="운행_일자_to" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" repeatNode="map" id="dsTcmEqpmRunDlogList" saveRemovedData="true">
+			        <w2:columnInfo>
+			            <w2:column id="siteCd" name="현장명" dataType="text"></w2:column>
+			            <w2:column id="runDt" name="운행일자" dataType="text"></w2:column>
+			            <w2:column id="runSeq" name="운행순번" dataType="text"></w2:column>
+			            <w2:column id="eqpmCd" name="장비코드" dataType="text"></w2:column>
+			            <w2:column id="eqpmNm" name="장비명" dataType="text"></w2:column>
+			            <w2:column id="hireTradeNm" name="장비업체" dataType="text"></w2:column>
+			            <w2:column id="payGbVal" name="지불구분" dataType="text"></w2:column>
+			            <w2:column id="levyAmt" name="부과금액" dataType="number"></w2:column>
+			            <w2:column id="vatAmt" name="부가세액" dataType="number"></w2:column>
+			            <w2:column id="amtSum" name="계" dataType="number"></w2:column>
+			            <w2:column id="fuelDdctAmt" name="주유공제" dataType="number"></w2:column>
+			        </w2:columnInfo>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsTcmEqpmRunDlogMap">
+			        <w2:keyInfo>
+			            <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+			            <w2:key id="runDt" name="운행일자" dataType="text"></w2:key>
+			            <w2:key id="runSeq" name="운행순번" dataType="text"></w2:key>
+			            <w2:key id="eqpmCd" name="장비코드" dataType="text"></w2:key>
+			            <w2:key id="hireTradeNm" name="임차_거래처_명" dataType="text"></w2:key>
+			            <w2:key id="eqpmNm" name="장비명" dataType="text"></w2:key>
+			            <w2:key id="stdrNm" name="규격" dataType="text"></w2:key>
+			            <w2:key id="bgtItemiCd" name="투입공종코드" dataType="text"></w2:key>
+			            <w2:key id="bgtItemiNmNavi" name="투입공종명" dataType="text"></w2:key>
+			            <w2:key id="payGbVal" name="지급구분" dataType="text"></w2:key>
+			            <w2:key id="workTm" name="작업시간" dataType="text"></w2:key>
+			            <w2:key id="waitTm" name="대기시간" dataType="text"></w2:key>
+			            <w2:key id="mediTm" name="조정시간" dataType="text"></w2:key>
+			            <w2:key id="levyTm" name="부과시간" dataType="text"></w2:key>
+			            <w2:key id="levyUct" name="부과단가" dataType="text"></w2:key>
+			            <w2:key id="levyAmt" name="부과금액" dataType="text"></w2:key>
+			            <w2:key id="vatCd" name="부가세구분" dataType="text"></w2:key>
+			            <w2:key id="vatCdNm" name="부가세구분명" dataType="text"></w2:key>
+			            <w2:key id="vatAmt" name="부가세액" dataType="text"></w2:key>
+			            <w2:key id="fuelDdctQty" name="주유공제수량" dataType="text"></w2:key>
+			            <w2:key id="fuelDdctAmt" name="주유공제금액" dataType="text"></w2:key>
+			            <w2:key id="repaCn" name="수리내역" dataType="text"></w2:key>
+			            <w2:key id="delyCn" name="운반내역" dataType="text"></w2:key>
+			            <w2:key id="workCn" name="작업내용" dataType="text"></w2:key>
+
+
+			            <w2:key id="closeYnCnt" name="월마감여부" dataType="text"></w2:key>
+			            <w2:key id="spprcTxamtYn" name="공급가세액여부" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" repeatNode="map" id="dsVatCdList" saveRemovedData="true">
+			        <w2:columnInfo>
+			            <w2:column id="evdcCd" name="증빙_코드" dataType="text"></w2:column>
+			            <w2:column id="evdcNm" name="증빙_명" dataType="text"></w2:column>
+			            <w2:column id="spprcTxamtYn" name="공급가세액여부" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			    </w2:dataList>
+			    <w2:dataList baseNode="list" repeatNode="map" id="dsCloseYmList" saveRemovedData="true">
+			        <w2:columnInfo>
+			            <w2:column id="closeYm" name="마감연월" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/common/cmn_SM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM700500000U.xml
+ * Program Name : 장비 운행일보 등록
+ * Author : dslee 
+ * Date : 2022.06.13
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ * 2022.06.13   dslee    최초작성
+ **************************************************************************/
+	/**************************************************************************
+	 * [1] 전역변수 선언
+	 **************************************************************************/ 	 
+	/**************************************************************************
+	 * [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        //기간 set
+        com.setUdcValue("udcStdDtm", "frDate", scwin.$w.getCurrentServerDate("yyyyMM" )+"01"); //운행일자 검색 시작일자(현재달 1일)
+        com.setUdcValue("udcStdDtm", "toDate", scwin.$w.getCurrentServerDate("yyyyMMdd"));     //운행일자 검색 종료일자(오늘)
+        dsSearchMap.set("frmRunDt", com.getUdcValue("udcStdDtm", "frDate"));                    //검색 시작 날짜
+        dsSearchMap.set("toRunDt", com.getUdcValue("udcStdDtm", "toDate"));                     //검색 종료 날짜
+       
+        //최초 그리드 편집 불가
+        grpEqpmRunDlog.setDisabled( true );
+        
+        //지급구분값 코드셋팅
+        com.selCdListVrbl("payGbVal", {
+            "upperCd": "CM100021",
+            "setCd": "charValN1",
+            }
+        );
+        
+        scwin.selectVatCdList(); //부가세구분 코드 리스트 조회
+        cmCom.setSite(wfmKeySiteInfo.getWindow()); //세션의 현장코드 set
+        scwin.commonUI(); //UI팀용 함수 호출
+    };
+    
+    scwin.onpageunload = function() {};
+    /************************************************************************************
+     *  [3] 사용자정의 함수
+     ************************************************************************************/
+    /* 장비운행 상세정보 조회 */
+    scwin.selectTcmEqpmRunDlogDtl = function(siteCd, eqpmCd, runDt, runSeq){
+        let paramObj = {siteCd: siteCd,
+                        eqpmCd: eqpmCd,
+                        runDt: runDt,
+                        runSeq: runSeq
+        }    
+                        
+        ajaxLib.ajax("/cm/cm7005/CM70050000U/selectTcmEqpmRunDlogDtl", {
+            method: "POST",
+            requestData: paramObj ,
+            callback: function(result,e) {
+                        dsTcmEqpmRunDlogMap.setJSON(result.data);
+                        
+                        //마감월과 마감되지 않은 월 함께 조회후 마감월 신규 or 삭제 or 수정 불가 처리 후 마감 안 된 월 클릭시 버튼 다시 활성화 처리
+                        if (dsTcmEqpmRunDlogMap.get( "closeYnCnt" ) == 0) {
+                            btnNew.setDisabled(false);  
+                            btnSave.setDisabled(false); 
+                            btnDel.setDisabled(false);  
+                        }
+                        
+                        //변경 내용 없을 때 저장할 내용 없음 표시(상세 조회후 row 상태 초기화)
+                        dsTcmEqpmRunDlogMap.initRowStatus(); 
+            },
+            errCallback : function(result,e) {}
+        });
+    };
+    
+    /* 부가세 코드 리스트 조회 */
+    scwin.selectVatCdList = function() {
+        ajaxLib.ajax("/cm/cm7005/CM70050000U/selectVatCdList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result,e) {
+                        dsVatCdList.setJSON(result.data);
+            },
+            errCallback: function(result,e) {}
+        });
+    }
+
+    /* 마감월 조회 */
+    scwin.selectCloseYmList = function() {
+        ajaxLib.ajax("/cm/cm7005/CM70050000U/selectCloseYmList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result,e) {
+                        dsCloseYmList.setJSON(result.data);
+            },
+            errCallback: function(result,e) {}
+        });
+    }
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+	/* 장비코드 팝업 콜백 */
+    scwin.popEqpmCdCallback = function(obj){
+        //AS-IS소스 : 장비코드 선택시 f_chk_sbcr_blacklist(업체 정보에 문제가 있습니다. DGNS에 해당 업체 이력을 확인하시기 바랍니다. 업체발주제한 - 윤리경영팀)
+        //필요시 추가해야함.
+         
+        if(obj != ""){
+            dsTcmEqpmRunDlogMap.setJSON({
+                "eqpmCd": obj.eqpmCd,           //장비코드
+                "hireTradeNm": obj.hireTradeNm, //회사명
+                "eqpmNm": obj.eqpmNm,           //장비명
+                "levyUct": obj.aplyUct,         //단가
+                "stdrNm": obj.stdrNm            //규격
+            })
+        }
+        scwin.levyUct_onviewchange();
+    }
+    
+    /* 투입공종 팝업 콜백 */
+    scwin.popBgtItemCallback = function(obj){
+        if(obj != ""){
+            dsTcmEqpmRunDlogMap.setJSON({
+                "bgtItemiCd": obj.bgtItemiCd,           //투입공종코드
+                "bgtItemiNmNavi": obj.bgtItemiNmNavi    //투입공종요약
+            })
+        }
+    }
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    /* 현장코드 변경 이벤트 */
+    scwin.WFrameSiteInfo_change_callback = function(){
+        grpEqpmRunDlog.init(); //상세 조회 테이블 초기화
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드 set
+        scwin.btnFind_onclick(); //재조회
+        btnNew.setDisabled(false); 
+        btnSave.setDisabled(false); 
+        btnDel.setDisabled(false); 
+    }; 
+    
+    /* 조회버튼 클릭 */
+    scwin.btnFind_onclick = function(){ 
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드
+        
+        if (dsSearchMap.get("frmRunDt") != com.getUdcValue("udcStdDtm", "frDate")) {
+            btnNew.setDisabled(false); 
+            btnSave.setDisabled(false); 
+            btnDel.setDisabled(false); 
+        }
+        
+        dsSearchMap.set("frmRunDt", com.getUdcValue("udcStdDtm", "frDate"));            //검색 시작 날짜
+        dsSearchMap.set("toRunDt", com.getUdcValue("udcStdDtm", "toDate"));             //검색 종료 날짜
+        
+        if (dsSearchMap.get("siteCd") == ""){
+            com.showMessage("SAA0031", "현장"); //을(를) 선택하십시오.
+            return false;
+        }else if (dsSearchMap.get("frmRunDt") == "" || dsSearchMap.get("toRunDt") == "") {
+            com.showMessage("SAA0031", "기간"); //을(를) 선택하십시오.
+            return false;
+        }
+        
+        ajaxLib.ajax("/cm/cm7005/CM70050000U/selectTcmEqpmRunDlogList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result,e) {
+                        grpEqpmRunDlog.init();
+                        dsTcmEqpmRunDlogList.setJSON(result.data);
+                        com.setUdcValue("dsTotalCount", "udcListCount", dsTcmEqpmRunDlogList.getTotalRow());
+                                               
+                        scwin.selectTcmEqpmRunDlogDtl(dsTcmEqpmRunDlogList.getCellData(0 , "siteCd"),
+                                                      dsTcmEqpmRunDlogList.getCellData(0 , "eqpmCd"),
+                                                      dsTcmEqpmRunDlogList.getCellData(0 , "runDt"),
+                                                      dsTcmEqpmRunDlogList.getCellData(0 , "runSeq"));
+                                                      
+                        grpEqpmRunDlog.setDisabled(false);    //map 편집 가능 활성화
+                        
+                        //비활성화
+                        runDt.setDisabled(true);              //운행일자 
+                        eqpmCd.setDisabled(true);             //장비코드 
+                        btnFindEqpmCd.setDisabled(true);      //장비코드 검색 버튼 
+                        eqpmNm.setDisabled(true);             //장비명 
+                        stdrNm.setDisabled(true);             //규격명 
+                        hireTradeNm.setDisabled(true);        //업체명 
+                        bgtItemiCd.setDisabled(true);         //투입공종코드 
+                        bgtItemiNmNavi.setDisabled(true);     //토입공종네비 
+                        levyTm.setReadOnly(true);             //부과시간
+                        levyAmt.setReadOnly(true);            //부과금액                          
+            },
+            errCallback : function(result,e) {}
+        });
+        
+    };
+    
+    /* 신규 버튼 클릭 */
+	scwin.btnNew_onclick = function() {
+        if (dsSearchMap.get("siteCd") == ""){
+            com.showMessage("SAA0031", "현장");   //을(를) 선택하십시오.
+            return false;
+        } 
+                
+        grpEqpmRunDlog.setDisabled(false);    //map 편집 가능
+        btnSave.setDisabled(false);
+        btnDel.setDisabled(false);
+        
+        //비활성화
+        eqpmCd.setDisabled(true);             //장비코드
+        eqpmNm.setDisabled(true);             //장비명
+        stdrNm.setDisabled(true);             //규격명
+        hireTradeNm.setDisabled(true);        //업체명
+        bgtItemiCd.setDisabled(true);         //투입공종코드
+        bgtItemiNmNavi.setDisabled(true);     //토입공종네비
+        levyTm.setReadOnly(true);             //부과시간
+        levyAmt.setReadOnly(true);            //부과금액
+        
+		// map 초기화
+        dsTcmEqpmRunDlogMap.setEmptyValue();
+        
+        dsTcmEqpmRunDlogMap.setJSON({
+            "payGbVal": "2",                                                //지급구분코드 최초 미지급금으로 set
+            "vatCd": "0205",                                                //부가세구분 최초 매입공제로 set
+            "runDt": scwin.$w.getCurrentServerDate( "yyyyMMdd" ),           //운행일자 오늘 날짜로 set
+            "siteCd": wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue()    //현장코드 set
+        })       
+	};
+
+	/* 저장 */
+	scwin.btnSave_onclick = function() {
+        scwin.selectCloseYmList(); //마감월 리스트 조회
+        
+        if (dsSearchMap.get("siteCd") == ""){
+            com.showMessage("SAA0031", "현장"); //을(를) 선택하십시오.
+            return false;
+        } 
+        
+        if (dsTcmEqpmRunDlogMap.get("levyAmt") == 0) {
+            com.showMessage("SAA0035", "부과금액이 0원인 경우"); //$1은(는) 저장할 수 없습니다.
+            return false;
+        }        
+        
+        //월마감 여부에 따라 수정 가능 or 불가 체크
+        if (dsCloseYmList.getColData("closeYm").includes(dsTcmEqpmRunDlogMap.get( "runDt" ).substr(0,6)) && dsTcmEqpmRunDlogMap.get("runSeq") == "") {
+            com.showMessage("EMA0057", "투입일보", "신규 등록"); //$1(이)가 마감되었습니다. $2(이)가 불가 합니다. 
+            btnSave.setDisabled(true);
+            btnDel.setDisabled(true);
+            return false;
+        } else if (dsCloseYmList.getColData("closeYm").includes(dsTcmEqpmRunDlogMap.get( "runDt" ).substr(0,6)) && dsTcmEqpmRunDlogMap.get("runSeq") != "") {
+            com.showMessage("EMA0057", "투입일보", "수정"); //$1(이)가 마감되었습니다. $2(이)가 불가 합니다. 
+            btnSave.setDisabled(true);
+            btnDel.setDisabled(true);
+            return false;
+        }
+        
+        if (dsTcmEqpmRunDlogMap.get("runDt") == "") {
+            com.showMessage("CMW0025", "운행일자"); //$1은(는) 필수입력사항입니다.
+            return false;
+        }else if (dsTcmEqpmRunDlogMap.get("runDt").length != 8) {
+            com.showMessage("SCA0086", "운행일자"); //$1을(를) 바르게 입력하십시오.
+            return false;
+        }else if (dsTcmEqpmRunDlogMap.get("eqpmCd") == "") {
+            com.showMessage("CMW0025", "장비코드"); //$1은(는) 필수입력사항입니다.
+            return false;
+        }else if (dsTcmEqpmRunDlogMap.get("bgtItemiCd") == "") {
+            com.showMessage("CMW0025", "투입공종"); //$1은(는) 필수입력사항입니다.
+            return false;
+        }
+
+        // 부가세구분의 공급가세액여부 값 SET 
+        var iRow = dsVatCdList.getMatchedIndex( "evdcCd" , dsTcmEqpmRunDlogMap.get("vatCd") );
+        dsTcmEqpmRunDlogMap.set( "spprcTxamtYn" , dsVatCdList.getCellData( iRow , "spprcTxamtYn" ) );
+     
+//        console.log("dsVatCdList.getRowPosition() : " + dsVatCdList.getCellData( iRow , "spprcTxamtYn" ));
+//        console.log("spprcTxamtYn1 : " + dsVatCdList.getCellData( iRow , "spprcTxamtYn" ));
+//        console.log("spprcTxamtYn2 : " + dsTcmEqpmRunDlogMap.get("spprcTxamtYn" ));
+     
+		if (confirm("저장 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm7005/CM70050000U/saveTcmEqpmRunDlog", {
+	            mode: "synchronous",
+	            method: "POST",
+	            requestData: dsTcmEqpmRunDlogMap.getJSON(),
+	            callback: function(result,e) {
+                            com.showMessage("CFA0012"); //저장되었습니다.
+                            scwin.btnFind_onclick();
+                },
+	            errCallback : function(result,e) {
+                }
+	        });
+	    }
+	};
+
+    /* 엑셀다운 */
+    scwin.btnExcelDwn_onclick = function() {
+        grdTcmEqpmRunDlogList.advancedExcelDownload({
+            fileName: "장비운행일보목록.xlsx",
+            useDataFormat : true,
+            useSubTotal : true,             // Sub-Total 표시 
+            headerFontColor : "#FFFFFF",    // Header Font Color
+            headerColor : "#D9D9D9",        // Header Back Color
+            subTotalColor : "#FCE4D6",      // SubTotal Back Color
+            footerColor : "#BDD7EE"         // Footer Color
+        });
+    };
+	
+    /* 장비코드 팝업 */
+	scwin.btnFindEqpmCd_onclick = function(data, callback) {
+		let popOps = {
+            popup_name: "장비코드 목록(팝업)",
+            url: "/ux/cm/cm7000/CM70000001P.xml",
+            data: {siteCd: wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue()},
+            widType: "L",
+            height: "678",
+            callbackFn: "scwin.popEqpmCdCallback"
+        };
+        com.popup_open(popOps);
+	};
+    
+    /* 투입공종 팝업 */
+	scwin.btnFindBgtItem_onclick = function(data, callback) {
+		let popOps = {
+            popup_name: "투입공종(팝업)",
+            url: "/ux/cm/cm4010/CM40100515P.xml",
+            data: { siteCd: wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue(),
+                    itexpGb: "O,D,T",                               //비목구분 자재[M], 경비[O], 외주[S], 직영[D], 현장관리비[T]
+                    yyyyMm: com.getCurrentDate().substring(0,6),
+                    multiSelectYn: false,                           //다건 선택 true, 단건 선택 false
+                  },
+            widType: "XL",
+            height: "678",
+            callbackFn: "scwin.popBgtItemCallback"
+        };
+        com.popup_open(popOps);
+	};
+
+	/* 조정시간 변경시 부과시간 변경(작업시간+조정시간), 부과금액, 부가세액 재계산 */
+	scwin.mediTm_onviewchange = function(info) {
+		if (mediTm.getValue != "") { //조정시간 값 입력시
+            levyTm.setValue(Number(dsTcmEqpmRunDlogMap.get( "workTm" )) + Number(dsTcmEqpmRunDlogMap.get( "mediTm" )));   //작업시간+조정시간
+            levyAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyTm" )) * Number(dsTcmEqpmRunDlogMap.get( "levyUct" ))));  //부과시간*부과단가
+            vatAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyAmt" )) * 0.1)); //부과금액*0.1 = 부과세액
+        }else { //조정시간 빈 값인 경우
+            levyTm.setValue(dsTcmEqpmRunDlogMap.get( "workTm" ).toFixed(2)); //부과시간=작업시간
+            levyAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyTm" )) * Number(dsTcmEqpmRunDlogMap.get( "levyUct" )))); //부과시간*부과단가
+            vatAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyAmt" )) * 0.1)); //부과금액*0.1 = 부과세액 
+        }
+	};
+	
+    /* 작업시간 변경시 부과시간 변경(작업시간+조정시간), 부과금액, 부가세액 재계산 */
+	scwin.workTm_onviewchange = function(info) {
+		if (workTm.getValue != "") { //작업시간 값 입력시
+            levyTm.setValue(Number(dsTcmEqpmRunDlogMap.get( "workTm" )) + Number(dsTcmEqpmRunDlogMap.get( "mediTm" )));   //작업시간+조정시간
+            levyAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyTm" )) * Number(dsTcmEqpmRunDlogMap.get( "levyUct" ))));  //부과시간*부과단가
+            vatAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyAmt" )) * 0.1)); //부과금액*0.1 = 부과세액
+        }else { //작업시간 빈 값인 경우
+            levyTm.setValue( dsTcmEqpmRunDlogMap.get( "mediTm" ).toFixed(2)); //부과시간=조정시간
+            levyAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyTm" )) * Number(dsTcmEqpmRunDlogMap.get( "levyUct" )))); //부과시간*부과단가
+            vatAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyAmt" )) * 0.1)); //부과금액*0.1 = 부과세액
+        }
+	}; 
+    
+	/* 부과단가 변경시 부과금액 변경(부과시간 * 부과단가 = 부과금액), 부가새액 재계산 */
+	scwin.levyUct_onviewchange = function(info) {
+		if (levyUct.getValue != "") { //부과단가 값 입력시 
+            levyAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyTm" )) * Number(dsTcmEqpmRunDlogMap.get( "levyUct" )))); //부과시간*부과단가
+            vatAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyAmt" )) * 0.1)); //부과금액*0.1 = 부과세액
+        }else { //부과단가 값 미입력시 
+            levyAmt.setValue( "" ); //부과금액 빈 값
+            vatAmt.setValue(Math.floor(Number(dsTcmEqpmRunDlogMap.get( "levyAmt" )) * 0.1)); //부과금액*0.1 = 부과세액
+        }
+	};
+
+	/* 부가세구분코드 0315(매입 계산서 면서(일반))로 변경시 부가세액 0원으로 변경. 나머지는 10% */
+	scwin.vatCd_onchange = function() {
+		if (dsTcmEqpmRunDlogMap.get("vatCd") == "0315") {
+            dsTcmEqpmRunDlogMap.set("vatAmt", 0);
+        }else {
+            dsTcmEqpmRunDlogMap.set("vatAmt", Math.floor(Number(dsTcmEqpmRunDlogMap.get("levyAmt")) * 0.1));
+        }
+	};
+	
+    /* 장비운행일보 목록 클릭(상세 조회) */
+	scwin.grdTcmEqpmRunDlogList_oncellclick = function(row,col) {
+		if (dsTcmEqpmRunDlogList.getRowCount() > 0){
+            var idxRow = grdTcmEqpmRunDlogList.getFocusedRowIndex();
+            var selSiteCd = dsTcmEqpmRunDlogList.getCellData(idxRow , "siteCd");
+            var selEqpmCd = dsTcmEqpmRunDlogList.getCellData(idxRow , "eqpmCd");
+            var selRunDt = dsTcmEqpmRunDlogList.getCellData(idxRow , "runDt");
+            var selRunSeq = dsTcmEqpmRunDlogList.getCellData(idxRow , "runSeq");
+            
+        }
+        scwin.selectTcmEqpmRunDlogDtl(selSiteCd, selEqpmCd, selRunDt, selRunSeq); //상세 조회
+	};
+	
+    /* 삭제 버튼 클릭 이벤트 */
+	scwin.btnDel_onclick = function() {
+        if (dsSearchMap.get("siteCd") == ""){
+            com.showMessage("SAA0031", "현장"); //을(를) 선택하십시오.
+            return false;
+        } 
+        
+        if (dsTcmEqpmRunDlogMap.get("runSeq") == "") {
+            com.showMessage("PRA0003"); //삭제할 데이터를 선택해 주십시오.
+            return false;
+        }
+        
+        //월마감 여부에 따라 삭제 가능 or 불가 체크
+        if (dsCloseYmList.getColData("closeYm").includes(dsTcmEqpmRunDlogMap.get( "runDt" ).substr(0,6))) {
+            com.showMessage("CSW0009", "투입일보가 마감되어"); //$1 삭제할 수 없습니다.
+            btnSave.setDisabled(true); //수정 불가
+            btnDel.setDisabled(true);  //삭제 불가
+            return false;
+        }
+        
+        if (confirm("삭제 하시겠습니까?")) {
+            ajaxLib.ajax("/cm/cm7005/CM70050000U/deleteTcmEqpmRunDlog", {
+                mode: "synchronous",
+                method: "POST",
+                requestData: dsTcmEqpmRunDlogMap.getJSON(),
+                callback: function(result,e) {
+                            com.showMessage("CMW0035"); //삭제되었습니다.
+                            scwin.btnFind_onclick();
+                },
+                errCallback : function(result,e) {}
+            });
+        }
+	};]]></script>
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+		        <xf:group class="tb_list" id="" style="" tagname="table">
+		            <w2:attributes>
+		                <w2:summary>조회조건 테이블 입니다.</w2:summary>
+		            </w2:attributes>
+		            <xf:group tagname="colgroup">
+		                <xf:group style="width:96.00px;" tagname="col"></xf:group>
+		                <xf:group style="width:auto;" tagname="col"></xf:group>
+		                <xf:group tagname="col" style="width:88px;"></xf:group>
+		                <xf:group tagname="col" style="width:auto;"></xf:group>
+		                <xf:group style="width:67.00px;" tagname="col"></xf:group>
+		                <xf:group style="width:auto;" tagname="col"></xf:group>
+		            </xf:group>
+		            <xf:group style="" tagname="tr">
+		                <xf:group class="w2tb_th req" style="" tagname="th">
+		                    <w2:attributes>
+		                        <w2:scope>row</w2:scope>
+		                    </w2:attributes>
+		                    <w2:span class="" id="" label="현장명" style=""></w2:span>
+		                </xf:group>
+		                <xf:group class="w2tb_td" style="width:30%;" tagname="td">
+		                    <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+		                </xf:group>
+                        <xf:group class="w2tb_th req" style="" tagname="th"><w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes><w2:span class="" id="" label="기간" style=""></w2:span></xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            <w2:udc_periodcalendar class="req" id="udcStdDtm" style="" date=""></w2:udc_periodcalendar>
+                        </xf:group> 
+		            </xf:group>
+		        </xf:group>
+		        <xf:group class="btn_tbl_search" style="" tagname="">
+		            <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+		                <xf:label><![CDATA[조회]]></xf:label>
+		            </w2:anchor>
+		        </xf:group>
+		    </xf:group>
+			<xf:group class="lybox_wrap col_6_4" id="" style="">
+				<xf:group class="lybox" id="" style="">
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="">
+							<xf:group class="defaultbox" id="" style="">
+								<xf:group class="right_wrap" id="" style="">
+								</xf:group>
+								<w2:textbox class="df_tt" id="" label="장비운행일보 목록" style="" tagname="h3"></w2:textbox>
+                                <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+                                <xf:group class="right_wrap" id="" style="">
+                                    <xf:group id="" style="">
+                                        <w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+                                            outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+                                            <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+                                        </w2:anchor>
+                                    </xf:group>
+                                </xf:group>
+							</xf:group>
+							<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmEqpmRunDlogList"
+							    fixedColumnWithHidden="true" focusMode="row" id="grdTcmEqpmRunDlogList" readOnly="true" rowNumHeaderValue="No" rowNumVisible=""
+							    rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height:216px;" useShiftKey="true"
+							    visibleRowNum="" sortable="true" ev:oncellclick="scwin.grdTcmEqpmRunDlogList_oncellclick">
+							    <w2:header id="header1" style="">
+							        <w2:row id="row2" style="">
+							            <w2:column blockSelect="false" displayMode="label" id="column49" inputType="text"
+							                removeBorderStyle="false" value="No" width="60" sortable="false" style="">
+							            </w2:column>
+							            <w2:column blockSelect="false" id="column19" inputType="text" value="운행일자" width="100" style="">
+							            </w2:column>
+							            <w2:column blockSelect="false" id="column17" inputType="text" value="장비명" width="120" style="">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column59"
+							                value="장비업체" blockSelect="false" displayMode="label">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="100" inputType="text" id="column56" value="지불구분"
+							                blockSelect="false" displayMode="label" style="">
+							            </w2:column>
+							            <w2:column blockSelect="false" displayMode="label" id="column55" inputType="text"
+							                removeBorderStyle="false" value="부과금액" width="120" style="">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" id="column58" value="부가세액"
+							                blockSelect="false" displayMode="label" style="">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column60" value="계"
+							                blockSelect="false" displayMode="label">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column62" value="주유공제"
+							                blockSelect="false" displayMode="label">
+							            </w2:column>
+							        </w2:row>
+							    </w2:header>
+							    <w2:gBody id="gBody4" style="">
+							        <w2:row id="row5" style="">
+							            <w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="column24"
+							                inputType="expression" removeBorderStyle="false" width="60">
+							            </w2:column>
+							            <w2:column blockSelect="false" id="runDt" inputType="text" value="" width="100" dataType="date"></w2:column>
+							            <w2:column blockSelect="false" id="eqpmNm" inputType="text" displayFormat="" value=""
+							                width="120" textAlign="left">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="hireTradeNm" value=""
+							                blockSelect="false" displayFormat="" displayMode="label" textAlign="left">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="100" inputType="text" displayFormat=""
+							                id="payGbVal" value="" blockSelect="false" displayMode="label" textAlign="center">
+							            </w2:column>
+							            <w2:column blockSelect="false" displayMode="label" id="levyAmt" inputType="text"
+							                removeBorderStyle="false" value="" width="120" textAlign="right" displayFormat="#,###,###,###">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" id="vatAmt" value=""
+							                blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,###,###,###">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="amtSum" value=""
+							                blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,###,###,###">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="fuelDdctAmt" value=""
+							                blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,###,###,###">
+							            </w2:column>
+							        </w2:row>
+							    </w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="" style="">
+							<xf:group class="defaultbox" id="" style="">
+								<xf:group class="right_wrap" id="" style="">
+									<xf:group id="" style="">
+										<w2:anchor class="btn_gcm" clickEventElement="" id="btnNew" outerDiv="false" style="" ev:onclick="scwin.btnNew_onclick">
+											<xf:label><![CDATA[신규]]></xf:label>
+										</w2:anchor>
+										<w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+											<xf:label><![CDATA[저장]]></xf:label>
+										</w2:anchor>
+                                        <w2:anchor class="btn_gcm" clickEventElement="" id="btnDel" outerDiv="false" style="" ev:onclick="scwin.btnDel_onclick">
+                                            <xf:label><![CDATA[삭제]]></xf:label>
+                                        </w2:anchor>
+									</xf:group>
+								</xf:group>
+								<w2:textbox class="df_tt" id="" label="장비운행 상세정보" style="" tagname="h3"></w2:textbox>
+							</xf:group>
+							<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpEqpmRunDlog" style="" tagname="table">
+								<w2:attributes>
+									<w2:summary></w2:summary>
+								</w2:attributes>
+								<xf:group tagname="colgroup">
+									<xf:group style="width:120.00px;" tagname="col"></xf:group>
+									<xf:group style="" tagname="col"></xf:group>
+									<xf:group style="width:120.00px;" tagname="col"></xf:group>
+									<xf:group style="" tagname="col"></xf:group>
+								</xf:group>
+								<xf:group class="" style="" tagname="tr">
+									<xf:group class="w2tb_th req" style="" tagname="th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="운행일자" style=""></w2:span>
+									</xf:group>
+									<xf:group class="w2tb_td" style="" tagname="td">
+										<w2:attributes>
+                                            <w2:colspan>3</w2:colspan>
+                                            <w2:rowspan>1</w2:rowspan>
+                                        </w2:attributes>
+                                        <w2:inputCalendar calendarClass="" calendarValueType="" class="req" focusOnDateSelect="false"
+                                            footerDiv="false" id="runDt" renderDiv="true" renderType="component" rightAlign="false" style="width: 100px;"
+                                            weekStartsOn="0" mandatory="true" ref="data:dsTcmEqpmRunDlogMap.runDt" validCheck="true">
+                                        </w2:inputCalendar>
+									</xf:group></xf:group>
+								<xf:group style="" tagname="tr">
+									<xf:group class="w2tb_th req" style="" tagname="th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="장비코드" style=""></w2:span>
+									</xf:group>
+									<xf:group class="w2tb_td" style="" tagname="td">
+                                        <w2:attributes>
+                                            <w2:colspan>3</w2:colspan>
+                                            <w2:rowspan>1</w2:rowspan>
+                                        </w2:attributes>
+                                        <xf:input allowChar="" id="eqpmCd" initValue="" maxlength="" style="width:109px; text-align:center;" ref="data:dsTcmEqpmRunDlogMap.eqpmCd"></xf:input>
+                                        <w2:anchor class="btn_gcm_ic src" id="btnFindEqpmCd" outerDiv="false" style="" ev:onclick="scwin.btnFindEqpmCd_onclick">
+                                            <xf:label><![CDATA[조회]]></xf:label>
+                                        </w2:anchor>
+                                        <xf:input id="hireTradeNm" initValue="" style="width:299px;" ref="data:dsTcmEqpmRunDlogMap.hireTradeNm"></xf:input>
+                                    <xf:group style="float:left;" >
+                                        </xf:group>
+                                        <xf:group style="float:right;" >
+                                        </xf:group>
+									</xf:group>
+								</xf:group>
+                                <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th" style="" tagname="th">
+                                        <w2:attributes>
+                                            <w2:scope>row</w2:scope>
+                                        </w2:attributes>
+                                        <w2:span id="" label="장비명/규격" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                        <w2:attributes>
+                                            <w2:colspan>3</w2:colspan>
+                                            <w2:rowspan>1</w2:rowspan>
+                                        </w2:attributes>
+                                        <xf:input class="" dataType="" allowChar="" displayFormat="" id="eqpmNm"
+                                            initValue="" mandatory="" readOnly="" maxlength="" minlength=""
+                                            ref="data:dsTcmEqpmRunDlogMap.eqpmNm" style="width:44%;">
+                                        </xf:input>
+                                        <xf:input allowChar="" class="" dataType="" displayFormat="" id="stdrNm"
+                                            initValue="" mandatory="" maxlength="" minlength="" readOnly=""
+                                            ref="data:dsTcmEqpmRunDlogMap.stdrNm" style="width:44%;">
+                                        </xf:input>
+                                    </xf:group>
+                                </xf:group>
+								<xf:group tagname="tr" style="">
+									<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="투입공종" style="" class=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+											<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+                                        <xf:input allowChar="" id="bgtItemiCd" initValue="" maxlength="" style="width:109px; text-align:center;" ref="data:dsTcmEqpmRunDlogMap.bgtItemiCd"></xf:input>
+                                        <w2:anchor class="btn_gcm_ic src" id="btnFindBgtItem" outerDiv="false" style="" ev:onclick="scwin.btnFindBgtItem_onclick">
+                                            <xf:label><![CDATA[조회]]></xf:label>
+                                        </w2:anchor>
+                                        <xf:input id="bgtItemiNmNavi" initValue="" style="width:299px;" ref="data:dsTcmEqpmRunDlogMap.bgtItemiNmNavi"></xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="지급구분" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+											<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										<xf:select1 allOption="" appearance="minimal" chooseOption="" chooseOptionLabel="선택" class=""
+										    direction="auto" disabled="" disabledClass="w2selectbox_disabled" displayMode="label"
+										    ev:onviewchange="scwin.sbxDong_onviewchange" id="payGbVal" mandatory="" ref="data:dsTcmEqpmRunDlogMap.payGbVal"
+										    style="width:184px;" submenuSize="auto" textAlign="left" visibleRowNum="10">
+										    <xf:choices></xf:choices>
+										</xf:select1>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="작업시간" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:input class="" dataType="" id="workTm" adjustMaxLength="false" initValue="" mandatory="" maxlength="5" 
+                                            readOnly="" allowChar="0-9." ref="data:dsTcmEqpmRunDlogMap.workTm" style="width:100%; text-align:right;" ev:onchange="scwin.workTm_onchange" ev:onviewchange="scwin.workTm_onviewchange" displayFormat="">
+										</xf:input>
+									</xf:group>
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="대기시간" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:input class="" dataType="" id="waitTm" initValue="" mandatory="" maxlength="5" readOnly=""
+											ref="data:dsTcmEqpmRunDlogMap.waitTm" style="width:100%; text-align:right;" allowChar="0-9." displayFormat="">
+										</xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="조정시간" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:input class="" dataType="" id="mediTm" initValue="" mandatory="" maxlength="5" readOnly=""
+											ref="data:dsTcmEqpmRunDlogMap.mediTm" style="width:100%; text-align:right;" ev:onchange="scwin.mediTm_onchange" ev:onviewchange="scwin.mediTm_onviewchange" allowChar="0-9." displayFormat="">
+										</xf:input>
+									</xf:group>
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="부과시간" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <w2:attributes></w2:attributes>
+									    <xf:input class="" dataType="" id="levyTm" initValue="" mandatory="" maxlength="5" readOnly=""
+									        ref="data:dsTcmEqpmRunDlogMap.levyTm" style="width:100%; text-align:right;" allowChar="0-9." displayFormat="">
+									    </xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="부과단가" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <w2:attributes></w2:attributes>
+									    <xf:input class="" dataType="" id="levyUct" initValue="" mandatory="" maxlength="" readOnly=""
+									        displayFormat="#,###,###,###" allowChar="0-9" ref="data:dsTcmEqpmRunDlogMap.levyUct" style="width:100%; text-align:right;" ev:onviewchange="scwin.levyUct_onviewchange">
+									    </xf:input>
+									</xf:group>
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="부과금액" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td" style="">
+									    <w2:attributes></w2:attributes>
+									    <xf:input class="" dataType="number" id="levyAmt" initValue="" mandatory="" maxlength="" readOnly=""
+									        ref="data:dsTcmEqpmRunDlogMap.levyAmt" style="width:100%; text-align:right;" displayFormat="#,##0" allowChar="0-9">
+									    </xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="부가세구분" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <w2:attributes>
+									        <w2:colspan>1</w2:colspan>
+									        <w2:rowspan>1</w2:rowspan>
+									    </w2:attributes>
+									    <xf:select1 allOption="" appearance="minimal" chooseOption="" chooseOptionLabel="선택" class=""
+									        direction="auto" disabled="" disabledClass="w2selectbox_disabled" displayMode="label"
+									        ev:onviewchange="scwin.sbxDong_onviewchange" id="vatCd" mandatory="" ref="data:dsTcmEqpmRunDlogMap.vatCd"
+									        style="width:100%;" submenuSize="auto" textAlign="left" visibleRowNum="10" ev:onchange="scwin.vatCd_onchange">
+									        <xf:choices>
+									            <w2:gridViewItemset hideHeader="true" rowMouseOver="" nodeset="data:dsVatCdList"
+									                width="250px" selectedRowColor="" label="evdcNm" visibleRowNum="" autoFit="lastColumn" value="evdcCd"
+									                rowMouseOverColor="" height="10px">
+									                <w2:item ref="evdcCd" hidden="" header="" style="width:150px" headerStyle=""></w2:item>
+									                <w2:item ref="evdcNm" hidden="" header="" style="width:350px; text-align:left;"
+									                    headerStyle="">
+									                </w2:item>
+									            </w2:gridViewItemset>
+									        </xf:choices>
+									    </xf:select1>
+									</xf:group>
+									<xf:group tagname="th" class="w2tb_th">
+									    <w2:attributes></w2:attributes>
+									    <w2:span id="" label="부가세액" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <w2:attributes></w2:attributes>
+									    <xf:input class="" dataType="number" id="vatAmt" initValue="" mandatory="" maxlength="" readOnly=""
+									        ref="data:dsTcmEqpmRunDlogMap.vatAmt" style="width:100%; text-align:right;" allowChar="0-9" displayFormat="#,##0">
+									    </xf:input>
+									</xf:group></xf:group>
+									<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="주유공제수량" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <w2:attributes>
+									        <w2:colspan>1</w2:colspan>
+									        <w2:rowspan>1</w2:rowspan>
+									    </w2:attributes>
+									    <xf:input class="" dataType="" id="fuelDdctQty" initValue="" mandatory="" maxlength="" readOnly=""
+									        ref="data:dsTcmEqpmRunDlogMap.fuelDdctQty" style="width:100%; text-align:right;" allowChar="0-9">
+									    </xf:input>
+									</xf:group>
+									<xf:group tagname="th" class="w2tb_th">
+									    <w2:attributes></w2:attributes>
+									    <w2:span id="" label="주유공제금액" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <w2:attributes></w2:attributes>
+									    <xf:input class="" dataType="number" id="fuelDdctAmt" initValue="" mandatory="" maxlength="" readOnly=""
+									        ref="data:dsTcmEqpmRunDlogMap.fuelDdctAmt" style="width:100%; text-align:right;" displayFormat="#,##0" allowChar="0-9">
+									    </xf:input>
+									</xf:group></xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="수리내역" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+											<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										<xf:input class="" dataType="" id="repaCn" initValue="" maxlength="" readOnly=""
+											style="width:100%;" ref="data:dsTcmEqpmRunDlogMap.repaCn">
+										</xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="운반내역" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <w2:attributes>
+									        <w2:colspan>3</w2:colspan>
+                                            <w2:rowspan>1</w2:rowspan>
+									    </w2:attributes>
+									    <xf:input class="" dataType="" id="delyCn" initValue="" maxlength="" readOnly=""
+									        ref="data:dsTcmEqpmRunDlogMap.delyCn" style="width:100%;">
+									    </xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="작업내용" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <w2:attributes>
+									        <w2:colspan>3</w2:colspan>
+                                            <w2:rowspan>1</w2:rowspan>
+									    </w2:attributes>
+									    <xf:input class="" dataType="" id="workCn" initValue="" maxlength="" readOnly=""
+									        ref="data:dsTcmEqpmRunDlogMap.workCn" style="width:100%;">
+									    </xf:input>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

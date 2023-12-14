@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+            <w2:workflowCollection>
+            </w2:workflowCollection>
+        </xf:model>
+        <script type="text/javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : navigator.xml
+     * Program Name : 메뉴타이틀 관리
+     * Author : 강상국 (tpksg)
+     * Date : 2019.02.15
+     *
+     * History
+     * ========================================
+     * 변경일자     	  수정자   내 용
+     * ========================================
+     * 2019.02.15   강상국   최초작성
+     *
+     **************************************************************************/
+
+     /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    scwin.svcId = "";
+    scwin.cdLv = 1;
+    scwin.upperCd = "";
+    scwin.naviYn  = "N";
+    scwin.helpToolTip = "";
+
+    /************************************************************************************
+     *  [2] 초기화
+     ************************************************************************************/
+    scwin.onpageloadInclude = function() {
+
+        if( gcm.MENU_ID != "" ) {
+            var menuIds = $.grep(JSON.parse(gcm.MENU_LIST), function( n, i ) { return n.menuId == gcm.MENU_ID; } );
+            if( menuIds.length === 0 ) {
+                grpNaviQuick.hide();
+            }
+        }
+
+        var menuNm = "";
+        if($w.isPopup()) { // 팝업으로 호출시
+            if(NAVI_YN =="Y") {
+                menuNm = POPUP_UNIQUE_MENU_NM;
+            } else {
+                menuNm = JSON.parse($w.getPopupParam()).data.menuNm;
+            }
+            grpNaviQuick.hide();
+
+        } else if($w.isWFramePopup()) {
+            menuNm = JSON.parse($p.getPopupParam()).data.menuNm;
+            grpNaviQuick.hide();
+        }
+
+        if(menuNm != "" ) {
+            tbxMenuTitle.setValue( menuNm );
+        } else {
+            tbxMenuTitle.setValue( gcm.MENU_TITLE );
+        }
+
+        try{
+            var booleanResult = gcm.tab_main.scope_obj.getObj("scwin")["fnBookMarkChk"]();
+            if(booleanResult) {
+                btnAddBookMark.addClass("on");
+            }
+        } catch(e){}
+
+        var obj = new Object();
+        obj.menuId    = gcm.MENU_ID;
+        obj.menuTitle = gcm.MENU_TITLE;
+        obj.menuUrl   = gcm.MENU_URL;
+        btnAddBookMark.setUserData( "menu" , obj );
+        
+        scwin.selectHelpTooltip();
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.btnAddBookMark_onclick
+     * 기 능: 마이메뉴 즐겨찾기
+     **************************************************************************/
+    scwin.btnAddBookMark_onclick = function() {
+        var menuObj       = btnAddBookMark.getUserData( "menu" );
+        var booleanResult = gcm.tab_main.scope_obj.getObj("scwin")["fnAddBookMark"](menuObj);
+
+        if(booleanResult) {
+            if(menuObj == undefined) {
+                var obj = new Object();
+                obj.menuId    = gcm.MENU_ID;
+                obj.menuTitle = gcm.MENU_TITLE;
+                obj.menuUrl   = gcm.MENU_URL;
+                btnAddBookMark.setUserData( "menu" , obj );
+            }
+
+            if(!btnAddBookMark.hasClass("on")) {
+                btnAddBookMark.addClass("on");
+            }
+        }
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.btnFromOpenPopup_onclick
+     * 기 능: 팝업으로 열기
+     **************************************************************************/
+    scwin.btnFromOpenPopup_onclick = function() {
+        scwin.naviYn  = "Y";
+        var url       = "";
+
+        if(gcm.tab_main != undefined) {
+             var tabFr = gcm.tab_main.getFrame(gcm.tab_main.getSelectedTabIndex());
+                   url = tabFr.getSrc().replaceAll("/I18N?w2xPath=","");
+
+        }
+
+        var popOps = {
+                       url        :url
+                     , modal      :false
+                     , type       :"browser"
+                     , height     :"900"
+                     , width      :"1400"
+                     , popup_name :gcm.MENU_TITLE
+                     , resizable  :true
+                     , scrollbars :true
+                     , location   :false
+                     , data       :{menuNm : gcm.MENU_TITLE}
+        };
+
+        com.popup_open(popOps);
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.btnHelpPopup_onclick
+     * 기 능: 도움말 팝업
+     **************************************************************************/
+    scwin.btnHelpPopup_onclick = function() {
+        scwin.naviYn  = "N";
+        ajaxLib.ajax("/ep/Main/selectMenuHelpInfo", {
+             mode : "synchronous",
+             method : "Post"
+            ,requestData : { menuId : gcm.MENU_ID }
+            ,callback : function(result,e){
+
+                var fileDownloadUrl = result.data.fileDownloadUrl;
+                if("" == fileDownloadUrl ) {
+                    com.showMessage('CFW0010','등록된 메뉴도움말이 없습니다.');
+                    return;
+                }
+                var popOps = {
+                               url        :"/ux/common/pdfView.xml"
+                             , type       :"browser"
+                             , modal      :false
+                             , height     :"900"
+                             , width      :"1000"
+                             , popup_name :gcm.MENU_TITLE
+                             , resizable  :true
+                             , data       :{fileDownloadUrl:fileDownloadUrl}
+                };
+                com.popup_open(popOps);
+            },
+            errCallback : function(result,e){}
+        });
+    };
+    
+    /**************************************************************************
+     * 함 수 명: scwin.selectHelpTooltip
+     * 기 능: 도움말 tooltip 조회
+     **************************************************************************/
+    scwin.selectHelpTooltip = function(){
+    	scwin.helpToolTip = "";
+    	
+    	ajaxLib.ajax("/ep/Main/selectMenuHelpTooltip", {
+             mode : "synchronous",
+             method : "Post"
+            ,requestData : { menuId : gcm.MENU_ID }
+            ,callback : function(result,e){
+                scwin.helpToolTip = result.data.tooltip;
+            },
+            errCallback : function(result,e){}
+        });
+    	
+    }
+    
+    /**************************************************************************
+     * 함 수 명: scwin.btnHelpToolTip
+     * 기 능: 도움말 tooltip formatter
+     **************************************************************************/
+    scwin.btnHelpToolTip = function(){
+    	var returnVal = "";
+    	
+    	if(scwin.helpToolTip == ""){
+    		returnVal = "도움말";
+    	}else{
+    		returnVal = scwin.helpToolTip;
+    	}
+    	
+    	return returnVal;
+    };
+    ]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageloadInclude">
+        <xf:group class="navigator" id="" style="">
+            <w2:textbox class="tit" id="tbxMenuTitle" label="화면 타이틀" style="" tagname="h2" userData1=""></w2:textbox>
+            <xf:group class="navi_quick" id="grpNaviQuick" style="">
+                <w2:anchor class="btn_star" clickEventElement="outerDiv" id="btnAddBookMark" outerDiv="false" style=""
+                    toolTip="즐겨찾기" ev:onclick="scwin.btnAddBookMark_onclick">
+                    <xf:label><![CDATA[즐겨찾기]]></xf:label>
+                </w2:anchor>
+                <w2:anchor class="btn_new" clickEventElement="outerDiv" id="btnFromOpenPopup" outerDiv="false" style=""
+                    toolTip="팝업으로 열기" ev:onclick="scwin.btnFromOpenPopup_onclick">
+                    <xf:label><![CDATA[팝업으로 열기]]></xf:label>
+                </w2:anchor>
+                <w2:anchor class="btn_help" clickEventElement="outerDiv" id="btnHelpPopup" outerDiv="false" style=""
+                    toolTip="도움말" ev:onclick="scwin.btnHelpPopup_onclick" tooltipFormatter="scwin.btnHelpToolTip">
+                    <xf:label><![CDATA[도움말]]></xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

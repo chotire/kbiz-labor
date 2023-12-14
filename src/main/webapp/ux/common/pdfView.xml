@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>DEFAULT</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+            <w2:workflowCollection>
+            </w2:workflowCollection>
+        </xf:model>
+        <script src="/resources/js/pdfjs-2.0.943-dist/web/viewer.js"></script>
+        <script type="text/javascript" lazy="false"><![CDATA[
+	/***************************************************************************
+	 * Program ID : pdfView.xml 
+	 * Program Name : PDF 뷰어 
+	 * Author : 강상국 (tpksg)
+	 * Date : 2019.06.27
+	 * 
+	 * History 
+	 * ======================================== 
+	 * 변경일자     	  수정자   내 용 
+	 * ======================================== 
+	 * 2019.02.15   강상국   최초작성
+	 *     
+	 **************************************************************************/
+
+     /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+	scwin.svcId = ""; 
+	
+
+    /************************************************************************************
+     *  [2] 초기화 
+     ************************************************************************************/  
+    scwin.onpageloadInclude = function() {
+    
+    	var fileDownloadUrl = ""; 
+    	if($w.isPopup())
+    	{//팝업으로 호출시
+    	 	fileDownloadUrl = JSON.parse($w.getPopupParam()).data.fileDownloadUrl;
+    	}
+    	else if($w.isWFramePopup())
+    	{
+    		fileDownloadUrl = JSON.parse($p.getPopupParam()).data.fileDownloadUrl;
+    	}
+    	
+    	iframePdfView.setSrc("/resources/js/pdfjs-2.0.943-dist/web/viewer.html?file="+fileDownloadUrl);
+    	
+    };
+	
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+	 
+		    		
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+
+	
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+	
+	]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageloadInclude">
+    		<w2:iframe src="" style="position: absolute;width: 100%;height: 100%;" name="iframePdfView" id="iframePdfView"></w2:iframe>
+    </body>
+</html>

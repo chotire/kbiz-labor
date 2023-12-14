@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:aliasDataMap id="sdm_fileDesc" scope="../dma_fileDesc" studio_src="/ui/HM/HM003M01.xml"/>
+			</w2:dataCollection>
+		</xf:model>
+		<script type="text/javascript" lazy="false"><![CDATA[
+	scwin.onpageload = function() {
+
+	};
+	
+	scwin.onpageunload = function() {
+	
+	};
+		
+	scwin.wfTitleDesc_btn_DescTitleBtn_onclick = function() {
+		var tmpType = this.getUserData("userData1");
+		switch(tmpType){
+			case "desc" :
+				wfTitleDesc_grp_excelBasicDescription.toggleClass( "act" );
+			break;
+			case "test" :
+				wfTitleDesc_grp_excelBasicTest.toggleClass( "act" );
+			break;
+			default :
+		};
+	};
+]]></script>
+<style>
+		
+.titlelistbox .titlelist_tit{ border-top:2px solid #6d7580;border-bottom:1px solid #b9c0ca;background:url(/resources/images/content/btn_toggle_open_D.png) no-repeat right 15px;}
+.titlelistbox .btn_titlelist{display: block;font-weight: bold;padding: 10px 0px 10px 6px;}
+.titlelistbox .btn_titlelist:hover{color:#444;text-decoration: underline;}
+.titlelistbox .contlistbox{display: none;padding:6px;}
+
+.titlelistbox.act .titlelist_tit{background: url(/resources/images/content/btn_toggle_close.png) no-repeat right 15px;}
+.titlelistbox.act .contlistbox{display: block;}
+
+.titlelistbox .etcbox{color:#566478; font-weight:bold;display:block;background:#f4f7fa;border:1px solid #e2e7ec;padding:20px;box-sizing:border-box;white-space: pre-wrap;word-wrap: break-word;}
+.titlelistbox .etc_tit{display:inline-block;color:#fff;background:#9656b0;border-radius:3px;padding:2px 10px;margin:4px 0;white-space: pre-wrap;word-wrap: break-word;}
+
+	</style>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+	<xf:group id="" style="" class="section"><xf:group id="wfTitleDesc_grp_excelBasicDescription" style="" class="titlelistbox mb5">
+			<xf:group id="" style="" class="titlelist_tit mb5">
+				<w2:anchor userData1="desc" style="" ev:onclick="scwin.wfTitleDesc_btn_DescTitleBtn_onclick" class="btn_titlelist" outerDiv="false">
+					<xf:label><![CDATA[화면 설명]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+			<w2:textbox id="" ref="data:sdm_fileDesc.desc" class="contlistbox"></w2:textbox>
+		</xf:group><xf:group id="wfTitleDesc_grp_excelBasicTest" style="" class="titlelistbox mb5">
+			<xf:group id="" style="" class="titlelist_tit mb5">
+				<w2:anchor userData1="test" title="" style="" ev:onclick="scwin.wfTitleDesc_btn_DescTitleBtn_onclick" class="btn_titlelist" outerDiv="false">
+					<xf:label><![CDATA[테스트 방법]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+			<w2:textbox ref="data:sdm_fileDesc.test" class="contlistbox"></w2:textbox>
+		</xf:group></xf:group></body>
+</html>

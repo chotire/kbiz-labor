@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchParamMap" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+						<w2:key dataType="text" id="siteNm" name="현장명"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+    /************************************************************************************
+     *  [1] onpageload
+     ************************************************************************************/  
+    scwin.onpageload = function() {
+        //화면초기화 호출
+        scwin.fnInitial();
+        
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+    
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수 
+     ************************************************************************************/    
+	var svcId;		//callback 처리용 서비스ID
+
+    /************************************************************************************
+     *  [3] Callback 함수 
+     ************************************************************************************/
+    /** 오류시 처리 **/
+	scwin.fnErrCallback = function(result, e) {
+
+	}
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function(result, e) {
+
+    };
+     
+    /************************************************************************************
+     *  [4] Event 함수 
+     ************************************************************************************/      
+    /** 현장 정보를 리스트 조회 **/
+    scwin.btnSearch_onclick = function() {
+        alert("조회");
+    };
+
+    /************************************************************************************
+     *  [5] 사용자 정의함수 함수 
+     ************************************************************************************/
+	/* 현장코드 변경 이벤트 */
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchParamMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+		dsSearchParamMap.set( "siteNm" , wfmKeySiteInfo.getWindow().ibxKeySiteNm.getValue() );
+	}
+]]></script>
+
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+
+		<xf:group class="content_body" id="" style="">
+			<xf:group class="navigator_wrap" id="" style="">
+				<xf:group class="navigator" id="" style="">
+					<w2:textbox class="tit" id="screenTitle" label="화면 타이틀" style="" tagname="h2" userData1=""></w2:textbox>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:120.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnSearch" outerDiv="false" style="" ev:onclick="scwin.btnSearch_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

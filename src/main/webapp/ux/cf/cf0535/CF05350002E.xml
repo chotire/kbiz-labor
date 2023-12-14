@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+	<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="list" repeatNode="map" style="" id="dsTcfVPNMngMap" saveRemovedData="true">
+					<w2:keyInfo>
+						<w2:key id="vpnOffrNo" name="신청_번호" dataType="text"></w2:key>
+						<w2:key id="offrDt" name="신청_일" dataType="text"></w2:key>
+						<w2:key id="offrPrgsStusCd" name="요청_진행_상태_코드" dataType="text"></w2:key>
+						<w2:key id="usePrdStrtDt" name="사용_기간_시작_일자" dataType="text"></w2:key>
+						<w2:key id="usePrdEndDt" name="사용_기간_종료_일자" dataType="text"></w2:key>
+						<w2:key id="usePrdDt" name="사용_기간_일자" dataType="text"></w2:key>
+						<w2:key id="aplntEmpno" name="신청자_사번" dataType="text"></w2:key>
+						<w2:key id="aplntId" name="신청자_ID" dataType="text"></w2:key>
+						<w2:key id="aplntNm" name="신청자_명" dataType="text"></w2:key>
+						<w2:key id="aplntDsgnNm" name="신청자_직급_명" dataType="text"></w2:key>
+						<w2:key id="aplntDeptNm" name="신청_부서_명" dataType="text"></w2:key>
+						<w2:key id="aplntDeptCd" name="신청_부서_코드" dataType="text"></w2:key>
+						<w2:key id="rUserEmpno" name="실사용자사번" dataType="text"></w2:key>
+						<w2:key id="rUserNm" name="실사용자_명" dataType="text"></w2:key>
+						<w2:key id="rUserId" name="실사용자_ID" dataType="text"></w2:key>
+						<w2:key id="rUserDsgnNm" name="실사용자_직급" dataType="text"></w2:key>		
+						<w2:key id="rUserDeptNm" name="실사용자_부서_명" dataType="text"></w2:key>
+						<w2:key id="rUserDeptCd" name="실사용자_부서_코드" dataType="text"></w2:key>	
+						<w2:key id="aprvNo" name="결재_번호" dataType="number"></w2:key>
+						<w2:key id="hdofAprvNo" name="본사_결재_번호" dataType="number"></w2:key>
+						<w2:key id="ownConfYn" name="본인_확인_여부" dataType="text"></w2:key>
+						<w2:key id="offrRsnCn" name="신청_사유_내용" dataType="text"></w2:key>
+						<w2:key id="status" name="상태정보" dataType="text"></w2:key>
+						<w2:key id="etc1" name="유의사항" dataType="text"></w2:key>
+						<w2:key id="etc2" name="VPN사용 서약서" dataType="text"></w2:key>
+					</w2:keyInfo>
+					<w2:data></w2:data>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsSearchParam">
+					<w2:keyInfo>
+						<w2:key id="vpnOffrNo" name="신청_번호" dataType="number"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>				
+			</w2:dataCollection>
+		</xf:model>
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+	 * Program ID : CF05350002E.xml
+	 * Program Name : VPN 신청 결재화면 
+	 * Author : 류상휴 (ryush)
+	 * Date : 2020.07.13
+     *
+     * History
+     * ========================================
+     * 변경일자     수정자   내 용
+     * ========================================
+ 	 * 2020.07.13   류상휴   최초작성
+     **************************************************************************/
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    scwin.svcId = "";
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        scwin.initScreen();
+    };
+
+    scwin.onpageunload = function() {
+    };
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function() {
+
+	var dsSrch = com.getAprvParam("dsKeyTcfVPNMngMap"); // 부모창의 데이터맵을 읽어온다.
+     	dsSearchParam.setJSON(dsSrch.getJSON()); 
+
+		var etc1="1. 신청절차 : <b>해당 임원(현장소장) 요청승인</b> -> 담당팀검토 -> 지급승인"
+		        +"<br>2. 사내보안과  네트워크의 올바른 사용을 위하여  “생활보안 지침”을 준수하여야 하며, 미준수시 VPN사용 승인이 취소 될 수 있습니다."        
+		        +"<br>3. VPN ID 공유 및 인터넷사이트 접근 허용에 따른 문제 발생시 책임은 사용자 본임임"
+		        +"<br>&nbsp;&nbsp;&nbsp;&nbsp;(접속일시 , 접속자 이력 관리함)"
+		        +"<br>4. VPN 권한 부여 이후 3개월 이상 미 접속 시 별도 통보 없이 권한 삭제함.";
+		        
+		var etc2="본인은 VPN  망을 이용하여 당사 업무시스템 및 그룹웨어를 사용하는데 있어 VPN ID를 본인이"
+		        +"<br>인수하였슴을 서명/확인드리오며 VPN  ID 사용 규칙을 정히 준수하고 위반시, ID 회수 및 회사의 상응 하는조치에 따르겠습니다."
+		        +"<br>또한 그로 인한 사내/외 폐해는 전적으로 본인의 귀책 사유이므로 법적, 경제적으로 책임질 것을 서약합니다.";
+		
+		 dsTcfVPNMngMap.set("etc1",etc1);
+		 dsTcfVPNMngMap.set("etc2",etc2);
+	 
+	     scwin.fnSearch();
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+     
+    /**************************************************************************
+     * 함 수 명: scwin.fnSearch
+     * 기 능: VPN 신청 상세 조회
+     **************************************************************************/
+    scwin.fnSearch = function(){
+
+        scwin.svcId = "selectTcfVPNMng";
+ 
+        ajaxLib.ajax("/cf/CF05350001U/selectTcfVPNMng", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData : dsSearchParam.getJSON()
+            , callback    : function(result,e){
+            
+            	var  tcfVPNMngData = result.data.tcfVPNMngData;
+            	
+            	 dsTcfVPNMngMap.setJSON(tcfVPNMngData);  
+            	           	             
+            	 dsTcfVPNMngMap.set( "offrDt" , scwin.fnDtFormatter(dsTcfVPNMngMap.get("offrDt")));
+            	 
+ 			     var ownConfYn =  dsTcfVPNMngMap.get( "ownConfYn" );
+
+				 if(ownConfYn=="Y"){ //본인확인 처리			
+				    cbxOwnConfYn.setSelectedIndex(0);
+				 }   
+				//본인확인
+				cbxOwnConfYn.setDisabled(true);			
+            }            
+            , errCallback : "fnErrCallBack"
+        });
+
+    };
+  
+	/**************************************************************************
+	* 함 수 명: scwin.fnDtFormatter
+	* 기 능: 수신일자 포캣터
+	**************************************************************************/
+	scwin.fnDtFormatter = function(value){
+		
+		var str = "";
+		
+		if(value == "") return "";
+		
+		if(value != "")
+		{
+			str = com.transDate(value,'dash') ;
+		}
+		
+		return str;
+		
+	}
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+     
+    /* 결과 후처리*/
+    scwin.fnCallback = function(result, e) {
+         console.log(e);
+        
+	   	switch(scwin.svcId) {
+	   		case "" :
+	   			 console.log('search success!!!!!!!!!!!');
+	   		break;
+	   }    
+    };
+
+    /* 에러 후처리 */
+    scwin.fnErrCallBack = function(e) {
+         console.log(e);
+        
+	   	switch(scwin.svcId) {
+	   		case "" :
+	   			 console.log('search Error!!!!!!!!!!!');
+	   		break;
+	   }   
+    };
+    
+     // 미리보기, 확인 버튼 클릭했을 경우 업무페이지에서 별도로 함수를 실행
+    scwin.fnStartImportMainScript = function() {
+        console.log("TEST");
+    };
+	
+
+	]]></script>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="menuInfoView" class="content_body">		
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpVPNMngInputArea" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>VPN신청 상세등록 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:120px;" tagname="col"></xf:group>
+					<xf:group style="width:200px;" tagname="col"></xf:group>
+					<xf:group tagname="col" style="width:120px;"></xf:group>
+					<xf:group tagname="col" style="width:200px;"></xf:group>
+					<xf:group tagname="col" style="width:120px;"></xf:group>
+					<xf:group tagname="col" style="width:200px;"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청자" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span label="" style="" id="aplntNm" class="txt_unit" ref="data:dsTcfVPNMngMap.aplntNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="직위" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="aplntDsgnNm" label="" style="" ref="data:dsTcfVPNMngMap.aplntDsgnNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="ID" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="aplntId" label="" style="" ref="data:dsTcfVPNMngMap.aplntId"></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th req" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청팀" style=""></w2:span>
+					</xf:group>
+ 					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="rUserDeptNm" label="" style="" ref="data:dsTcfVPNMngMap.rUserDeptNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th req" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="실사용자" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+					<w2:span class="txt_unit" id="rUserNm" label="" style="" ref="data:dsTcfVPNMngMap.rUserNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="직위" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="rUserDsgnNm" label="" style="" ref="data:dsTcfVPNMngMap.rUserDsgnNm"></w2:span>
+					</xf:group>
+				</xf:group>
+ 
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청일" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						 <w2:span class="txt_unit" id="offrDt" label="" style="" ref="data:dsTcfVPNMngMap.offrDt"></w2:span>
+					</xf:group>				
+					<xf:group class="w2tb_th req" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="사용기간" style=""></w2:span>
+					</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="usePrdDt" label="" style="" ref="data:dsTcfVPNMngMap.usePrdDt"></w2:span>
+					</xf:group>				
+					<xf:group class="w2tb_th req" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청사유" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+					<w2:span class="txt_unit" id="offrRsnCn" label="" style="" ref="data:dsTcfVPNMngMap.offrRsnCn"></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="유의사항" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td" >
+					    <w2:attributes>
+							<w2:colspan>5</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>
+						<w2:span id="etc1" style="line-height:170%;" label="" ref="data:dsTcfVPNMngMap.etc1" ></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+							<w2:rowspan>2</w2:rowspan>
+							<w2:colspan>1</w2:colspan>
+						</w2:attributes>						
+						<w2:span id="" label="VPN 서약서" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td"  >
+					    <w2:attributes>
+							<w2:colspan>5</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>	
+                        <w2:span id="etc2" style="line-height:170%;" label=""  ref="data:dsTcfVPNMngMap.etc2" ></w2:span>
+				    </xf:group>			    
+				</xf:group>	
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_td" style="" tagname="td"  >
+					    <w2:attributes>
+							<w2:colspan>5</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>
+						<xf:select appearance="full" class="" cols="1" id="cbxOwnConfYn"
+							ref="data:dsTcfVPNMng.ownConfYn" renderType="checkboxgroup" rows="" selectedindex="" style=""
+							falseValue="N" ev:onchange="">
+							<xf:choices>
+								<xf:item>
+									<xf:label>본인확인</xf:label>
+									<xf:value><![CDATA[Y]]></xf:value>
+								</xf:item>
+							</xf:choices>
+						</xf:select>
+					</xf:group>
+				</xf:group>													
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

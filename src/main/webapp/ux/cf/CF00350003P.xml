@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="/resources/css/magnific-popup.css" type="text/css"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    
+    <script type="text/javascript" src="/resources/js/lib/util/jquery.magnific-popup.min.js"></script>
+
+    <script type="javascript" lazy="false"><![CDATA[		
+    /***************************************************************************
+     * Program ID : CF00350003P.xml 
+     * Program Name : 첨부파일(팝업) 
+     * Author : 김환섭 (tpkhs1)
+     * Date : 2019.02.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.02.15   김환섭   최초작성
+     *    
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+     var imgSrc = "";
+     
+     /************************************************************************************ 
+      *  [1] onpageload
+      ************************************************************************************/   
+     scwin.onpageload = function() {
+         imgSrc = JSON.parse($p.getPopupParam()).data.imgSrc;
+         imgAfl.setSrc(imgSrc);
+         
+         // 이미지 확대 플러그인 적용
+         $("#"+imgAflAn.id).attr("href", imgSrc);
+         $("#"+imgAflAn.id).magnificPopup({
+             type: 'image',
+             closeOnContentClick: true,
+             mainClass: 'mfp-img-mobile',
+             image: { verticalFit: true }
+         });
+     };
+
+     scwin.btnClose_onclick = function() {
+         com.popup_close("");
+     };
+     
+     scwin.btnDownload_onclick = function() {
+         $.fileDownload(imgSrc);
+         return;
+     };
+
+	scwin.imgAfl_onclick = function(e) {
+        var img = new Image();
+        img.src = imgAfl.getSrc();
+        var win_width = img.width;
+        var win_height = img.height;
+        var OpenWindow = window.open('','_blank', 'width='+win_width+', height='+win_height+', menubars=no, scrollbars=auto');
+        OpenWindow.document.write("<style>body{margin:0px;}</style><img src='"+imgAfl.getSrc()+"'>");        
+	};
+]]></script>
+</head>
+<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group class="content_body popup" id="" style="" tagname="div">
+        <!-- <xf:image src="" style="width:780px;height:450px;" id="imgAfl" ev:onclick="scwin.imgAfl_onclick"></xf:image> -->
+        <xf:group id="imgAflAn" tagname="a">
+            <xf:image id="imgAfl" src="" style="width:780px;height:450px;"></xf:image>
+        </xf:group>        
+    </xf:group>
+    <xf:group class="bottombox" id="" style="margin-top:0px;">
+        <w2:anchor class="btn_gcm" outerDiv="false" style="" ev:onclick="scwin.btnDownload_onclick">
+            <xf:label>
+                <![CDATA[다운로드]]>
+            </xf:label>
+        </w2:anchor>
+        <w2:anchor class="btn_gcm" outerDiv="false" style="" ev:onclick="scwin.btnClose_onclick">
+            <xf:label>
+                <![CDATA[닫기]]>
+            </xf:label>
+        </w2:anchor>
+    </xf:group>
+</body>
+
+</html>

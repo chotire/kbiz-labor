@@ -1,0 +1,57 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/labor
+    username: sa
+    password:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: null
+  mapper-locations:
+    - classpath*:mappers/**/*.xml
+  type-aliases-package: kbiz.labor
+prunus:
+  websquare:
+    adaptor:
+      websquare-home: /Users/yongsang/Development/workspace/java/kbiz-labor/runtime/websquare_home
+  security:
+    authentication:
+      mode: session
+      tenant: labor
+      username-parameter: loginId
+      password-parameter: passWd
+      maximum-password-age: 90  #비밀번호 유효기간
+      maximum-failed-attempts: 5
+      lock-time-duration: 0
+    concurrent:
+      maximum-users: -1
+      allowed-multi-device: false
+      exception-if-maximum-exceeded: false
+    access:
+      whitelisted-endpoints:
+        - /
+        - /error
+        - /I18N
+      ignored-static-endpoints:
+        - /**/*.html
+        - /websquare/**
+        - /resources/**
+        - /webjars/**
+logging:
+  level:
+    org.springframework.security: debug
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev, prod
+prunus:
+  websquare:
+    adaptor:
+      websquare-home:

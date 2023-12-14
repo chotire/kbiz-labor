@@ -1,0 +1,1186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>DEFAULT</w2:type>
+    	<w2:buildDate />
+    	<xf:model>
+    		<xf:instance>
+    			<data xmlns="" />
+    		</xf:instance>
+    		<w2:dataCollection baseNode="map">
+    			<w2:dataList id="dataList1" baseNode="list" saveRemovedData="true" repeatNode="map">
+    				<w2:columnInfo>
+    					<w2:column id="col1" name="텍스트" dataType="텍스트"></w2:column>
+    					<w2:column id="jobGbCd" name="텍스트" dataType="텍스트"></w2:column>
+    					<w2:column id="aflId" name="텍스트" dataType="텍스트"></w2:column>
+    					<w2:column id="aflNm" name="name4" dataType="text"></w2:column>
+    				</w2:columnInfo>
+    				<w2:data use="true">
+    					<w2:row>
+    						<col1><![CDATA[입력용]]></col1>
+    						<jobGbCd><![CDATA[조회용]]></jobGbCd>
+    						<aflId><![CDATA[]]></aflId>
+    					</w2:row>
+    				</w2:data>
+    			</w2:dataList>
+    		</w2:dataCollection>
+    		<w2:workflowCollection></w2:workflowCollection>
+    	</xf:model>
+    	<script type="javascript" lazy="false"><![CDATA[
+    	scwin.udc_Multi_onDone = function(data) {
+				console.log("---- html5 multi upload done.----");
+				console.log(data);
+			};
+    	]]></script>
+
+<!-- 테스트를 위한 참조       -->
+        <w2:require src="/WEB-INF/ux/common/udc/udcAddress.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcBusiness.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcCardnumber.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcCurrency.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcDatecalendarSelect.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcDatecalendar4Time.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcDatecalendar6Time.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcDatecalendarTime.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcDeptTreePopup.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcDeptPopup.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcSitePopup.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcUserPopup.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcEmail.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcICnumber.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcNumber.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcPhone.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcSearchCode.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcSearchpopup.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcTradePopup.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcYearcalendar.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcImgFileList.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcSingleupload.xml"></w2:require>
+
+    	<script type="text/javascript" src="/resources/js/html2canvas/html2canvas.js"></script>
+        
+    <script type="text/javascript"><![CDATA[
+    scwin.onpageload = function() {
+	
+		//주소창 동적크기 지정
+		com.getUdcComp("udcAddressInfo", "addrBasic").setStyle("width", "300px");
+		com.getUdcComp("udcAddressInfo", "addrDetail").setStyle("width", "300px");
+        
+        //udcSingleUpldFile.hide(); // udc숨기기...
+    };
+
+    // 싱글업로드 파일첨부 팝업
+	scwin.btnAfl_onclick = function(e) {
+		var sAflId   = ibxAflId.getValue();
+		var sJobGbCd = ibxJobGbCd.getValue();
+		var sMenuId  = ibxMenuId.getValue();
+
+		var popOps = {
+				pid: "AflPopup"+"_" +new Date().getTime()
+		        ,url:"/ux/cf/CF00350002P.xml"
+		        ,modal : true //true || false
+		        ,popup_name:"파일 첨부"
+		        ,callbackFn : "scwin.fnSingleUploadCallBack"
+		        ,widType : "M"
+		        ,height : 270
+		        ,data : {
+		                 aflId   : sAflId,
+		                 jobGbCd : sJobGbCd,
+		                 menuId  : sMenuId,
+		                 fileExt : "txt,xlsx,doc,pdf",
+		                 usage   : "INS"
+		                }
+               };
+  		com.popup_open(popOps);
+	};
+
+    // 싱글업로드 파일패스지정 파일첨부 팝업
+    scwin.btnAflPathCustom_onclick = function(e) {
+        var sAflId   = ibxAflId.getValue();
+        var sJobGbCd = ibxJobGbCd.getValue();
+        var sMenuId  = ibxMenuId.getValue();
+        var sFilePathCustom = ibxFilePathCustom.getValue(); // 파일패스지정
+
+        var popOps = {
+                pid: "AflPopup"+"_" +new Date().getTime()
+                ,url:"/ux/cf/CF00350002P.xml"
+                ,modal : true //true || false
+                ,popup_name:"파일 첨부"
+                ,callbackFn : "scwin.fnSingleUploadCallBack"
+                ,widType : "M"
+                ,height : 270
+                ,data : {
+                         aflId   : sAflId,
+                         jobGbCd : sJobGbCd,
+                         menuId  : sMenuId,
+                         filePathCustom : sFilePathCustom,
+                         fileExt : "txt,xlsx,doc,pdf",
+                         usage   : "INS"
+                        }
+               };
+        com.popup_open(popOps);
+    };
+    
+    // 싱글업로드 파일첨부 팝업 콜백
+    scwin.fnSingleUploadCallBack = function(result){
+        ibxAflId.setValue(result.aflId);
+        ibxJobGbCd.setValue(result.jobGbCd);
+        ibxMenuId.setValue(result.menuId);
+        scwin.fnFileLink_onclick(); // 파일보기 및 다운로드 매핑
+    };
+    
+    // 싱글첨부파일 다운로드 매핑 : 첨부파일ID입력 후 클릭(aflId를 미리 입력해 놓으면 미리 보여준다)
+    scwin.fnFileLink_onclick = function(){
+        var aflId = ibxAflId.getValue(); // 아이디 매핑
+        var aflData = com.udcAflSingle(aflId); // 싱글 데이터 불러오기
+        if( aflData != null ) {
+            ibxDownFile.setValue(aflData.aflNm); // 파일명 입력
+            
+            // 클릭이벤트 입력
+            var href = "/cf/CF00350000P/downloadMAV?aflp="+aflData.aflp;
+            $("#"+ibxDownFile.getID()).off("click").on("click", function() {
+                $.fileDownload(href);
+            });
+        }
+    };
+
+    // 팝업없는 싱글업로드(단순 업로드와 콜백만 제공함)
+    scwin.btnAflSingleUpload_onclick = function() {
+        var sJobGbCd = "CF";
+        var sMenuId  = "CF05101525U";
+        var sFileExt = "txt,xlsx,doc,pdf,jpg,png";
+        com.setUdcValue( "udcSingleUpldFile", "jobGbCd", sJobGbCd);
+        com.setUdcValue( "udcSingleUpldFile", "menuId", sMenuId);
+        com.setUdcValue( "udcSingleUpldFile", "fileExt", sFileExt);
+        com.setUdcValue( "udcSingleUpldFile", "callBackFn", "fnAlertSrc"); // 콜백함수명 입력
+        //com.getUdcComp( "udcSingleUpldFile", "filePath").addClass("hide"); // 주석처리 했으나 사용가능 기능 : 패스 숨길 때 사용
+
+        // WebSquare.layer.processMsg = "프로그래스바 변경할 메시지 내용입력";
+        //com.setUdcValue( "udcSingleUpldFile", "progUseYN", "N"); // 주석처리 했으나 사용가능 기능 : 프로그래스바 사용/사용안함
+    };
+
+    // 팝업없는 싱글업로드 콜백
+    scwin.fnAlertSrc = function(fileId) {
+        alert(fileId);
+    }
+    
+    // 멀티업로드 파일첨부 팝업입력가능
+	scwin.ins_aflId_onclick = function(e) {
+		var sJobGbCd = "CF";
+		var sMenuId  = "CF05101525U";
+		var sAflId   = "_20140103_102158314";
+		var sFileExt = "txt,xlsx,doc,pdf,jpg,png,tif,tiff";
+
+		com.setUdcValue( "uFileList", "jobGbCd", sJobGbCd);
+		com.setUdcValue( "uFileList", "menuId", sMenuId);
+		com.setUdcValue( "uFileList", "aflId", sAflId);
+		com.setUdcValue( "uFileList", "fileExt", sFileExt);
+		com.setUdcValue( "uFileList", "usage", "INS");       // 버튼숨기기처리 : 필수값
+        com.setUdcValue( "uFileList", "fileSize", "");       // 용량표시안함(표시함:INS) : 필수값
+        com.setUdcValue( "uFileList", "fileCert", "");       // 암호화처리
+        com.setUdcValue( "uFileList", "filePathCustom", ""); // 파일패스입력        
+	};
+
+    // 멀티업로드 파일첨부 팝업입력불가 
+	scwin.ins_aflIdNot_onclick = function(e) {
+		var sJobGbCd = "CF";
+		var sMenuId  = "CF05101525U";
+		var sAflId   = "_20140103_102158314";
+		var sFileExt = "txt,xlsx,doc,pdf,jpg,png,tif,tiff";
+
+		com.setUdcValue( "uFileList", "jobGbCd", sJobGbCd);
+		com.setUdcValue( "uFileList", "menuId", sMenuId);
+		com.setUdcValue( "uFileList", "aflId", sAflId);
+		com.setUdcValue( "uFileList", "usage", "");          // 팝업입력가능
+	};
+    
+    // 멀티업로드 파일 다운로드 리스트 용량표시
+    scwin.btnSize_onclick = function(e) {
+        var sJobGbCd = "CF";
+        var sMenuId  = "CF05101525U";
+        var sAflId   = "_20140103_102158314";
+        var sFileExt = "txt,xlsx,doc,pdf,jpg,png,tif,tiff";
+        
+        com.setUdcValue( "uFileList", "jobGbCd", sJobGbCd);
+        com.setUdcValue( "uFileList", "menuId", sMenuId);
+        com.setUdcValue( "uFileList", "aflId", sAflId);
+        com.setUdcValue( "uFileList", "fileExt", sFileExt);
+        com.setUdcValue( "uFileList", "usage", "INS");       // 팝업입력가능
+        com.setUdcValue( "uFileList", "fileSize", "INS");    // 용량표시
+        com.setUdcValue( "uFileList", "fileCert", "");       // 암호화처리
+        com.setUdcValue( "uFileList", "filePathCustom", ""); // 파일패스입력        
+    };
+
+    // 멀티업로드 파일 암호화
+    scwin.btnCert_onclick = function(e) {
+        var sJobGbCd = "CF";
+        var sMenuId  = "CF05101525U";
+        var sAflId   = "_20140103_102158314";
+        var sFileExt = "txt,xlsx,doc,pdf,jpg,png,tif,tiff";
+
+        com.setUdcValue( "uFileList", "jobGbCd", sJobGbCd);
+        com.setUdcValue( "uFileList", "menuId", sMenuId);
+        com.setUdcValue( "uFileList", "aflId", sAflId);
+        com.setUdcValue( "uFileList", "fileExt", sFileExt);
+        com.setUdcValue( "uFileList", "usage", "INS");       // 팝업입력가능
+        com.setUdcValue( "uFileList", "fileSize", "");       // 용량표시
+        com.setUdcValue( "uFileList", "fileCert", "INS");    // 암호화처리
+        com.setUdcValue( "uFileList", "filePathCustom", ""); // 파일패스입력        
+    };
+
+    // 멀티업로드 파일패스지정
+    scwin.btnPath_onclick = function(e) {
+        var sJobGbCd = "CF";
+        var sMenuId  = "CF05101525U";
+        var sAflId   = "_20140103_102158314";
+        var sFileExt = "txt,xlsx,doc,pdf,jpg,png,tif,tiff";
+
+        com.setUdcValue( "uFileList", "jobGbCd", sJobGbCd);
+        com.setUdcValue( "uFileList", "menuId", sMenuId);
+        com.setUdcValue( "uFileList", "aflId", sAflId);
+        com.setUdcValue( "uFileList", "fileExt", sFileExt);
+        com.setUdcValue( "uFileList", "usage", "INS"); // 팝업입력가능
+        com.setUdcValue( "uFileList", "fileSize", ""); // 용량표시
+        com.setUdcValue( "uFileList", "fileCert", ""); // 암호화처리
+        com.setUdcValue( "uFileList", "filePathCustom", "/testsub1/testsub2"); // 파일패스입력
+    };
+
+    // 멀티업로드 파일 다운로드 리스트 디자인 변경(1컬럼~4컬럼)
+    scwin.selListChg_onchange = function() {
+        $("#"+com.getUdcComp("uFileList", "gen_aflList").id).removeClass();
+        com.getUdcComp("uFileList", "gen_aflList").addClass("databox");
+        if( selListChg.getValue() != "databox" ) {
+            com.getUdcComp("uFileList", "gen_aflList").addClass(selListChg.getValue());
+        }
+    };
+    
+    // 멀티업로드 파일첨부 버튼 보이기    
+    scwin.btnShow_onclick = function(e) {
+        com.getUdcComp("uFileList", "btnAddFile").removeClass("hide");
+        com.getUdcComp("uFileList", "btnAddFile").addClass("show");
+    };
+    
+    // 멀티업로드 파일첨부 버튼 숨기기    
+    scwin.btnHide_onclick = function(e) {
+        com.getUdcComp("uFileList", "btnAddFile").removeClass("show");
+        com.getUdcComp("uFileList", "btnAddFile").addClass("hide");
+    };
+    
+    // 이미지리스트 팝업입력가능
+    scwin.ins_ImgaflId_onclick = function(e) {
+        com.getUdcComp("uImgFileList", "gen_aflList").addClass("img_databox");
+
+        var sJobGbCd = "CF";
+        var sMenuId  = "CF05101525U";
+        var sAflId   = "_20140103_102158314";
+        var sFileExt = "jpg,png,jpeg,tif,tiff";
+
+        com.setUdcValue( "uImgFileList", "jobGbCd", sJobGbCd);
+        com.setUdcValue( "uImgFileList", "menuId", sMenuId);
+        com.setUdcValue( "uImgFileList", "aflId", sAflId);
+        com.setUdcValue( "uImgFileList", "fileExt", sFileExt);
+        com.setUdcValue( "uImgFileList", "usage", "INS");
+    };
+
+    // 이미지리스트 팝업입력불가 
+    scwin.ins_ImgaflIdNot_onclick = function(e) {
+        com.getUdcComp("uImgFileList", "gen_aflList").addClass("img_databox");
+
+        var sJobGbCd = "CF";
+        var sMenuId  = "CF05101525U";
+        var sAflId   = "_20140103_102158314";
+        var sFileExt = "jpg,png,jpeg,tif,tiff";
+
+        com.setUdcValue( "uImgFileList", "jobGbCd", sJobGbCd);
+        com.setUdcValue( "uImgFileList", "menuId", sMenuId);
+        com.setUdcValue( "uImgFileList", "aflId", sAflId);
+        com.setUdcValue( "uImgFileList", "usage", "");
+    };    
+
+    // 이미지리스트 이미지보기 : 첨부이미지ID입력 후 클릭(aflId를 미리 입력해 놓으면 미리 보여준다)
+    scwin.ins_ImgAflIdView_onclick = function(e) {
+        com.getUdcComp("uImgFileList", "gen_aflList").addClass("img_databox");
+
+        var sJobGbCd = "CF";
+        var sMenuId  = "CF05101525U";
+        var sAflId   = imgAflId.getValue();
+        var sFileExt = "jpg,png,jpeg,tif,tiff";
+
+        com.setUdcValue( "uImgFileList", "jobGbCd", sJobGbCd);
+        com.setUdcValue( "uImgFileList", "menuId", sMenuId);
+        com.setUdcValue( "uImgFileList", "aflId", sAflId);
+        com.setUdcValue( "uImgFileList", "fileExt", sFileExt);
+        com.setUdcValue( "uImgFileList", "usage", "INS");
+    };    
+    
+    // 이미지리스트 파일첨부 버튼 보이기
+    scwin.btnImgShow_onclick = function(e) {
+        com.getUdcComp("uImgFileList", "btnAddFile").removeClass("hide");
+        com.getUdcComp("uImgFileList", "btnAddFile").addClass("show");
+    };
+
+    // 이미지리스트 파일첨부 버튼 숨기기
+    scwin.btnImgHide_onclick = function(e) {
+        com.getUdcComp("uImgFileList", "btnAddFile").removeClass("show");
+        com.getUdcComp("uImgFileList", "btnAddFile").addClass("hide");
+    };
+    
+    // 이미지리스트 디자인 변경(1컬럼~5컬럼)
+    scwin.selImgListChg_onchange = function() {
+        $("#"+com.getUdcComp("uImgFileList", "grp_img_aflList").id).removeClass();
+        com.getUdcComp("uImgFileList", "grp_img_aflList").addClass("file_img_list");
+        if( selImgListChg.getValue() != "file_img_list" ) {
+            com.getUdcComp("uImgFileList", "grp_img_aflList").addClass(selImgListChg.getValue());
+        }
+    };
+
+    // 싱글이미지 첨부 팝업 
+    scwin.ins_SimgAflId_onclick = function(e) {
+        var sAflId   = ibxAflIdImg.getValue();
+        var sJobGbCd = ibxJobGbCdImg.getValue();
+        var sMenuId  = ibxMenuIdImg.getValue();
+        var popOps = {
+                pid: "AflPopup"+"_" +new Date().getTime()
+                ,url:"/ux/cf/CF00350002P.xml"
+                ,modal : true
+                ,popup_name:"이미지 파일 첨부"
+                ,callbackFn : "scwin.fnImgSingleUploadCallBack"
+                ,widType : "M"
+                ,height : 270
+                ,data : {
+                         aflId   : sAflId,
+                         jobGbCd : sJobGbCd,
+                         menuId  : sMenuId,
+                         fileExt : "jpg,png,jpeg,tif,tiff",
+                         usage   : "INS"
+                        }
+               };
+        com.popup_open(popOps);
+    };    
+    
+    // 싱글이미지 첨부 콜백처리
+    scwin.fnImgSingleUploadCallBack = function(result){
+        ibxAflIdImg.setValue(result.aflId);
+        ibx_inputImg.setValue(result.aflNm);
+        ibxJobGbCdImg.setValue(result.jobGbCd);
+        ibxMenuIdImg.setValue(result.menuId);
+        ibxFileHref.setSrc(result.imgUrl);
+    };
+
+    // 싱글이미지 샘플첨부
+    scwin.ins_ImgAflIdSingleView_onclick = function(){
+        var aflId = imgAflIdSingle.getValue(); // 아이디 매핑
+        var aflData = com.udcAflSingle(aflId); // 싱글 데이터 불러오기
+        // 이미지주소 입력
+        var imgUrl = "/cf/CF00350000P/downloadMAV?aflp="+aflData.aflp;
+        ibxFileHref.setSrc(imgUrl);
+    };
+
+    // 싱글이미지 첨부 이미지 크게 보기    
+    scwin.ibxFileHref_onclick = function(e) {
+        com.udcPopup("AflImgPopup", "", ibxFileHref.getSrc());
+    };
+    
+    // UDC멀티업로드 실행 후 닫기 눌렀을 때 콜백실행 부분
+    scwin.udcCallbackAflEx = function(){
+        console.log("test");
+    };
+    
+	scwin.getUserAllData = function(){
+		
+		var data = com.getUdcCBAllData('udcUserInfo');
+		
+		if(data != undefined && data != "" )
+		{
+			alert(JSON.stringify(data));
+		}
+	};
+	
+	scwin.btnTradeAllData_onclick = function(e) {
+		var data = com.getUdcCBAllData('udcTradeInfo');
+		
+		if(data != undefined && data != "")
+		{
+			alert(JSON.stringify(data));
+		}
+	};
+	
+	scwin.btnSiteAllData_onclick = function(e) {
+		
+		var data = com.getUdcCBAllData('udcSiteInfo');
+		
+		if(data != undefined && data != "")
+		{
+			alert(JSON.stringify(data));
+		}
+		
+	};
+	
+	scwin.btnDeptAllData_onclick = function(e) {
+		var data = com.getUdcCBAllData('udcDeptInfo');
+		
+		if(data != undefined && data != "")
+		{
+			alert(JSON.stringify(data));
+		}
+	};
+	
+	scwin.btnDeptTreeAllData_onclick = function(e) {
+		var data = com.getUdcCBAllData('udcDeptTreeInfo');
+		
+		if(data != undefined && data != "")
+		{
+			alert(JSON.stringify(data));
+		}
+	};
+    
+	scwin.grd_gridView1_oncellclick = function(row,col) {
+		
+		if ( row == 0 && col == 0 ) {
+		    scwin.fnAflPop("INS");
+		    alert("rtn:"+rtn);
+		}
+		if ( row == 0 && col == 1 ) {
+		    scwin.fnAflPop("");
+		    alert("rtn:"+rtn);
+		}
+	};
+	
+	scwin.fnAflPop = function( strIns ) {
+		var popOps = {
+			popup_name:"파일첨부 검색"
+	               		,url:"/ux/cf/CF00350000P.xml"
+	               		,data :  {
+					              jobGbCd : "CF", 
+					              menuId  : "CS05101525U", 
+					              aflId   : "_20140103_102158314", 
+					              fileExt : "txt,xlsx,doc,pdf",
+					              usage   : strIns
+	               		          }
+	               		,widType : "M"
+	               		,height:"520"
+	               		,callbackFn : "scwin.popCallback"
+	    };
+		com.popup_open(popOps);	
+	}
+
+	// 팝업 결과 후처리
+	scwin.popCallback = function(result){
+
+    	var pRowIndex = 0;
+    	pRowIndex = grd_gridView1.getFocusedRowIndex();
+    	if (pRowIndex == -1){
+    	    return;
+    	}else{
+			dataList1.setCellData(pRowIndex, "aflId", result.aflId);
+			dataList1.setCellData(pRowIndex, "aflNm", result.aflNm);
+    	}
+	};
+
+    /*
+    * 날짜입력 예제(utils.js 의 com.transDateType(value, sdate))
+    *
+    * com.transDateType("frDay7")            : 일주일전 시작(오늘날짜 기본값)
+    * com.transDateType("frDay7",new Date()) : Date object로 입력
+    * com.transDateType("frDay7","20190415") : String으로 날짜입력
+    */
+    scwin.ins_lastWeek_onclick = function(value){
+        com.setUdcValue( "udcPeriodcalendar", "frDate", com.transDateType("fr"+value));
+        com.setUdcValue( "udcPeriodcalendar", "toDate", com.transDateType("to"+value));
+    };
+
+	// HTML2CANVAS 캡처 버튼 클릭 이벤트 핸들러
+	scwin.btnPrintCanvas_onclick = function(e) {
+		debugger;
+		var srcImg = $("#" + aprvContent.id);
+		
+		html2canvas(srcImg, {
+			onrendered : function(canvas) {
+				var imgData = canvas.toDataURL();
+				/*
+				popupLib.open("popup0", "/ux/cf/html2canvas.xml", {
+					title: "HTML2CANVAS 캡처",
+					useLayer: false,
+					modal: false,
+					width:"800px",
+					height:"680px",
+					param: {
+						img: imgData
+					},
+					scrollbars: true,
+					resizable: true											
+				});
+				 */
+
+				var popOps = {
+					id : "popup0",
+					url : "/ux/template/pagePrint/html2canvas.xml",
+					type : "browser",
+					popup_name : "HTML2CANVAS 캡처",
+					data : {
+						img : imgData
+					}
+				};
+				com.popup_open(popOps);
+
+			}
+		});
+
+	};
+]]></script></head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <xf:group id="" style="" class="content_body no_btns">
+            <xf:group id="" style="" class="tb_overflow">
+                <xf:group tagname="table" id="" style="" class="w2tb">
+                    <w2:attributes>
+                        <w2:summary></w2:summary>
+                    </w2:attributes>
+                    <xf:group tagname="colgroup">
+                        <xf:group style="width:200px;" tagname="col"></xf:group>
+                        <xf:group tagname="col" style="width:200px;"></xf:group>
+                        <xf:group style="" tagname="col"></xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group style="" class="w2tb_th" tagname="th">종류</xf:group>
+                        <xf:group tagname="th" class="w2tb_th">
+                            파일명
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group style="" class="w2tb_th" tagname="th">입력포맷</xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group class="w2tb_th" tagname="th">
+                            일자(년/월/일)&amp;nbsp;(시)
+                            <w2:attributes>
+                                <w2:colspan>1</w2:colspan>
+                                <w2:rowspan>1</w2:rowspan>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcDatecalendarSelect.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group class="w2tb_td" tagname="td">
+                            <w2:udc_datecalendar_select id="" style=""></w2:udc_datecalendar_select>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group class="w2tb_th" tagname="th">연월</xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcYearMonthcalendar.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group class="w2tb_td" tagname="td">
+                            <w2:udc_yearMonthcalendar id="" style=""></w2:udc_yearMonthcalendar>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            연도
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcYearcalendar.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_yearcalendar id="" style=""></w2:udc_yearcalendar>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            일자&amp;nbsp;+&amp;nbsp;시:분
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcDatecalendar4Time.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_datecalendar_4time id="" style=""></w2:udc_datecalendar_4time>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            일자&amp;nbsp;+&amp;nbsp;시:분:초
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcDatecalendar6Time.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_datecalendar_6time id="" style=""></w2:udc_datecalendar_6time>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            기간
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcPeriodcalendar.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_periodcalendar id="udcPeriodcalendar" style=""></w2:udc_periodcalendar>
+
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('Day7')"><xf:label><![CDATA[일주일]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('Day30')"><xf:label><![CDATA[한달]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('Day90')"><xf:label><![CDATA[세달]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('Quarter1')"><xf:label><![CDATA[1분기]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('Quarter2')"><xf:label><![CDATA[2분기]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('Quarter3')"><xf:label><![CDATA[3분기]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('Quarter4')"><xf:label><![CDATA[4분기]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('LastWeek')"><xf:label><![CDATA[전주]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('LastMonth')"><xf:label><![CDATA[전달]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('LastYear')"><xf:label><![CDATA[전년]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('LastYear2')"><xf:label><![CDATA[2년전]]></xf:label></xf:trigger>
+                            <xf:trigger type="button" ev:onclick="scwin.ins_lastWeek_onclick('LastYear3')"><xf:label><![CDATA[3년전]]></xf:label></xf:trigger>
+                        </xf:group>
+                    </xf:group>
+                    <!--    				<xf:group tagname="tr" style="">-->
+                    <!--    					<xf:group tagname="th" class="w2tb_th">-->
+                    <!--    						숫자-->
+                    <!--    						<w2:attributes>-->
+                    <!--    							<w2:scope>row</w2:scope>-->
+                    <!--    						</w2:attributes>-->
+                    <!--    					</xf:group>-->
+                    <!--    					<xf:group tagname="td" class="w2tb_td">-->
+                    <!--    						udcNumber.xml-->
+                    <!--    						<w2:attributes></w2:attributes>-->
+                    <!--    					</xf:group>-->
+                    <!--    					<xf:group tagname="td" class="w2tb_td">-->
+                    <!--    						<w2:attributes></w2:attributes>-->
+                    <!--    						<w2:udc_number id="" style=""></w2:udc_number>-->
+                    <!--    					</xf:group>-->
+                    <!--    				</xf:group>-->
+                    <!--    				<xf:group tagname="tr" style="">-->
+                    <!--    					<xf:group tagname="th" class="w2tb_th">-->
+                    <!--    						통화-->
+                    <!--    						<w2:attributes>-->
+                    <!--    							<w2:scope>row</w2:scope>-->
+                    <!--    						</w2:attributes>-->
+                    <!--    					</xf:group>-->
+                    <!--    					<xf:group tagname="td" class="w2tb_td">-->
+                    <!--    						udcCurrency.xml-->
+                    <!--    						<w2:attributes></w2:attributes>-->
+                    <!--    					</xf:group>-->
+                    <!--    					<xf:group tagname="td" class="w2tb_td">-->
+                    <!--    						<w2:attributes></w2:attributes>-->
+                    <!--    						<w2:udc_currency id="" style=""></w2:udc_currency>-->
+                    <!--    					</xf:group>-->
+                    <!--    				</xf:group>-->
+
+                    <xf:group tagname="tr" style="">
+    					<xf:group tagname="th" class="w2tb_th">부서트리검색<w2:attributes>
+    							<w2:scope>row</w2:scope>
+    						</w2:attributes></xf:group>
+
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcDeptTreePopup.xml
+                            <w2:attributes></w2:attributes>
+                            <xf:trigger ev:onclick="scwin.btnDeptTreeAllData_onclick" id="btnDeptTreeAllData" style=""
+                                type="button">
+                                <xf:label><![CDATA[getInfo]]></xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_depttreepopup style="" class="req" id="udcDeptTreeInfo" disabled="false"></w2:udc_depttreepopup>
+                            명명규칙 : 'udcDeptTreeInfo'+ 첨자, 예)udcDeptTreeInfo, udcDeptTreeInfo2, udcDeptTreeInfo3
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+    					<xf:group tagname="th" class="w2tb_th">부서조회<w2:attributes>
+    							<w2:scope>row</w2:scope>
+    						</w2:attributes></xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcDeptPopup.xml
+                            <w2:attributes></w2:attributes>
+                            <xf:trigger ev:onclick="scwin.btnDeptAllData_onclick" id="btnDeptAllData" style=""
+                                type="button">
+                                <xf:label><![CDATA[getInfo]]></xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_deptpopup style="" class="req" id="udcDeptInfo" disabled="false"></w2:udc_deptpopup>
+                            명명규칙 : 'udcDeptInfo'+ 첨자, 예)udcDeptInfo, udcDeptInfo2, udcDeptInfo3
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+    					<xf:group tagname="th" class="w2tb_th">현장조회<w2:attributes>
+    							<w2:scope>row</w2:scope>
+    						</w2:attributes></xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcSitePopup.xml
+                            <w2:attributes></w2:attributes>
+                            <xf:trigger ev:onclick="scwin.btnSiteAllData_onclick" id="btnSiteAllData" style=""
+                                type="button">
+                                <xf:label><![CDATA[getInfo]]></xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_sitepopup style="" class="req" id="udcSiteInfo" disabled="false"></w2:udc_sitepopup>
+                            명명규칙 : 'udcSiteInfo'+ 첨자, 예)udcSiteInfo, udcSiteInfo2, udcSiteInfo3
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            거래처
+                            <br></br>
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcTradePopup.xml
+                            <w2:attributes></w2:attributes>
+    						<xf:trigger ev:onclick="scwin.btnTradeAllData_onclick" id="btnTradeAllData" style="" type="button">
+                                <xf:label><![CDATA[getInfo]]></xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_tradepopup style="" class="" id="udcTradeInfo"></w2:udc_tradepopup>
+                            명명규칙 : 'udcTradeInfo'+ 첨자, 예)udcTradeInfo, udcTradeInfo2, udcTradeInfo3
+                        </xf:group>
+                    </xf:group>
+
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            사용자 검색
+                            <br></br>
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcUserPopup.xml
+                            <w2:attributes></w2:attributes>
+                            <xf:trigger ev:onclick="scwin.getUserAllData" id="btnUserAllData" style="" type="button">
+                                <xf:label><![CDATA[getInfo]]></xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_userpopup style="" class="" id="udcUserInfo"></w2:udc_userpopup>
+                            명명규칙 : 'udcUserInfo'+ 첨자, 예)udcUserInfo, udcUserInfo2, udcUserInfo3
+                        </xf:group>
+                    </xf:group>
+
+                    <!--    				<xf:group tagname="tr" style="">-->
+                    <!--    					<xf:group tagname="th" class="w2tb_th">-->
+                    <!--    						팝업으로&amp;nbsp;찾는&amp;nbsp;데이터-->
+                    <!--    						<br></br>-->
+                    <!--    						<w2:attributes>-->
+                    <!--    							<w2:scope>row</w2:scope>-->
+                    <!--    						</w2:attributes>-->
+                    <!--    					</xf:group>-->
+                    <!--    					<xf:group tagname="td" class="w2tb_td">-->
+                    <!--    						udcSearchpopup.xml-->
+                    <!--    						<w2:attributes></w2:attributes>-->
+                    <!--    					</xf:group>-->
+                    <!--    					<xf:group tagname="td" class="w2tb_td">-->
+                    <!--    						<w2:attributes></w2:attributes>-->
+                    <!--    						<w2:udc_searchpopup id="" style=""></w2:udc_searchpopup>-->
+                    <!--    					</xf:group>-->
+                    <!--    				</xf:group>-->
+                    <!--    				<xf:group tagname="tr" style="">-->
+                    <!--    					<xf:group tagname="th" class="w2tb_th">-->
+                    <!--    						코드명&amp;nbsp;+&amp;nbsp;코드-->
+                    <!--    						<br></br>-->
+                    <!--    						<w2:attributes>-->
+                    <!--    							<w2:scope>row</w2:scope>-->
+                    <!--    						</w2:attributes>-->
+                    <!--    					</xf:group>-->
+                    <!--    					<xf:group tagname="td" class="w2tb_td">-->
+                    <!--    						udcSearchCode.xml-->
+                    <!--    						<w2:attributes></w2:attributes>-->
+                    <!--    					</xf:group>-->
+                    <!--    					<xf:group tagname="td" class="w2tb_td">-->
+                    <!--    						<w2:attributes></w2:attributes>-->
+                    <!--    						<w2:udc_search_code id="" style=""></w2:udc_search_code>-->
+                    <!--    					</xf:group>-->
+                    <!--    				</xf:group>-->
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            전화번호
+                            <br></br>
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcPhone.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_phone id="" style=""></w2:udc_phone>
+                            dispalyFormatter : com.phoneFormat
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            주민번호/외국인번호
+                            <br></br>
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcICnumber.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_icnumber id="" style=""></w2:udc_icnumber>
+                            com.chkIcNo('주민등록번호'); 체크제외(임시) : 999999-8888888
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            사업자등록번호
+                            <br></br>
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcBusiness.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_business id="" style=""></w2:udc_business>
+                            com.chkBizNo('사업자등록번호'); 체크제외(임시) : 999-88-77777
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            카드번호
+                            <br></br>
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcCardnumber.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_cardnumber id="" style=""></w2:udc_cardnumber>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            주소
+                            <br></br>
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcAddress.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_address style="" class="req" id="udcAddressInfo" disabled="false"></w2:udc_address>
+                            명명규칙 : 'udcAddressInfo'+ 첨자, 예)udcAddressInfo, udcAddressInfo2, udcAddressInfo3
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            이메일
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcEmail.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_email id="" style=""></w2:udc_email>
+                        </xf:group>
+                    </xf:group>
+
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            리스트건수
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcListCount.xml
+                            <w2:attributes></w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+                        </xf:group>
+                    </xf:group>
+
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            파일첨부 테스트
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            싱글업로드.xml
+                            <w2:attributes></w2:attributes>
+
+                            <xf:input adjustMaxLength="false" id="ibxAflId" initValue="A00004_96513046101409102"></xf:input>
+                            <xf:trigger ev:onclick="scwin.fnFileLink_onclick" id="btnFileView" style="" type="button">
+                                <xf:label><![CDATA[ 첨부파일ID입력후클릭 ]]></xf:label>
+                            </xf:trigger>
+
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            (첨부파일ID입력후클릭)버튼 클릭 후 생성되는 파일링크 :
+                            <w2:anchor outerDiv="false" id="ibxDownFile">
+                                <xf:label><![CDATA[파일링크위치]]></xf:label>
+                            </w2:anchor>
+                            <xf:trigger ev:onclick="scwin.btnAfl_onclick" id="btnAfl" style="" type="button">
+                                <xf:label><![CDATA[단건첨부]]></xf:label>
+                            </xf:trigger>
+    					    <xf:trigger ev:onclick="scwin.btnAflPathCustom_onclick" id="btnAflPathCustom" style="" type="button">
+    					        <xf:label><![CDATA[단건첨부(커스텀폴더)]]></xf:label>
+    					    </xf:trigger>
+    						<xf:input adjustMaxLength="false" id="ibxJobGbCd" style="width:50px" initValue="CF" placeholder="ibxJobGbCd"></xf:input>
+    						<xf:input adjustMaxLength="false" id="ibxMenuId" style="" initValue="CS05101525U" placeholder="ibxMenuId"></xf:input>
+                            <xf:input adjustMaxLength="false" id="ibxFilePathCustom" style="" initValue="/testsub1/testsub2" placeholder="ibxMenuId"></xf:input>
+
+    						/ux/cf/CF00350002P.xml , 파일다운로드코드 ( Internal js : /resources/js/lib/util/jquery.fileDownload.js ) , ( 스크립트 : $.fileDownload("/cf/CF00350000P/downloadMAV?aflp=암호화된파라미터") )
+    					</xf:group>
+    				</xf:group>
+
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            팝업없는 파일첨부 테스트
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcSingleupload.xml
+                            <w2:attributes></w2:attributes>
+                            <xf:trigger ev:onclick="scwin.btnAflSingleUpload_onclick" id="" style="" type="button">
+                                <xf:label><![CDATA[ 입력가능 ]]></xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            
+                            <w2:udc_Singleupload style="" id="udcSingleUpldFile"></w2:udc_Singleupload>
+                            
+                        </xf:group>
+                    </xf:group>
+
+    				<xf:group tagname="tr" style="height:66.00px;">
+    					<xf:group tagname="th" class="w2tb_th">파일&amp;nbsp;첨부&amp;nbsp;리스트<w2:attributes><w2:scope>row</w2:scope></w2:attributes></xf:group>
+    					<xf:group tagname="td" class="w2tb_td">
+    						udcFileList.xml
+    						<w2:attributes></w2:attributes>
+    						<xf:trigger ev:onclick="scwin.ins_aflId_onclick" id="ins_aflId" style="" type="button" toolTip='com.getUdcComp("uFileList", "gen_aflList").addClass("col4");  com.setUdcValue( "uFileList", "aflId", "_20140103_102158314");'>
+    							<xf:label><![CDATA[ 팝업입력가능  ]]></xf:label>
+    						</xf:trigger>
+    						<xf:trigger  ev:onclick="scwin.ins_aflIdNot_onclick" id="ins_aflIdNot" style="" type="button" toolTip='com.getUdcComp("uFileList", "gen_aflList").addClass("col4");  com.setUdcValue( "uFileList", "aflId", "_20140103_102158314");'>
+
+                                <xf:label><![CDATA[ 팝업입력불가 ]]></xf:label>
+                            </xf:trigger>
+
+                            <xf:trigger id="btnShow" style="" type="button" ev:onclick="scwin.btnShow_onclick">
+                                <xf:label><![CDATA[ 버튼Show ]]></xf:label>
+                            </xf:trigger>
+                            <xf:trigger id="btnHide" style="" type="button" ev:onclick="scwin.btnHide_onclick">
+                                <xf:label><![CDATA[ 버튼Hide ]]></xf:label>
+                            </xf:trigger>
+
+                            <xf:trigger id="btnSize" style="" type="button" ev:onclick="scwin.btnSize_onclick">
+                                <xf:label><![CDATA[ 용량표시(+팝업입력가능) ]]></xf:label>
+                            </xf:trigger>
+
+                            <xf:trigger id="btnCert" style="" type="button" ev:onclick="scwin.btnCert_onclick">
+                                <xf:label><![CDATA[ 파일암호화(+팝업입력가능) ]]></xf:label>
+                            </xf:trigger>
+
+                            <xf:trigger id="btnPath" style="" type="button" ev:onclick="scwin.btnPath_onclick">
+                                <xf:label><![CDATA[ 파일패스지정(+팝업입력가능) ]]></xf:label>
+                            </xf:trigger>
+
+    	                    <xf:select1 id="selListChg" chooseOption="false" displayMode="label" style="width: 148px;" submenuSize="auto" allOption="false" 
+                                disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" ev:onchange="scwin.selListChg_onchange">
+                                <xf:choices>
+                                    <xf:item>
+                                        <xf:label><![CDATA[텍스트리스트형기본]]></xf:label>
+                                        <xf:value>databox</xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[텍스트리스트형2컬럼]]></xf:label>
+                                        <xf:value>col2</xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[텍스트리스트형3컬럼]]></xf:label>
+                                        <xf:value>col3</xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[텍스트리스트형4컬럼]]></xf:label>
+                                        <xf:value>col4</xf:value>
+                                    </xf:item>
+                                </xf:choices>
+                            </xf:select1>
+
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_file_list style="" id="uFileList"></w2:udc_file_list>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style=""></xf:group>
+
+                    <xf:group tagname="tr" style="">
+                        <xf:group tagname="th" class="w2tb_th">
+                            이미지 리스트형&lt;br/&gt;(이미지 첨부 전)
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            udcImgFileList.xml
+                            <w2:attributes></w2:attributes>
+                            <xf:trigger ev:onclick="scwin.ins_ImgaflId_onclick" id="ins_imgAflId" style="" type="button"
+                                toolTip='com.getUdcComp("uImgFileList", "gen_aflList").addClass("img_databox");  com.setUdcValue( "uImgFileList", "aflId", "_20140103_102158314");'>
+                                <xf:label><![CDATA[ 팝업입력가능  ]]></xf:label>
+                            </xf:trigger>
+                            <xf:trigger ev:onclick="scwin.ins_ImgaflIdNot_onclick" id="ins_imgAflIdNot" style="" type="button"
+                                toolTip='com.getUdcComp("uImgFileList", "gen_aflList").addClass("img_databox");  com.setUdcValue( "uImgFileList", "aflId", "_20140103_102158314");'>
+                                <xf:label><![CDATA[ 팝업입력불가 ]]></xf:label>
+                            </xf:trigger>
+
+                            <xf:trigger id="btnImgShow" style="" type="button" ev:onclick="scwin.btnImgShow_onclick">
+                                <xf:label><![CDATA[ 버튼Show ]]></xf:label>
+                            </xf:trigger>
+                            <xf:trigger id="btnImgHide" style="" type="button" ev:onclick="scwin.btnImgHide_onclick">
+                                <xf:label><![CDATA[ 버튼Hide ]]></xf:label>
+                            </xf:trigger>
+
+                            <xf:input adjustMaxLength="false" id="imgAflId" initValue="A00004_55973350101409102">
+                            </xf:input>
+                            <xf:trigger ev:onclick="scwin.ins_ImgAflIdView_onclick" id="btnImgView" style="" type="button">
+                                <xf:label><![CDATA[ 첨부이미지ID입력후클릭 ]]></xf:label>
+                            </xf:trigger>
+
+                            <xf:select1 id="selImgListChg" chooseOption="false" displayMode="label" style="width: 148px;" submenuSize="auto" allOption="false" 
+                                disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" ev:onchange="scwin.selImgListChg_onchange">
+                                <xf:choices>
+                                    <xf:item>
+                                        <xf:label><![CDATA[이미지리스트형기본]]></xf:label>
+                                        <xf:value>file_img_list</xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[이미지리스트형1컬럼]]></xf:label>
+                                        <xf:value>img1</xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[이미지리스트형2컬럼]]></xf:label>
+                                        <xf:value>img2</xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[이미지리스트형3컬럼]]></xf:label>
+                                        <xf:value>img3</xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[이미지리스트형4컬럼]]></xf:label>
+                                        <xf:value>img4</xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[이미지리스트형5컬럼]]></xf:label>
+                                        <xf:value>img5</xf:value>
+                                    </xf:item>
+                                </xf:choices>
+                            </xf:select1>
+                             <xf:trigger ev:onclick="scwin.btnPrintCanvas_onclick" id="btnImgCanvas" style="" type="button">
+                                <xf:label><![CDATA[ 이미지리스트 캡쳐 ]]></xf:label>
+                            </xf:trigger>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td" id="aprvContent">
+                            <w2:attributes></w2:attributes>
+                            <w2:udc_img_file_list style="" id="uImgFileList"></w2:udc_img_file_list>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group tagname="tr" style=""></xf:group>
+                    
+    				<xf:group tagname="tr" style="">
+    					<xf:group tagname="th" class="w2tb_th">
+    						이미지 파일첨부 테스트
+    						<w2:attributes>
+    							<w2:scope>row</w2:scope>
+    						</w2:attributes>
+    					</xf:group>
+    					<xf:group tagname="td" class="w2tb_td">
+    						이미지싱글업로드.xml
+    						<w2:attributes></w2:attributes>
+                            <xf:input adjustMaxLength="false" id="imgAflIdSingle" initValue="A00004_75463507161409102">
+                            </xf:input>
+                            <xf:trigger ev:onclick="scwin.ins_ImgAflIdSingleView_onclick" id="btnImgViewSingle" style="" type="button">
+                                <xf:label><![CDATA[ 첨부이미지ID입력후클릭 ]]></xf:label>
+                            </xf:trigger>
+    					</xf:group>
+    					<xf:group tagname="td" class="w2tb_td">
+                            <xf:input adjustMaxLength="false" id="ibx_inputImg" style=""></xf:input>
+    						<xf:input adjustMaxLength="false" id="ibxJobGbCdImg" style="width:50px" initValue="CF" placeholder="ibxJobGbCdImg"></xf:input>
+    						<xf:input adjustMaxLength="false" id="ibxMenuIdImg" style="" initValue="CS05101525U" placeholder="ibxMenuIdImg"></xf:input>
+    						<xf:input adjustMaxLength="false" id="ibxAflIdImg" style="" initValue="" placeholder="ibxAflIdImg"></xf:input>
+    						/ux/cf/CF00350002P.xml
+    						<xf:group class="img_wrap" id="" style="">
+    							<xf:group class="file_img_list full" id="" style="">
+    								<xf:group class="btn_wrap" id="" style="">
+    									<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.ins_SimgAflId_onclick" id="btnAfl4" outerDiv="false">
+    										<xf:label><![CDATA[이미지첨부]]></xf:label>
+    									</w2:anchor>
+    								</xf:group>
+    								<xf:group class="img_databox" id="" tagname="ul">
+    									<xf:group class="w2group" id="" style="" tagname="li">
+    										<xf:image id="ibxFileHref" src="/resources/images/layout/content_main.png" style="" ev:onclick="scwin.ibxFileHref_onclick"></xf:image>
+                                        </xf:group>
+                                    </xf:group>
+                                </xf:group>
+                            </xf:group>
+
+                        </xf:group>
+                    </xf:group>
+
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

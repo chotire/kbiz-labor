@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+    <?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            	<w2:dataMap baseNode="map" id="dsSearchMap">
+            		<w2:keyInfo>
+            			<w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+            			<w2:key id="aprvSeq" name="결재_순번" dataType="text"></w2:key>
+            		</w2:keyInfo>
+            	</w2:dataMap>
+            	<w2:dataMap baseNode="map" id="dsAprvDtlMap">
+            		<w2:keyInfo>
+            			<w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+            			<w2:key id="aprvSeq" name="결재_순번" dataType="text"></w2:key>
+            			<w2:key id="aprprNm" name="결재상태코드" dataType="text"></w2:key>
+            			<w2:key id="apprEmpno" name="승인자_사번" dataType="text"></w2:key>
+            			<w2:key id="jbposGbCd" name="승인_일시" dataType="text"></w2:key>
+            			<w2:key id="nextAprprEmpno" name="다음_결재자_사번" dataType="text"></w2:key>
+            			<w2:key id="modiYn" name="수정_여부" dataType="text"></w2:key>
+            			<w2:key id="absprYn" name="부재자_여부" dataType="text"></w2:key>
+            			<w2:key id="gwDocNo" name="텔레피아_문서번호" dataType="text"></w2:key>
+            			<w2:key id="aprvCmtryCn" name="결재_주석_내용" dataType="text"></w2:key>
+            			<w2:key id="fstRegprEmpno" name="최초_등록자_사번" dataType="text"></w2:key>
+            			<w2:key id="fstRegDtm" name="최초_등록_일시" dataType="text"></w2:key>
+            			<w2:key id="fnlModprEmpno" name="최종_수정자_사번" dataType="text"></w2:key>
+            			<w2:key id="fnlModiDtm" name="최종_수정_일시" dataType="text"></w2:key>
+            			<w2:key id="aprvGbCd" name="결재_구분_코드" dataType="text"></w2:key>
+            		</w2:keyInfo>
+            	</w2:dataMap>
+            </w2:dataCollection>
+            <w2:workflowCollection></w2:workflowCollection>
+        </xf:model>
+
+        <script type="text/javascript" src="/resources/js/lib/util/jquery.blockUI.js"></script>
+
+        <w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+
+        <script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CF04000035P.xml
+ * Program Name : 결재내용(팝업)
+ * Author : 김환섭 (tpkhs1@asianaidt.com)
+ * Date : 2019.04.11
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+     *  [1] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+    
+    	dsSearchMap.set( "aprvNo" , JSON.parse($p.getPopupParam()).data.paramKeyAprvNo );//결재번호
+    	dsSearchMap.set( "aprvSeq" , JSON.parse($p.getPopupParam()).data.paramKeyAprvSeq );//결재_순번
+    	
+        // X버튼의 원 이벤트 삭제하고 닫기 버튼의 이벤트 대신 입력
+        var frameIds = $p.getPopupId()+"_close";
+        $("#"+frameIds).off("click").on("click", function() {
+            scwin.btnCancel_onclick();
+        });
+        
+        scwin.fnAprvDtl();
+        
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+     //결재상세조회
+    scwin.fnAprvDtl = function() {
+        ajaxLib.ajax("/cf/cf0400/CF04000035P/selectTcfAprvDtl", {
+            mode : "synchronous",
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+            	dsAprvDtlMap.setJSON( result.data.dsAprvDtlMap );
+            	spnAprvCmtryCn.setValue( dsAprvDtlMap.get( "aprvCmtryCn" ) );//결재_의견_내용
+            },            
+            errCallback : "fnErrCallBack"
+        });
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    // 닫기 버튼 클릭이나 취소버튼 클릭시 작동
+    scwin.btnCancel_onclick = function () {
+        com.popup_close("");
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+    };
+]]></script>
+
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <xf:group class="content_body popup" id="" style="">
+
+            <xf:group class="defaultbox" id="" style="">
+                <w2:textbox class="df_tt" id="" label="결재내용" style="" tagname="h3"></w2:textbox>
+
+                <xf:group class="btn_wrap" id="" style="float:right;" tagname="">
+                    <w2:anchor ev:onclick="scwin.btnCancel_onclick" outerDiv="false" clickEventElement="outerDiv"
+                        style="left:0px;top:0px;" id="btnCancel" class="btn_gcm">
+                        <xf:label><![CDATA[닫기]]></xf:label>
+                    </w2:anchor>
+                </xf:group>
+
+            </xf:group>
+
+            <xf:group class="w2tb" id="" style="width:Infinity%;" tagname="table">
+                <w2:attributes>
+                    <w2:summary>결재상신 주석, 파일첨부 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:100.00px;" tagname="col"></xf:group>
+                    <xf:group style="" tagname="col"></xf:group>
+                </xf:group>
+ 
+                <xf:group class="" style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="내용" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="height:420px;vertical-align: top" tagname="td">
+                    	<w2:span id="spnAprvCmtryCn" label="" style=""></w2:span>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+
+        </xf:group>
+    </body>
+</html>

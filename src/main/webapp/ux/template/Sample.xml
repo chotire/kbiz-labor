@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    
+    <head>
+    	<w2:type>DEFAULT</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            	<w2:dataList baseNode="list" repeatNode="map" id="dataList1" saveRemovedData="true" ev:onbeforecelldatachange="scwin.dataList1_onbeforecelldatachange" ev:oncelldatachange="scwin.dataList1_oncelldatachange" ev:onbeforerowpositionchange="scwin.dataList1_onbeforerowpositionchange" ev:onrowpositionchange="scwin.dataList1_onrowpositionchange" ev:oninsertrow="scwin.dataList1_oninsertrow" ev:onremoverow="scwin.dataList1_onremoverow" ev:ondataload="scwin.dataList1_ondataload" ev:onbeforecolumnfilterchange="scwin.dataList1_onbeforecolumnfilterchange" ev:onaftercolumnfilterchange="scwin.dataList1_onaftercolumnfilterchange">
+            		<w2:columnInfo>
+            			<w2:column id="company" name="회사" dataType="text"></w2:column>
+            			<w2:column id="category" name="분류" dataType="text"></w2:column>
+            			<w2:column id="good" name="상품명" dataType="text"></w2:column>
+            			<w2:column id="surtax" name="금액" dataType="number"></w2:column>
+            			<w2:column id="money" name="부가세" dataType="number"></w2:column>
+            			<w2:column id="price" name="합계" dataType="number"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>
+            	<w2:dataList baseNode="list" repeatNode="map" id="dataList2" saveRemovedData="true">
+            		<w2:columnInfo>
+            			<w2:column id="company" name="회사" dataType="text"></w2:column>
+            			<w2:column id="category" name="분류" dataType="text"></w2:column>
+            			<w2:column id="good" name="상품명" dataType="text"></w2:column>
+            			<w2:column id="surtax" name="금액" dataType="number"></w2:column>
+            			<w2:column id="money" name="부가세" dataType="number"></w2:column>
+            			<w2:column id="price" name="합계" dataType="number"></w2:column>
+            		</w2:columnInfo>
+            	</w2:dataList>            	
+            </w2:dataCollection>
+            <w2:workflowCollection>
+            </w2:workflowCollection>
+        </xf:model>
+        <script src="/resources_ux/js/comExcel.js" type="javascript"/>
+        <script type="text/javascript"><![CDATA[
+	// 엑셀 업로드
+	scwin.trgExcelUpload_onclick = function(e) {
+		scwin.excelUpload();
+	};
+	
+	// 엑셀 다운로드
+	scwin.trgExcelDown_onclick = function(e) {
+		scwin.excelDownload();
+	};
+	
+	// 데이터가 새로 설정될 때 발생
+	scwin.dataList1_ondataload = function() {
+		console.log(dataList1);	
+		dataList2.setJSON( dataList1.getAllJSON());
+		console.log('----------');
+		console.log(dataList2);
+	};
+	
+]]></script>
+    </head>
+    <body>
+    	<xf:trigger id="trgExcelUpload"
+    		style="position: relative;width: 150px;height: 23px;margin-top:10px;margin-left:10px;left:552px;top:418px;"
+    		type="button" ev:onclick="scwin.trgExcelUpload_onclick">
+    		<xf:label>
+    			<![CDATA[엑셀업로드]]>
+    		</xf:label>
+    	</xf:trigger>
+    	<w2:textbox
+    		label="Excel (Pom.xml 파일을 열어서 groupId : xmlbeans, artifactId : xbean, version : 2.2.0&lt;br/&gt;을 삭제하고 저장 한 후 Maven -&gt; Update Project -&gt; Ok 한 후 톰캣을 재 실행 한 후 엑셀 업로드가 된다.)"
+    		style="position: absolute ;left: 41px;top: 21px;width: 673px;height: 27px;" id="">
+    	</w2:textbox>
+    	<w2:gridView id="gridView1" style="position: absolute ;left: 40px;top: 56px;width:672px;height:150px;"
+    		scrollByColumn="false" defaultCellHeight="20" scrollByColumnAdaptive="false" dataList="data:dataList1">
+    		<w2:caption style="" id="caption1" value="this is a grid caption."></w2:caption>
+    		<w2:header style="" id="header1">
+    			<w2:row style="" id="row1">
+    				<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:30px;" id="column1"
+    					value="회사" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:30px;" id="column11"
+    					value="분류" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="120" inputType="text" style="height:30px;" id="column9"
+    					value="상품명" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="90" inputType="text" style="height:30px;" id="column7"
+    					value="금액" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:30px;" id="column3"
+    					value="부가세" blockSelect="false" displayMode="label">
+    				</w2:column>
+    			</w2:row>
+    		</w2:header>
+    		<w2:gBody style="" id="gBody1">
+    			<w2:row style="" id="row2">
+    				<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:25px;" id="company"
+    					value="" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:25px;" id="category"
+    					value="" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="120" inputType="text" style="height:25px;" id="good"
+    					value="" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="90" inputType="text" style="height:25px;" id="money"
+    					value="" blockSelect="false" displayMode="label" dataType="number">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:25px;" id="surtax"
+    					value="" blockSelect="false" displayMode="label" dataType="number">
+    				</w2:column>
+    			</w2:row>
+    		</w2:gBody>
+    	</w2:gridView>
+    	<xf:trigger ev:onclick="scwin.trgExcelDown_onclick" id="trgExcelDown"
+    		style="position: relative;width: 150px;height: 23px;margin-top:10px;margin-left:10px;left:233px;top:419px;"
+    		type="button">
+    		<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+    	</xf:trigger>
+    	<w2:gridView id="" style="position: absolute ;left: 40px;top:234px;width:670px;height:187px;"
+    		scrollByColumn="false" defaultCellHeight="20" scrollByColumnAdaptive="false" dataList="data:dataList2">
+    		<w2:caption style="" id="caption1" value="this is a grid caption."></w2:caption>
+    		<w2:header style="" id="header1">
+    			<w2:row style="" id="row1">
+    				<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:30px;" id="column11"
+    					value="회사" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:30px;" id="column9"
+    					value="분류" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="120" inputType="text" style="height:30px;" id="column7"
+    					value="상품명" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:30px;" id="column5"
+    					value="금액" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:30px;" id="column3"
+    					value="부가세" blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:30px;" id="column1"
+    					value="합계" blockSelect="false" displayMode="label">
+    				</w2:column>
+    			</w2:row>
+    		</w2:header>
+    		<w2:gBody style="" id="gBody1">
+    			<w2:row style="" id="row2">
+    				<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="company" value=""
+    					blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="category" value=""
+    					blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="good" value=""
+    					blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="money" value=""
+    					blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="surtax" value=""
+    					blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="price" value=""
+    					blockSelect="false" displayMode="label"
+    					expression="parseInt(display('money')) + parseInt(display('surtax'))">
+    				</w2:column>
+    			</w2:row>
+    		</w2:gBody>
+    	</w2:gridView>
+    	<w2:textbox label="수식 추가 엑셀 업로드는 기존 업로드 DataCollection을 복사를 해서 GridView 에서 수식을 추가한다." style="position: absolute ;left:41px;top:218px;width:672px;height:19px;" id=""></w2:textbox>
+    </body>
+</html>

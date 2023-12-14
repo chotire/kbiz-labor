@@ -1,0 +1,1405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dsSearchParamMap" style="">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+                        <w2:key dataType="text" id="workDt" name="조회년월"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+                <w2:dataMap baseNode="map" id="dsSearchParamSubMap">
+                    <w2:keyInfo>
+                        <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+                        <w2:key id="workDt" name="작업일자" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+                <w2:dataList baseNode="list" repeatNode="map" id="dsTcmJobRptWeekMstrList" saveRemovedData="true"
+                    ev:onrowpositionchange="">
+                    <w2:columnInfo>
+                        <w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+                        <w2:column id="workDt" name="작업일자" dataType="text"></w2:column>
+                        <w2:column id="weekStrtDt" name="주간_시작_일자" dataType="text"></w2:column>
+                        <w2:column id="weekEndDt" name="주간_종료_일자" dataType="text"></w2:column>
+                        <w2:column id="bfPlanCn" name="이전_계획_내용" dataType="text"></w2:column>
+                        <w2:column id="bfPfmcCn" name="이전_실적_내용" dataType="text"></w2:column>
+                        <w2:column id="afPlanCn" name="이후_계획_내용" dataType="text"></w2:column>
+                        <w2:column id="notiPrpaCn" name="공지_건의_내용" dataType="text"></w2:column>
+                        <w2:column id="aproGbVal" name="승인구분값" dataType="text"></w2:column>
+                        <w2:column id="reqDtm" name="요청일자" dataType="text"></w2:column>
+                        <w2:column id="aproDtm" name="승인일자" dataType="text"></w2:column>
+                        <w2:column id="weekWbsRt" name="주간_공정_율" dataType="number"></w2:column>
+                        <w2:column id="weekPlanRt" name="주간_계획_율" dataType="number"></w2:column>
+                        <w2:column id="bfWeekPlanRt" name="전주_주간_계획_율" dataType="number"></w2:column>
+                        <w2:column id="fstConstDt" name="최초_공사_기간" dataType="text"></w2:column>
+                        <w2:column id="chgConstDt" name="변경_공사_기간" dataType="text"></w2:column>
+                        <w2:column id="tflar" name="연면적" dataType="text"></w2:column>
+                        <w2:column id="pltgArea" name="대지_면적" dataType="text"></w2:column>
+                        <w2:column id="workPeriod" name="작업기간" dataType="text"></w2:column>
+                        <w2:column id="bfWorkPeriod" name="전주_작업기간" dataType="text"></w2:column>
+                        <w2:column id="afWorkPeriod" name="금주_작업기간" dataType="text"></w2:column>
+                        <w2:column id="aprvNo" name="결재번호" dataType="text"></w2:column>
+                    </w2:columnInfo>
+                </w2:dataList>
+                <w2:dataList baseNode="list" id="dsTcmJobRptPhotoList" repeatNode="map" saveRemovedData="true" style="">
+                    <w2:columnInfo>
+                        <w2:column dataType="text" id="chk" name="체크박스"></w2:column>
+                        <w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+                        <w2:column dataType="text" id="workDt" name="작업일자"></w2:column>
+                        <w2:column dataType="text" id="workGbVal" name="업무보고_구분값"></w2:column>
+                        <w2:column dataType="number" id="workSeq" name="작업순번"></w2:column>
+                        <w2:column dataType="text" id="photoDesc" name="사진설명"></w2:column>
+                        <w2:column dataType="text" id="aflId" name="첨부파일ID"></w2:column>
+                        <w2:column id="aflCnt" name="건수" dataType="number"></w2:column>
+                    </w2:columnInfo>
+                </w2:dataList>
+                <w2:dataMap baseNode="list" ev:onrowpositionchange="" id="dsTcmJobRptWeekDtlMap" repeatNode="map"
+                    saveRemovedData="true" style="">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" id="workDt" name="작업일자"></w2:key>
+                        <w2:key dataType="text" id="weekStrtDt" name="주간_시작_일자"></w2:key>
+                        <w2:key dataType="text" id="weekEndDt" name="주간_종료_일자"></w2:key>
+                        <w2:key dataType="text" id="bfPlanCn" name="이전_계획_내용"></w2:key>
+                        <w2:key dataType="text" id="bfPfmcCn" name="이전_실적_내용"></w2:key>
+                        <w2:key dataType="text" id="afPlanCn" name="이후_계획_내용"></w2:key>
+                        <w2:key dataType="text" id="notiPrpaCn" name="공지_건의_내용"></w2:key>
+                        <w2:key dataType="text" id="aproGbVal" name="승인구분값"></w2:key>
+                        <w2:key dataType="text" id="reqDtm" name="요청일자"></w2:key>
+                        <w2:key dataType="text" id="aproDtm" name="승인일자"></w2:key>
+                        <w2:key dataType="text" id="weekWbsRt" name="주간_공정_율"></w2:key>
+                        <w2:key dataType="text" id="weekPlanRt" name="주간_계획_율"></w2:key>
+                        <w2:key dataType="text" id="bfWeekPlanRt" name="전주_주간_계획_율"></w2:key>
+                        <w2:key dataType="text" id="fstConstDt" name="최초_공사_기간"></w2:key>
+                        <w2:key dataType="text" id="chgConstDt" name="변경_공사_기간"></w2:key>
+                        <w2:key dataType="text" id="tflar" name="연면적"></w2:key>
+                        <w2:key dataType="text" id="pltgArea" name="대지_면적"></w2:key>
+                        <w2:key dataType="text" id="workPeriod" name="작업기간"></w2:key>
+                        <w2:key dataType="text" id="bfWorkPeriod" name="전주_작업기간"></w2:key>
+                        <w2:key dataType="text" id="afWorkPeriod" name="금주_작업기간"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+        </xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false" />
+        <script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM70250000U.xml
+ * Program Name : 업무보고 > 주간보고 > 주간업무계획등록
+ * Author : 표성빈(sbPyo)
+ * Date : 2022.06.23
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ 
+ 	/************************************************************************************
+		DataCollection description
+
+		dsTcmJobRptWeekMstrList : GRID 주간업무계획 목록 LIST
+		dsSearchParamMap: 검색조건 parameter
+	 ************************************************************************************/
+     /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+ 
+     /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+	scwin.onpageload = function() {
+
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+        dsSearchParamMap.set("workDt", $p.getCurrentServerDate("yyyy"));   //년도
+        
+		//GRID 초기화
+        grdTcmJobRptWeekMstrList.initGrid();
+        
+		//주간업무계획등록 MASTER 조회
+		scwin.fnTcmJobRptWeekMstrList();
+        
+        //UI팀용 함수 호출
+        com.commonUI();
+        
+	};
+
+	scwin.onpageunload = function() {
+	
+	};
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+	//주간업무계획등록 목록 조회
+	scwin.fnTcmJobRptWeekMstrList = function(){
+    
+        ajaxLib.ajax("/cm/cm7025/CM70250000U/selectTcmJobRptWeekMstrList", {
+        	method : "POST",
+            requestData : dsSearchParamMap.getJSON(),
+            callback: function(result, e) {
+                dsTcmJobRptWeekMstrList.setJSON(result.data.dsTcmJobRptWeekMstrList);
+                
+		        // 탭 컨트롤 활성화 및 초기탭으로 설정
+				tacTactbgtMng.setSelectedTabIndex(0);
+		    	tacTactbgtMng.setDisabled( false );
+
+                // 사진테이블 컨트롤 disabled
+                btnAddRow.setDisabled( true );
+                btnDelRow.setDisabled( true );
+                btnSavePhotoList.setDisabled( true );
+                    
+                // 사진테이블 초기화
+                grdTcmJobRptPhotoList.initGrid( );
+                
+                // 테이블 맵 초기화
+                dsTcmJobRptWeekDtlMap.setEmptyValue();
+                
+                // 사진 미리보기 초기화
+                gen_ImgList.removeAll();
+            },
+            errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+        
+	}
+	
+	//사진 탭 테이블 조회
+	scwin.fnTcmJobRptPhotoList = function(siteCd, workDt){
+    
+		let param = new Object();
+        
+		param.siteCd = siteCd;
+		param.workDt = workDt;
+		param.workGbVal = '2';
+		
+        ajaxLib.ajax("/cm/cm7020/CM70200010U/selectTcmJobRptPhotoList", {
+        	method : "POST",
+            requestData : param,
+            callback: function(result, e) {
+                dsTcmJobRptPhotoList.setJSON(result.data.dsTcmJobRptPhotoList);
+            },
+            errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+        
+	}
+    
+    /* 주간업무계획등록 신규 작성 */
+    scwin.btnAddWeekMstr = function(e) {
+    
+        //현장코드 입력이 되어있는지 체크 
+        if (com.isEmpty(com.getUdcValue("wfmKeySiteInfo", "ibxKeySiteCd"))) {
+            com.showMessage("EMW0001", "현장");   // $1을(를) 입력하십시오.
+            return;
+        }
+        
+        // 컨트롤 비활성화 설정
+        calYearMonthDate.setDisabled( false );
+        btnAprv.setDisabled( true );
+        btnStatus.setDisabled( true );
+        btnPrtWeekMstr.setDisabled( true );
+        btnDel.setDisabled( false );
+                
+        let rowIndex = dsTcmJobRptWeekMstrList.insertRow();
+        
+       // 현장코드, 작업일자, 결재상태 설정
+        dsTcmJobRptWeekMstrList.setCellData( rowIndex , "siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());
+        dsTcmJobRptWeekMstrList.setCellData( rowIndex , "workDt", $p.getCurrentServerDate("yyyyMMdd"));
+        dsTcmJobRptWeekMstrList.setCellData( rowIndex , "aproGbVal", "작성중");
+		
+        // 신규 로우로 그리드 포커스 설정
+        grdTcmJobRptWeekMstrList.setFocusedCell( rowIndex , "grdRowNum" , false );  
+        
+		// map 초기화
+        dsTcmJobRptWeekDtlMap.setEmptyValue();
+        
+		// 상세정보 작업일자 당일날짜로 설정
+		dsTcmJobRptWeekDtlMap.set("workDt", $p.getCurrentServerDate("yyyyMMdd"));
+		dsTcmJobRptWeekDtlMap.set("workPeriod", "작업일자 설정 후 저장하세요.");
+		
+        // 탭 컨트롤 비활성화 및 초기탭으로 설정
+		tacTactbgtMng.setSelectedTabIndex(0);
+    	tacTactbgtMng.setDisabled( true );
+
+        //사진 정보 초기화
+		gen_ImgList.removeAll();
+
+    };
+    
+    //주간업무계획등록 - 저장
+	scwin.btnSaveWeekMstr = function(e) {
+    
+		let arrMdfIdx = dsTcmJobRptWeekMstrList.getModifiedIndex();
+        let curRowIdx = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+		
+        for (let i=0; i<arrMdfIdx.length; i++) {
+            let rowData = grdTcmJobRptWeekMstrList.getRowJSON( arrMdfIdx[i] );
+            
+            if (rowData.workDt == "") {
+                com.showMessage("SAA0043", "작업일자", "", "", grdTcmJobRptWeekMstrList.id, arrMdfIdx[i] , "workDt");//$1은(는) 필수입력사항입니다.
+                return false;
+            }
+            
+			if (rowData.rowStatus == "C") {
+				// 입력 요일 확인(일요일만 가능)
+	            if(scwin.getDayLabel(rowData.workDt) != '일') {
+					com.showMessage("SMA0038", "작업일자는 일요일");//$1만 저장이 가능합니다.
+					return;
+	            }
+            }
+            
+			if (rowData.rowStatus == "C" || rowData.rowStatus == "U") {
+			    //중복코드값 체크 
+				let matchedEa1 = grdTcmJobRptWeekMstrList.getMatchedColumnData("workDt" , rowData.workDt).length;
+				if (matchedEa1 > 1) {
+	                com.showMessage("CMW0001", "[작업일자]", "", "", grdTcmJobRptWeekMstrList.id, arrMdfIdx[i], "workDt");		// 중복 된 $1가(이) 존재합니다..
+	                return false;
+				}
+			}
+		}
+	
+        if (dsTcmJobRptWeekMstrList.getModifiedJSON() == "") {
+			com.showMessage("CSA0003");//저장(변경)할 내용이 없습니다.
+			return;
+		} else if (confirm("저장 하시겠습니까?")) {
+
+	        ajaxLib.ajax("/cm/cm7025/CM70250000U/saveTcmJobRptWeekMstr", {
+	            method : "POST",
+	            requestData : {
+									tcmJobRptWeekMstrList : dsTcmJobRptWeekMstrList.getModifiedJSON()
+	            },
+                callback: function(result, e) {
+                    com.showMessage("CFA0012");//저장되었습니다.
+                    
+                    //저장 후 마스터 조회
+                    scwin.fnTcmJobRptWeekMstrList();
+                    
+                    // 실적 탭으로 이동
+                    tacTactbgtMng.setSelectedTabIndex(0);
+                },
+                errCallback: function(result, e) {
+                    com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+                }
+	        });
+		}
+        
+	};
+	
+    //주간업무계획등록 사진정보 - 저장
+	scwin.btnSavePhoto = function(e) {
+    
+        let curRowIdxMstr = grdTcmJobRptWeekMstrList.getFocusedRowIndex();    
+		let arrMdfIdx = dsTcmJobRptPhotoList.getModifiedIndex();
+        let curRowIdx = grdTcmJobRptPhotoList.getFocusedRowIndex();
+        
+        /*
+		for (let i=0; i<arrMdfIdx.length; i++) {
+			let rowData = dsTcmJobRptPhotoList.getRowJSON( arrMdfIdx[i] );
+		}
+        */
+
+		if (dsTcmJobRptPhotoList.getModifiedJSON() == "") {
+			com.showMessage("CSA0003");//저장(변경)할 내용이 없습니다.
+			return;
+		} else if (confirm("저장 하시겠습니까?")) {
+
+	        ajaxLib.ajax("/cm/cm7020/CM70200010U/saveTcmJobRptPhoto", {
+                method : "POST",
+	            requestData : {
+									tcmJobRptPhotoList : dsTcmJobRptPhotoList.getModifiedJSON()
+	            },
+                callback: function(result, e) {
+                    com.showMessage("CFA0012");//저장되었습니다.
+                    
+                    gen_ImgList.removeAll();
+                    
+                    let siteCd = dsTcmJobRptWeekMstrList.getCellData(curRowIdxMstr, "siteCd");
+                    let workDt = dsTcmJobRptWeekMstrList.getCellData(curRowIdxMstr, "workDt");
+                    
+        			// 저장 후 사진테이블 조회
+                    scwin.fnTcmJobRptPhotoList(siteCd, workDt);
+                },
+                errCallback: function(result, e) {
+                    com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+                }
+	        });
+		}
+        
+	};
+   
+    //사진정보 테이블 - 로우 추가
+    scwin.btnAddRowPhoto_onclick = function() {
+    
+        let rowIndex = dsTcmJobRptPhotoList.insertRow();
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+        
+        dsTcmJobRptPhotoList.setCellData(rowIndex, "siteCd", dsTcmJobRptWeekMstrList.getCellData( idxRow , "siteCd"));   //현장코드
+        dsTcmJobRptPhotoList.setCellData(rowIndex, "workDt", dsTcmJobRptWeekMstrList.getCellData( idxRow , "workDt"));   //작업일자
+    	dsTcmJobRptPhotoList.setCellData(rowIndex, "workGbVal", "2"); //업무보고_구분_값(2:주간)
+        
+    };
+    
+    //사진정보 테이블 - 로우 삭제
+    scwin.btnDelRowPhoto_onclick = function() {
+    
+        let checkedIndex = grdTcmJobRptPhotoList.getCheckedIndex( "chk" );
+        
+        if (checkedIndex.length == 0) {
+            com.showMessage("PRA0003");//삭제할 데이터를 선택해 주십시오.
+            return;
+        }
+        
+        gen_ImgList.removeAll();
+
+        dsTcmJobRptPhotoList.removeRows( checkedIndex );
+        
+    };
+    
+    /* 특정 일자 요일 구하기 */
+	scwin.getDayLabel = function (strDate){ // 매개변수 형식 ex) 20220101
+	
+	    let week = ['일', '월', '화', '수', '목', '금', '토'];
+		
+	    let dayLabel = week[new Date(strDate.substring(0, 4)+'-'+strDate.substring(4, 6)+'-'+strDate.substring(6,8)).getDay()];
+	
+	    return dayLabel;
+	
+	};
+	
+    /* 주간업무계획등록 엑셀다운로드 버튼 Click */
+	scwin.btnExcelDwnMstr_onclick = function() {
+    
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+		let curWorkDt = dsTcmJobRptWeekMstrList.getCellData(idxRow, "workDt");
+		
+        if (dsTcmJobRptWeekMstrList.getTotalRow() == 0) {
+            com.showMessage("CMW0020", "다운로드할");// $1 자료가 존재하지 않습니다.
+            return;
+        }
+	
+        grdTcmJobRptWeekMstrList.advancedExcelDownload({
+            fileName: dsSearchParamMap.get("workDt") + "년도 주간업무계획 목록(" + wfmKeySiteInfo.getWindow().ibxKeySiteNm.getValue() + ").xlsx",
+            useSubTotal : true,             // Sub-Total 표시 
+            headerFontColor : "#FFFFFF",    // Header Font Color
+            headerColor : "#D9D9D9",        // Header Back Color
+            subTotalColor : "#FCE4D6",      // SubTotal Back Color
+            autoSizeColumn : "true"
+        });
+        
+	}; 
+    
+    // 결재상태에 따른 객체 Display Setting
+    scwin.itemDisplayControll =  function() {
+    
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+        let rowStatus = dsTcmJobRptWeekMstrList.getRowStatus( idxRow );
+        
+        /* 결재상태에 따라 객체 활성화 처리 */
+		if (dsTcmJobRptWeekMstrList.getCellData(idxRow,"aproGbVal") == '작성중') {
+            
+            if (rowStatus == "C") {
+            
+                calYearMonthDate.setDisabled( false );
+                
+                btnAprv.setDisabled( true );
+                btnPrtWeekMstr.setDisabled( true );
+
+                btnSaveWeekMstr.setDisabled( true );
+
+                txtWeekWbsRt.setDisabled( true );
+                txtWeekPlanRt.setDisabled( true );
+                
+            } else {
+            
+                calYearMonthDate.setDisabled( true );
+                
+                btnAprv.setDisabled( false );
+                btnPrtWeekMstr.setDisabled( false );
+                btnSaveWeekMstr.setDisabled( false );
+                
+                txtWeekWbsRt.setDisabled( false );
+                txtWeekPlanRt.setDisabled( false );
+                
+            }
+            
+            btnStatus.setDisabled( true );
+            
+            btnSaveWeekMstrPlan.setDisabled( false );
+                
+            txtBfPfmcCn.setReadOnly( false );
+            txtAfPlanCn.setReadOnly( false );
+            txtNotiPrpaCn.setReadOnly( false );
+                
+            btnAddRow.setDisabled( false );
+            btnDelRow.setDisabled( false );
+                
+            btnDel.setDisabled( false );
+                
+            btnSavePhotoList.setDisabled( false );
+                
+            btnAddFile.setDisabled( true );
+            
+            grdTcmJobRptPhotoList.setReadOnly("grid", false);
+            grdTcmJobRptPhotoList.setColumnReadOnly( 0 , false );
+            
+		} else {
+        
+            calYearMonthDate.setDisabled( true );
+        
+            btnSaveWeekMstr.setDisabled( true );
+            btnSaveWeekMstrPlan.setDisabled( true );
+            
+            btnAprv.setDisabled( true );
+            btnStatus.setDisabled( false );
+            
+            txtWeekWbsRt.setDisabled( true );
+            txtWeekPlanRt.setDisabled( true );
+            
+            txtBfPfmcCn.setReadOnly( true );
+            txtAfPlanCn.setReadOnly( true );
+            txtNotiPrpaCn.setReadOnly( true );
+            
+            btnAddRow.setDisabled( true );
+            btnDelRow.setDisabled( true );
+            
+            btnDel.setDisabled( true );
+            
+            btnSavePhotoList.setDisabled( true );
+            
+            btnAddFile.setDisabled( true );
+            
+            btnPrtWeekMstr.setDisabled( false );
+            
+            grdTcmJobRptPhotoList.setReadOnly("grid", true);
+            grdTcmJobRptPhotoList.setColumnReadOnly( 0 , true );
+            
+		}
+        
+    }
+    
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    
+	// 업무보고사진 Callback 처리
+	scwin.popAflCallback = function(result){
+    
+		let fileId = result.aflId;
+		let fileArr = result.allParam;
+		let row = grdTcmJobRptPhotoList.getFocusedRowIndex();
+		let fileCnt = 0;
+        
+		for (let i = 0; i < fileArr.length; i++) {
+			if (fileArr[i].scssYn == "Y") {
+				fileCnt++;
+			}
+		}
+        
+		dsTcmJobRptPhotoList.setCellData( row , "aflId" , fileId );
+		dsTcmJobRptPhotoList.setCellData( row , "aflCnt" , fileCnt );
+		dsTcmJobRptPhotoList.setCellData( row , "workGbVal" , '2' );
+		aflId.setValue("");
+		aflId.setValue(fileId);
+        
+	}    
+	
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    
+	/* 현장코드 변경 이벤트 */
+	scwin.WFrameSiteInfo_change_callback = function() {
+    
+		dsSearchParamMap.set( "siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());
+        dsSearchParamMap.set( "workDt", calYear.getValue());
+
+        scwin.btnFind_onclick();
+	};
+    
+	/* 조회 버튼 클릭 이벤트 */
+    scwin.btnFind_onclick = function () {
+    
+        //현장코드 입력이 되어있는지 체크 
+        if (com.isEmpty(com.getUdcValue("wfmKeySiteInfo", "ibxKeySiteCd"))) {
+            com.showMessage("EMW0001", "현장");   // $1을(를) 입력하십시오.
+            return;
+        }
+    
+        scwin.fnTcmJobRptWeekMstrList();
+        
+    };
+    
+	/* 저장 버튼 클릭 이벤트 */
+	scwin.btnSaveAll_onclick = function() {
+	
+		/* 주간업무 저장 시 수정 중인 데이터 확인 */
+        /*
+		let photoMdfJson = dsTcmJobRptPhotoList.getModifiedJSON();
+		
+		if (photoMdfJson != '') {
+            com.showMessage("EMW0006", "해당 작업일자의 [사진정보]");//$1이(가) 변경되었습니다. 먼저 저장하세요.
+            return;
+		}
+	    */
+        scwin.btnSaveWeekMstr();
+        
+	};
+
+    /* 삭제 버튼 클릭 이벤트 */
+    scwin.btnDelWeekMstr_onclick = function() {
+    
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+    
+    	if (idxRow < 0) {
+            com.showMessage("SCA0011", "");//삭제할 항목을 선택하세요.
+            return;
+    	}
+    	
+    	let curSiteNm = com.getUdcValue("wfmKeySiteInfo", "ibxKeySiteNm");
+    	let curWorkDt = dsTcmJobRptWeekMstrList.getCellData( idxRow , "workDt" );
+    	
+    	if (confirm("[현장 : " + curSiteNm + ", 일자 : " + curWorkDt + "]\n주간업무계획 데이터가 삭제됩니다. 삭제 하시겠습니까?")) {
+    	
+    		dsTcmJobRptWeekMstrList.removeRow(idxRow);
+    	
+	        ajaxLib.ajax("/cm/cm7025/CM70250000U/deleteTcmJobRptWeekMstr", {
+	            method : "POST",
+	            requestData : {
+									tcmJobRptWeekMstrList : dsTcmJobRptWeekMstrList.getModifiedJSON()
+	            },
+                callback: function(result, e) {
+                    com.showMessage("CFA0012");//저장되었습니다.
+                    
+                    //저장 후 마스터 조회
+                    scwin.fnTcmJobRptWeekMstrList();
+                    
+                },
+                errCallback: function(result, e) {
+                    com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+                }
+	        });
+		}
+    	
+    	/*
+		let photoMdfJson = dsTcmJobRptPhotoList.getModifiedJSON();
+		let photoTotalRow = dsTcmJobRptPhotoList.getTotalRow();
+
+ 		if (!(com.isEmpty(photoMdfJson))) {
+			com.showMessage("CMW0112", "수정 중인 [사진정보]가");//$1 존재하기 때문에 삭제할 수 없습니다.
+			return;
+		} else if (photoTotalRow > 0 && rowStatus != 'C') {
+            com.showMessage("CMW0112", "해당 작업일자의 [사진정보]가");//$1 존재하기 때문에 삭제할 수 없습니다.
+            return;
+    	}
+    	*/
+        
+    };
+    
+	/* 신규 버튼 클릭 이벤트 */
+	scwin.btnAdd_onclick = function() {
+    
+        scwin.btnAddWeekMstr();
+        
+	};
+    
+	/* 실적/계획 탭 저장 버튼 클릭 이벤트 */
+    scwin.btnSaveWeekMstr_onclick = function() {
+    
+        scwin.btnSaveWeekMstr();  
+        
+    };
+	
+    /* 사진정보 탭 저장 버튼 클릭 이벤트 */
+    scwin.btnSavePhoto_onclick =  function() {
+    
+        scwin.btnSavePhoto();
+        
+    };
+    
+	/* 주간업무계획목록 그리드 셀 선택 시 */
+	scwin.grdTcmJobRptWeekMstrList_oncellclick = function(row,col) {
+	
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+        let siteCd = dsTcmJobRptWeekMstrList.getCellData(idxRow, "siteCd");
+        let workDt = dsTcmJobRptWeekMstrList.getCellData(idxRow, "workDt");
+        
+        // 상세정보 설정
+        dsTcmJobRptWeekDtlMap.set("workDt", dsTcmJobRptWeekMstrList.getCellData(idxRow, "workDt"));
+        dsTcmJobRptWeekDtlMap.set("weekStrtDt", dsTcmJobRptWeekMstrList.getCellData(idxRow, "weekStrtDt"));
+        dsTcmJobRptWeekDtlMap.set("weekEndDt", dsTcmJobRptWeekMstrList.getCellData(idxRow, "weekEndDt"));
+        dsTcmJobRptWeekDtlMap.set("bfPlanCn", dsTcmJobRptWeekMstrList.getCellData(idxRow, "bfPlanCn"));
+        dsTcmJobRptWeekDtlMap.set("bfPfmcCn", dsTcmJobRptWeekMstrList.getCellData(idxRow, "bfPfmcCn"));
+        dsTcmJobRptWeekDtlMap.set("afPlanCn", dsTcmJobRptWeekMstrList.getCellData(idxRow, "afPlanCn"));
+        dsTcmJobRptWeekDtlMap.set("notiPrpaCn", dsTcmJobRptWeekMstrList.getCellData(idxRow, "notiPrpaCn"));
+        dsTcmJobRptWeekDtlMap.set("aproGbVal", dsTcmJobRptWeekMstrList.getCellData(idxRow, "aproGbVal"));
+        dsTcmJobRptWeekDtlMap.set("weekWbsRt", dsTcmJobRptWeekMstrList.getCellData(idxRow, "weekWbsRt"));
+        dsTcmJobRptWeekDtlMap.set("weekPlanRt", dsTcmJobRptWeekMstrList.getCellData(idxRow, "weekPlanRt"));
+        dsTcmJobRptWeekDtlMap.set("bfWeekPlanRt", dsTcmJobRptWeekMstrList.getCellData(idxRow, "bfWeekPlanRt"));
+        dsTcmJobRptWeekDtlMap.set("fstConstDt", dsTcmJobRptWeekMstrList.getCellData(idxRow, "fstConstDt"));
+        dsTcmJobRptWeekDtlMap.set("chgConstDt", dsTcmJobRptWeekMstrList.getCellData(idxRow, "chgConstDt"));
+        dsTcmJobRptWeekDtlMap.set("tflar", dsTcmJobRptWeekMstrList.getCellData(idxRow, "tflar"));
+        dsTcmJobRptWeekDtlMap.set("pltgArea", dsTcmJobRptWeekMstrList.getCellData(idxRow, "pltgArea"));
+        dsTcmJobRptWeekDtlMap.set("workPeriod", dsTcmJobRptWeekMstrList.getCellData(idxRow, "workPeriod"));
+        dsTcmJobRptWeekDtlMap.set("bfWorkPeriod", dsTcmJobRptWeekMstrList.getCellData(idxRow, "bfWorkPeriod"));
+        dsTcmJobRptWeekDtlMap.set("afWorkPeriod", dsTcmJobRptWeekMstrList.getCellData(idxRow, "afWorkPeriod"));
+       
+        /* 사진 탭 조회 */        
+        scwin.fnTcmJobRptPhotoList(siteCd, workDt);
+        
+        /* 사진 탭 미리보기 초기화 */
+        gen_ImgList.removeAll();
+        
+		/* 신규 시 탭 비활성화 */
+		if(dsTcmJobRptWeekMstrList.getRowStatus( idxRow ) == "C") {
+			// 탭 컨트롤 활성화 및 초기탭으로 설정
+			tacTactbgtMng.setSelectedTabIndex(0);
+			tacTactbgtMng.setDisabled( true );
+		} else {
+			tacTactbgtMng.setDisabled( false );
+		}
+        
+        // 결재상태에 따른 객체 Display Setting
+        scwin.itemDisplayControll();
+
+	};
+    
+	/* 이미지첨부 클릭 */
+	scwin.btnAddFile_onclick = function() {
+
+        let sAflId   = dsTcmJobRptPhotoList.getCellData( grdTcmJobRptPhotoList.getFocusedRowIndex() , "aflId" );    // 첨부파일ID
+        let sJobGbCd = "CM";                            // 업무구분
+        let sMenuId  = "CM70250000U";                   // 매뉴ID
+        let popOps = {
+                pid: "AflPopup"+"_" +new Date().getTime(),
+                url: "/ux/cf/CF00350000P.xml",
+                modal: true,
+                popup_name: "업무보고사진",
+                callbackFn: "scwin.popAflCallback",
+                widType: "M",
+                height: 540,
+                data: {
+                   aflId: sAflId,
+                   jobGbCd: sJobGbCd,
+                   menuId: sMenuId,
+                   fileExt: "jpg,jpeg,png,gif",
+                   usage: "INS"
+                }
+        };
+        
+        com.popup_open(popOps);
+        
+	};
+	
+	/* 사진정보 그리드 셀 선택 시 */
+	scwin.grdTcmJobRptPhotoList_oncellclick = function(row,col) {
+    
+        let curRowIndex = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+
+		/* 이미지첨부 버튼 활성화 */
+        if(dsTcmJobRptWeekMstrList.getCellData( curRowIndex , 'aproGbVal' ) == '작성중') {
+		  btnAddFile.setDisabled( false );
+        } else {
+		  btnAddFile.setDisabled( true ); 
+        }
+	
+		/* 사진목록 로우 변경 시 사진 조회 */
+		if(dsTcmJobRptPhotoList.getTotalRow() == 0) {
+			gen_ImgList.removeAll();
+			return;
+		}
+		
+		let modRow = dsTcmJobRptPhotoList.getModifiedIndex()[0];
+
+		if ( modRow == undefined || modRow == "" || modRow == row ) {
+			let aflid   = dsTcmJobRptPhotoList.getCellData( row , "aflId" );
+			aflId.setValue("");
+			aflId.setValue(aflid);
+			document.getElementById("gen_generator").classList.add("file_img_list");
+		} /* else{
+			grdTcmJobRptPhotoList.setFocusedCell( modRow , 0 , false );
+			com.showMessage("CSA0007");
+		} */
+
+	};
+	
+	/* 작업일자 변경 시 해당 그리드 로우 반영 */
+	scwin.calYearMonth_onchange = function() {
+    
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+		
+		dsTcmJobRptWeekMstrList.setCellData(idxRow, "workDt", dsTcmJobRptWeekDtlMap.get("workDt"));
+        
+	};
+	
+	scwin.txtWeekWbsRt_onchange = function() {
+    
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+		
+		dsTcmJobRptWeekMstrList.setCellData(idxRow, "weekWbsRt", dsTcmJobRptWeekDtlMap.get("weekWbsRt"));
+        
+	};
+	
+	scwin.txtWeekPlanRt_onchange = function() {
+    
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+		
+		dsTcmJobRptWeekMstrList.setCellData(idxRow, "weekPlanRt", dsTcmJobRptWeekDtlMap.get("weekPlanRt"));
+	
+	};
+	
+	scwin.txtBfPfmcCn_onchange = function() {
+    
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+		
+		dsTcmJobRptWeekMstrList.setCellData(idxRow, "bfPfmcCn", dsTcmJobRptWeekDtlMap.get("bfPfmcCn"));
+	
+	};
+	
+	scwin.txtAfPlanCn_onchange = function() {
+    
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+		
+		dsTcmJobRptWeekMstrList.setCellData(idxRow, "afPlanCn", dsTcmJobRptWeekDtlMap.get("afPlanCn"));
+	
+	};
+	
+	scwin.txtNotiPrpaCn_onchange = function() {
+    
+		let idxRow = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+		
+		dsTcmJobRptWeekMstrList.setCellData(idxRow, "notiPrpaCn", dsTcmJobRptWeekDtlMap.get("notiPrpaCn"));
+	
+	};
+    
+	//결재상신
+	scwin.btnAprvSbrq_onclick = function(aprvFlag) {
+
+		/* 1. 기본 파라미터 설정 */
+		let siteNm = com.getUdcValue("wfmKeySiteInfo", "ibxKeySiteNm");
+        let paramObj = new Object();
+        let curRowIndex = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+        
+        /* 2. 결재 보고서 데이터 설정 */
+        dsSearchParamSubMap.set("siteCd", dsTcmJobRptWeekMstrList.getCellData( curRowIndex , "siteCd"));
+        dsSearchParamSubMap.set("workDt", dsTcmJobRptWeekMstrList.getCellData( curRowIndex , "workDt"));
+
+        paramObj.jobGbCd = "CM";                                         // 업무구분코드
+        paramObj.importUrl = "/ux/cm/cm7025/CM70250000E.xml";            // 출력할 결재본문페이지
+        paramObj.aprvTtl = "[주간업무계획] (" + siteNm + " : " + dsTcmJobRptWeekMstrList.getCellData( curRowIndex , "workDt") + ")";  // 결재제목
+        paramObj.rvwrEmpno = "";                                         // 검토자_사번
+        paramObj.fnlAprprEmpno = "";                                     // 최종승인자_사번
+        paramObj.aprvPrcgNm = "";                                        // 후처리결재처리명
+        paramObj.aprvPrcgEventNm = "/cm/cmif/CMIfTelepiaPostProcess/notifyTcmJobRptAprv";   // 후처리결재처리 이벤트명
+        paramObj.aprvDocModiPsblYn = "Y";                                // 결재문서 수정불가기능 Y/N
+        paramObj.aprlnModiPsblYn = "N";                                  // 결재선 수정불가기능 Y/N
+        paramObj.aprvAtchModiPsblYn = "N";                               // 결재첨부 수정불가기능 Y/N
+        paramObj.aprvAflId = "";                                         // 본문링크용 첨부파일 id (콤머로 구분해서 보내준다)
+//        paramObj.popupWidth = "1200";                                  // 미리보기 가로크기
+//        paramObj.popupHeight = "800";                                  // 미리보기 세로크기
+        
+        com.aprvSendEditor(paramObj); //의견달기호출
+		
+	};
+    
+    /** 전자결재 후처리 **/
+	scwin.aprvPublicAction = function() {
+    
+	   let curRowIndex = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+        
+	   //결재번호 update
+	   ajaxLib.ajax("/cm/cm7025/CM70250000U/updateTcmJobRptWeekMstrAprv", {
+	       method      : "post",
+           requestData: {
+                    siteCd: dsSearchParamMap.get("siteCd"),
+                    aprvNo: com.getAprvNo(),
+                    aproGbVal:"CF004110",
+                    workDt:dsTcmJobRptWeekMstrList.getCellData( curRowIndex , "workDt")
+           },
+	       callback: function(result, e) {
+	                   // 저장 후 조회
+	                   scwin.fnTcmJobRptWeekMstrList();
+	       },
+	       errCallback: function(result, e) {
+	                   com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+	       }
+	   });
+         
+    };
+    
+    // 결재현황 클릭
+	scwin.btnApprCon_onclick = function() {
+    
+        let curRowIndex = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+        
+        com.aprvViewPopup(dsTcmJobRptWeekMstrList.getCellData( curRowIndex , "aprvNo"));
+        
+	};
+    
+    /**************************************************************************
+     * 함 수 명: scwin.btnRptWeekMstr_onclick
+     * 기 능: 주간업무보고출력 버튼 Click 이벤트(출력) 
+     **************************************************************************/
+    scwin.btnRptWeekMstr_onclick = function() {
+    
+	   let curRowIndex = grdTcmJobRptWeekMstrList.getFocusedRowIndex();
+        
+	   let siteCd      = dsTcmJobRptWeekMstrList.getCellData( curRowIndex , "siteCd");           //현장코드
+	   let workDt      = dsTcmJobRptWeekMstrList.getCellData( curRowIndex , "workDt");           //작업일자
+
+       console.log("siteCd : " + siteCd);
+       console.log("workDt : " + workDt);
+
+       let param = { 
+                     SITE_CD      : siteCd
+	               , WORK_DT      : workDt
+       };
+    
+        com.ubiReportPopup("CM70250000R.jrf", param, "CM", "");
+                   
+	};
+]]></script>
+        <w2:require src="/WEB-INF/ux/common/udc/udcAddress.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcPhone.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcImgFileList.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcYearcalendar.xml"></w2:require>
+    </head>
+    <body ev:onpageload="scwin.onpageload" >
+        <xf:group style="" id="" class="content_body">
+            <xf:group class="navigator_wrap" id="" style="">
+                <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            </xf:group>
+            <xf:group class="tbl_search" id="" style="">
+                <xf:group class="tb_list" id="" style="" tagname="table">
+                    <w2:attributes>
+                        <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                    </w2:attributes>
+                    <xf:group tagname="colgroup">
+                        <xf:group style="width:67px;" tagname="col"></xf:group>
+                        <xf:group style="width:auto;" tagname="col"></xf:group>
+                        <xf:group style="width:67px;" tagname="col"></xf:group>
+                        <xf:group style="width:auto;" tagname="col"></xf:group>
+                    </xf:group>
+                    <xf:group style="" tagname="tr">
+                        <xf:group class="w2tb_th req" style="" tagname="th">
+                            <w2:span class="" id="" label="현장" style=""></w2:span>
+                        </xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""
+                                ev:onwframeunload=""></w2:wframe>
+                        </xf:group>
+                        <xf:group class="w2tb_th req" style="" tagname="th">
+                            <w2:span class="" id="" label="년도" style=""></w2:span>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:inputCalendar footerDiv="false" id="calYear" style="width:120px" renderDiv="true"
+                                focusOnDateSelect="false" calendarValueType="year" rightAlign="false" renderType="component" class="req"
+                                mandatory="" placeholder="____-__" ev:onchange="" defaultDate="" ref="data:dsSearchParamMap.workDt">
+                            </w2:inputCalendar>
+                        </xf:group>
+
+                    </xf:group>
+                </xf:group>
+                <xf:group class="btn_tbl_search" style="" tagname="">
+                    <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+                        <xf:label><![CDATA[조회]]></xf:label>
+                    </w2:anchor>
+                </xf:group>
+            </xf:group>
+            <xf:group style="" id="" class="lybox_wrap">
+                <xf:group style="" id="" class="lybox">
+                    <xf:group style="width:26%; height:100%;" id="" class="lycolumn ">
+                        <xf:group style="" id="" class="lyinner">
+                            <xf:group style="" id="" class="defaultbox">
+                                <w2:textbox tagname="h3" style="" label="주간업무계획 목록" id="" class="df_tt"></w2:textbox>
+                                <xf:group style="" id="" class="right_wrap">
+                                    <w2:anchor class="btn_gcm excel_down" clickEventElement=""
+                                        ev:onclick="scwin.btnExcelDwnMstr_onclick" id="btnExcelDwnMstrDtl" localeRef="" outerDiv="false"
+                                        style="text-align:right;" toolTip="엑셀다운로드">
+                                    </w2:anchor>
+                                </xf:group>
+                            </xf:group>
+
+                            <w2:gridView readOnly="false" autoFit="allColumn" class="s_narrow autoHeight"
+                                dataList="data:dsTcmJobRptWeekMstrList" fixedColumnWithHidden="" focusMode="row"
+                                id="grdTcmJobRptWeekMstrList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+                                rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 100%;" useShiftKey="false"
+                                visibleRowNum="" ev:onrowindexchange="" ev:oncellclick="scwin.grdTcmJobRptWeekMstrList_oncellclick"
+                                useCtrlKey="false">
+                                <w2:header id="header1" style="">
+                                    <w2:row id="row2" style="">
+                                        <w2:column blockSelect="false" displayMode="label" id="grdRowNum" inputType="text"
+                                            removeBorderStyle="false" style="" value="No." width="40">
+                                        </w2:column>
+                                        <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column1"
+                                            value="작업일자" blockSelect="false" displayMode="label">
+                                        </w2:column>
+                                        <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column2"
+                                            value="결재상태" blockSelect="false" displayMode="label">
+                                        </w2:column>
+                                        <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column3"
+                                            value="요청일자" blockSelect="false" displayMode="label">
+                                        </w2:column>
+                                        <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column4"
+                                            value="승인일자" blockSelect="false" displayMode="label">
+
+                                        </w2:column>
+                                    </w2:row>
+                                </w2:header>
+                                <w2:gBody id="gBody4" style="">
+                                    <w2:row id="row5" style="">
+                                        <w2:column blockSelect="false" displayMode="label" id="grdRowNum" inputType="expression"
+                                            removeBorderStyle="false" style="" textAlign="" value="" width="40" expression="rowindex()+1"
+                                            readOnly="true">
+                                        </w2:column>
+                                        <w2:column blockSelect="false" displayMode="label" id="workDt" inputType="calendar"
+                                            removeBorderStyle="false" style="" value="" width="70" readOnly="true" maxLength="100"
+                                            textAlign="center">
+                                        </w2:column>
+                                        <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="aproGbVal"
+                                            value="" blockSelect="false" displayMode="label" textAlign="center" readOnly="true">
+                                        </w2:column>
+                                        <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="reqDtm"
+                                            value="" blockSelect="false" displayMode="label" textAlign="center" readOnly="true">
+                                        </w2:column>
+                                        <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="aproDtm"
+                                            value="" blockSelect="false" displayMode="label" textAlign="center" readOnly="true">
+                                        </w2:column>
+                                    </w2:row>
+                                </w2:gBody>
+                            </w2:gridView>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group style="width:74%; height:100%" id="" class="lycolumn">
+                        <xf:group style="height:100%;" id="" class="lyinner">
+                            <xf:group style="margin-top:0px;" id="" class="defaultbox">
+                                <w2:textbox tagname="h3" style="" id="" label="주간업무계획 상세정보" class="df_tt"></w2:textbox>
+                                <xf:group style="" id="" class="right_wrap">
+                                    <!-- 결재이벤트 페이지 임포트 -->
+                                    <xf:group>
+                                        <w2:wframe style="display:none" id="importAprvMain" src="/ux/cf/CF00350500U.xml"></w2:wframe>
+                                    </xf:group>
+                                    <xf:group style="" id="">
+                                        <w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnAprvSbrq_onclick"
+                                            id="btnAprv" outerDiv="false" style="" disabled="true">
+                                            <xf:label><![CDATA[결재]]></xf:label>
+                                        </w2:anchor>
+                                        <w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnApprCon_onclick"
+                                            id="btnStatus" outerDiv="false" style="" disabled="true">
+                                            <xf:label><![CDATA[결재현황]]></xf:label>
+                                        </w2:anchor>
+                                        <w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnRptWeekMstr_onclick"
+                                            id="btnPrtWeekMstr" outerDiv="false" style="" disabled="true">
+                                            <xf:label><![CDATA[주간업무보고출력]]></xf:label>
+                                        </w2:anchor>
+                                        <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnAdd" outerDiv="false"
+                                            style="" ev:onclick="scwin.btnAdd_onclick">
+                                            <xf:label><![CDATA[신규]]></xf:label>
+                                        </w2:anchor>
+                                        <w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style=""
+                                            ev:onclick="scwin.btnSaveAll_onclick">
+                                            <xf:label><![CDATA[저장]]></xf:label>
+                                        </w2:anchor>
+                                        <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnDel"
+                                            class="btn_gcm" ev:onclick="scwin.btnDelWeekMstr_onclick">
+                                            <xf:label><![CDATA[삭제]]></xf:label>
+                                        </w2:anchor>
+                                    </xf:group>
+                                </xf:group>
+                            </xf:group>
+                            <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                                <w2:attributes>
+                                    <w2:summary>주간업무계획상 상세정보 테이블 입니다.</w2:summary>
+                                </w2:attributes>
+                                <xf:group tagname="colgroup">
+                                    <xf:group style="width:20%;" tagname="col"></xf:group>
+                                    <xf:group style="width:35%;" tagname="col"></xf:group>
+                                    <xf:group style="width:20%;" tagname="col"></xf:group>
+                                    <xf:group style="width:25%;" tagname="col"></xf:group>
+                                </xf:group>
+                                <xf:group style="" tagname="tr" class="">
+                                    <xf:group class="w2tb_th req" style="" tagname="th">
+                                        <w2:attributes>
+                                            <w2:scope>row</w2:scope>
+                                        </w2:attributes>
+                                        <w2:span class="" id="" label="작업일자" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="text-align:left;" tagname="td">
+                                        <w2:inputCalendar footerDiv="false" id="calYearMonthDate" style="width:120px"
+                                            renderDiv="true" focusOnDateSelect="false" calendarValueType="yearMonthDate" rightAlign="false"
+                                            renderType="component" class="req" mandatory="" placeholder="____-__-__"
+                                            ev:onchange="scwin.calYearMonth_onchange" defaultDate="" ref="data:dsTcmJobRptWeekDtlMap.workDt"
+                                            readOnly="false">
+                                        </w2:inputCalendar>
+                                        <w2:span class="txt_unit" id="txtWorkPeriod" label=""
+                                            style="margin-left:5px; width:200px; text-align:center;"
+                                            ref="data:dsTcmJobRptWeekDtlMap.workPeriod"></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_th" tagname="th">
+                                        <w2:span class="" id="" label="결재상태" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" tagname="td">
+                                        <w2:span class="txt_unit" id="" label="" style="width:100%; text-align:left;"
+                                            ref="data:dsTcmJobRptWeekDtlMap.aproGbVal"></w2:span>
+                                    </xf:group>
+                                </xf:group>
+                                <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th" style="" tagname="th">
+                                        <w2:span id="" label="대지면적" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" tagname="td">
+                                        <w2:span class="txt_unit" id="" label="" style="width:100%;"
+                                            ref="data:dsTcmJobRptWeekDtlMap.pltgArea"></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_th" tagname="th">
+                                        <w2:span id="" label="연면적" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" tagname="td">
+                                        <w2:span class="txt_unit" id="" label="" style="width:100%;"
+                                            ref="data:dsTcmJobRptWeekDtlMap.tflar"></w2:span>
+                                    </xf:group>
+                                </xf:group>
+                                <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th" style="" tagname="th">
+                                        <w2:span id="" label="공사기간(당초)" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" tagname="td">
+                                        <w2:span class="txt_unit" id="" label="" style="width:100%;"
+                                            ref="data:dsTcmJobRptWeekDtlMap.fstConstDt"></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_th" tagname="th">
+                                        <w2:span id="" label="공사기간(변경)" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" tagname="td">
+                                        <w2:span class="txt_unit" id="" label="" style="width:100%;"
+                                            ref="data:dsTcmJobRptWeekDtlMap.chgConstDt"></w2:span>
+                                    </xf:group>
+                                </xf:group>
+                            </xf:group>
+                            <w2:tabControl alwaysDraw="true" class="cm_tab" confirmFalseAction="new" confirmTrueAction="exist"
+                                id="tacTactbgtMng" style="margin-top:15px;" useConfirmMessage="false" useMoveNextTabFocus="false"
+                                useTabKeyOnly="true" >
+                                <w2:tabs disabled="false" id="tabs1" label="실적" localeRef="" style=""></w2:tabs>
+                                <w2:tabs disabled="false" id="tabs2" label="계획" style=""></w2:tabs>
+                                <w2:tabs disabled="false" id="tabs4" label="사진" localeRef="" style=""></w2:tabs>
+                                <w2:content alwaysDraw="false" id="content1" style="">
+                                    <xf:group style="margin-top:0px;" id="" class="defaultbox">
+                                        <xf:group style="" id="" class="left_wrap">
+                                            <xf:group id="" style="">
+                                                <w2:span class="txt_unit" id="" label="" style="width:220px; text-align:left;"
+                                                    ref="data:dsTcmJobRptWeekDtlMap.bfWorkPeriod"></w2:span>
+                                            </xf:group>
+                                        </xf:group>
+                                        <xf:group style="" id="" class="right_wrap">
+                                            <xf:group style="" id="">
+                                                <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnSaveWeekMstr"
+                                                    outerDiv="false" style="" ev:onclick="scwin.btnSaveWeekMstr_onclick" disabled="true">
+                                                    <xf:label><![CDATA[저장]]></xf:label>
+                                                </w2:anchor>
+                                            </xf:group>
+                                        </xf:group>
+                                    </xf:group>
+                                    <xf:group style="" id="" class="lybox_wrap">
+                                        <xf:group style="" id="" class="lybox">
+                                            <xf:group style="width:50%; height:100%;" id="" class="lycolumn">
+                                                <xf:group style="height:100%;" id="" class="lyinner">
+                                                    <xf:group style="" id="" class="defaultbox">
+                                                        <xf:group style="" id="" class="left_wrap">
+                                                            <w2:textbox tagname="h3" style="margin-top:11px;" id="" label="전주계획"
+                                                                class="df_tt"></w2:textbox>
+                                                        </xf:group>
+                                                        <xf:group style="" id="" class="right_wrap">
+                                                            <xf:group id="" style="margin-top:5px;">
+                                                                공정율(%) :
+                                                            </xf:group>
+                                                            <xf:input readOnly="true" id="txtBfWeekPlanRt"
+                                                                ref="data:dsTcmJobRptWeekDtlMap.bfWeekPlanRt"
+                                                                style="margin-left:5px; width:65px;margin-top:5px; text-align:right;"
+                                                                enterBlur="true" maxlength="100" dataType="number" displayFormat="#.00"
+                                                                displayFormatter="" ev:onchange=""></xf:input>
+                                                        </xf:group>
+                                                    </xf:group>
+                                                </xf:group>
+                                            </xf:group>
+                                            <xf:group style="width:50%; height:100%" id="" class="lycolumn">
+                                                <xf:group style="height:100%;" id="" class="lyinner">
+                                                    <xf:group style="" id="" class="defaultbox">
+                                                        <xf:group style="" id="" class="left_wrap">
+                                                            <w2:textbox tagname="h3" style="margin-top:9px;" id="" label="전주실적"
+                                                                class="df_tt"></w2:textbox>
+                                                        </xf:group>
+                                                        <xf:group style="" id="" class="right_wrap">
+                                                            <xf:group id="" style="margin-top:5px;">
+                                                                공정율(%) :
+                                                            </xf:group>
+                                                            <xf:input id="txtWeekWbsRt" ref="data:dsTcmJobRptWeekDtlMap.weekWbsRt"
+                                                                style="margin-left:5px; width:65px;margin-top:5px; text-align:right;"
+                                                                enterBlur="true" maxlength="100" dataType="number" displayFormat="#.00"
+                                                                ev:onchange="scwin.txtWeekWbsRt_onchange"></xf:input>
+                                                        </xf:group>
+                                                    </xf:group>
+                                                </xf:group>
+                                            </xf:group>
+                                        </xf:group>
+                                    </xf:group>
+                                    <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                                        <w2:attributes>
+                                            <w2:summary>주간업무계획등록 실적 테이블 입니다.</w2:summary>
+                                        </w2:attributes>
+                                        <xf:group tagname="colgroup">
+                                            <xf:group style="width:auto;" tagname="col"></xf:group>
+                                            <xf:group style="width:auto;" tagname="col"></xf:group>
+                                        </xf:group>
+                                        <xf:group style="" tagname="tr">
+                                            <xf:group class="w2tb_th" style="text-align:center;" tagname="th">
+                                                <w2:span id="" label="전주계획" style=""></w2:span>
+                                            </xf:group>
+                                            <xf:group class="w2tb_th" style="text-align:center;" tagname="th">
+                                                <w2:span id="" label="전주실적" style=""></w2:span>
+                                            </xf:group>
+                                        </xf:group>
+                                        <xf:group style="" tagname="tr">
+                                            <xf:group class="w2tb_td ac" style="height:356px" tagname="td">
+                                                <w2:textarea class="txt_unit" id="txtBfPlanCn" label="" readOnly="true"
+                                                    style="border-style:solid; border-width:1px; text-align:left; height:100%; width:100%;"
+                                                    ref="data:dsTcmJobRptWeekDtlMap.bfPlanCn">
+                                                </w2:textarea>
+                                            </xf:group>
+                                            <xf:group class="w2tb_td ar" style="height:356px" tagname="td">
+                                                <w2:textarea class="txt_unit" id="txtBfPfmcCn" label=""
+                                                    ev:onchange="scwin.txtBfPfmcCn_onchange"
+                                                    style="border-style:solid; border-width:1px; text-align:left; height:100%; width:100%;"
+                                                    ref="data:dsTcmJobRptWeekDtlMap.bfPfmcCn">
+                                                </w2:textarea>
+                                            </xf:group>
+                                        </xf:group>
+                                    </xf:group>
+                                </w2:content>
+                                <w2:content alwaysDraw="false" id="content2" style="">
+                                    <xf:group style="margin-top:0px;" id="" class="defaultbox">
+                                        <xf:group style="" id="" class="left_wrap">
+                                            <xf:group id="" style="">
+                                                <w2:span class="txt_unit" id="" label="" style="width:220px; text-align:left;"
+                                                    ref="data:dsTcmJobRptWeekDtlMap.afWorkPeriod"></w2:span>
+                                            </xf:group>
+                                        </xf:group>
+                                        <xf:group style="" id="" class="right_wrap">
+                                            <xf:group style="" id="">
+                                                <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnSaveWeekMstrPlan"
+                                                    outerDiv="false" style="" ev:onclick="scwin.btnSaveWeekMstr_onclick" disabled="true">
+                                                    <xf:label><![CDATA[저장]]></xf:label>
+                                                </w2:anchor>
+                                            </xf:group>
+                                        </xf:group>
+                                    </xf:group>
+                                    <xf:group style="" id="" class="lybox_wrap">
+                                        <xf:group style="" id="" class="lybox">
+                                            <xf:group style="width:50%; height:100%;" id="" class="lycolumn">
+                                                <xf:group style="height:100%;" id="" class="lyinner">
+                                                    <xf:group style="" id="" class="defaultbox">
+                                                        <xf:group style="" id="" class="left_wrap">
+                                                            <w2:textbox tagname="h3" style="margin-top:11px;" id="" label="금주계획"
+                                                                class="df_tt"></w2:textbox>
+                                                        </xf:group>
+                                                        <xf:group style="" id="" class="right_wrap">
+                                                            <xf:group id="" style="margin-top:5px;">
+                                                                공정율(%) :
+                                                            </xf:group>
+                                                            <xf:input id="txtWeekPlanRt"
+                                                                ref="data:dsTcmJobRptWeekDtlMap.weekPlanRt"
+                                                                style="margin-left:5px; width:65px;margin-top:5px; text-align:right;"
+                                                                enterBlur="true" maxlength="100" dataType="number" displayFormat="#.00"
+                                                                applyFormat="##.00" ev:onchange="scwin.txtWeekPlanRt_onchange"></xf:input>
+                                                        </xf:group>
+                                                    </xf:group>
+                                                </xf:group>
+                                            </xf:group>
+                                            <xf:group style="width:50%; height:100%" id="" class="lycolumn">
+                                                <xf:group style="height:100%;" id="" class="lyinner">
+                                                    <xf:group style="" id="" class="defaultbox">
+                                                        <xf:group style="" id="" class="left_wrap">
+                                                            <w2:textbox tagname="h3" style="margin-top:9px;" id=""
+                                                                label="공지/건의사항" class="df_tt"></w2:textbox>
+                                                        </xf:group>
+                                                    </xf:group>
+                                                </xf:group>
+                                            </xf:group>
+                                        </xf:group>
+                                    </xf:group>
+                                    <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                                        <w2:attributes>
+                                            <w2:summary>주간업무계획등록 계획 테이블입니다.</w2:summary>
+                                        </w2:attributes>
+                                        <xf:group tagname="colgroup">
+                                            <xf:group style="width:auto;" tagname="col"></xf:group>
+                                            <xf:group style="width:auto;" tagname="col"></xf:group>
+                                        </xf:group>
+                                        <xf:group style="" tagname="tr">
+                                            <xf:group class="w2tb_th" style="text-align:center;" tagname="th">
+                                                <w2:span id="" label="금주계획" style=""></w2:span>
+                                            </xf:group>
+                                            <xf:group class="w2tb_th" style="text-align:center;" tagname="th">
+                                                <w2:span id="" label="공지/건의사항" style=""></w2:span>
+                                            </xf:group>
+                                        </xf:group>
+                                        <xf:group style="" tagname="tr">
+                                            <xf:group class="w2tb_td ac" style="height:356px" tagname="td">
+                                                <w2:textarea class="txt_unit" id="txtAfPlanCn" label=""
+                                                    ev:onchange="scwin.txtAfPlanCn_onchange"
+                                                    style="border-style:solid; border-width:1px; text-align:left; height:100%; width:100%;"
+                                                    ref="data:dsTcmJobRptWeekDtlMap.afPlanCn">
+                                                </w2:textarea>
+                                            </xf:group>
+                                            <xf:group class="w2tb_td ar" style="height:356px" tagname="td">
+                                                <w2:textarea class="txt_unit" id="txtNotiPrpaCn" label=""
+                                                    ev:onchange="scwin.txtNotiPrpaCn_onchange"
+                                                    style="border-style:solid; border-width:1px; text-align:left; height:100%; width:100%;"
+                                                    ref="data:dsTcmJobRptWeekDtlMap.notiPrpaCn">
+                                                </w2:textarea>
+                                            </xf:group>
+                                        </xf:group>
+                                    </xf:group>
+                                </w2:content>
+                                <w2:content alwaysDraw="false" id="content3" style="">
+                                    <xf:group style="" id="" class="tab_body">
+                                        <xf:group class="lybox_wrap col_3_7" id="" style="">
+                                            <xf:group class="lybox" id="" style="">
+                                                <xf:group class="lycolumn" id="" style="width:40%;">
+                                                    <xf:group class="lyinner" id="" style="">
+                                                        <xf:group class="defaultbox" id="" style="">
+                                                            <w2:textbox class="df_tt" id="" label="사진정보" style="" tagname="h3"></w2:textbox>
+                                                            <xf:group class="right_wrap" id="" style="">
+                                                                <xf:group id="" style="">
+                                                                    <w2:anchor class="btn_gcm" clickEventElement=""
+                                                                        id="btnSavePhotoList" outerDiv="false" style=""
+                                                                        ev:onclick="scwin.btnSavePhoto_onclick" disabled="true">
+                                                                        <xf:label><![CDATA[저장]]></xf:label>
+                                                                    </w2:anchor>
+                                                                    <w2:anchor class="btn_gcm row_add" clickEventElement=""
+                                                                        id="btnAddRow" outerDiv="false" style="" toolTip="행추가"
+                                                                        ev:onclick="scwin.btnAddRowPhoto_onclick" disabled="true">
+                                                                        <xf:label><![CDATA[행추가]]></xf:label>
+                                                                    </w2:anchor>
+                                                                    <w2:anchor class="btn_gcm row_del" clickEventElement=""
+                                                                        id="btnDelRow" outerDiv="false" style="" toolTip="행삭제"
+                                                                        ev:onclick="scwin.btnDelRowPhoto_onclick" disabled="true">
+                                                                        <xf:label><![CDATA[행삭제]]></xf:label>
+                                                                    </w2:anchor>
+                                                                </xf:group>
+                                                            </xf:group>
+                                                        </xf:group>
+                                                        <w2:gridView autoFit="allColumn" class=""
+                                                            dataList="data:dsTcmJobRptPhotoList" fixedColumnWithHidden="true"
+                                                            focusMode="row" id="grdTcmJobRptPhotoList" readOnly="" rowNumHeaderValue="No"
+                                                            rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30"
+                                                            scrollByColumn="false" style="height:443px;" useShiftKey="true" visibleRowNum=""
+                                                            ev:oncellclick="scwin.grdTcmJobRptPhotoList_oncellclick"
+                                                            checkReadOnlyOnCut="true" checkReadOnlyOnPaste="true">
+                                                            <w2:header id="header1" style="">
+                                                                <w2:row id="row2" style="">
+                                                                    <w2:column removeBorderStyle="false" width="40"
+                                                                        inputType="checkbox" style="" id="chk" value="" blockSelect="false"
+                                                                        displayMode="label">
+                                                                    </w2:column>
+                                                                    <w2:column blockSelect="false" id="" inputType="text" style=""
+                                                                        value="No." width="40px;">
+                                                                    </w2:column>
+                                                                    <w2:column removeBorderStyle="false" width="200"
+                                                                        inputType="text" style="" id="" value="설명" blockSelect="false"
+                                                                        displayMode="label">
+                                                                    </w2:column>
+                                                                    <w2:column removeBorderStyle="false" width="40"
+                                                                        inputType="text" style="" id="" value="건수" blockSelect="false"
+                                                                        displayMode="label">
+                                                                    </w2:column>
+                                                                </w2:row>
+                                                            </w2:header>
+                                                            <w2:gBody id="gBody4" style="">
+                                                                <w2:row id="row5" style="">
+                                                                    <w2:column id="chk" width="40" inputType="checkbox" style=""
+                                                                        value="" readOnly="false">
+                                                                    </w2:column>
+                                                                    <w2:column id="no" expression="rowindex()+1"
+                                                                        inputType="expression" width="40">
+                                                                    </w2:column>
+                                                                    <w2:column width="40" inputType="text" style=""
+                                                                        id="photoDesc" value="" textAlign="left">
+                                                                    </w2:column>
+                                                                    <w2:column width="40" inputType="text" style="" id="aflCnt"
+                                                                        value="" textAlign="center" readOnly="true">
+                                                                    </w2:column>
+                                                                </w2:row>
+                                                            </w2:gBody>
+                                                        </w2:gridView>
+                                                    </xf:group>
+                                                </xf:group>
+                                                <xf:group class="lycolumn" id="" style="width:60%;">
+                                                    <xf:group class="lyinner" id="" style="">
+                                                        <xf:group class="btn_wrap" id="" style="">
+                                                            <w2:anchor class="btn_gcm" clickEventElement="" id="btnAddFile" disabled="true"
+                                                                outerDiv="false" style="float: right;" ev:onclick="scwin.btnAddFile_onclick">
+                                                                <xf:label><![CDATA[이미지첨부]]></xf:label>
+                                                            </w2:anchor>
+                                                        </xf:group>
+                                                        <w2:generator class="img_databox" id="gen_ImgList" tagname="ul">
+                                                            <w2:generator id="gen_generator" tagname="li" class=""
+                                                                style="display: inline; ">
+                                                            </w2:generator>
+                                                        </w2:generator>
+                                                        <xf:input adjustMaxLength="false" id="jobGbCd"
+                                                            style="display:none;width:50px"></xf:input>
+                                                        <xf:input adjustMaxLength="false" id="menuId"
+                                                            style="display:none;width:50px"></xf:input>
+                                                        <xf:input adjustMaxLength="false" id="fileExt"
+                                                            style="display:none;width:50px"></xf:input>
+                                                        <xf:input adjustMaxLength="false" id="usage"
+                                                            style="display:none;width:50px"></xf:input>
+                                                        <xf:input adjustMaxLength="false" id="aflId"
+                                                            style="display:none;width:50px;">
+                                                            <script ev:event="onchange" type="text/javascript"><![CDATA[
+                            			                            gen_ImgList.removeAll(); // 초기화
+                            			                            if ( aflId.getValue() != "" ) {
+                            			                                var rtnArr = com.udcAflList(aflId.getValue()) || [];
+                            			                                $.each(rtnArr, function(key,data){
+                            			                                    var idx = gen_ImgList.insertChild();
+                            			                                    var gen_Obj = gen_ImgList.getChild(idx,"gen_generator");
+                            			                                    var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+                            			                                    var $imgData = $("#"+gen_Obj.id);
+                            			                                    $imgData.append($('<img src="'+href+'" class="w2image" style="position:relative;display:inline-block;width:250px;margin:15px;height:215px;text-align:center;border:1px solid #e8e8e8;background:#eee;vertical-align:middle;box-sizing:border-box">'));
+                            			                                    $imgData.off("click").on("click", function() {
+                            			                                        com.udcPopup("AflImgPopup", {comp:[aflId,""]}, $(this).find("img").attr("src"));
+                            			                                    });
+                            			                                });
+                            			                            }
+                            			                        ]]></script>
+                                                        </xf:input>
+                                                    </xf:group>
+                                                </xf:group>
+                                            </xf:group>
+                                        </xf:group>
+                                    </xf:group>
+                                </w2:content>
+                                <w2:content alwaysDraw="false" id="content4" style="">
+                                </w2:content>
+                            </w2:tabControl>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmCloseInfoList" saveRemovedData="true" ev:oncelldatachange="scwin.dsTcmCloseInfoList_oncelldatachange">
+			        <w2:columnInfo>
+			            <w2:column id="siteCd" name="현장_코드" dataType="text"></w2:column>
+			            <w2:column id="siteNm" name="현장명" dataType="text"></w2:column>
+			            <w2:column id="closeYm" name="마감_연월" dataType="text"></w2:column>
+
+			            <w2:column id="sCloseYn" name="외주_상태" dataType="text"></w2:column>
+			            <w2:column id="sOldCloseYn" name="외주_상태" dataType="text"></w2:column>
+			            <w2:column id="sCloseDt" name="외주_작업일시" dataType="text"></w2:column>
+			            <w2:column id="mCloseYn" name="자재_상태" dataType="text"></w2:column>
+			            <w2:column id="mOldCloseYn" name="자재_상태" dataType="text"></w2:column>
+			            <w2:column id="mCloseDt" name="자재_작업일시" dataType="text"></w2:column>
+			            <w2:column id="lCloseYn" name="노무_상태" dataType="text"></w2:column>
+			            <w2:column id="lOldCloseYn" name="노무_상태" dataType="text"></w2:column>
+			            <w2:column id="lCloseDt" name="노무_작업일시" dataType="text"></w2:column>
+			            <w2:column id="eCloseYn" name="장비_상태" dataType="text"></w2:column>
+			            <w2:column id="eOldCloseYn" name="장비_상태" dataType="text"></w2:column>
+			            <w2:column id="eCloseDt" name="장비_작업일시" dataType="text"></w2:column>
+			            <w2:column id="oCloseYn" name="경비_상태" dataType="text"></w2:column>
+			            <w2:column id="oOldCloseYn" name="경비_상태" dataType="text"></w2:column>
+			            <w2:column id="oCloseDt" name="경비_작업일시" dataType="text"></w2:column>
+			            <w2:column id="pCloseYn" name="현장_상태" dataType="text"></w2:column>
+			            <w2:column id="pCloseDt" name="현장_작업일시" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataList baseNode="list" id="dsTcfCloseInfoSaveList" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="closeDeptCd" name=" 마감현장_코드"></w2:column>
+			            <w2:column dataType="text" id="closeTypeCd" name="마감유형코드[CF003]"></w2:column>
+			            <w2:column dataType="text" id="closeYm" name="마감_연월"></w2:column>
+			            <w2:column dataType="text" id="closeJobCd" name="마감업무코드[CF001]"></w2:column>
+			            <w2:column dataType="text" id="closeYn" name="마감_여부"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false" />
+		<script src="/resources/js/commonUI.js" type="javascript" lazy="false" />
+		<script type="javascript" lazy="false"><![CDATA[
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {              
+        com.setUdcValue("udcWorkYm", "calYearMonth", dateLib.getCurrentDate().substring(0,6));  //마감년원 셋팅
+        com.commonUI();         
+    };
+
+/************************************************************************************
+ *  [3] Event 함수
+ ************************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.btnFind_onclick
+     * 기 능: 조회버튼 클릭
+     **************************************************************************/
+    scwin.btnFind_onclick = function() {
+    
+        let closeYm = com.getUdcValue("udcWorkYm", "calYearMonth");
+        
+        if (closeYm == "") {
+            com.showMessage("CFW0004", "마감년월");// $1을(를) 선택하십시오.
+            return;
+        }
+
+        ajaxLib.ajax("/cm/cm3010/CM30100030U/selectCloseInfoSiteList", {
+            method: "POST",
+            requestData: {
+                closeYm: closeYm
+            },
+            callback: function(result, e){
+                dsTcmCloseInfoList.setJSON(result.data);
+                
+                //(22.9.27추가)현장마감 후에는 외주, 자재, 노무, 장비, 경비 마감해제 불가 처리
+                for (let i = 0; i < dsTcmCloseInfoList.getRowCount(); i++) {
+                    if (dsTcmCloseInfoList.getCellData(i,"pCloseYn") == "Y") { //현장마감 Y일 경우 
+                        grdTcmCloseInfoList.setDisabled("cell", i, "sCloseYn", true); //외주
+                        grdTcmCloseInfoList.setDisabled("cell", i, "mCloseYn", true); //자재
+                        grdTcmCloseInfoList.setDisabled("cell", i, "lCloseYn", true); //노무
+                        grdTcmCloseInfoList.setDisabled("cell", i, "eCloseYn", true); //장비
+                        grdTcmCloseInfoList.setDisabled("cell", i, "oCloseYn", true); //경비
+                    }
+                }
+            },
+            errCallback: function(result, e) {
+                console.log(result);
+            }
+        });
+
+    };    
+
+/************************************************************************************
+ *  [4] 사용자 정의함수 함수
+ ************************************************************************************/    
+	//저장버튼 클릭 
+	scwin.btnSave_onclick = function() {
+        let closeYm = com.getUdcValue("udcWorkYm", "calYearMonth");
+        
+        if (closeYm == "") {
+            com.showMessage("CFW0004", "마감년월");// $1을(를) 선택하십시오.
+            return;
+        }    
+                
+		if (dsTcmCloseInfoList.getModifiedIndex().length < 1){
+            com.showMessage("SAA0054");// 변경된 내용이 없습니다.
+            return;
+        }
+               
+        dsTcfCloseInfoSaveList.removeAll();     //저장전 삭제                          
+        let objModified = dsTcmCloseInfoList.getModifiedJSON();     //수정된 row
+
+        let j = 0;
+        for (let i in objModified) {
+            
+            //체크 값이 변경된 것만 저장한다. 
+            if (objModified[i].sCloseYn != objModified[i].sOldCloseYn){           
+                dsTcfCloseInfoSaveList.insertJSON(j++,[{
+                    closeDeptCd: objModified[i].siteCd,         //현장코드
+                    closeTypeCd: "CF00302",                     //CF00302 손익추정/실적 
+                    closeYm: closeYm,
+                    closeJobCd: "CF00109",                      //마감유형코드 - 외주 
+                    closeYn: objModified[i].sCloseYn,                            
+                }]);
+            }            
+            
+            if (objModified[i].mCloseYn != objModified[i].mOldCloseYn){           
+                dsTcfCloseInfoSaveList.insertJSON(j++,[{
+                    closeDeptCd: objModified[i].siteCd,         //현장코드
+                    closeTypeCd: "CF00302",                     //CF00302 손익추정/실적 
+                    closeYm: closeYm,
+                    closeJobCd: "CF00110",                      //마감유형코드 - 자재 
+                    closeYn: objModified[i].mCloseYn,       
+                }]);
+            }     
+            
+            if (objModified[i].lCloseYn != objModified[i].lOldCloseYn){           
+                dsTcfCloseInfoSaveList.insertJSON(j++,[{
+                    closeDeptCd: objModified[i].siteCd,         //현장코드
+                    closeTypeCd: "CF00302",                     //CF00302 손익추정/실적 
+                    closeYm: closeYm,
+                    closeJobCd: "CF00112",                      //마감유형코드 - 노무
+                    closeYn: objModified[i].lCloseYn,        
+                }]);
+            }     
+            
+            if (objModified[i].eCloseYn != objModified[i].eOldCloseYn){           
+                dsTcfCloseInfoSaveList.insertJSON(j++,[{
+                    closeDeptCd: objModified[i].siteCd,         //현장코드
+                    closeTypeCd: "CF00302",                     //CF00302 손익추정/실적 
+                    closeYm: closeYm,
+                    closeJobCd: "CF00111",                      //마감유형코드 - 장비
+                    closeYn: objModified[i].eCloseYn,        
+                }]);
+            } 
+
+            if (objModified[i].oCloseYn != objModified[i].oOldCloseYn){           
+                dsTcfCloseInfoSaveList.insertJSON(j++,[{
+                    closeDeptCd: objModified[i].siteCd,         //현장코드
+                    closeTypeCd: "CF00302",                     //CF00302 손익추정/실적 
+                    closeYm: closeYm,
+                    closeJobCd: "CF00113",                      //마감유형코드 - 경비
+                    closeYn: objModified[i].oCloseYn,        
+                }]);
+            }
+            
+            if (objModified[i].pCloseYn != objModified[i].pOldCloseYn){           
+                dsTcfCloseInfoSaveList.insertJSON(j++,[{
+                    closeDeptCd: objModified[i].siteCd,         //현장코드
+                    closeTypeCd: "CF00302",                     //CF00302 손익추정/실적 
+                    closeYm: closeYm,
+                    closeJobCd: "CF00104",                      //마감유형코드 - 현장
+                    closeYn: objModified[i].pCloseYn,        
+                }]);
+            }                                     
+        }
+        
+        ajaxLib.ajax("/cm/cm3010/CM30100030U/saveTcfCloseInfo", {
+            method: "POST",
+            requestData: {
+                "tcfCloseInfoVOs": dsTcfCloseInfoSaveList.getAllJSON()
+            },    
+            callback: function(result, e){
+                com.showMessage("SAA0032");     //정상적으로 처리되었습니다.
+                scwin.btnFind_onclick();
+            },
+            errCallback: function(result, e) {
+                console.log(result);
+            }
+        });        
+        
+	};
+	
+    //현장마감 체크후 외주, 자재, 노무, 장비, 경비 체크해제 불가 처리
+	scwin.grdTcmCloseInfoList_oncellclick = function(row,col) {
+		let colId = grdTcmCloseInfoList.getColumnID(col);
+        let message = "";
+        
+        let sCloseYn = dsTcmCloseInfoList.getCellData(row, "sCloseYn");     //외주
+        let mCloseYn = dsTcmCloseInfoList.getCellData(row, "mCloseYn");     //자재
+        let lCloseYn = dsTcmCloseInfoList.getCellData(row, "lCloseYn");     //노무
+        let eCloseYn = dsTcmCloseInfoList.getCellData(row, "eCloseYn");     //장비
+        let oCloseYn = dsTcmCloseInfoList.getCellData(row, "oCloseYn");     //경비
+        let pCloseYn = dsTcmCloseInfoList.getCellData(row, "pCloseYn");     //현장마감
+        
+        let obj = {
+            "type" : [
+                {colId: "sCloseYn"},
+                {colId: "mCloseYn"},
+                {colId: "lCloseYn"},
+                {colId: "eCloseYn"},
+                {colId: "oCloseYn"},
+            ]        
+        }            
+                
+        //CF00109: 외주, CF00110:자재, CF00112:노무, CF00111:장비, CF00113:경비                  
+        for (let i in obj.type) {
+            let objLine = obj.type[i];
+            if (colId == objLine.colId){
+                if (pCloseYn == "Y") {
+                    com.showMessage("CMW0016"); //현장 손익마감을 해제 후 마감해제가 가능합니다.
+                    dsTcmCloseInfoList.setCellData(row, objLine.colId, "Y");
+                    return false;              
+                }
+            }
+        }
+        
+        if (colId == "pCloseYn") { //현장마감 클릭시
+            if (pCloseYn == "Y") { //현장마감 선택시
+                if (!(sCloseYn == "Y" && mCloseYn == "Y" && lCloseYn == "Y" && eCloseYn == "Y" && oCloseYn == "Y")){ //외주, 자재, 노무, 장비, 경비가 마감해제인 경우
+                    message += (sCloseYn == "Y") ? "" : "외주, "; 
+                    message += (mCloseYn == "Y") ? "" : "자재, ";
+                    message += (lCloseYn == "Y") ? "" : "노무, "; 
+                    message += (eCloseYn == "Y") ? "" : "장비, ";
+                    message += (oCloseYn == "Y") ? "" : "경비 ";
+                 
+                    com.showMessage("CMW0070", message); //$1 업무마감이 되지 않았습니다.
+                    dsTcmCloseInfoList.setCellData(row , "pCloseYn", "N");
+                }    
+            }
+        }       
+	};
+    
+    //마감 전체선택(헤더) 클릭 이벤트(외주, 자재, 노무, 장비, 경비, 현장마감)
+    scwin.grdTcmCloseInfoList_onheaderclick = function(headerId) {
+        if (headerId != "column54" && headerId != "column77" && headerId != "column79" && headerId != "column31" &&
+            headerId != "column51" && headerId != "column27" && headerId != "column49" && headerId != "column23" &&
+            headerId != "column55" && headerId != "column59" && headerId != "column47" && headerId != "column19" &&
+            headerId != "column80" && headerId != "column84" && headerId != "column53") { //헤더중 마감 선택시에만 동작하도록.
+        
+            let message  = ""; //경고 메세지
+            let msgCnt = 0; //경고 메세지 3개까지 표시할 count 변수
+            let yCnt = 0; //현장마감 가능한 데이터 수
+            
+            let obj = {
+                "type" : [
+                    {headerId: "sCloseYn", cellId: "sCloseYn", comnId: "pCloseYn"},
+                    {headerId: "mCloseYn", cellId: "mCloseYn", comnId: "pCloseYn"},
+                    {headerId: "lCloseYn", cellId: "lCloseYn", comnId: "pCloseYn"},
+                    {headerId: "eCloseYn", cellId: "eCloseYn", comnId: "pCloseYn"},
+                    {headerId: "oCloseYn", cellId: "oCloseYn", comnId: "pCloseYn"},
+                ]        
+            }
+         
+            if (headerId == "pCloseAll") { //현장마감 전체 선택
+                for (let i = 0; i < dsTcmCloseInfoList.getRowCount(); i++) {
+                    let sCloseYn = dsTcmCloseInfoList.getCellData(i, "sCloseYn");     //외주
+                    let mCloseYn = dsTcmCloseInfoList.getCellData(i, "mCloseYn");     //자재
+                    let lCloseYn = dsTcmCloseInfoList.getCellData(i, "lCloseYn");     //노무
+                    let eCloseYn = dsTcmCloseInfoList.getCellData(i, "eCloseYn");     //장비
+                    let oCloseYn = dsTcmCloseInfoList.getCellData(i, "oCloseYn");     //경비
+                    let pCloseYn = dsTcmCloseInfoList.getCellData(i, "pCloseYn");     //현장마감
+                    let siteNm = dsTcmCloseInfoList.getCellData(i, "siteNm");         //현장명
+                    
+                    if (pCloseYn == "Y") {
+                        if (!(sCloseYn == "Y" && mCloseYn == "Y" && lCloseYn == "Y" && eCloseYn == "Y" && oCloseYn == "Y")){
+                            msgCnt += 1;
+                            if (msgCnt < 4) {
+                                message += dsTcmCloseInfoList.getCellData(i, "siteNm") + "의 ";
+                                message += (sCloseYn == "Y") ? "" : "외주, "; 
+                                message += (mCloseYn == "Y") ? "" : "자재, ";
+                                message += (lCloseYn == "Y") ? "" : "노무, "; 
+                                message += (eCloseYn == "Y") ? "" : "장비, ";
+                                message += (oCloseYn == "Y") ? "" : "경비 ";
+                                message += "<br>";
+                            }
+                            dsTcmCloseInfoList.setCellData(i , "pCloseYn", "");
+                        }else {
+                            yCnt += 1;
+                        }
+                    } 
+                } 
+            
+                if (message != "") {
+                   if (msgCnt > 3) { //업무마감 안된 건수가 3건 이상일 때만 3건 외 몇 건으로 건수 표시
+                       message += "외 " + (dsTcmCloseInfoList.getRowCount() - yCnt - 3) + "건의";
+                       com.showMessage("CMW0070", message);
+                   }else {
+                       com.showMessage("CMW0070", message);
+                   }
+                   
+                }
+            }
+            
+            if (headerId != "pCloseAll") { //현장마감 외 전체 선택        
+                for (let i in obj.type) {
+                    let objLine = obj.type[i];
+                    
+                    if (headerId == objLine.headerId){
+                        for (let i = 0; i < dsTcmCloseInfoList.getRowCount(); i++) {                  
+                            if (objLine.comnId == "Y" && objLine.cellId == "N") { //현장마감상태에서 외주/자재/노무/장비/경비 마감해제시
+                                message += "Y";
+                                dsTcmCloseInfoList.setCellData(i, objLine.cellId, "Y");
+                            }
+                        }
+                        
+                        if (message != "") {
+                            com.showMessage("CMW0016"); //현장 손익마감을 해제 후 마감해제가 가능합니다.
+                        } 
+                    }
+                }
+            }
+        }       
+    }]]></script>
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcYearcalendar.xml"></w2:require>
+        <w2:require src="/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<xf:group class="navigator" id="" style="">
+					<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:94.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="마감년월" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">						    
+                            <w2:udc_yearMonthcalendar id="udcWorkYm" style=""></w2:udc_yearMonthcalendar>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+			    <xf:group class="right_wrap" id="" style=""></xf:group>
+			    <w2:textbox label="원가마감" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+			    <xf:group class="right_wrap" id="" style="">
+			        <xf:group id="" style="">
+			            <w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnSave_onclick"
+			                id="btnSave" outerDiv="false" style="">
+			                <xf:label><![CDATA[저장]]></xf:label>
+			            </w2:anchor>
+			        </xf:group>
+			    </xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmCloseInfoList" fixedColumnWithHidden="true"
+			    focusMode="row" id="grdTcmCloseInfoList" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+			    rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 450px;" useShiftKey="true" visibleRowNum=""
+			    autoFitMinWidth="" setCellInputTypeCustom="true" checkReadOnlyOnCut="true" checkReadOnlyOnPaste="true" contextMenu="true"
+			    ev:oncellclick="scwin.grdTcmCloseInfoList_oncellclick" ev:onheaderclick="scwin.grdTcmCloseInfoList_onheaderclick">
+			    <w2:caption style="" id="caption1" value="this is a grid caption."></w2:caption>
+			    <w2:header style="" id="header1">
+			        <w2:row style="" id="row3">
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="height:34px;" id="column54" value="현장"
+			                blockSelect="false" displayMode="label" rowSpan="" colSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="height:34px;" id="column53" value="외주"
+			                blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="height:34px;" id="column51" value="자재"
+			                blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="height:34px;" id="column49" value="노무"
+			                blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="height:34px;" id="column55" value="장비"
+			                blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="height:34px;" id="column47" value="경비"
+			                blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="140" inputType="text" style="height:34px;" id="column80" value="현장마감"
+			                blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+			            </w2:column>
+			        </w2:row>
+			        <w2:row style="" id="row1">
+			            <w2:column hidden="false" removeBorderStyle="false" width="100" inputType="text" style="height:36px;" id="column77"
+			                value="코드" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="150" inputType="text" style="height:36px;" id="column79" value="명"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="checkbox" style="height:36px;" id="sCloseAll" value="마감"
+			                blockSelect="false" displayMode="label" checkboxLabel="마감">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="height:36px;" id="column31" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="checkbox" style="height:36px;" id="mCloseAll" value=""
+			                blockSelect="false" displayMode="label" checkboxLabel="마감">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="height:36px;" id="column27" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="checkbox" style="height:36px;" id="lCloseAll" value="상태"
+			                blockSelect="false" displayMode="label" checkboxLabel="마감">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="height:36px;" id="column23" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="checkbox" style="height:36px;" id="eCloseAll" value="상태"
+			                blockSelect="false" displayMode="label" checkboxLabel="마감">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="height:36px;" id="column59" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="checkbox" style="height:36px;" id="oCloseAll" value="상태"
+			                blockSelect="false" displayMode="label" checkboxLabel="마감">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="height:36px;" id="column19" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+                        <w2:column removeBorderStyle="false" width="70" inputType="checkbox" style="height:36px;" id="pCloseAll" value="상태"
+                            blockSelect="false" displayMode="label" checkboxLabel="마감">
+                        </w2:column>
+                        <w2:column removeBorderStyle="false" width="115" inputType="text" style="height:36px;" id="column84" value="작업일시"
+                            blockSelect="false" displayMode="label">
+                        </w2:column>
+			        </w2:row>
+			    </w2:header>
+			    <w2:gBody style="" id="gBody1">
+			        <w2:row style="" id="row2">
+			            <w2:column removeBorderStyle="false" width="125" inputType="text" style="height:20px;" id="siteCd"
+			                blockSelect="false" displayMode="label" displayFormat="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="siteNm" value="" blockSelect="false"
+			                displayMode="label" textAlign="left">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="checkbox" style="" id="sCloseYn" value=""
+			                blockSelect="false" displayMode="label" trueValue="Y" falseValue="N" valueType="other" readOnly="false"
+			                checkboxLabel="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="sCloseDt"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="checkbox" style="height:20px;" id="mCloseYn"
+			                blockSelect="false" displayMode="label" valueType="other" trueValue="Y" falseValue="N" readOnly="false">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="mCloseDt"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="checkbox" style="height:20px;" id="lCloseYn"
+			                blockSelect="false" displayMode="label" valueType="other" trueValue="Y" falseValue="N" readOnly="false">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="lCloseDt"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="checkbox" style="" id="eCloseYn" value=""
+			                blockSelect="false" displayMode="label" valueType="other" trueValue="Y" falseValue="N" readOnly="false">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="170" inputType="text" style="" id="eCloseDt" value=""
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="checkbox" style="height:20px;" id="oCloseYn"
+			                blockSelect="false" displayMode="label" valueType="other" trueValue="Y" falseValue="N" readOnly="false">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="oCloseDt"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+                        <w2:column removeBorderStyle="false" width="40" inputType="checkbox" style="height:20px;" id="pCloseYn"
+                            blockSelect="false" displayMode="label" valueType="other" trueValue="Y" falseValue="N" readOnly="false">
+                        </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="pCloseDt" value="" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			        </w2:row>
+			    </w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

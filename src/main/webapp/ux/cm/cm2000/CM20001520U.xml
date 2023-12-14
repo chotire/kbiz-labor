@@ -1,0 +1,1315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap" ev:onmodelchange="scwin.dsSearchMap_onmodelchange">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="workYm" name="기준년월" dataType="text"></w2:key>
+						<w2:key id="constSlipStusVal" name="공사전표상태값" dataType="text"></w2:key>
+						<w2:key id="serverDate" name="서버시간" dataType="text"></w2:key>
+						<w2:key id="closeTypeCd" name="마감유형코드[CF003]" dataType="text"></w2:key>
+						<w2:key id="closeJobCd" name="마감업무코드[CF001]" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsSlipList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+						<w2:column id="workYm" name="작업년월" dataType="text"></w2:column>
+						<w2:column id="constSlipNo" name="공사_전표_번호" dataType="text"></w2:column>
+						<w2:column id="constSlipNoSeq" name="공사_전표_번호_순번" dataType="text"></w2:column>
+						<w2:column id="groupCd" name="그룹CD" dataType="text"></w2:column>
+						<w2:column id="constSlipStusVal" name="공사전표_발행_상태" dataType="text"></w2:column>
+						<w2:column id="slipRvwYn" name="전표_검증_여부" dataType="text"></w2:column>
+						<w2:column id="eaiSlipPrcgStusCd" name="eai_전표처리상태코드" dataType="text"></w2:column>
+						<w2:column id="eaiSlipPrcgStusNm" name="eai_전표처리상태" dataType="text"></w2:column>
+						<w2:column id="tradeCd" name="거래처코드" dataType="text"></w2:column>
+						<w2:column id="tradeNm" name="거래처명" dataType="text"></w2:column>
+						<w2:column id="actgDt" name="회계일자" dataType="text"></w2:column>
+						<w2:column id="slipJnlzTypeCd" name="분개유형코드" dataType="text"></w2:column>
+						<w2:column id="slipJnlzTypeNm" name="분개유형" dataType="text"></w2:column>
+						<w2:column id="abstrCn" name="적요" dataType="text"></w2:column>
+						<w2:column id="suplAmt" name="공급가액" dataType="text"></w2:column>
+						<w2:column id="vatAmt" name="부가세" dataType="text"></w2:column>
+						<w2:column id="totAmt" name="합계" dataType="text"></w2:column>
+						<w2:column id="txbilYn" name="세금계산서 대상 여부" dataType="text"></w2:column>
+						<w2:column id="smrtbTxbilNo" name="세금계산서 번호" dataType="text"></w2:column>
+						<w2:column id="slipNo" name="재무 전표 번호" dataType="text"></w2:column>
+						<w2:column id="cnclSlipNo" name="취소_전표번호" dataType="text"></w2:column>
+
+
+						<w2:column id="cnclSlipYn" name="취소_전표_여부" dataType="text"></w2:column>
+
+
+
+
+						<w2:column id="slipEvdcId" name="전표증빙ID" dataType="text"></w2:column>
+						<w2:column id="chrgrNm" name="담당자명" dataType="text"></w2:column>
+						<w2:column id="chrgrEmail" name="담당자이메일" dataType="text"></w2:column>
+						<w2:column id="workCd" name="전표유형" dataType="text"></w2:column>
+						<w2:column id="refKey" name="전자증빙" dataType="text"></w2:column>
+						<w2:column id="invNo" name="전표번호" dataType="text"></w2:column>
+						<w2:column id="slipTypeGbCd" name="소스" dataType="text"></w2:column>
+						<w2:column id="approveId" name="세금계산서_승인id" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsTcmAprv">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="aprvMappId" name="결재매핑ID" dataType="text"></w2:key>
+						<w2:key id="aprvPgmId" name="결재프로그램ID" dataType="text"></w2:key>
+						<w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+						<w2:key id="aproId" name="승인ID" dataType="text"></w2:key>
+						<w2:key id="aprvCharN1Val" name="결재_문자_1_값" dataType="text"></w2:key>
+						<w2:key id="aprvCharN2Val" name="결재_문자_2_값" dataType="text"></w2:key>
+						<w2:key id="aprvCharN3Val" name="결재_문자_3_값" dataType="text"></w2:key>
+						<w2:key id="intAprvStusCd" name="결재진행상태" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsCloseInfoMap">
+					<w2:keyInfo>
+						<w2:key id="closeYn" name="공동도급마감여부" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsTcmAprvCncl" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+						<w2:key dataType="text" id="aprvMappId" name="결재매핑ID"></w2:key>
+						<w2:key dataType="text" id="aprvPgmId" name="결재프로그램ID"></w2:key>
+						<w2:key dataType="text" id="aprvNo" name="결재번호"></w2:key>
+						<w2:key dataType="text" id="aproId" name="승인ID"></w2:key>
+						<w2:key dataType="text" id="aprvCharN1Val" name="결재_문자_1_값"></w2:key>
+						<w2:key dataType="text" id="aprvCharN2Val" name="결재_문자_2_값"></w2:key>
+						<w2:key dataType="text" id="aprvCharN3Val" name="결재_문자_3_값"></w2:key>
+						<w2:key dataType="text" id="intAprvStusCd" name="결재진행상태"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsSiteStaf" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+						<w2:key dataType="text" id="stafEmpno" name="직원_사번"></w2:key>
+						<w2:key dataType="text" id="userNm" name="성명"></w2:key>
+						<w2:key dataType="text" id="siteDtyGbCd" name="현장직무구분코드[CM100001]"></w2:key>
+						<w2:key dataType="text" id="siteStafGbCd" name="현장직원구분코드[CM100004]"></w2:key>
+						<w2:key dataType="text" id="apntDt" name="발령_일자"></w2:key>
+						<w2:key dataType="text" id="dtyEndDt" name="직무_종료_일자"></w2:key>
+						<w2:key dataType="text" id="wthdPrDt" name="철수_예정_일자"></w2:key>
+						<w2:key dataType="text" id="wthdDt" name="철수_일자"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" id="dsSlipList2" repeatNode="map" saveRemovedData="true" style="">
+					<w2:columnInfo>
+						<w2:column id="siteCd" name="name1" dataType="text"></w2:column>
+						<w2:column id="workYm" name="name2" dataType="text"></w2:column>
+						<w2:column id="constSlipNo" name="name3" dataType="text"></w2:column>
+						<w2:column id="constSlipNoSeq" name="name4" dataType="text"></w2:column>
+						<w2:column id="tradeCd" name="name5" dataType="text"></w2:column>
+						<w2:column id="tradeNm" name="name6" dataType="text"></w2:column>
+						<w2:column id="actgDt" name="name7" dataType="text"></w2:column>
+						<w2:column id="slipJnlzTypeCd" name="name8" dataType="text"></w2:column>
+						<w2:column id="slipJnlzTypeNm" name="name9" dataType="text"></w2:column>
+						<w2:column id="abstrCn" name="name10" dataType="text"></w2:column>
+						<w2:column id="acctCd" name="name11" dataType="text"></w2:column>
+						<w2:column id="acctNm" name="name12" dataType="text"></w2:column>
+						<w2:column id="dbcrGbMarkVal" name="name13" dataType="text"></w2:column>
+						<w2:column id="dbAmt" name="name14" dataType="text"></w2:column>
+						<w2:column id="crAmt" name="name15" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM20001520U.xml
+ * Program Name : 공동도급전표관리
+ * Author : sychoi (tpcsy)
+ * Date : 2019.05.21
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ * [처리기준]
+ *  취소전표생성 및 승인이 되어야 각사별원가이체청구 승인건 삭제되게(내부결재 Clear 및 공동도급청구구분 자료 상태 변경)
+ *  => 원가청구집계 부터 다시 작성 후 (집계취소 선행) 작업 진행 => 재 집계 후 승인요청..진행
+ *  => 취소된 전표는 전표관리 화면에서 조회 가능
+ * [정상 처리순서]
+ * 1) 공동도급원가이체청구 화면에서 "승인요청" 버튼 클릭 시 전표 검증 진행
+ * 2) 전표검증이 성공되면, 승인요청 팝업 화면 호출하여 승인 프로세스 진행
+ * 3) 전표관리 화면에서 조회가 가능
+ *    - 승인완료 X : 전표 대상자료만 조회가능하며, 발행은 못함
+ *    - 승인완료 O : 전표상태 "미발행"에서 전표발행 처리 진행
+ * [역분개 처리순서]
+ * 조건) 전표관리 화면에서 "발행" 된 전표가 있어야 가능 : 발행 목록에 표시된 전표 기준으로 전체 전표취소 함
+ * 1) 전표상태가 "발행"인 자료에 대해서 목록을 조회
+ * 2) "취소전표생성" 버튼을 클릭 시 취소전표에 대한 전표검증 작업을 진행함, 성공 시 취소요청 팝업 호출 함
+ *    - 성공 시 공사전표에 취소되는 전표에 대한 해더만 생성이 됨 : 미발행(역분개) 전표로 조회 가능
+ *    - 원전표는 전표상태가 "취소대기" 상태로 변경 됨
+ *    ※ 취소전표 생성된 자료는 현재  이전상태로 되돌리는 방법 없음.... 필요 시 2) 번 작업 되돌려야 함
+ * 3) 미발행(역분개) 상태의 목록을 확인 : 취소전표에 대한 발행 작업 진행
+ *    - 취소전표에 대한 승인단계 필요
+ *    - 승인완료 X : 전표 대상자료만 조회가능하며, 발행은 못함
+ *    - 승인완료 O : 전표상태 "미발행(역분개)"에서 전표발행 처리 진행
+ * 4) "전표발행" 버튼을 클릭하여 취소전표에 대한 자료를 SAP 에 전달...
+ * 5) 취소전표가 정상적으로 처리되면
+ *    -  원가청구집계 결재 자료는 Clear 되어, 해당 화면에서 재작업이 가능해야 함 : 승인요청 이전단계로 돌려야 함
+ *    -  취소전표 결재 자료도 Clear 함
+ *
+ * Q) 내부결재에서 승인이 아닌 반려일 경우 후속작업은 어떻게 처리???
+ **************************************************************************/
+  /**************************************************************************
+ * DataCollection description
+ *
+ *  dsSearchMap : 검색조건 Map
+ *	dsSlipList  : 전표현황 그리드
+ *  dsTcmAprv   : 각사별원가이체청구 결재상태
+ *  dsTcmAprvCncl  : 공동도급 취소전표 결재상태
+ **************************************************************************/
+
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+    var svcId = "";
+	var pMap;
+	var serverDate = WebSquare.date.getCurrentServerDate();	//현재일자
+
+ /**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    };
+
+    scwin.onpageload = function() {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+
+		dsSearchMap.set("workYm", dateLib.addMonths(dateLib.getCurrentDate(), -1).substring(0,6));   //기준연월
+		dsSearchMap.set("closeTypeCd", "CF00302");	//마감유형코드 : 손익추정/실적
+		dsSearchMap.set("closeJobCd", "CF00115");	//마감업무코드 : 공동도급
+		dsSearchMap.set("serverDate", serverDate);	//서버시간
+        com.commonUI();
+    };
+
+ /**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnSearch
+	 * 기 능: 전표발행현황 LIST 조회
+	 **************************************************************************/
+    scwin.fnSearch = function() {
+		svcId = "selectConstJvSlipList";
+        ajaxLib.ajax("/cm/cm2000/CM20001520U/selectConstJvSlipList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnSearchValidate
+	 * 기 능: 검색조건 관련 Validate
+	 **************************************************************************/
+	scwin.fnSearchValidate = function() {
+		// 현장코드 CHECK
+	    if ( dsSearchMap.get("siteCd").length == 0){
+	        com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+	        return false;
+	    }
+		// 기준년월 CHECK
+	    if ( dsSearchMap.get("workYm").length == 0){
+	        com.showMessage("CFW0004", "기준년월");// $1을(를) 선택하십시오.
+	        return false;
+	    }
+	    return true;
+	};
+
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnBtnDisabled
+	 * 기 능: 버튼제어 관련 처리
+	 **************************************************************************/
+    scwin.fnBtnDisabled = function(){
+    	var rowCnt = dsSlipList.getRowCount();
+    	var intAprvStusCd = dsTcmAprv.get( "intAprvStusCd" );//결재진행상태
+    	var intAprvCnclStusCd = dsTcmAprvCncl.get( "intAprvStusCd" );//결재진행상태 : 취소전표
+		var sSel = sbxSlipStusVal.getValue(); // 전표상태
+    	var closeYn = dsCloseInfoMap.get( "closeYn" );//공동도급마감여부
+
+		// 공동도급마감 시 작업 불가
+		if (closeYn == "Y") {
+			tbxCloseDisp.setValue( "해당월의 공동도급이 마감되었습니다." );
+			scwin.fnBtnAllDisabled();
+			return false;
+		} else {
+			tbxCloseDisp.setValue( "" );
+		}
+
+    	switch (intAprvStusCd) {
+    		case "CF00702" : //확정 (공동도급원가이체청구)
+        		btnCnclSlipDel.setDisabled( true );//취소전표생성 삭제
+				btnCnclSlipAprvReq.setDisabled( true );//취소전표승인요청
+		        btnCnclSlipAprv.setDisabled( true );//취소전표승인
+		        btnCnclSlipStatus.setDisabled( true );//취소전표승인현황
+		        btnSlipProc.setDisabled( true );//전표발행
+
+				// 취소전표결재상태에 따른 버튼 처리 : 전표상태와 상관없이 표시
+				if (intAprvCnclStusCd == "CF00701") {	// 취소전표결재=미확정
+	        		//if(sessionStorage.getItem("userEmpno") == dsSiteStaf.get( "stafEmpno" )){//세션사용자와 승인자가 동일한지 여부
+        				btnCnclSlipAprv.setDisabled( false );//취소전표승인
+					//}
+				} else if (intAprvCnclStusCd == "CF00702") {	// 취소전표결재=확정
+	        		btnCnclSlipStatus.setDisabled( false );//취소전표승인현황
+				}
+
+				if (sSel == "00")	{ // 미발행(00) 인 경우에만 전표발행 버튼 활성화
+        			if (rowCnt > 0){
+						btnSlipProc.setDisabled( false );//전표발행
+						btnCnclSlipDel.setDisabled( false );//전표생성 삭제 20191106
+        			}
+				}
+
+				if (sSel == "01")	{ // 미발행(역발행)(01) & 취소전표 결재승인 인 경우 에만 전표발행 버튼 활성화
+					if (intAprvCnclStusCd == "CF00702") {
+	        			if (rowCnt > 0) btnSlipProc.setDisabled( false );//전표발행
+					} 
+					// 취소전표발행전에는 삭제가 가능하게 함..
+       				if (rowCnt > 0) btnCnclSlipDel.setDisabled( false );//취소전표생성 삭제
+				}
+
+		 		if (sSel == "10") { // 전표상태 발행[10]일 경우에만 취소전표승인요청 버튼 활성화
+					if (intAprvCnclStusCd == "") {	// 취소전표결재상태가 없을 경우에만
+		 				if (rowCnt > 0) btnCnclSlipAprvReq.setDisabled( false );//취소전표승인요청
+		 			}
+				}
+    			break;
+			default :
+				scwin.fnBtnAllDisabled();
+				break;
+    	}
+    }
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnBtnAllDisabled
+	 * 기 능: 버튼 전체 Disabled 처리
+	 **************************************************************************/
+    scwin.fnBtnAllDisabled = function(){
+        btnCnclSlipDel.setDisabled( true );//취소전표생성 삭제
+		btnCnclSlipAprvReq.setDisabled( true );//취소전표승인요청
+        btnCnclSlipAprv.setDisabled( true );//취소전표승인
+        btnCnclSlipStatus.setDisabled( true );//취소전표승인현황
+        btnSlipProc.setDisabled( true );//전표발행
+	}
+
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnApprRequestPop
+	 * 기 능: 취소전표생성 시 승인요청 팝업 호출
+	 **************************************************************************/
+    scwin.fnApprRequestPop = function(){
+		var yyyy = dsSearchMap.get( "workYm" ).substring(0,4);
+		var mm = dsSearchMap.get( "workYm" ).substring(4,6);
+		var popOps = {
+				popup_name : "취소전표승인요청"						// 팝업 타이틀
+		       ,url        : "/ux/cf/CF00350502P.xml"
+		       ,data       :  {   gubunCd : gcm.APPR_REQUEST		// gcm.APPR_REQUEST : 승인요청
+		                        , intAprvNo : ""						// 승인아이디 (승인/반려 시 또는 조회 시에만 필요)
+		                        , cancelYn : "" 					// 승인을 취소할 수 있는 경우 “Y” – 승인내역 조회 시에 사용
+		                        , intAprvTtl : yyyy + "년 " + mm + "월 공동도급 취소전표 승인요청 건."					// 내부결재제목
+								, intAprvReqOpinCn : ""				// 내부_결재_요청_의견_내용
+						        , apprEmpno : dsSiteStaf.get( "stafEmpno" )					// 승인자사번
+						        , apprEmpNm : dsSiteStaf.get( "userNm" )					// 승인자명
+						        , intAprvAproOpinCn : ""			// 내부_결재_승인_의견_내용  - 승인/반려 시에 사용
+						        , jobGbCd : "CM"					// 업무구분코드
+						        , menuId : "JJCM01"					// 메뉴ID
+						        , scrUrl : ""						// 화면_URL
+			      }
+		       ,width      : "600"
+		       ,height     : "400"
+		       ,callbackFn : "scwin.fnPopupCallback"
+			};
+		svcIdPop = "intAprvPopup";
+		com.popup_open(popOps);
+    }
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnTcmAprvCncl
+	 * 기 능: 내부결재 저장 : 취소전표승인
+	 **************************************************************************/
+    scwin.fnTcmAprvCncl = function() {
+        ajaxLib.ajax("/cm/cm4015/CM40150000U/saveTcmAprv", {
+            method : "POST",
+            requestData : dsTcmAprvCncl.getJSON(),
+            callback : function(result, e){
+            	//결재 저장 후 -> 역분개전표 검증 진행 처리
+				scwin.fnJvPcostTrnmPyrqRevSlipCheck();
+           	},
+            errCallback : "fnErrCallBack"
+        });
+    };
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnSiteCloseCheck
+	 * 기 능: 현장 마감 체크
+	 **************************************************************************/
+    scwin.fnSiteCloseCheck = function(flag) {
+        ajaxLib.ajax("/cm/cm2000/CM20001520U/selectSiteCloseCheck", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+				if (result.data.dsSiteClose.jvCloseYn == "Y") {//마감여부
+	        		com.showMessage("CMW0154");//해당월은 마감되었습니다.
+				}else{
+					if(flag == 'I'){
+						scwin.btnSlipProcCall();//전표발행
+					}else{
+						scwin.btnCnclSlipCall();//취소전표생성
+					}
+				}
+			},
+            errCallback : "fnErrCallBack"
+        });	
+    };	 
+	 
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnSiteCloseCheck
+	 * 기 능: 역분개전표 검증 진행
+	 **************************************************************************/
+	scwin.fnJvPcostTrnmPyrqRevSlipCheck = function() {
+        ajaxLib.ajax("/cm/cm2000/CM20001520U/saveJvPcostTrnmPyrqRevSlipCheck", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+            	if(result.data.rFlag == "S"){
+            		com.showMessage("CFA0021", "취소전표승인요청");// $1 되었습니다
+            	}else{
+            		com.showMessage("CFW0010", result.data.rMsg);// $1
+            	}
+				scwin.fnSearch();
+			},
+            errCallback : "fnErrCallBack"
+        });	
+	};	 
+	 
+/************************************************************************************
+ *  [4] Callback 함수
+************************************************************************************/
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnCallback
+	 * 기 능: CallBack 함수
+	 **************************************************************************/
+    scwin.fnCallback = function(result, e) {
+        switch(svcId) {
+            case "selectConstJvSlipList" :
+            	dsSlipList.removeAll();
+            	dsTcmAprv.setEmptyValue();
+            	dsTcmAprvCncl.setEmptyValue();
+				dsCloseInfoMap.setEmptyValue();
+				dsSiteStaf.setEmptyValue();
+				dsSlipList.setJSON(result.data.dsSlipList);	//공동도급 전표현황
+				dsTcmAprv.setJSON(result.data.dsTcmAprv);	//결재정보 : 공동도급원가이체
+				dsCloseInfoMap.setJSON(result.data.dsCloseInfoMap);	//공동도급마감여부
+				dsTcmAprvCncl.setJSON(result.data.dsTcmAprvCncl);	//결재정보 : 공동도급취소전표
+				dsSiteStaf.setJSON(result.data.dsSiteStaf);//현장소장
+				scwin.fnBtnDisabled();//버튼제어
+				dtlSearch(dsSlipList.getTotalRow() == 0 ? -1 : 0);
+                break;
+        }
+    }
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnPopupCallback
+	 * 기 능: 팝업 CallBack 함수
+	 **************************************************************************/
+    scwin.fnPopupCallback = function(arg) {
+    	switch (svcIdPop) {
+			case "intAprvPopup" :        //취소전표 승인요청
+                dsTcmAprvCncl.set("siteCd"        , dsSearchMap.get("siteCd"));    //현장코드
+                dsTcmAprvCncl.set("aprvMappId"    , dsSearchMap.get("workYm"));    //결재매핑ID
+                dsTcmAprvCncl.set("aprvPgmId"     , 'CM20001520U');                 //결재프로그램ID : 공동도급전표관리
+                dsTcmAprvCncl.set("aprvNo"        , '');                           //결재번호
+                dsTcmAprvCncl.set("aproId"        , arg.intAprvNo);                //승인ID
+                dsTcmAprvCncl.set("aprvCharN1Val" , '');                           //결재_문자_1_값
+                dsTcmAprvCncl.set("aprvCharN2Val" , '');                           //결재_문자_2_값
+                dsTcmAprvCncl.set("aprvCharN3Val" , '');                           //결재_문자_3_값
+                scwin.fnTcmAprvCncl();  //내부 결재 저장
+                break;
+            case "intAprvProcPopup" :   //승인
+				scwin.fnSearch();
+                break;
+            case "intAprvSituPopup" :   //승인현황
+                break;
+			default :
+				break;
+    	}
+    }
+
+    scwin.fnErrCallBack = function(result, e) {
+       
+    }
+
+/************************************************************************************
+ *  [5] Event 함수
+ ************************************************************************************/
+ 	/* 현장코드 변경 이벤트 */
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+	};
+
+
+	//조회 클릭 이벤트
+	scwin.btnFind_onclick = function() {
+		// 검색조건 Check
+		if (!scwin.fnSearchValidate()) return false;
+		scwin.fnSearch();
+	};
+
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.sbxSlipStusVal_onchange
+	 * 기 능: 전표상태 SELECT BOX CHANGE 이벤트 함수
+	 **************************************************************************/
+	scwin.sbxSlipStusVal_onchange = function() {
+		//scwin.btnFind_onclick();
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.btnSlipProc_onclick
+	 * 기 능: 전표발행 버튼 클릭 이벤트
+	 **************************************************************************/
+	scwin.btnSlipProc_onclick = function() {
+		scwin.fnSiteCloseCheck('I');//현장 마감 체크 I:전표발행, D:취소전표생성
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.btnSlipProcCall
+	 * 기 능: 전표발행 버튼 클릭 이벤트
+	 * 전표발행 구분 : 미발행(00), 미발행(역분개) ==> 관련 서비스 호출
+	 **************************************************************************/
+	 scwin.btnSlipProcCall = function() {
+        var checkedIndex = dsSlipList.getRowCount();
+
+		// 전표미발행 대상 자료가 있는지 체크 : 화면 LIST 확인
+		if (dsSlipList.getRowCount() == 0) {
+	        com.showMessage("CSA0008", "전표발행할 자료");// $1이(가) 존재하지 않습니다.
+	        return false;
+		}
+
+		// 세금계산서 여부 "Y" 인 경우 담당자이메일 CHECK
+		for (var i = 0; i < checkedIndex; i++) {
+			var obj = dsSlipList.getRowJSON(i);
+			// 세금계산서여부 및 이메일 체크
+			if(obj.txbilYn == "Y") {
+				if(strLib.isEmpty(obj.chrgrEmail, false)) {
+	        		com.showMessage("CMW0017");// 세금계산서 대상인 경우 수신자 이메일은 필수입니다.~~~
+					grdSlipList.setFocusedCell(i , "chrgrEmail");
+					return false;
+				}
+			}
+		}
+
+
+    	if (!confirm("전표를 발행하시겠습니까?")) return;
+
+
+        ajaxLib.ajax("/cm/cm2000/CM20001520U/saveJvPcostTrnmPyrqSlipPblc", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+				if (result.data == "S") {
+	        		com.showMessage("SAA0032");// 정상적으로 처리되었습니다..
+  					//전표발행 성공 : 성공 시
+  					scwin.fnSearch();
+				}
+			},
+            errCallback : "fnErrCallBack"
+        });	 
+	 };
+	 
+  	/**************************************************************************
+	 * 함 수 명: scwin.dsSearchMap_onmodelchange
+	 * 기 능: 검색조건 Dataset 변경 이벤트 처리
+	 **************************************************************************/
+	scwin.dsSearchMap_onmodelchange = function(info) {
+		// Dataset 초기화
+		dsSlipList.removeAll();
+		dsSlipList2.removeAll();
+		// 버튼 Disabled 처리
+		scwin.fnBtnAllDisabled();
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.btnCnclSlipCall
+	 * 기 능: 취소전표생성
+	 * (8/19) 취소전표 생성 시 세금계산서 작성여부가 "Y" 인 자료에 대해서는
+	 *        (수정)세금계산서 발행전에 원 세금계산서의 승인ID(approveId)에 값이 존재해야 가능하게 처리
+	 **************************************************************************/
+	scwin.btnCnclSlipCall = function() {
+        var checkedIndex = dsSlipList.getRowCount();
+
+		//1. 발행 데이터 여부 확인
+		if (checkedIndex == 0) {
+	        com.showMessage("CSA0008", "취소전표 대상자료");// $1이(가) 존재하지 않습니다.
+	        return false;
+		}
+
+
+		//2. 발행 데이터의 EAI 전송상태 확인 : CF07603 (EAI전송완료)
+		//EAI 전송상태가 "EAI전송완료" 가 아닌 자료가 존재 시 작업 불가
+		//(8/19) 3.세금계산서 대상인 자료는 원 세금계산서의 승인ID 가 있어야 취소전표가 가능하게 Check
+
+		for (var i = 0; i < checkedIndex; i++) {
+			var obj = dsSlipList.getRowJSON(i);
+
+			// EAI_전송상태 확인
+			if(obj.eaiSlipPrcgStusCd != "CF07603") {
+	        	com.showMessage("CMW0019", "["+obj.eaiSlipPrcgStusNm+"]");	//전표상태가 $1 상태의 자료가 존재합니다.
+				grdSlipList.setFocusedCell(i , "eaiSlipPrcgStusNm");
+				return false;
+			}
+		}
+
+		scwin.fnApprRequestPop();//내부결재 팝업 호출
+
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.btnCnclSlipAprv_onclick
+	 * 기 능: 취소전표승인 버튼 이벤트 처리
+	 **************************************************************************/
+	scwin.btnCnclSlipAprv_onclick = function() {
+        var checkedIndex = dsSlipList.getRowCount();
+
+		//1. 데이터 여부 확인
+		if (checkedIndex == 0) {
+	        com.showMessage("CSA0008", "취소전표승인 대상자료");// $1이(가) 존재하지 않습니다.
+	        return false;
+		}
+
+		var sAproId = dsTcmAprvCncl.get( "aproId" );
+		var yyyy = dsSearchMap.get( "workYm" ).substring(0,4);
+		var mm = dsSearchMap.get( "workYm" ).substring(4,6);
+		var popOps = {
+				popup_name : "공동도급 취소전표 승인"				// 팝업 타이틀
+		       ,url        : "/ux/cf/CF00350502P.xml"
+		       ,data       :  {   gubunCd:gcm.APPR_PROC				// [gcm.APPR_REQUEST : 승인요청], [gcm.APPR_PROC : 승인/반려], [gcm.APPR_FIND : 승인현황조회(승인취소)]
+		                        , intAprvNo : sAproId				// 승인아이디 (승인/반려 시 또는 조회 시에만 필요)
+		                        , cancelYn : "Y" 					// 승인을 취소할 수 있는 경우 “Y” – 승인내역 조회 시에 사용
+		                        , intAprvTtl : yyyy + "년 " + mm + "월 공동도급 취소전표 승인요청 건."					// 내부결재제목
+								, intAprvReqOpinCn : ""				// 내부_결재_요청_의견_내용
+						        , apprEmpno : dsSiteStaf.get( "stafEmpno" )					// 승인자사번
+						        , apprEmpNm : dsSiteStaf.get( "userNm" )					// 승인자명
+						        , intAprvAproOpinCn : ""			// 내부_결재_승인_의견_내용  - 승인/반려 시에 사용
+						        , jobGbCd : "CM"					// 업무구분코드
+						        , menuId : "JJCM01"					// 메뉴ID
+						        , scrUrl : ""						// 화면_URL
+			      }
+		       ,width      : "600"
+		       ,height     : "500"
+		       ,callbackFn : "scwin.fnPopupCallback"
+			};
+		svcIdPop = "intAprvProcPopup";
+		com.popup_open(popOps);
+
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.btnCnclSlipStatus_onclick
+	 * 기 능: 취소전표승인현황 버튼 이벤트 처리
+	 **************************************************************************/
+	scwin.btnCnclSlipStatus_onclick = function() {
+		var sAproId = dsTcmAprvCncl.get( "aproId" );
+		var yyyy = dsSearchMap.get( "workYm" ).substring(0,4);
+		var mm = dsSearchMap.get( "workYm" ).substring(4,6);
+		var popOps = {
+				popup_name : "공동도급 취소전표 승인현황"			// 팝업 타이틀
+		       ,url        : "/ux/cf/CF00350502P.xml"
+		       ,data       :  {   gubunCd:gcm.APPR_FIND				// [gcm.APPR_REQUEST : 승인요청], [gcm.APPR_PROC : 승인/반려], [gcm.APPR_FIND : 승인현황조회(승인취소)]
+		                        , intAprvNo : sAproId				// 승인아이디 (승인/반려 시 또는 조회 시에만 필요)
+		                        , cancelYn : "" 					// 승인을 취소할 수 있는 경우 “Y” – 승인내역 조회 시에 사용
+		                        , intAprvTtl : yyyy + "년 " + mm + "월 공동도급 취소전표 승인요청 건."					// 내부결재제목
+								, intAprvReqOpinCn : ""				// 내부_결재_요청_의견_내용
+						        , apprEmpno : dsSiteStaf.get( "stafEmpno" )					// 승인자사번
+						        , apprEmpNm : dsSiteStaf.get( "userNm" )					// 승인자명
+						        , intAprvAproOpinCn : ""			// 내부_결재_승인_의견_내용  - 승인/반려 시에 사용
+						        , jobGbCd : "CM"					// 업무구분코드
+						        , menuId : "JJCM01"					// 메뉴ID
+						        , scrUrl : ""						// 화면_URL
+			      }
+		       ,width      : "600"
+		       ,height     : "500"
+		       ,callbackFn : "scwin.fnPopupCallback"
+			};
+		svcIdPop = "intAprvSituPopup";
+		com.popup_open(popOps);
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.btnCnclSlipDel_onclick
+	 * 기 능: 취소전표생성 삭제 버튼 이벤트 처리
+	 **************************************************************************/
+	scwin.btnCnclSlipDel_onclick = function() {
+        var checkedIndex = dsSlipList.getRowCount();
+		var sSel = sbxSlipStusVal.getValue(); // 전표상태
+		
+		//1. 발행 데이터 여부 확인
+		if (checkedIndex == 0) {
+	        com.showMessage("CSA0008", "삭제 대상자료");// $1이(가) 존재하지 않습니다.
+	        return false;
+		}
+
+		//2. 발행상태가 미발행(역분개)(01) 가 아닌경우는 PASS
+		for (var i = 0; i < checkedIndex; i++) {
+			var obj = dsSlipList.getRowJSON(i);
+
+			// 공사전표발행상태 확인
+			if(sSel == "00"){//미발행
+				if(obj.constSlipStusVal != "00"){
+		        	com.showMessage("SMA0013", "발행상태가 미발행 전표자료");	//$1만 삭제가 가능합니다.
+					grdSlipList.setFocusedCell(i , "constSlipStusVal");
+					return false;			
+				}
+			}
+			if(sSel == "01"){//미발행(역분개)
+				if(obj.constSlipStusVal != "01") {
+		        	com.showMessage("SMA0013", "발행상태가 미발행(역분개) 전표자료");	//$1만 삭제가 가능합니다.
+					grdSlipList.setFocusedCell(i , "constSlipStusVal");
+					return false;
+				}			
+			}
+
+		}
+
+		if(sSel == "00"){//미발행
+			if (!confirm("전표를 삭제하시겠습니까?\n삭제 시 전표생성 자료와 원가이체청구집계 자료가 삭제됩니다.")){
+				return;
+			}else{
+		        ajaxLib.ajax("/cm/cm2000/CM20001500U/saveJvPcostTrnmPyrqAcumCancel", {
+		            method : "POST",
+		            requestData : dsSearchMap.getJSON(),
+		            callback : function(result, e){
+						com.showMessage("SAA0032");// 정상적으로 처리되었습니다.
+						scwin.fnSearch();
+					},
+		            errCallback : "fnErrCallBack"
+		        });			
+			}
+		}else{//미발행(역분개)
+			if (!confirm("취소전표를 삭제하시겠습니까?\n삭제 시 취소전표생성 자료는 삭제되며, 원전표는 발행상태로 전환됩니다.")){
+				return;
+			}else{
+				//3. 취소전표 삭제 Call
+		        ajaxLib.ajax("/cm/cm2000/CM20001520U/saveJvPcostTrnmPyrqRevSlipUndo", {
+		            method : "POST",
+		            requestData : dsSearchMap.getJSON(),
+		            callback : function(result, e){
+						if (result.data == "S") {
+			        		com.showMessage("SAA0032");// 정상적으로 처리되었습니다.
+		  					//취소전표삭제 성공 : 성공 시
+		  					scwin.fnSearch();
+						}
+					},
+		            errCallback : "fnErrCallBack"
+		        });			
+			}
+		}
+
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.btnCnclSlipAprvReq_onclick
+	 * 기 능: 취소전표승인 요청 버튼 이벤트 처리
+	 **************************************************************************/
+	scwin.btnCnclSlipAprvReq_onclick = function() {
+		scwin.fnSiteCloseCheck('D');//현장 마감 체크 I:전표발행, D:취소전표생성
+	};
+
+	//GRID 클릭 이벤트
+	scwin.grdSlipList_oncellclick = function(row,col) {
+		var sColunmName = grdSlipList.getColumnID( col );
+		if(sColunmName == "slipEvdcId"){//전자증빙ID
+			/*
+			 * 00(미발행) -> 증빙 등록 가능 - saveEvidence
+			 * 10(발행) --> 증빙 조회 가능 - getEvidence
+			 * 01(미발행-역분개) --> 증빙 등록 가능 - saveEvidence
+			 * 11(발행-역분개) --> 증빙 조회 가능 - getEvidence
+			 * 90(취소대기) --> 증빙 조회 가능 - getEvidence
+			 * 91(취소) --> 증빙 조회 가능 - getEvidence
+			 */
+			var _obj = dsSlipList.getRowJSON( row );
+			if(_obj.workCd != "" && _obj.refKey != "" && _obj.invNo != "" && _obj.slipTypeGbCd != ""){
+				if(_obj.constSlipStusVal == "00" || _obj.constSlipStusVal == "01"){
+					saveEvidence(_obj.workCd, _obj.refKey, _obj.slipTypeGbCd, _obj.invNo,  sessionStorage.getItem("userEmpno"));
+				}else if(_obj.constSlipStusVal == "10" || _obj.constSlipStusVal == "11" || _obj.constSlipStusVal == "90" || _obj.constSlipStusVal == "91"){
+					getEvidence(_obj.workCd, _obj.refKey, _obj.slipTypeGbCd, _obj.invNo,  sessionStorage.getItem("userEmpno"));
+				}
+			}
+		}else if(sColunmName == "smrtbTxbilNo"){//세금계산서 번호
+			var _obj = dsSlipList.getRowJSON( row );
+			if(_obj.smrtbTxbilNo != ""){
+				viewSmartbill(_obj.smrtbTxbilNo, 'AR');
+			}
+		}
+		dtlSearch(row);
+	};
+
+	function dtlSearch(row){
+		if (row == -1) {
+			dsSlipList2.removeAll();
+			return;
+		}
+        ajaxLib.ajax("/cm/cm2000/CM20001520U/selectConstJvSlipDetail2", {
+            method : "POST",
+            requestData : {
+				siteCd : dsSlipList.getCellData( row , "siteCd" ),
+				workYm : dsSlipList.getCellData( row , "workYm" ),
+				constSlipNo : dsSlipList.getCellData( row , "constSlipNo" ),
+				constSlipNoSeq : dsSlipList.getCellData( row , "constSlipNoSeq" )
+            },
+            callback : function(result, e){
+            	dsSlipList2.setJSON( result.data );
+            	grdSlipList.setFocusedCell( row , 0 , false );
+            	grdSlipList2.setFocusedCell( 0 , 0 , false );
+			},
+            errCallback : "fnErrCallBack"
+        });
+	}
+	]]></script>
+
+	<w2:require src="/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:40%;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기준년월" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:inputCalendar calendarValueType="yearMonth" class="req"
+								ev:onchange="scwin.calYearMonth_onchange" focusOnDateSelect="false" footerDiv="false" id="calYearMonth"
+								mandatory="" placeholder="____-__" ref="data:dsSearchMap.workYm" renderDiv="true" renderType="component"
+								rightAlign="false" style="width:120px">
+								<script ev:event="onchange" type="text/javascript"><![CDATA[
+			   				        if ( !com.isYearMonth(calYearMonth.getValue()) ){
+			                            alert("년월을 확인하십시오.");
+			                            calYearMonth.setValue("");
+			                            calYearMonth.focus();
+			                        }
+			    				 ]]></script>
+							</w2:inputCalendar>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="전표상태" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="" chooseOptionLabel="미발행"
+								class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label"
+								id="sbxSlipStusVal" ref="data:dsSearchMap.constSlipStusVal" style="width:100px;" submenuSize="auto"
+								textAlign="left" ev:onchange="scwin.sbxSlipStusVal_onchange">
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[미발행]]></xf:label>
+										<xf:value><![CDATA[00]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[미발행(역분개)]]></xf:label>
+										<xf:value><![CDATA[01]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[발행]]></xf:label>
+										<xf:value><![CDATA[10]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[발행(역분개)]]></xf:label>
+										<xf:value><![CDATA[11]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[취소대기]]></xf:label>
+										<xf:value><![CDATA[90]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[취소]]></xf:label>
+										<xf:value><![CDATA[91]]></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<!-- <w2:anchor outerDiv="false" style="" id="" class="btn_swich">
+					<xf:label>검색열고닫기</xf:label>
+					</w2:anchor> -->
+
+
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style=""
+						ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="공동도급 전표발행 목록" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="descbox" id="" style="">
+						<w2:textbox class="" id="tbxCloseDisp" label="" tagname=""></w2:textbox>
+					</xf:group>
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="" disabled="true"
+							ev:onclick="scwin.btnCnclSlipDel_onclick" id="btnCnclSlipDel" outerDiv="false" style="">
+							<xf:label><![CDATA[전표생성 삭제]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" disabled="true"
+							ev:onclick="scwin.btnCnclSlipAprvReq_onclick" id="btnCnclSlipAprvReq" outerDiv="false" style="">
+							<xf:label><![CDATA[취소전표승인요청]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnCnclSlipAprv" outerDiv="false" style=""
+							ev:onclick="scwin.btnCnclSlipAprv_onclick" disabled="true">
+							<xf:label><![CDATA[취소전표승인]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnCnclSlipStatus_onclick"
+							id="btnCnclSlipStatus" outerDiv="false" style="">
+							<xf:label><![CDATA[취소전표승인현황]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnSlipProc" outerDiv="false" style=""
+							ev:onclick="scwin.btnSlipProc_onclick" disabled="true">
+							<xf:label><![CDATA[전표발행]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+
+			</xf:group>
+			<w2:gridView autoFit="" class="" dataList="data:dsSlipList" ev:oncellclick="scwin.grdSlipList_oncellclick"
+				fixedColumnWithHidden="true" focusMode="row" id="grdSlipList" readOnly="true" rowNumHeaderValue="No"
+				rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false"
+				style="height: 311px;" useShiftKey="true" visibleRowNum="" tooltipDisplay="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column49" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="No." width="40">
+						</w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" rowSpan="2" sortable="true"
+							style="height:34px;" value="발행상태" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" rowSpan="2" style="height:34px;"
+							value="전표검증" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" rowSpan="2" style="height:34px;"
+							value="전표상태" width="98">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" rowSpan="2" style="height:34px;"
+							value="거래처" width="150">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="회계일자" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column41" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="분개유형" width="181">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column53" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="적요" width="250">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="height:68px;"
+							id="column148" value="공급가액" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="height:68px;"
+							id="column145" value="부가세" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="height:68px;"
+							id="column142" value="합계" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="147" inputType="text" style="height:34px;"
+							id="column130" value="전자증빙&lt;br/&gt;ID" blockSelect="false" displayMode="label" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:34px;"
+							id="column76" value="(세금)계산서&lt;br/&gt;작성여부" blockSelect="false" displayMode="label" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:34px;"
+							id="column79" value="(세금)계산서&lt;br/&gt;번호" blockSelect="false" displayMode="label" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="111" inputType="text" style="height:68px;"
+							id="column149" value="(세금)계산서&lt;br/&gt;승인ID" blockSelect="false" displayMode="label" colSpan="" rowSpan="2"
+							hidden="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="177" inputType="text" style="height:34px;"
+							id="column140" value="(세금)계산서 수신자" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="170" inputType="text" style="height:34px;"
+							id="column73" value="재무전표번호" blockSelect="false" displayMode="label" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column57" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="원전표번호" width="170">
+						</w2:column>
+					</w2:row>
+					<w2:row id="row6" style="">
+						<w2:column removeBorderStyle="false" width="114" inputType="text" style="" id="column141"
+							value="담당자" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="177" inputType="text" style="" id="column136"
+							value="이메일" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="column50"
+							inputType="expression" removeBorderStyle="false" width="40" style="">
+						</w2:column>
+						<w2:column blockSelect="false" id="constSlipStusVal" inputType="select" textAlign="center"
+							width="80" colMerge="" style="">
+							<w2:choices>
+								<w2:item>
+									<w2:label><![CDATA[미발행]]></w2:label>
+									<w2:value><![CDATA[00]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[미발행(역분개)]]></w2:label>
+									<w2:value><![CDATA[01]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[발행]]></w2:label>
+									<w2:value><![CDATA[10]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[발행(역분개)]]></w2:label>
+									<w2:value><![CDATA[11]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[취소대기]]></w2:label>
+									<w2:value><![CDATA[90]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[취소]]></w2:label>
+									<w2:value><![CDATA[91]]></w2:value>
+								</w2:item>
+							</w2:choices>
+						</w2:column>
+						<w2:column blockSelect="false" id="slipRvwYn" inputType="text" textAlign="center" width="80"
+							colMerge="" style="">
+						</w2:column>
+						<w2:column blockSelect="false" id="eaiSlipPrcgStusNm" inputType="text" width="100" colMerge=""
+							style="">
+						</w2:column>
+						<w2:column blockSelect="false" id="tradeNm" inputType="text" textAlign="left" width="150"
+							colMerge="" style="">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="actgDt" inputType="text"
+							removeBorderStyle="false" width="100" colMerge="" style="">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="slipJnlzTypeNm" inputType="text"
+							removeBorderStyle="false" width="181" colMerge="" style="" textAlign="left">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="abstrCn" inputType="text"
+							removeBorderStyle="false" textAlign="left" width="250" colMerge="" style="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="suplAmt" value=""
+							blockSelect="false" displayMode="label" displayFormat="#,###" dataType="number" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="vatAmt" value=""
+							blockSelect="false" displayMode="label" displayFormat="#,###" dataType="number" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="totAmt" value=""
+							blockSelect="false" displayMode="label" displayFormat="#,###" dataType="number" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="147" inputType="link" id="slipEvdcId"
+							blockSelect="false" displayMode="label" textAlign="center" colMerge="" style="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" id="txbilYn"
+							blockSelect="false" displayMode="label" textAlign="center" colMerge="" style="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="link" id="smrtbTxbilNo"
+							blockSelect="false" displayMode="label" colMerge="" style="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="110" inputType="text" style="" id="approveId"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="114" inputType="text" style="" id="chrgrNm" value=""
+							blockSelect="false" displayMode="label" colMerge="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="177" inputType="text" style="" id="chrgrEmail"
+							value="" blockSelect="false" displayMode="label" colMerge="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="170" inputType="text" id="slipNo"
+							blockSelect="false" displayMode="label" colMerge="" style="">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="cnclSlipNo" inputType="text"
+							removeBorderStyle="false" width="170" colMerge="" style="">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+				<!-- <w2:subTotal targetColumnID="groupCd" style="" id="subTotal1">
+					<w2:row style="" id="row8">
+					<w2:column removeBorderStyle="false" width="40" inputType="text" id="column113"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="80" inputType="text" id="column112"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="80" inputType="text" id="column111"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="98" inputType="text" id="column110"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="150" inputType="text" id="column109" value="소계"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="100" inputType="text" id="column108"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="181" inputType="text" id="column107"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="250" inputType="text" id="column106"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="147" inputType="text" id="column133"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="80" inputType="text" id="column101"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="100" inputType="text" id="column100"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="114" inputType="text" style="" id="column143"
+					value="" blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="177" inputType="text" style="" id="column138"
+					value="" blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="100" inputType="text" id="column99"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="100" inputType="text" id="column98"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					</w2:row>
+					</w2:subTotal>
+					<w2:footer style="" id="footer1">
+					<w2:row style="" id="row9">
+					<w2:column removeBorderStyle="false" width="40" inputType="text" id="column129"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="80" inputType="text" id="column128"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="80" inputType="text" id="column127"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="98" inputType="text" id="column126"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="150" inputType="text" id="column125" value="합계"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="100" inputType="text" id="column124"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="181" inputType="text" id="column123"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="250" inputType="text" id="column122"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="147" inputType="text" id="column134"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="80" inputType="text" id="column117"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="100" inputType="text" id="column116"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="114" inputType="text" style="" id="column144"
+					value="" blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="177" inputType="text" style="" id="column139"
+					value="" blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="100" inputType="text" id="column115"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					<w2:column removeBorderStyle="false" width="100" inputType="text" id="column114"
+					blockSelect="false" displayMode="label">
+					</w2:column>
+					</w2:row>
+					</w2:footer> -->
+			</w2:gridView>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="공동도급 전표발행 상세" style="" tagname="h3"></w2:textbox>
+			</xf:group><w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsSlipList2" ev:oncellclick=""
+				fixedColumnWithHidden="true" focusMode="row" id="grdSlipList2" readOnly="true" rowNumHeaderValue="No"
+				rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false"
+				style="height: 300px;" useShiftKey="true" visibleRowNum="" tooltipDisplay="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column49" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="No." width="40">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="250" inputType="text" style="height:68px;"
+							id="column130" value="공사전표번호" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="height:68px;"
+							id="column134" value="공사전표&lt;br/&gt;순번" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" rowSpan="2" style="height:34px;"
+							value="거래처" width="150">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="회계일자" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column41" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="분개유형" width="181">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column53" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="적요" width="250">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column67" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="계정코드" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column70" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="계정과목" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="2" displayMode="label" id="column62" inputType="text"
+							removeBorderStyle="false" style="height:34px;" value="금액" width="100">
+						</w2:column>
+					</w2:row>
+					<w2:row id="row6" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column63" inputType="text"
+							removeBorderStyle="false" style="" value="차변" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column66" inputType="text"
+							removeBorderStyle="false" style="" value="대변" width="100">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="column50"
+							inputType="expression" removeBorderStyle="false" width="40" style="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="250" inputType="text" style="" id="constSlipNo"
+							value="" blockSelect="false" displayMode="label" colMerge="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="constSlipNoSeq"
+							value="" blockSelect="false" displayMode="label" colMerge="true">
+						</w2:column>
+						<w2:column blockSelect="false" colMerge="true" id="tradeNm" inputType="text" textAlign="left"
+							width="150" style="">
+						</w2:column>
+						<w2:column blockSelect="false" colMerge="true" displayMode="label" id="actgDt" inputType="text"
+							removeBorderStyle="false" width="100" style="">
+						</w2:column>
+						<w2:column blockSelect="false" colMerge="true" displayMode="label" id="slipJnlzTypeNm"
+							inputType="text" removeBorderStyle="false" width="181" style="" textAlign="left">
+						</w2:column>
+						<w2:column blockSelect="false" colMerge="true" displayMode="label" id="abstrCn" inputType="text"
+							removeBorderStyle="false" textAlign="left" width="250" style="">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="acctCd" inputType="text"
+							removeBorderStyle="false" width="100" style="">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="acctNm" inputType="text"
+							removeBorderStyle="false" width="120" style="" textAlign="left">
+						</w2:column>
+						<w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label"
+							id="dbAmt" removeBorderStyle="false" textAlign="right" width="100" style="">
+						</w2:column>
+						<w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label"
+							id="crAmt" inputType="text" removeBorderStyle="false" textAlign="right" width="100" style="">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+				<w2:footer id="footer1" style="">
+					<w2:row id="row9" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column129" inputType="text"
+							removeBorderStyle="false" width="40">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="250" inputType="text" style="" id="column133"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column137"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column125" inputType="text"
+							removeBorderStyle="false" value="합계" width="150">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column124" inputType="text"
+							removeBorderStyle="false" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column123" inputType="text"
+							removeBorderStyle="false" width="181">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column122" inputType="text"
+							removeBorderStyle="false" width="250">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column121" inputType="text"
+							removeBorderStyle="false" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column120" inputType="text"
+							removeBorderStyle="false" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label"
+							expression="sum('dbAmt')" id="column119" inputType="expression" removeBorderStyle="false" textAlign="right"
+							width="100">
+						</w2:column>
+						<w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label"
+							expression="sum('crAmt')" id="column118" inputType="expression" removeBorderStyle="false" textAlign="right"
+							width="100">
+						</w2:column>
+					</w2:row>
+				</w2:footer>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

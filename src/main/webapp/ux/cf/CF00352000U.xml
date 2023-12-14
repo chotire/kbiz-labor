@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataMap baseNode="list" repeatNode="map" style="" id="dsSdkSmsSend" saveRemovedData="true">
+                <w2:keyInfo>
+                    <w2:key id="msgId" name="메시지아이디" dataType="text"></w2:key>
+                    <w2:key id="userId" name="사번" dataType="text"></w2:key>
+                    <w2:key id="destInfo" name="수신자번호" dataType="text"></w2:key>
+                    <w2:key id="callback" name="발신자번호" dataType="text"></w2:key>
+                    <w2:key id="sendDate" name="전송일시" dataType="text"></w2:key>
+                    <w2:key id="subject" name="제목" dataType="text"></w2:key>
+                    <w2:key id="mmsMsg" name="전송메시지" dataType="text"></w2:key>
+                    <w2:key id="reserved1" name="기타1" dataType="text"></w2:key>
+                    <w2:key id="reserved2" name="기타2" dataType="text"></w2:key>
+                    <w2:key id="reserved3" name="기타3" dataType="text"></w2:key>
+                    <w2:key id="reserved4" name="기타4" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+
+    <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00352000U.xml 
+     * Program Name : SMS 전송 
+     * Author : 주홍원 (tpjhw)
+     * Date : 2019.03.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     * 2019.03.15   주홍원   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    var svcId; //callback 처리용 서비스ID
+
+
+    /************************************************************************************
+     *  [2] 초기화 
+     ************************************************************************************/
+    scwin.onpageload = function () {
+
+        if (gcm.SERVER_PROPERTY = "DEV") {
+            // 발신자
+            dsSdkSmsSend.set("userId", "sdcit04");
+
+            // 발신번호
+            dsSdkSmsSend.set("callback", "0263030102");
+            com.setUdcValue("udcCallBack", "telNo", dsSdkSmsSend.get("callback"));
+            com.getUdcComp("udcCallBack", "telNo").setReadOnly(true);
+        } else {
+            // 발신자
+            dsSdkSmsSend.set("userId", "sdcit03");
+        }
+
+        // 전송일시
+        com.setUdcValue("udcSendDate", "calDate", WebSquare.date.getCurrentServerDate("yyyyMMdd"));
+        com.setUdcValue("udcSendDate", "cal6Time", WebSquare.date.getCurrentServerDate("hhmmss"));
+        com.getUdcComp("udcSendDate", "calDate").setReadOnly(true);
+        com.getUdcComp("udcSendDate", "cal6Time").setReadOnly(true);
+
+        // 등록자구분
+        dsSdkSmsSend.set("reserved1", "504476");
+
+    };
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function () {
+
+    };
+
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * Event: scwin.fnSave
+     * 기 능: SMS 전송
+     **************************************************************************/
+    scwin.fnSave = function () {
+        //console.log(dsSdkSmsSend.getJSON());
+
+        // 전송일시
+        dsSdkSmsSend.set("sendDate", com.getUdcValue("udcSendDate", "calDate") + com.getUdcValue("udcSendDate", "cal6Time"));
+
+        // 수신자번호
+        dsSdkSmsSend.set("destInfo", com.getUdcValue("udcDestInfo", "telNo"));
+
+        // 발신자번호
+        dsSdkSmsSend.set("callback", com.getUdcValue("udcCallBack", "telNo"));
+
+        // 수신자번호
+        if (com.getUdcValue("udcDestInfo", "telNo") == "") {
+            com.showMessage("CMW0025", "수신자번호");	//	$1은(는) 필수입력사항입니다.
+            com.getUdcComp("udcDestInfo",  "telNo").focus();
+            return false;
+        }
+
+        // 전송메시지
+        if (dsSdkSmsSend.get("mmsMsg") == "") {
+            com.showMessage("CMW0025", "전송메시지");	//	$1은(는) 필수입력사항입니다.
+
+            ibxMmsMsg.focus();
+            return false;
+        }
+
+        svcId = "insertSdkSmsSend";
+
+        if (confirm("전송 하시겠습니까?")) {
+            ajaxLib.ajax("/cf/CF00352000U/insertSdkSmsSend", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsSdkSmsSend.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+        if (svcId == "insertSdkSmsSend") {
+//            com.showMessage("CFA0015", "(msg_id=" + result.data + ")");	// 전송되었습니다.$1
+            com.showMessage("CFA0015");	// 전송되었습니다.$1
+            dsSdkSmsSend.clear();
+            grpSmsInfo.init(); // SMS 전송내용 초기화
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function (e) {
+    	com.showMessage("CFE0112");	// 작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+    };
+
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnSend_onclick
+     * 기 능: SMS 전송
+     **************************************************************************/
+    scwin.btnSend_onclick = function () {
+        scwin.fnSave();
+    };
+
+	]]></script>
+    <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+    <w2:require src="/ux/common/udc/udcSearchpopup.xml"></w2:require>
+    <w2:require src="/ux/common/udc/udcDatecalendar6Time.xml"></w2:require>
+    <w2:require src="/ux/common/udc/udcPhone.xml"></w2:require>
+</head>
+<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="wfrTitle" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>        
+        </xf:group>
+        <xf:group class="defaultbox" id="" style="">
+            <w2:textbox class="df_tt" id="" label="SMS정보" style="" tagname="h3"></w2:textbox>
+            <xf:group class="fr" id="" style="">
+                <xf:group class="right_wrap" id="" style="">
+                    <xf:group style="" id="">
+                        <w2:anchor class="btn_gcm" id="btnSend" outerDiv="false" style="" ev:onclick="scwin.btnSend_onclick">
+                            <xf:label>
+                                <![CDATA[전송]]>
+                            </xf:label>
+                        </w2:anchor>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+        <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpSmsInfo" style="" tagname="table">
+            <w2:attributes>
+                <w2:summary>SMS정보 입력 테이블 입니다.</w2:summary>
+            </w2:attributes>
+            <xf:group tagname="colgroup">
+                <xf:group style="width:152px;" tagname="col"></xf:group>
+                <xf:group style="width: auto;" tagname="col"></xf:group>
+                <xf:group style="width:128px;" tagname="col"></xf:group>
+                <xf:group style="width: auto;" tagname="col"></xf:group>
+                <xf:group style="width:110px;" tagname="col"></xf:group>
+                <xf:group style="width: auto;" tagname="col"></xf:group>
+                <xf:group tagname="col" style="width:110px;"></xf:group>
+                <xf:group tagname="col" style="width: auto;"></xf:group>
+            </xf:group>
+            <xf:group style="" tagname="tr">
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="메시지 ID" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="" style="width:100%;" ref="data:dsSdkSmsSend.msgId" readOnly="true"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="TRAN ID(사번)" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="" style="width:100%;" ref="data:dsSdkSmsSend.userId" readOnly="true"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="수신자번호" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:udc_phone class="req" id="udcDestInfo" style="width:100%;margin-left:0px;"></w2:udc_phone>
+                </xf:group>
+                <xf:group tagname="th" class="w2tb_th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="발신자번호" style=""></w2:span>
+                </xf:group>
+                <xf:group tagname="td" class="w2tb_td">
+                    <w2:attributes></w2:attributes>
+                    <w2:udc_phone class="req" id="udcCallBack" style="width:100%;margin-left:0px;"></w2:udc_phone>
+                </xf:group>
+            </xf:group>
+            <xf:group style="" tagname="tr">
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="전송일시" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:udc_datecalendar_6time id="udcSendDate" style=""></w2:udc_datecalendar_6time>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="MMS 제목" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="" style="width:100%;" ref="data:dsSdkSmsSend.subject"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="전송메시지" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                    </w2:attributes>
+                    <xf:input id="ibxMmsMsg" style="width:100%;margin-left:0px;" ref="data:dsSdkSmsSend.mmsMsg" class="req"></xf:input>
+                </xf:group>
+            </xf:group>
+            <xf:group class="" style="" tagname="tr">
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="기타1" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:input id="" style="width:100%;margin-left:0px;" ref="data:dsSdkSmsSend.reserved1" readOnly="true"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="기타2" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:input id="" style="width:100%;margin-left:0px;" ref="data:dsSdkSmsSend.reserved2"></xf:input>
+                </xf:group>
+            </xf:group>
+            <xf:group class="" style="" tagname="tr">
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="기타3" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:input id="" style="width:100%;margin-left:0px;" ref="data:dsSdkSmsSend.reserved3"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="기타4" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:input id="" style="width:100%;margin-left:0px;" ref="data:dsSdkSmsSend.reserved4"></xf:input>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

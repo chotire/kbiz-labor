@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+							<w2:dataList baseNode="list" repeatNode="map" style=""
+											id="dsTcmLbctPayItemiEplmtInsurExclList" saveRemovedData="true">
+											<w2:columnInfo>
+															<w2:column id="sitenm" name="현장명" dataType="text"></w2:column>
+															<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+															<w2:column id="pnum" name="총지급액-인원" dataType="text"></w2:column>
+															<w2:column id="bsalAmt" name="기본급_금액" dataType="text"></w2:column>
+															<w2:column id="extnExpyAmt" name="연장_수당_금액"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="nghtExpyAmt" name="야간_수당_금액"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="hldyErndExpyAmt" name="휴일_근로_수당_금액"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="hldyExpyAmt" name="휴일_수당_금액"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="especExpyAmt" name="특별_수당_금액"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="avgDywgAmt" name="평균_일급_금액"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="horwgAmt" name="총_급여_금액/출역_시간"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="totSalAmt" name="총_급여_금액" dataType="text"></w2:column>
+											</w2:columnInfo>
+											<w2:data use="false">
+															<!-- <w2:row></w2:row>
+																			<w2:row></w2:row>
+																			<w2:row></w2:row>
+																			<w2:row></w2:row>
+																			<w2:row></w2:row>
+																			<w2:row></w2:row>
+																			<w2:row></w2:row>
+																			<w2:row></w2:row>
+																			<w2:row></w2:row> -->
+											</w2:data>
+							</w2:dataList>
+							<w2:dataMap baseNode="map" id="dsSrchMap" style="">
+											<w2:keyInfo>
+															<w2:key dataType="text" id="keyFrLbatnYymm"
+																			name="출역기간form">
+															</w2:key>
+															<w2:key dataType="text" id="keyToLbatnYymm" name="출역기간to"></w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/><script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM40250500U.xml
+ * Program Name : 고용보험 제외자 명세서
+ * Author : tpyhyoj (tpyhyoj)
+ * Date : 2019.08.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ 
+    /************************************************************************************
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+
+		//화면초기화
+        scwin.fnInitial();
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+		if (!com.isEmpty($w.getParameter("keyFrLbatnYymm"))) {
+			dsSrchMap.set("keyFrLbatnYymm"	, $w.getParameter("keyFrLbatnYymm"));   				//출연년월
+			dsSrchMap.set("keyToLbatnYymm"	, $w.getParameter("keyToLbatnYymm"));   				//출연년월
+			com.setUdcValue("udcFrLbatnYymm", "calYearMonth", dsSrchMap.get( "keyFrLbatnYymm") );  	//출연년월
+			com.setUdcValue("udcToLbatnYymm", "calYearMonth", dsSrchMap.get( "keyToLbatnYymm") );  	//출연년월
+			scwin.fnSearchList();
+		} else{
+			dsSrchMap.set("keyFrLbatnYymm"	, $p.getCurrentServerDate( "yyyyMM" ));   				//출연년월
+			dsSrchMap.set("keyToLbatnYymm"	, $p.getCurrentServerDate( "yyyyMM" ));   				//출연년월
+			com.setUdcValue("udcFrLbatnYymm", "calYearMonth", dsSrchMap.get( "keyFrLbatnYymm") );  	//출연년월
+			com.setUdcValue("udcToLbatnYymm", "calYearMonth", dsSrchMap.get( "keyToLbatnYymm") );  	//출연년월
+		}
+        //UI팀용 함수 호출
+        scwin.commonUI();
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수
+     ************************************************************************************/
+    var svcId = "";
+
+    /************************************************************************************
+     *  [3] Event 함수
+     ************************************************************************************/
+
+    // 검색 버튼
+    scwin.btnFind_onclick = function() {
+        scwin.fnSearchList();
+    };
+
+    //엑셀다운 버튼
+    scwin.btnExcelDwn_onclick = function() {
+
+        if(dsTcmLbctPayItemiEplmtInsurExclList.getTotalRow() <= 0){
+            com.showMessage("CMW0042");     //다운로드할 내역이 존재하지 않습니다.
+            return;
+        }else{
+            var excelOpt = {};  						//excel download 옵션
+            excelOpt.fileName = "고용보험 제외자 명세서.xlsx";    	//또는 xlsx 확장자 사용
+            grdTcmLbctPayItemiEplmtInsurExclList.advancedExcelDownload( excelOpt );
+        }
+    };
+
+    // 그리드 클릭 이벤트
+    scwin.grdTcmLbctPayItemiEplmtInsurExclList_oncellclick = function(row,col) {
+        var sColName = grdTcmLbctPayItemiEplmtInsurExclList.getColumnID( col );		//선택 컬럼명
+
+        if( sColName == "sitenm"){
+            var sSiteCd  = dsTcmLbctPayItemiEplmtInsurExclList.getCellData( row , "siteCd" );     //현장코드
+            var sSiteNm  = dsTcmLbctPayItemiEplmtInsurExclList.getCellData( row , "sitenm" );     //현장명
+
+            var sTitle 	= "고용보험 제외자 명세서";
+            var sId 	= "CM40250505U";
+            var sUrl 	= "/ux/cm/cm4025/CM40250505U.xml";
+            var sOpenOpt = "1";
+            var sData = {  "paramKeySiteCd"  : sSiteCd    								//현장코드
+                         , "paramKeySiteNm"  : sSiteNm									//현장명
+                         , "keyFrLbatnYymm"   : dsSrchMap.get( "keyFrLbatnYymm"  )     	//출연기간 from
+                         , "keyToLbatnYymm"   : dsSrchMap.get( "keyToLbatnYymm"  )     	//출연기간 to
+
+                        };
+
+            com.detailOpen(sTitle, sId, sUrl, sOpenOpt, sData);
+        }
+    };
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    // 결과 후처리
+    scwin.fnCallback = function(result, e) {
+        switch (svcId) {
+            case "selectTcmLbctPayItemiEplmtInsurExclList" :	//그리드 조회
+                dsTcmLbctPayItemiEplmtInsurExclList.setJSON(result.data.tcmLbctPayItemiEplmtInsurExclList);		//그리드 검색 결과
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        switch (svcId) {
+            case "selectTcmLbctPayItemiEplmtInsurExclList" :   //그리드 조회
+                console.log('조회오류: ' + e);
+                break;
+        }
+    }
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+
+    // 조회 List
+    scwin.fnSearchList = function() {
+
+        //DS 매핑
+        dsSrchMap.set("keyFrLbatnYymm", com.getUdcValue("udcFrLbatnYymm", "calYearMonth"));      //출연기간 from
+        dsSrchMap.set("keyToLbatnYymm", com.getUdcValue("udcToLbatnYymm", "calYearMonth"));      //출연기간 to
+
+        if( dsSrchMap.get("keyFrLbatnYymm").length == 0  ){
+            var focusId = com.getUdcComp("udcFrLbatnYymm", "calYearMonth").id;
+            com.showMessage("CMW0025", "출연기간", "", "", focusId); //$1은(는) 필수입력사항입니다.
+
+            return ;
+        }
+
+        if( dsSrchMap.get("keyToLbatnYymm").length == 0  ){
+            var focusId = com.getUdcComp("udcToLbatnYymm", "calYearMonth").id;
+            com.showMessage("CMW0025", "출연기간", "", "", focusId); //$1은(는) 필수입력사항입니다.
+
+            return ;
+        }
+
+        svcId = "selectTcmLbctPayItemiEplmtInsurExclList";
+
+        ajaxLib.ajax("/cm/cm4025/CM40250500U/selectTcmLbctPayItemiEplmtInsurExclList", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : dsSrchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+
+    };
+	]]></script>
+
+    <w2:require src="/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+<!--		<w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>-->
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>		<!-- 고용보험 제외자명세서 -->
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:94.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="출역기간" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+
+							<w2:udc_yearMonthcalendar id="udcFrLbatnYymm" style=""></w2:udc_yearMonthcalendar>
+                            <w2:textbox label="~" style="" id=""></w2:textbox>
+                            <w2:udc_yearMonthcalendar id="udcToLbatnYymm" style=""></w2:udc_yearMonthcalendar>
+
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+
+			</xf:group>
+
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="고용보험 제외자명세서" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="descbox" id="" style="">
+						<w2:textbox class="" id="" label="(단위:원)" tagname=""></w2:textbox>
+					</xf:group>
+					<xf:group style="height:27px;" id="">
+						<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+                            outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+                            <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+                        </w2:anchor>
+					</xf:group>
+
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmLbctPayItemiEplmtInsurExclList"
+							fixedColumn="" fixedColumnWithHidden="true" focusMode="row" id="grdTcmLbctPayItemiEplmtInsurExclList"
+							readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+							rowStatusWidth="30" scrollByColumn="false" style="height: 162px;" useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdTcmLbctPayItemiEplmtInsurExclList_oncellclick" sortEvent="" sortable="true">
+							<w2:header id="header1" style="">
+											<w2:row id="row2" style="">
+															<w2:column blockSelect="false" id="column15"
+																			inputType="text" value="현장" width="170" sortable="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column37" inputType="text" removeBorderStyle="false" value="제외자수" width="100">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column189" inputType="text" removeBorderStyle="false" value="기본" width="120">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column233" inputType="text" removeBorderStyle="false" value="연장" width="100">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column237" inputType="text" removeBorderStyle="false" value="야간" width="100">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column241" inputType="text" removeBorderStyle="false" value="휴일근로" width="100">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column245" inputType="text" removeBorderStyle="false" value="휴일" width="100">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column249" inputType="text" removeBorderStyle="false" value="특별수당" width="100">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column253" inputType="text" removeBorderStyle="false" value="일급" width="100">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column41" inputType="text" removeBorderStyle="false" value="시급" width="100">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column193" inputType="text" removeBorderStyle="false" value="총급여" width="120">
+															</w2:column>
+											</w2:row>
+							</w2:header>
+							<w2:gBody id="gBody4" style="">
+											<w2:row id="row5" style="">
+															<w2:column blockSelect="false" id="sitenm" inputType="link"
+																			value="" width="170" displayMode="label" style="" textAlign="left">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label" id="pnum"
+																			inputType="text" removeBorderStyle="false" textAlign="right" value="" width="100" dataType="number"
+																			displayFormat="#,###" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="bsalAmt" inputType="text" removeBorderStyle="false" value="" width="120"
+																			textAlign="right" dataType="number" displayFormat="#,###" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="extnExpyAmt" inputType="text" removeBorderStyle="false" value="0" width="100" textAlign="right"
+																			dataType="number" displayFormat="#,###" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="nghtExpyAmt" inputType="text" removeBorderStyle="false" value="0" width="100" textAlign="right"
+																			dataType="number" displayFormat="#,###" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="hldyErndExpyAmt" inputType="text" removeBorderStyle="false" textAlign="right" value="0"
+																			width="100" dataType="number" displayFormat="#,###" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="hldyExpyAmt" inputType="text" removeBorderStyle="false" textAlign="right" value="0"
+																			width="100" dataType="number" displayFormat="#,###" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="especExpyAmt" inputType="text" removeBorderStyle="false" textAlign="right" value="0" width="100"
+																			dataType="number" displayFormat="#,###" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="avgDywgAmt" inputType="text" removeBorderStyle="false" textAlign="right" value="0"
+																			width="100" dataType="number" displayFormat="#,###" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="horwgAmt" inputType="text" removeBorderStyle="false" textAlign="right" value="0"
+																			width="100" dataType="number" displayFormat="#,###" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="totSalAmt" inputType="text" removeBorderStyle="false" textAlign="right" value="0"
+																			width="120" dataType="number" displayFormat="#,###" style="">
+															</w2:column>
+											</w2:row>
+							</w2:gBody>
+							<w2:footer id="footer2" style="">
+											<w2:row id="row7" style="">
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column68" inputType="text" removeBorderStyle="false" value="총계" width="170">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column67" inputType="expression" removeBorderStyle="false" value="0" width="100"
+																			textAlign="right" dataType="number" displayFormat="#,###" expression="sum('pnum')">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column192" inputType="expression" removeBorderStyle="false" value="0" width="120"
+																			textAlign="right" expression="sum('bsalAmt')" dataType="number" displayFormat="#,###">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column236" inputType="expression" removeBorderStyle="false" value="0" width="100"
+																			textAlign="right" expression="sum('extnExpyAmt')" dataType="number" displayFormat="#,###">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column240" inputType="expression" removeBorderStyle="false" value="0" width="100"
+																			textAlign="right" expression="sum('nghtExpyAmt')" dataType="number" displayFormat="#,###">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column244" inputType="expression" removeBorderStyle="false" value="0" width="100"
+																			textAlign="right" expression="sum('hldyErndExpyAmt')" dataType="number" displayFormat="#,###">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column248" inputType="expression" removeBorderStyle="false" value="0" width="100"
+																			textAlign="right" expression="sum('hldyExpyAmt')" dataType="number" displayFormat="#,###">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column252" inputType="expression" removeBorderStyle="false" value="0" width="100"
+																			textAlign="right" expression="sum('especExpyAmt')" dataType="number" displayFormat="#,###">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column256" inputType="expression" removeBorderStyle="false" value="0" width="100"
+																			textAlign="right" expression="sum('avgDywgAmt')" dataType="number" displayFormat="#,###">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column65" inputType="expression" removeBorderStyle="false" value="0" width="100"
+																			textAlign="right" expression="sum('horwgAmt')" dataType="number" displayFormat="#,###">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column196" inputType="expression" removeBorderStyle="false" value="0" width="120"
+																			textAlign="right" expression="sum('totSalAmt')" dataType="number" displayFormat="#,###">
+															</w2:column>
+											</w2:row>
+							</w2:footer>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

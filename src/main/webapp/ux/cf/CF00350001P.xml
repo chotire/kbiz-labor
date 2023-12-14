@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataMap baseNode="map" id="dsSrch">
+                <w2:keyInfo>
+                    <w2:key id="aflId" name="첨부파일ID" dataType="text"></w2:key>
+                    <w2:key id="jobGbCd" name="업무구분" dataType="text"></w2:key>
+                    <w2:key id="menuId" name="메뉴ID" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+            <w2:dataList baseNode="list" repeatNode="map" style="" id="dsAflList" saveRemovedData="true">
+                <w2:columnInfo>
+                    <w2:column id="chk" name="선택" dataType="text"></w2:column>
+                    <w2:column id="aflId" name="첨부파일ID" dataType="text"></w2:column>
+                    <w2:column id="aflSeq" name="첨부파일_순번" dataType="text"></w2:column>
+                    <w2:column id="aflp" name="파일암호화param" dataType="text"></w2:column>
+                    <w2:column id="jobGbCd" name="업무구분코드[CF035]" dataType="text"></w2:column>
+                    <w2:column id="filePathNm" name="파일_경로_명" dataType="text"></w2:column>
+                    <w2:column id="aflNm" name="첨부파일_명" dataType="text"></w2:column>
+                    <w2:column id="saveFileNm" name="저장_파일_명" dataType="text"></w2:column>
+                    <w2:column id="fileSize" name="파일_크기" dataType="text"></w2:column>
+                    <w2:column id="scssYn" name="성공_여부" dataType="text"></w2:column>
+                    <w2:column id="rndmVal" name="임의_값" dataType="text"></w2:column>
+                    <w2:column id="menuId" name="메뉴ID" dataType="text"></w2:column>
+                    <w2:column id="fstRegprEmpno" name="최초_등록자_사번" dataType="text"></w2:column>
+                    <w2:column id="fstRegDtm" name="최초_등록_일시" dataType="text"></w2:column>
+                    <w2:column id="fnlModprEmpno" name="최종_수정자_사번" dataType="text"></w2:column>
+                    <w2:column id="fnlModiDtm" name="최종_수정_일시" dataType="text"></w2:column>
+                </w2:columnInfo>
+            </w2:dataList>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+
+    <script type="javascript" lazy="false"><![CDATA[
+		
+    /***************************************************************************
+     * Program ID : CF00350001P.xml 
+     * Program Name : 첨부파일(팝업) 
+     * Author : 김환섭 (tpkhs1)
+     * Date : 2019.02.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.02.15   김환섭   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    var svcId = "";
+    var ingStatus = "";
+    var jobGbCd = "";
+    var menuId = "";
+
+    /************************************************************************************ 
+     *  [2] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function () {
+
+        scwin.initScreen();
+
+        // 이미지만 허용할 경우
+        //mpd.setFilter("IMG","*.png;*.gif;*.jpg");
+        // 모든파일
+        mpd.setFilter("ALL", "*.*");
+
+        jobGbCd = JSON.parse($p.getPopupParam()).data.jobGbCd;
+        menuId = JSON.parse($p.getPopupParam()).data.menuId;
+        jobGbCd = "CF";
+        menuId = "CF00350001P";
+
+        dsSrch.set("jobGbCd", jobGbCd);
+        dsSrch.set("menuId", menuId);
+        dsSrch.set("aflId", JSON.parse($p.getPopupParam()).data.aflId);
+        //dsSrch.set("aflId"  , "_20140103_102158314");
+
+        if (dsSrch.get("aflId") != "") {
+            scwin.fnSearchList();
+        }
+    };
+
+    scwin.initScreen = function () {
+        grdAflList.initGrid(); //첨부파일목록 초기화
+        com.setUdcValue("uListCount", "udcListCount", 0);
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    // 조회 List
+    scwin.fnSearchList = function () {
+
+        if (dsSrch.get("aflId") == "") {
+            alert("AFL_ID를 확인하십시오.");
+            return;
+        }
+
+        svcId = "selectTcfAflList";
+        ajaxLib.ajax("/cf/CF00350000P/selectTcfAflList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSrch.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    // 파일리스트 저장.
+    scwin.fnUpdatefileList = function (JSONList) {
+
+        svcId = "updateTcfAfl";
+        ajaxLib.ajax("/cf/CF00350000P/updateTcfAfl", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: {
+                param: dsSrch.getJSON(),
+                tcfAflList: JSONList
+            },
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    // 파일리스트 삭제.
+    scwin.fnDeletefileList = function (JSONList) {
+
+        svcId = "deleteTcfAfl";
+        ajaxLib.ajax("/cf/CF00350000P/deleteTcfAfl", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: {
+                param: dsSrch.getJSON(),
+                tcfAflList: JSONList
+            },
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+
+        switch (svcId) {
+
+            case "selectTcfAflList":
+                dsAflList.setJSON(result.data.dsTcfAflList);
+                com.setUdcValue("uListCount", "udcListCount", dsAflList.getTotalRow());
+                ingStatus = "S";
+                break;
+
+            case "updateTcfAfl":
+
+                // dsSrch.setJSON(result.data.dsTcfAflMap);  
+                // 채번된 aflId 세팅.(jobGbCd, menuId 유지.)  
+                dsSrch.set("aflId", result.data.dsTcfAflMap.aflId);
+                // 재조회.	   	 
+                scwin.fnSearchList();
+                break;
+
+            case "deleteTcfAfl":
+                // 재조회.	   	 
+                scwin.fnSearchList();
+                break;
+
+            case "downLoadTcfAfl":
+                alert("callback downLoadTcfAfl !!");
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function (e) {
+        console.log(e);
+    }
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    scwin.btnSearchOnClick = function () {
+    };
+
+    scwin.btnSearch_onclick = function () {
+        scwin.fnSearchList();
+    };
+
+    scwin.fileUploadReady = function (_fInfos) {
+        var jsontext = [];
+        // 기존 첨부파일 존재하는 경우.
+        jsontext = dsAflList.getAllJSON();
+
+        for (var i = 0; i < _fInfos.length; i++) {
+            jsontext.push({
+                "chk": "1",
+                "aflNm": _fInfos[i].name,
+                "fileSize": _fInfos[i].size
+            });
+        }
+        dsAflList.setJSON(jsontext);
+        com.setUdcValue("uListCount", "udcListCount", dsAflList.getTotalRow());
+    };
+
+    scwin.mpd_onComplete = function () {
+        alert("mpd_onComplete !");
+    };
+
+    scwin.mpd_ondone = function (_data) {
+        var strFail = "";
+
+        //파일이 저장되고 저장된 결과를 넘겨줍니다.
+        for (var j = 0; j < _data.length; j++) {
+            if (_data[j].deniedCode == "") {
+                //업로드 성공한 경우.
+            } else {
+                //101: 허용하지 않는 확장자, 102: 허용범위 밖의 파일 사이즈, 999: 기타 서버 오류
+                strFail = strFail + _data[j].deniedFile + ',' + _data[j].deniedCode;
+                //업로드 실패한 경우.
+            }
+        }
+
+        if (strFail != "") {
+            strFail = strFail + "/n" +
+                "101: 허용하지 않는 확장자, 102: 허용범위 밖의 파일 사이즈, 999: 기타 서버 오류";
+            alert("파일 업로드에 실패하였습니다. " + strFail);
+        } else {
+
+            // WAS 업로드 결과 파일명(중복시 변경된)으로 첨부파일 테이블 데이타 INSERT.
+            var JSON_LIST = [];
+            for (var i = 0; i < _data.length; i++) {
+                JSON_LIST.push({
+                    "chk": "1",
+                    "jobGbCd": jobGbCd,
+                    "filePathNm": "",
+                    "aflNm": _data[i].localFile,
+                    "fileSize": _data[i].size,
+                    "menuId": menuId
+                });
+            }
+
+            scwin.fnUpdatefileList(JSON_LIST);
+        }
+    };
+
+    scwin.btnUpl_onclick = function () {
+        alert("btnUpl_onclick");
+        //저장공간에 저장합니다.
+        mpd.startUpload();
+    };
+
+    scwin.btnDel_onclick = function () {
+
+        //1. 그리드에서 선택한 index를 구한다.
+        var chkIdxs = grdAflList.getCheckedIndex("chk");
+        if (chkIdxs.length == 0) {
+            alert('삭제 대상을 선택 하세요');
+            return;
+        }
+
+        //2. 찾아보기로 올린 파일을 삭제합니다.
+        var delIdxs = [];
+        for (var i = chkIdxs.length; i > 0; i--) {
+            //2.1 업로드전 삭제대상 찾기
+            if (dsAflList.getDataRow(chkIdxs[i - 1]).aflId == "") {
+                delIdxs.push(chkIdxs[i - 1]);
+                //2.2. 파일업로드 객체에 올라온 파일을 정리한다.
+                mpd.removeFile(dsAflList.getDataRow(chkIdxs[i - 1]).aflNm);
+            }
+        }
+
+        //2.3. 그리드에 보여지는 데이터리스트를 정리한다.
+        dsAflList.removeRows(delIdxs);
+
+        //3. 저장소 파일 삭제
+        scwin.fnDelFile();
+    };
+
+    scwin.fnDelFile = function () {
+        //1. 그리드에서 선택한 index를 구한다.
+        var chkIdxs = grdAflList.getCheckedIndex("chk");
+        if (chkIdxs.length == 0) {
+            return;
+        }
+        var JSONList = dsAflList.getMatchedJSON("chk", "1")
+        scwin.fnDeletefileList(JSONList);
+    };
+
+    scwin.btnClose_onclick = function () {
+        var oJSON = dsSrch.getJSON();
+
+        com.popup_close(oJSON);
+    };
+
+    // 파일리스트 다운로드.
+    scwin.fnDownLoadfileList = function (paramJSON, JSONList) {
+        svcId = "downLoadTcfAfl";
+        ajaxLib.ajax("/cf/CF00350000P/downLoadTcfAfl", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: {
+                param: paramJSON,
+                tcfAflList: JSONList
+
+            },
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+
+    };
+
+    scwin.grdAflList_oncelldblclick = function (row, col) {
+        var aflp = dsAflList.getRowData(row)[3];
+        var href = "/cf/CF00350000P/downloadMAV?aflp=" + aflp;
+        $.fileDownload(href);
+        return;
+    };
+
+    scwin.fnDownLoadfileList3 = function (row, col) {
+
+        var JSON_LIST = dsAflList.getRowJSON(row);
+        svcId = "downloadMAV";
+
+        var iJsn = dsAflList.getRowJSON(row);
+        var downUrl = "/cf/CF00350000P/downLoadTcfAflVOID";
+        //var downUrl = "/filedownload";
+
+
+        var $iframe = $('<iframe></iframe>');
+        $iframe.attr("name", "filedownIfrm")
+        $iframe.appendTo('body');
+
+        var $form = $("<form></form>");
+        //$form.attr("enctype", "application/json");
+        $form.attr("action", downUrl);
+        $form.attr("target", "filedownIfrm");
+        $form.attr("accept-language", "ko")
+        $form.appendTo('body');
+
+        //for( var key in iJsn){
+        var $input = $("<input></input>");
+        $input.attr({
+            type: "hidden",
+            name: "aflId",
+            id: "aflId",
+            value: iJsn.aflId
+        });
+        $input.appendTo($form);
+        $input = $("<input></input>");
+        $input.attr({
+            type: "hidden",
+            name: "aflSeq",
+            id: "aflSeq",
+            value: iJsn.aflSeq
+        });
+        $input.appendTo($form);
+        //}
+
+        $form.submit();
+    };
+
+    scwin.fnDownLoadfileList_plugin = function (row, col) {
+
+        $.fileDownload($(this).prop('http://localhost:8080/cf/CF00350000P/downloadMAV'), {
+            preparingMessageHtml: "We are preparing your report, please wait...",
+            failMessageHtml: "There was a problem generating your report, please try again."
+        });
+    };
+
+	]]></script>
+    <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+</head>
+<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group class="content_body popup" id="" style="">
+        <xf:group class="defaultbox" id="" style="">
+            <w2:textbox class="df_tt" id="" label="첨부파일 목록" style="" tagname="h3"></w2:textbox>
+            <w2:udc_list_count id="uListCount"></w2:udc_list_count>
+            <xf:group class="right_wrap" id="" style="">
+                <xf:group id="" style="">
+                    <w2:multiupload maxcount="" filter="" mode="html5_transparent" action="" wmode="" style="position:absolute;top:0px;left:10px;width: 79px;height: 27px;" id="mpd" maxsize="" uploadButton="" ev:ondone="scwin.mpd_ondone" ev:onComplete="scwin.mpd_onComplete" selectCallback="scwin.fileUploadReady">
+                    </w2:multiupload>
+                    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btn_Search" outerDiv="false" style="" ev:onclick="scwin.btn_Search_onclick">
+                        <xf:label>
+                            <![CDATA[찾아보기]]>
+                        </xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnSearch" outerDiv="false" style="display: none;" ev:onclick="scwin.btnSearch_onclick">
+                        <xf:label>
+                            <![CDATA[조회]]>
+                        </xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnDel" outerDiv="false" style="" ev:onclick="scwin.btnDel_onclick">
+                        <xf:label>
+                            <![CDATA[삭제]]>
+                        </xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnUpl" outerDiv="false" style="" ev:onclick="scwin.btnUpl_onclick">
+                        <xf:label>
+                            <![CDATA[업로드]]>
+                        </xf:label>
+                    </w2:anchor>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+        <w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsAflList" fixedColumnWithHidden="true" focusMode="row" id="grdAflList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" ev:oncelldblclick="scwin.grdAflList_oncelldblclick">
+            <w2:header id="header1" style="">
+                <w2:row id="row2" style="">
+                    <w2:column blockSelect="false" id="column23" inputType="checkbox" readOnly="false" value="체크" width="40">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column21" inputType="text" value="파일명" width="350">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column19" inputType="text" value="크기" width="80"></w2:column>
+                    <w2:column removeBorderStyle="false" width="100" inputType="text" id="column27" value="등록일자" blockSelect="false" displayMode="label">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="80" inputType="text" id="column25" value="등록자" blockSelect="false" displayMode="label">
+                    </w2:column>
+                </w2:row>
+            </w2:header>
+            <w2:gBody id="gBody4" style="">
+                <w2:row id="row5" style="">
+                    <w2:column blockSelect="false" id="chk" inputType="checkbox" readOnly="false" style="height:24px;" width="40">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="aflNm" inputType="text" style="height:24px;" textAlign="left" value="" width="350">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="fileSize" inputType="text" style="height:24px;" value="" width="80">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;" id="fnlModiDtm" value="" blockSelect="false" displayMode="label">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="fnlModprEmpno" value="" blockSelect="false" displayMode="label">
+                    </w2:column>
+                </w2:row>
+            </w2:gBody>
+        </w2:gridView>
+        <xf:group class="bottombox" id="" style="">
+            <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnClose" outerDiv="false" style="" ev:onclick="scwin.btnClose_onclick">
+                <xf:label>
+                    <![CDATA[닫기]]>
+                </xf:label>
+            </w2:anchor>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

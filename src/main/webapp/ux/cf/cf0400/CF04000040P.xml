@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+    <?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dsSearchMap">
+                    <w2:keyInfo>
+                        <w2:key id="aprlnNm" name="결재선명" dataType="text"></w2:key>
+                        <w2:key id="aprlnNo" name="결재선번호" dataType="text"></w2:key>
+                        <w2:key id="aprvNo" name="aprvNo" dataType="text"></w2:key>
+                        <w2:key id="flag" name="flag" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+                <w2:dataList baseNode="list" repeatNode="map" id="dsAprlnDtlList" saveRemovedData="true">
+                    <w2:columnInfo>
+                        <w2:column id="chk" name="chk" dataType="text"></w2:column>
+                        <w2:column id="aprlnNo" name="결재선_번호" dataType="text"></w2:column>
+                        <w2:column id="aprlnSeq" name="결재선_순번_번호" dataType="text"></w2:column>
+                        <w2:column id="apprEmpno" name="결재자_사번" dataType="text"></w2:column>
+                        <w2:column id="aprprNm" name="결재자_명" dataType="text"></w2:column>
+                        <w2:column id="aprvGbCd" name="결재_구분_코드" dataType="text"></w2:column>
+                        <w2:column id="aprvGbNm" name="결재_구분_명" dataType="text"></w2:column>
+                        <w2:column id="jbposGbCd" name="직위구분" dataType="text"></w2:column>
+                        <w2:column id="jbposGbNm" name="직위명" dataType="text"></w2:column>
+                        <w2:column id="deptCd" name="부서코드" dataType="text"></w2:column>
+                        <w2:column id="deptNm" name="부서명" dataType="text"></w2:column>
+                        <w2:column id="jbclCd" name="직급구분" dataType="text"></w2:column>
+                        <w2:column id="jbclNm" name="직급명" dataType="text"></w2:column>
+                        <w2:column id="aproDtm" name="승인_일시" dataType="text"></w2:column>
+                        <w2:column id="aprvSeq" name="결재선_순번_번호" dataType="text"></w2:column>
+                        <w2:column id="aprvNo" name="결재번호" dataType="text"></w2:column>
+                        <w2:column id="stusNm" name="상태값" dataType="text"></w2:column>
+                        <w2:column id="rowIdx" name="결재row" dataType="text"></w2:column>
+                    </w2:columnInfo>
+                </w2:dataList>
+            </w2:dataCollection>
+            <w2:workflowCollection></w2:workflowCollection>
+        </xf:model>
+
+        <script type="text/javascript" src="/resources/js/html2canvas/html2canvas.js"></script>
+        <w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+
+        <script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CF04000000U.xml
+ * Program Name : 결재선변경
+ * Author : jhlee
+ * Date : 2022.09.27
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+    *  [1] 전역변수
+    ************************************************************************************/
+
+    /************************************************************************************
+    *  [2] onpageload(초기화포함)
+    ************************************************************************************/
+    /************************************************************************************ 
+     *  [2] onpageload  
+     ************************************************************************************/ 
+    scwin.onpageload = function() {
+	    //추가 코드값 맵핑 호출
+		com.selCdListVrbl( "grdAprlnDtlList:aprvGbCd", {"upperCd": "CF004","cd": "'CF004110','CF004120','CF004130'"});
+        
+        //dsSearchMap 셋팅
+        dsSearchMap.set("aprvNo" ,JSON.parse($p.getPopupParam()).data.aprvNo);
+        dsSearchMap.set("flag" ,JSON.parse($p.getPopupParam()).data.flag);
+        scwin.fnAprlnDtl();
+    };
+
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+    scwin.fnAprlnDtl = function(){
+        ajaxLib.ajax("/cf/cf0400/CF04000025P/selectTcfAprvDtlChgListNew", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+                dsAprlnDtlList.setJSON(result.data.dsAprlnDtlList);
+                
+                let cntVal = -1;
+                let isCheck= false;
+                
+                for(var i = 0; i < dsAprlnDtlList.getRowCount(); i++)
+                {
+                    dsAprlnDtlList.setCellData( i , "aprlnNo" , dsAprlnDtlList.getCellData( i , "aprvNo"));  
+                    
+                    if(dsAprlnDtlList.getCellData( i , "aproDtm") != "")
+                    {
+                        grdAprlnDtlList.setRowReadOnly( i , true );
+                        //grdAprlnDtlList.setReadOnly( "cell" , i , "chk" , true );           //체크박스
+                        //grdAprlnDtlList.setReadOnly( "cell" , i , "aprvGbCd" , true );      //결재구분
+                        //grdAprlnDtlList.setReadOnly( "cell" , i , "popAprprEmpno" , true ); //사번팝업
+                    }
+                    
+                    if(dsAprlnDtlList.getCellData( i , "aproDtm") == "" && isCheck == false)
+                    {
+                        cntVal  = i;
+                        
+                        grdAprlnDtlList.setRowReadOnly( i , true );
+                        isCheck = true;
+                        grdAprlnDtlList.setReadOnly( "cell" , i , "aprvGbCd" , false );     //결재구분
+                        
+                        dsAprlnDtlList.setCellData( i , "rowIdx" , cntVal + 1);  
+                        //grdAprlnDtlList.setReadOnly( "cell" , i , "chk" , false );           //체크박스
+                        //grdAprlnDtlList.setReadOnly( "cell" , i , "aprvGbCd" , true );      //결재구분
+                        //grdAprlnDtlList.setReadOnly( "cell" , i , "popAprprEmpno" , true ); //사번팝업
+                    }
+                    
+                    if(i > cntVal && isCheck == true) 
+                    {
+                        grdAprlnDtlList.setRowReadOnly( i , false );
+                        //grdAprlnDtlList.setReadOnly( "cell" , i , "chk" , false );           //체크박스
+                        //grdAprlnDtlList.setReadOnly( "cell" , i , "aprvGbCd" , false );      //결재구분
+                        //grdAprlnDtlList.setReadOnly( "cell" , i , "popAprprEmpno" , false);  //사번팝업
+                    }
+                }
+                
+                dsAprlnDtlList.initRowStatus();
+                
+            },
+            errCallback : "fnErrCallBack"
+        });    
+    };
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+    // 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        com.showMessage("CFE0112");	// 작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+    };
+	
+    //사용자 팝업 콜백
+    scwin.fnPopupCallback = function(rtn) {
+        if(com.isEmpty(rtn.userEmpno)) return;  // 사용자 검색에서 사용자를 선택하지 않고, 확인을 누른 경우
+
+        var selectRowIdx = grdAprlnDtlList.getFocusedRowIndex();  // 선택된 결재자 업무 행번호
+        dsAprlnDtlList.setCellData( selectRowIdx , "apprEmpno" , rtn.userEmpno );  // 결제자 사번
+        dsAprlnDtlList.setCellData( selectRowIdx , "aprprNm" , rtn.userNm); // 결제자명
+        dsAprlnDtlList.setCellData( selectRowIdx ,"jbposGbCd", rtn.jbposGbCd);  //직위구분코드
+        dsAprlnDtlList.setCellData( selectRowIdx ,"jbposGbNm", rtn.jbposGbNm);  //직위명
+        dsAprlnDtlList.setCellData( selectRowIdx , "deptCd" , rtn.deptCd );  // 부서코드
+        dsAprlnDtlList.setCellData( selectRowIdx , "deptNm" , rtn.deptNm );  // 부서명
+    };
+        
+         
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/     
+    // 닫기 버튼 클릭이나 취소버튼 클릭시 작동
+    scwin.btnClose_onclick = function () {
+        com.popup_close("");
+    };	    
+
+     /** 결제선 변경팝업 호출 후처리 **/
+    scwin.btnChgApprovalLinePop_callback = function(result, e) {
+         //if(result.ockndCd == undefined || result.ockndNm == undefined) return;
+         
+        // ibxOckndCd.setValue( result.ockndCd );  
+        // ibxOckndNm.setValue( result.ockndNm );  
+    }
+
+	//결재선 정보 GRID 클릭 이벤트
+	scwin.grdAprlnDtlList_oncellclick = function(row,col) {
+        if(grdAprlnDtlList.getRowReadOnly(row) == true) return;
+        
+        var sColunmName = grdAprlnDtlList.getColumnID( col );
+		
+		if(sColunmName == "popAprprEmpno"){
+			var popOps = {
+							popup_name:"사용자조회"
+			               	,url:"/ux/cf/CF00050502P.xml"
+			               	,data: { 
+			               			 deptNm : ""
+			               	        ,deptCd : ""
+							}
+			               	,callbackFn : "scwin.fnPopupCallback"
+			               	,widType:"XL"
+			               	,height:"670"
+						  };
+						  
+			com.popup_open(popOps);			
+		}
+	};
+    
+    //확인 버튼 클릭
+    scwin.btnApply_onclick = function() {
+		var msg = "적용 하시겠습니까?";
+		if(dsAprlnDtlList.getModifiedJSON() != ""){
+			msg = "결재선 정보가 저장되지 않았습니다. 저장하지 않고 " + msg;
+		} 
+        
+        let arrChkData  = dsAprlnDtlList.getModifiedIndex();
+        
+        //유효성 체크 
+        for(let ci = 0; ci < arrChkData.length; ci++) 
+        {
+            let rowChkData = dsAprlnDtlList.getRowJSON( arrChkData[ci] );
+
+            if(com.isEmpty(rowChkData.apprEmpno)){
+                com.showMessage("CMW0025", "사번");        //$1은(는) 필수입력입니다.
+                return false;
+            }
+            
+            if(com.isEmpty(rowChkData.aprvGbCd)){ 
+                com.showMessage("CMW0025", "결재구분");     //$1은(는) 필수입력입니다.
+                return false;
+            }
+        }
+        
+        if(scwin.fnValidationCheck() == false){
+            return false;
+        }else if (confirm(msg)) {
+            //com.popup_close(JSON.stringify(dsAprlnDtlList.getAllJSON()));
+            com.popup_close(dsAprlnDtlList.getAllJSON());       
+        }
+	};
+	
+    //취소 버튼 클릭
+    scwin.btnCancel_onclick = function() {
+        com.popup_close("");
+    };
+    
+	//결재선 정보 - 행추가 클릭 이벤트
+	scwin.btnAddRow_onclick = function() {
+        var rowIndex = dsAprlnDtlList.insertRow();
+		var selectRowIdx = grdAprlnDtlList.getFocusedRowIndex();
+        
+        let nAprvSeq = dsAprlnDtlList.getCellData( rowIndex-1 , "aprvSeq" ); 
+        if(nAprvSeq != undefined && nAprvSeq != "") nAprvSeq = Number(nAprvSeq);
+        
+        dsAprlnDtlList.setCellData( rowIndex , "aprvSeq" , nAprvSeq + 1);//결재선 순번
+        dsAprlnDtlList.setCellData( rowIndex , "aprvNo"  , dsSearchMap.get("aprvNo"));//결재선 번호
+        dsAprlnDtlList.setCellData( rowIndex , "aprlnNo"  , dsSearchMap.get("aprvNo"));//결재선 번호
+        
+		dsAprlnDtlList.setCellData( rowIndex , "aprvGbCd" , "CF004120" );//결재구분 CF004120: 검토요청
+	};
+	
+	//결재선 정보 - 행삭제 클릭 이벤트
+	scwin.btnDelRow_onclick = function() {
+		var checkedIndex = grdAprlnDtlList.getCheckedIndex( "chk" );
+        if (checkedIndex.length == 0) {
+            com.showMessage("PRA0003");//삭제할 데이터를 선택해 주십시오.
+            return;
+        }
+        dsAprlnDtlList.removeRows( checkedIndex );
+	};
+    
+    //결재선 정보 - 저장  클릭 이벤트
+    scwin.btnSave_onclick = function() {
+        let dataChk  = dsAprlnDtlList.getModifiedJSON( true );
+            
+        if( dataChk.length == 0 ){
+            com.showMessage("CSA0003"); //저장(변경)할 내용이 없습니다.
+            return ;
+        }
+        
+        let arrData  = dsAprlnDtlList.getModifiedIndex();
+        
+        //사번, 결재구분 값 입력
+        for(let si = 0; si < arrData.length; si++) 
+        {
+            dsAprlnDtlList.setCellData( arrData[si]  , "aprlnNo" , dsSearchMap.get("aprlnNo"));
+            
+        
+            let rowData = dsAprlnDtlList.getRowJSON( arrData[si] );
+            
+            if(com.isEmpty(rowData.apprEmpno)){
+                com.showMessage("CMW0025", "사번");        //$1은(는) 필수입력입니다.
+                return false;
+            }
+            
+            if(com.isEmpty(rowData.aprvGbCd)){ 
+                com.showMessage("CMW0025", "결재구분");     //$1은(는) 필수입력입니다.
+                return false;
+            }
+        }
+       
+       if(scwin.fnValidationCheck() == false){
+            return false;
+        }else if (confirm("저장 하시겠습니까?")) {
+            ajaxLib.ajax("/cf/cf0400/CF04000000U/saveChgAprlnDtlList", {
+                method : "POST",
+                requestData : {
+                                 param : dsSearchMap.getJSON()
+                                ,tcfAprlnDtlList : dsAprlnDtlList.getAllJSON()
+                },
+                callback : function(result, e){
+                    com.showMessage("CFA0012");//저장되었습니다.
+                    scwin.fnAprlnDtl();
+                },
+                errCallback : "fnErrCallBack"
+            });                 
+        }       
+    };
+	
+	//결재선 정보 - 행위로 클릭 이벤트
+	scwin.btnUp_onclick = function() {
+	    var curIdx;
+	    var previousRowData
+	    var currentRowData;
+	             
+		curIdx = grdAprlnDtlList.getFocusedRowIndex();	
+        if(curIdx == -1) return;
+        if(curIdx == 0) 
+        {
+            com.showMessage("SMA0034", "가장 위에 있는 행이어서 이동");     //$1할 수 없습니다.
+            return;
+        }
+        //ReadOnly가 false 인 경우만 행 이동되도록 수정 
+
+		//if(curIdx == 0 || curIdx == 1) return; // 최상위 행을 위로 올리려 할때 그냥 리턴
+
+		previousRowData = dsAprlnDtlList.getRowJSON( curIdx - 1 );
+		
+        
+        if(grdAprlnDtlList.getRowReadOnly(curIdx - 1) == true)
+        {
+            com.showMessage("SMA0034", "위로 이동");     //$1할 수 없습니다.
+			return;
+        }
+        
+        
+        currentRowData = dsAprlnDtlList.getRowJSON( curIdx );
+        
+		dsAprlnDtlList.setRowJSON( curIdx , previousRowData , true ); //위에거 아래로
+		dsAprlnDtlList.setRowJSON( curIdx - 1 , currentRowData , true ); //위에거 아래로
+		
+        //grdAprlnDtlList.getRowReadOnly( rowIndex )
+        
+		grdAprlnDtlList.setFocusedCell( curIdx - 1  , 0 , false ); // 변경된 위로 focus		
+	};
+	
+	//결재선 정보 - 행아래 클릭 이벤트
+	scwin.btnDown_onclick = function() {
+	    var curIdx;
+	    var nextRowData
+	    var currentRowData;
+		
+		curIdx = grdAprlnDtlList.getFocusedRowIndex();
+		
+		if(curIdx == 0) return; // 최상위 행을 아래로 내리려 할때 그냥 리턴
+		
+		if(curIdx == dsAprlnDtlList.getRowCount() - 1) 
+        {
+            com.showMessage("SMA0034", "더이상 행을 아래로 이동");     //$1할 수 없습니다.
+            return;
+        }
+        
+        
+		nextRowData = dsAprlnDtlList.getRowJSON( curIdx + 1 );
+        if(grdAprlnDtlList.getRowReadOnly(curIdx) == true)
+        {
+            com.showMessage("SMA0034", "행을 아래로 이동");     //$1할 수 없습니다.
+            return;
+        }
+        
+		currentRowData = dsAprlnDtlList.getRowJSON( curIdx );
+		
+		dsAprlnDtlList.setRowJSON( curIdx , nextRowData , true ); //위에거 아래로
+		dsAprlnDtlList.setRowJSON( curIdx + 1 , currentRowData , true ); //위에거 아래로
+		
+		grdAprlnDtlList.setFocusedCell( curIdx + 1  , 0 , false );	// 변경된 위로 focus			
+	};
+	
+    //validation 체크 (적용 , 저장 시 )
+	scwin.fnValidationCheck = function()
+    {
+        var matchArr2 = dsAprlnDtlList.getMatchedIndex( "aprvGbCd", "CF004110", true );//기안
+        var matchArr = dsAprlnDtlList.getMatchedIndex( "aprvGbCd", "CF004130", true );//최종승인
+        var aprvGbCd = dsAprlnDtlList.getCellData( dsAprlnDtlList.getRowCount()-1 , "aprvGbCd" );//결재구분코드
+        
+        if(matchArr2.length > 1){
+            com.showMessage("CFW0010", "결재구분 기안자는 1명 이여야 합니다."); //$1
+            return false;       
+        }
+        
+        if(matchArr.length == 0){
+            com.showMessage("CFW0010", "결재구분 최종승인자가 존재하지 않습니다."); //$1
+            return false;
+        }
+        
+        if(matchArr.length > 1){
+            com.showMessage("CFW0010", "결재구분 최종승인자는 1명 이여야 합니다."); //$1
+            return false;       
+        }
+        
+        if(aprvGbCd != "CF004130"){
+            com.showMessage("CFW0010", "마지막 결재자가 최종승인자 이여야 합니다."); //$1
+            return false;               
+        }
+    }
+	]]></script>
+
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <xf:group class="content_body popup" id="" style="">
+        	<xf:group class="defaultbox" id="group2" style="">
+        		<w2:textbox class="df_tt" id="" label="" style="" tagname="h3"></w2:textbox>
+        		<xf:group class="btn_wrap" id="" style="float:right;" tagname="">
+        		    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnApply_onclick" id="btnApply"
+        		        outerDiv="false" style="left:0px;top:0px;">
+        		        <xf:label><![CDATA[확인]]></xf:label>
+        		    </w2:anchor>
+        		    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" disabled="" ev:onclick="scwin.btnCancel_onclick" id=""
+        		        outerDiv="false" style="left:0px;top:0px;">
+        		        <xf:label><![CDATA[취소]]></xf:label>
+        		    </w2:anchor>
+        		</xf:group>
+        	</xf:group>
+            <xf:group class="lyinner" id="" style="">
+                <xf:group style="left:0px;top:0px;" id="" class="defaultbox">
+                    <w2:textbox tagname="h3" style="" id="" label="결재선변경" class="df_tt"></w2:textbox>
+                    <xf:group style="" id="" class="right_wrap">
+                        <xf:group style="" id="" class="">
+                            <w2:anchor class="btn_gcm row_up" clickEventElement=""
+                                ev:onclick="scwin.btnUp_onclick" id="btnUp" outerDiv="false" style="" toolTip="행올림" disabled="false">
+                                <xf:label><![CDATA[행올림]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_gcm row_down" clickEventElement=""
+                                ev:onclick="scwin.btnDown_onclick" id="btnDown" outerDiv="false" style="" toolTip="행내림" disabled="false">
+                                <xf:label><![CDATA[행내림]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_gcm" clickEventElement="" disabled="false"
+                                ev:onclick="scwin.btnSave_onclick" id="" outerDiv="false" style="left:0px;top:0px;">
+                                <xf:label><![CDATA[저장]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_gcm row_add" clickEventElement=""
+                                ev:onclick="scwin.btnAddRow_onclick" id="" outerDiv="false" style="" toolTip="행추가"
+                                disabled="false">
+                                <xf:label><![CDATA[행추가]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_gcm row_del" clickEventElement=""
+                                ev:onclick="scwin.btnDelRow_onclick" id="" outerDiv="false" style="" toolTip="행삭제"
+                                disabled="false">
+                                <xf:label><![CDATA[행삭제]]></xf:label>
+                            </w2:anchor>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsAprlnDtlList"
+                    fixedColumnWithHidden="true" focusMode="row" id="grdAprlnDtlList" readOnly="false" rowNumHeaderValue="No"
+                    rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false"
+                    style="height:380px;" useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdAprlnDtlList_oncellclick">
+                    <w2:header id="header1" style="">
+                        <w2:row id="row2" style="">
+                            <w2:column removeBorderStyle="false" width="60" inputType="text" style=""
+                                id="column40" value="선택" blockSelect="false" displayMode="label">
+                            </w2:column>
+                            <w2:column removeBorderStyle="false" width="50" inputType="checkbox" style=""
+                                id="column50" value="" blockSelect="false" displayMode="label">
+                            </w2:column>
+                            <w2:column removeBorderStyle="false" width="50" inputType="text" style=""
+                                id="column48" value="No" blockSelect="false" displayMode="label">
+                            </w2:column>
+                            <w2:column blockSelect="false" id="column19" inputType="text"
+                                style="" value="사번" width="90" colSpan="2" rowSpan="">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="column37"
+                                inputType="text" removeBorderStyle="false" style="" value="성명" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="column38"
+                                inputType="text" removeBorderStyle="false" style="" value="직급" width="80">
+                            </w2:column>
+                            <w2:column removeBorderStyle="false" width="200" inputType="text" style=""
+                                id="column42" value="부서" blockSelect="false" displayMode="label">
+                            </w2:column>
+                            <w2:column removeBorderStyle="false" width="100" inputType="text" style=""
+                                id="column52" value="결재구분" blockSelect="false" displayMode="label">
+                            </w2:column>
+                        </w2:row>
+                    </w2:header>
+                    <w2:gBody id="gBody4" style="">
+                        <w2:row id="row5" style="">
+                            <w2:column removeBorderStyle="false" width="60" inputType="checkbox"
+                                style="height:24px;" id="column24" value="" blockSelect="false" displayMode="label" readOnly="false"
+                                viewType="icon" hidden="true">
+                            </w2:column>
+                            <w2:column removeBorderStyle="false" width="70" inputType="checkbox"
+                                style="height:24px;" id="chk" value="" blockSelect="false" displayMode="label" readOnly="false">
+                            </w2:column>
+                            <w2:column removeBorderStyle="false" width="70" inputType="expression"
+                                style="height:24px;" id="column49" value="" blockSelect="false" displayMode="label"
+                                expression="rowindex()+1">
+                            </w2:column>
+                            <w2:column blockSelect="false" class="" id="apprEmpno" inputType="text"
+                                style="height:24px;" textAlign="" value="" width="90" readOnly="true">
+                            </w2:column>
+                            <w2:column removeBorderStyle="false" width="30" inputType="image"
+                                style="height:24px;" id="popAprprEmpno" value="" blockSelect="false" displayMode="label"
+                                imageSrc="/resources/images/content/ico_grid_find.png">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="aprprNm" inputType="text"
+                                removeBorderStyle="false" style="height:24px;" textAlign="center" value="" width="100" readOnly="true">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="jbposGbNm"
+                                inputType="text" removeBorderStyle="false" style="height:24px;" value="" width="80" readOnly="true">
+                            </w2:column>
+                            <w2:column removeBorderStyle="false" width="200" inputType="text"
+                                style="height:24px;" id="deptNm" value="" blockSelect="false" displayMode="label" readOnly="true"
+                                textAlign="left">
+                            </w2:column>
+                            <w2:column removeBorderStyle="false" width="100" inputType="select"
+                                style="height:24px;" id="aprvGbCd" value="" blockSelect="false" displayMode="label" readOnly="false"
+                                viewType="icon">
+                                <w2:choices></w2:choices>
+                            </w2:column>
+                        </w2:row>
+                    </w2:gBody>
+                </w2:gridView>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

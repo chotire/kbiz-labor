@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM00150505U.xml
+ * Program Name : 가실행예산(상세)
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+        DataCollection description
+
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    //var svcId;      //callback 처리용 서비스ID
+
+    let pjtId;
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+        pjtId = $w.getParameter("paramKeyPjtId");
+		spnPjtNm.setValue( $w.getParameter("paramKeyPjtNm") );//프로젝트명
+
+		scwin.tabCall();
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/	
+	//조회
+	scwin.btnFind_onclick = function() {
+		scwin.tabCall();
+	};
+	
+	//tab이 선택되기 전에 발생되며 return을 통해 tab의 이동을 제어할 수 있다.
+	scwin.tacTactbgtMng_onbeforeselect = function(selectedIndex, index) {
+		if(index == 1){//집계표 클릭시
+			var _t1 = tacTactbgtMng.getFrame( "tabs1" );
+			var _obj = _t1.getWindow().dsTcmTactbgtItemiList.getModifiedJSON();
+			if(_obj != ""){
+				if (confirm("변경된 자료가 존재합니다. 작업사항을 저장 하시겠습니까?")) {
+					var _localScwin = _t1.getObj("scwin");
+					_localScwin["btnSave_onclick"]();	//이벤트명
+					return false;
+				}else{
+					return true;
+				}
+			}else{
+				return true;
+			}			
+		}else{
+			return true;
+		}
+	};
+	
+	//선택 된 tab이 변경된 경우에 발생한다.
+	scwin.tacTactbgtMng_onchange = function(tabID,idx,userTabID) {
+		scwin.tabCall();		
+	};
+
+	//탭 이동
+	scwin.tabCall = function(){
+        //UI팀용 함수 호출
+        com.commonUI();
+        debugger;	
+		var sTabId = tacTactbgtMng.getSelectedTabID();
+		var _selectedTabFrame = tacTactbgtMng.getFrame( sTabId );
+		var _localScwin = _selectedTabFrame.getObj("scwin");
+		_localScwin["fnInitial"](pjtId);	//이벤트명	
+	};	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchCode.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body" id="" style="">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:110px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:82px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="프로젝트명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:span id="spnPjtNm" label=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="진행상태" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:span id="spnAprvStusNm" label="" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="작업자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<w2:span id="spnLbprNm" label="" style=""></w2:span>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<w2:tabControl alwaysDraw="false" class="cm_tab" confirmFalseAction="new" confirmTrueAction="exist" id="tacTactbgtMng"
+				style="" useConfirmMessage="false" useMoveNextTabFocus="false" useTabKeyOnly="true" ev:ontabclick="scwin.tacTactbgtMng_ontabclick" ev:onbeforeselect="scwin.tacTactbgtMng_onbeforeselect" ev:onchange="scwin.tacTactbgtMng_onchange">
+				<w2:tabs disabled="false" id="tabs1" label="내역관리" style=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs2" label="집계표" style=""></w2:tabs>
+				<w2:content alwaysDraw="false" id="content2" style="" src="/ux/cm/cm0015/CM00150515T.xml"></w2:content>
+				<w2:content alwaysDraw="false" id="content3" style="" src="/ux/cm/cm0015/CM00150525T.xml">
+				</w2:content>
+			</w2:tabControl>
+		</xf:group>
+	</body>
+</html>

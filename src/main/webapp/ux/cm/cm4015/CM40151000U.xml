@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+							<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmErndIncmMdtAdjRtirSituList"
+								saveRemovedData="true">
+								<w2:columnInfo>
+									<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+									<w2:column id="wkrNo" name="근로자번호" dataType="text"></w2:column>
+									<w2:column id="erndSeq" name="근로_순번" dataType="text"></w2:column>
+									<w2:column id="wkrNm" name="근로자_명" dataType="text"></w2:column>
+									<w2:column id="resnoEnc" name="주민등록번호_암호화" dataType="text"></w2:column>
+									<w2:column id="erndGbCd" name="근로구분코드[CM005001]" dataType="text"></w2:column>
+									<w2:column id="rtirDt" name="퇴직_일자" dataType="text"></w2:column>
+									<w2:column id="salAmt" name="급여_금액(총급여)" dataType="text"></w2:column>
+									<w2:column id="taxnStndAmt" name="과세_표준_금액" dataType="text"></w2:column>
+									<w2:column id="calctxAmt" name="산출세_금액" dataType="text"></w2:column>
+									<w2:column id="taxSumAmt" name="기부_정치_자금_금액(세액공제)" dataType="text"></w2:column>
+									<w2:column id="prvpyTxamtIctxAmt" name="기납부_세액_소득세_금액" dataType="text"></w2:column>
+									<w2:column id="prvpyTxamtRstxAmt" name="기납부_세액_주민세_금액" dataType="text"></w2:column>
+									<w2:column id="dcsnTxamtIctxAmt" name="결정_세액_소득세_금액" dataType="text"></w2:column>
+									<w2:column id="dcsnTxamtRstxAmt" name="결정_세액_주민세_금액" dataType="text"></w2:column>
+									<w2:column id="sitenm" name="현장명(비고)" dataType="text"></w2:column>
+									<w2:column id="fstRegDtm" name="최초_등록_일시(중도정산일)" dataType="text"></w2:column>
+									<w2:column id="beofYn" name="재직여부" dataType="text"></w2:column>
+									<w2:column id="erndSlipStusNm" name="중도정산전표상태" dataType="text"></w2:column>
+									<w2:column id="rtirSlipStusNm" name="퇴직정산전표상태" dataType="text"></w2:column>
+									<w2:column id="rtirAdjYn" name="name21" dataType="text"></w2:column>
+								</w2:columnInfo>
+								<w2:data use="false"></w2:data>
+							</w2:dataList>
+							<w2:dataMap baseNode="map" id="dsSrchMap" style="">
+											<w2:keyInfo>
+															<w2:key dataType="text" id="keySrchGb" name="검색구분"></w2:key>
+															<w2:key dataType="text" id="keyYyyyMm" name="연월"></w2:key>
+															<w2:key dataType="text" id="keyErndGbCd"
+																			name="근로구분코드[CM005001]">
+															</w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/><script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM40151000U.xml
+ * Program Name : 근로자퇴직현황
+ * Author : tpyhyoj (tpyhyoj)
+ * Date : 2019.08.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ 
+    /************************************************************************************
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+
+        scwin.fnInitial();
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //공통 코드
+        com.selCdList( "keyAplyYm", "CM005001", "Y", "Y");   //근로구분코드
+        com.selCdList( "grdTcmErndIncmMdtAdjRtirSituList:erndGbCd", "CM005001", "Y", "Y");   //근로구분코드
+
+        //초기값 설정
+        dsSrchMap.set("keySrchGb",  "1");   //검색 구분
+        com.setUdcValue("udcYyyyMm", "calYearMonth", $p.getCurrentServerDate( "yyyyMM" ));  //출연년월
+        dsSrchMap.set("keyYyyyMm", com.getUdcValue("udcYyyyMm", "calYearMonth"));   		//출연년월
+        //UI팀용 함수 호출
+        scwin.commonUI();
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수
+     ************************************************************************************/
+    var svcId = "";
+
+    /************************************************************************************
+     *  [3] Event 함수
+     ************************************************************************************/
+
+    // 검색 버튼
+    scwin.btnFind_onclick = function() {
+        scwin.fnSearchList();
+    };
+
+    //엑셀다운 버튼
+    scwin.btnExcelDwn_onclick = function() {
+        if(dsTcmErndIncmMdtAdjRtirSituList.getTotalRow() <= 0){
+            com.showMessage("CMW0042");     //다운로드할 내역이 존재하지 않습니다.
+            return;
+        }else{
+            var excelOpt = {};  //excel download 옵션
+            excelOpt.fileName = "근로자퇴직현황.xlsx";    //또는 xlsx 확장자 사용
+            grdTcmErndIncmMdtAdjRtirSituList.advancedExcelDownload( excelOpt );
+        }
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    // 결과 후처리
+    scwin.fnCallback = function(result, e) {
+        switch (svcId) {
+            case "selectTcmErndIncmMdtAdjRtirSituList" :	//조회
+                dsTcmErndIncmMdtAdjRtirSituList.setJSON(result.data.tcmErndIncmMdtAdjRtirSituList);        //그리드 검색 결과
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        switch (svcId) {
+            case "selectTcmErndIncmMdtAdjRtirSituList" :    //조회
+                console.log('조회오류: ' + e);
+                break;
+        }
+    }
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+
+    // 조회 List
+    scwin.fnSearchList = function() {
+        //DS 매핑
+        dsSrchMap.set("keyYyyyMm", com.getUdcValue("udcYyyyMm", "calYearMonth"));      //출연기간 to
+
+        if( dsSrchMap.get("keyYyyyMm").length == 0  ){
+            var focusId = com.getUdcComp("udcYyyyMm", "calYearMonth").id;
+            com.showMessage("CMW0025", "연월", "", "", focusId); //$1은(는) 필수입력사항입니다.
+            return ;
+        }
+
+        svcId = "selectTcmErndIncmMdtAdjRtirSituList";
+
+        ajaxLib.ajax("/cm/cm4015/CM40151000U/selectTcmErndIncmMdtAdjRtirSituList", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : dsSrchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+
+    };
+]]></script>
+
+
+		<w2:require src="/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>		<!-- 근로자 퇴직현황 -->
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="구분" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 appearance="full" cols="" id="keySrchGb" ref="data:dsSrchMap.keySrchGb" renderType="radiogroup" rows="1"
+											selectedIndex="0" style="">
+											<xf:choices>
+															<xf:item>
+																			<xf:label><![CDATA[퇴직연월]]></xf:label>
+																			<xf:value><![CDATA[1]]></xf:value>
+															</xf:item>
+															<xf:item>
+																			<xf:label><![CDATA[정산연월]]></xf:label>
+																			<xf:value><![CDATA[2]]></xf:value>
+															</xf:item>
+											</xf:choices>
+							</xf:select1>
+						</xf:group>
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="연월" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:udc_yearMonthcalendar id="udcYyyyMm" style=""></w2:udc_yearMonthcalendar>
+						</xf:group>
+						<xf:group tagname="th" class="w2tb_th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="근로구분" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes></w2:attributes>
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" direction="auto"
+											disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="keyAplyYm"
+											optionOrder="false" ref="data:dsSrchMap.keyErndGbCd" style="width:120px;" submenuSize="auto">
+											<xf:choices>
+															<xf:item>
+																			<xf:label><![CDATA[전체]]></xf:label>
+																			<xf:value><![CDATA[]]></xf:value>
+															</xf:item>
+															<xf:item>
+																			<xf:label><![CDATA[new row]]></xf:label>
+																			<xf:value><![CDATA[]]></xf:value>
+															</xf:item>
+															<xf:item>
+																			<xf:label><![CDATA[new row]]></xf:label>
+																			<xf:value><![CDATA[]]></xf:value>
+															</xf:item>
+															<xf:item>
+																			<xf:label><![CDATA[new row]]></xf:label>
+																			<xf:value><![CDATA[]]></xf:value>
+															</xf:item>
+															<xf:item>
+																			<xf:label><![CDATA[new row]]></xf:label>
+																			<xf:value><![CDATA[]]></xf:value>
+															</xf:item>
+															<xf:item>
+																			<xf:label><![CDATA[new row]]></xf:label>
+																			<xf:value><![CDATA[]]></xf:value>
+															</xf:item>
+											</xf:choices>
+							</xf:select1>
+						</xf:group>
+
+
+					</xf:group>
+				</xf:group>
+
+
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="근로자 퇴직현황" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+							outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+
+			</xf:group>
+			<w2:gridView readOnly="true" autoFit="lastColumn" class="autoHeight"
+							dataList="data:dsTcmErndIncmMdtAdjRtirSituList" fixedColumnWithHidden="true" focusMode="row"
+							id="grdTcmErndIncmMdtAdjRtirSituList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+							rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true"
+							visibleRowNum="" fixedColumn="5" sortable="true">
+							<w2:header id="header1" style="">
+											<w2:row id="row2" style="">
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column49" inputType="text" removeBorderStyle="false" value="No" width="40" style="">
+															</w2:column>
+															<w2:column blockSelect="false" id="column19"
+																			inputType="text" value="성명" width="120" style="">
+															</w2:column>
+															<w2:column blockSelect="false" id="column17"
+																			inputType="text" value="주민번호" width="120" style="">
+															</w2:column>
+															<w2:column blockSelect="false" id="column15"
+																			inputType="text" value="근로구분" width="80" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column37" inputType="text" removeBorderStyle="false" value="퇴사일자" width="100" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column35" inputType="text" removeBorderStyle="false" value="총급여" width="120" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column41" inputType="text" removeBorderStyle="false" value="과세표준" width="120" style="">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column39" inputType="text" removeBorderStyle="false" value="산출세액" width="120" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column59" value="세액공제&lt;br/&gt;(계)" blockSelect="false" displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column57" value="기납부세액&lt;br/&gt;(소득세)" blockSelect="false"
+																			displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column55" value="기납부세액&lt;br/&gt;(지방소득세)" blockSelect="false"
+																			displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column53" value="결정세액&lt;br/&gt;(소득세)" blockSelect="false"
+																			displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column51" value="결정세액&lt;br/&gt;(지방소득세)" blockSelect="false"
+																			displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="200"
+																			inputType="text" id="column67" value="비고" blockSelect="false" displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column65" value="중도정산일" blockSelect="false" displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column63" value="근로소득중도정산&lt;br/&gt;전표발행" blockSelect="false"
+																			displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column61" value="퇴직금&lt;br/&gt;발행대상" blockSelect="false" displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column71" value="퇴직금전표발행" blockSelect="false" displayMode="label" style="">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="100"
+																			inputType="text" id="column69" value="재직여부" blockSelect="false" displayMode="label" style="">
+															</w2:column>
+											</w2:row>
+							</w2:header>
+							<w2:gBody id="gBody4" style="">
+											<w2:row id="row5" style="">
+															<w2:column blockSelect="false" displayMode="label"
+																			expression="rowindex()+1" id="column50" inputType="expression" removeBorderStyle="false"
+																			width="40">
+															</w2:column>
+															<w2:column blockSelect="false" id="wkrNm" inputType="text"
+																			width="120">
+															</w2:column>
+															<w2:column blockSelect="false" id="resnoEnc"
+																			inputType="text" width="120" displayFormat="######-#######">
+															</w2:column>
+															<w2:column blockSelect="false" id="erndGbCd"
+																			inputType="select" value="상용" width="80">
+																			<w2:choices></w2:choices>
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="rtirDt" inputType="text" removeBorderStyle="false" width="100" displayFormat="####-##-##">
+															</w2:column>
+															<w2:column blockSelect="false" dataType="number"
+																			displayFormat="#,###.#" displayMode="label" id="salAmt" inputType="text" removeBorderStyle="false"
+																			textAlign="right" value="0" width="120">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="taxnStndAmt" inputType="text" removeBorderStyle="false" value="0" width="120"
+																			displayFormat="#,###.#" dataType="number" textAlign="right">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="calctxAmt" inputType="text" removeBorderStyle="false" value="0" width="120"
+																			displayFormat="#,###.#" dataType="number" textAlign="right">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="taxSumAmt" value="0" blockSelect="false" displayMode="label"
+																			displayFormat="#,###.#" dataType="number" textAlign="right">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="prvpyTxamtIctxAmt" value="0" blockSelect="false" displayMode="label"
+																			displayFormat="#,###.#" dataType="number" textAlign="right">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="prvpyTxamtRstxAmt" value="0" blockSelect="false" displayMode="label"
+																			displayFormat="#,###.#" dataType="number" textAlign="right">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="dcsnTxamtIctxAmt" value="0" blockSelect="false" displayMode="label"
+																			displayFormat="#,###.#" dataType="number" textAlign="right">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="dcsnTxamtRstxAmt" value="0" blockSelect="false" displayMode="label"
+																			displayFormat="#,###.#" dataType="number" textAlign="right">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="200"
+																			inputType="text" id="sitenm" blockSelect="false" displayMode="label" textAlign="left">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="fstRegDtm" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="erndSlipStusNm" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="select" id="rtirAdjYn" value="N" blockSelect="false" displayMode="label">
+																			<w2:choices>
+																							<w2:item>
+																											<w2:label><![CDATA[미발행]]></w2:label>
+																											<w2:value><![CDATA[N]]></w2:value>
+																							</w2:item>
+																							<w2:item>
+																											<w2:label><![CDATA[발행]]></w2:label>
+																											<w2:value><![CDATA[Y]]></w2:value>
+																							</w2:item>
+																			</w2:choices>
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="rtirSlipStusNm" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="100"
+																			inputType="select" id="beofYn" blockSelect="false" displayMode="label">
+																			<w2:choices>
+																							<w2:item>
+																											<w2:label><![CDATA[재직]]></w2:label>
+																											<w2:value><![CDATA[Y]]></w2:value>
+																							</w2:item>
+																							<w2:item>
+																											<w2:label><![CDATA[퇴직]]></w2:label>
+																											<w2:value><![CDATA[N]]></w2:value>
+																							</w2:item>
+																			</w2:choices>
+															</w2:column>
+											</w2:row>
+							</w2:gBody>
+							<w2:footer style="" id="footer1">
+											<w2:row style="" id="row6">
+															<w2:column removeBorderStyle="false" width="40"
+																			inputType="text" id="column91" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column90" value="합계" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column89" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="80"
+																			inputType="text" id="column88" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="100"
+																			inputType="text" id="column87" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="expression" id="column86" value="0" blockSelect="false" displayMode="label"
+																			dataType="number" expression="sum('salAmt')" textAlign="right" displayFormat="#,###">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="expression" id="column85" value="0" blockSelect="false" displayMode="label"
+																			dataType="number" expression="sum('taxnStndAmt')" textAlign="right" displayFormat="#,###">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="expression" id="column84" value="0" blockSelect="false" displayMode="label"
+																			dataType="number" expression="sum('calctxAmt')" textAlign="right" displayFormat="#,###">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="expression" id="column83" value="0" blockSelect="false" displayMode="label"
+																			dataType="number" expression="sum('taxSumAmt')" textAlign="right" displayFormat="#,###">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="expression" id="column82" value="0" blockSelect="false" displayMode="label"
+																			dataType="number" expression="sum('prvpyTxamtIctxAmt')" textAlign="right" displayFormat="#,###">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="expression" id="column81" value="0" blockSelect="false" displayMode="label"
+																			dataType="number" expression="sum('prvpyTxamtRstxAmt')" textAlign="right" displayFormat="#,###">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="expression" id="column80" value="0" blockSelect="false" displayMode="label"
+																			dataType="number" expression="sum('dcsnTxamtIctxAmt')" textAlign="right" displayFormat="#,###">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="expression" id="column79" value="0" blockSelect="false" displayMode="label"
+																			dataType="number" expression="sum('dcsnTxamtRstxAmt')" textAlign="right" displayFormat="#,###">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="200"
+																			inputType="text" id="column78" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column77" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column76" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column75" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="120"
+																			inputType="text" id="column74" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column removeBorderStyle="false" width="100"
+																			inputType="text" id="column73" blockSelect="false" displayMode="label">
+															</w2:column>
+											</w2:row>
+							</w2:footer>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

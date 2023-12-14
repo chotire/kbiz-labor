@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsActgAcctList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="no" name="No" dataType="text"></w2:column>
+						<w2:column id="acctCd" name="계정코드" dataType="text"></w2:column>
+						<w2:column id="acctNm" name="계정명" dataType="text"></w2:column>
+
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsAcctMappList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="no" name="No" dataType="text"></w2:column>
+						<w2:column id="stndItemiCd" name="내역코드" dataType="text"></w2:column>
+						<w2:column id="stndItemiNm" name="내역명" dataType="text"></w2:column>
+						<w2:column id="upperStndItemiNm" name="상위공종명" dataType="text"></w2:column>
+						<w2:column id="rpstItemiYn" name="대표내역여부" dataType="text"></w2:column>
+						<w2:column id="acctCd" name="계정코드" dataType="text"></w2:column>
+
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="acctCd" name="계정코드" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM00150011T.xml
+ * Program Name : 현장관리비기준정보 - 대표내역설정TAB
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+	/************************************************************************************
+		DataCollection description
+
+		dsActgAcctList: 좌측 회계계정 GRID
+		dsAcctMappList: 우측 표준내역(연계) GRID
+		dsSearchMap: 검색조건 parameter
+	 ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+	//var svcId;		//callback 처리용 서비스ID
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+	scwin.onpageload = function() {
+
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+        grdActgAcctList.initGrid();	//회계계정 GRID 초기화
+        grdAcctMappList.initGrid();	//표준내역(연계) GRID 초기화
+
+		dsSearchMap.set( "acctCd" , "" );//검색조건 초기화
+
+		scwin.fnActgAcctList();
+
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+    //회계계정 조회
+    scwin.fnActgAcctList = function() {
+        ajaxLib.ajax("/cm/cm0015/CM00150011T/selectActgAcctList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : //"fnCallback",
+                function(result, e){
+	                dsActgAcctList.setJSON(result.data);
+	                com.setUdcValue("dsTotalCount1","udcListCount",dsActgAcctList.getTotalRow());   //GRID ROW COUNT
+            	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+    //표준내역(연계) 조회
+    scwin.fnAcctMappList = function() {
+        ajaxLib.ajax("/cm/cm0015/CM00150011T/selectAcctMappList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : //"fnCallback",
+                function(result, e){
+	                dsAcctMappList.setJSON(result.data);
+	                com.setUdcValue("dsTotalCount2","udcListCount",dsAcctMappList.getTotalRow());   //GRID ROW COUNT
+            	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+	/** 오류시 처리 **/
+	scwin.fnErrCallBack = function(result, e) {
+
+	};
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//회계계정 CELL 클릭 이벤트
+	scwin.grdActgAcctList_oncellclick = function(row,col) {
+		dsSearchMap.set( "acctCd" , dsActgAcctList.getCellData( row , "acctCd" ) );
+		scwin.fnAcctMappList();
+	};
+
+	//저장
+	scwin.btnSave_onclick = function() {
+		if(dsAcctMappList.getModifiedJSON() == "") {
+			com.showMessage("CSA0003");//저장(변경)할 내용이 없습니다.
+			return false;
+		}else if (confirm("저장 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm0015/CM00150011T/updateRpstItemiYn", {
+	            method : "POST",
+	            requestData : {
+	            				 tcmStndJobtypCdList : dsAcctMappList.getAllJSON()
+	            			},
+	            callback : //"fnCallback",
+	                function(result, e){
+		                com.showMessage("CFA0012");//저장되었습니다.
+		                scwin.fnAcctMappList();
+	            	},
+	            errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+]]></script>
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="tab_body">
+			<xf:group class="lybox_wrap" id="" style="">
+				<xf:group class="lybox" id="" style="">
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="" style="">
+							<xf:group class="defaultbox" id="" style="">
+								<w2:textbox class="df_tt" id="" label="회계계정" style="" tagname="h3"></w2:textbox>
+								<w2:udc_list_count id="dsTotalCount1"></w2:udc_list_count>
+							</xf:group>
+							<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsActgAcctList"
+								fixedColumnWithHidden="" focusMode="row" id="grdActgAcctList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+								rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px" useShiftKey="true"
+								visibleRowNum="" ev:oncellclick="scwin.grdActgAcctList_oncellclick">
+								<w2:header id="header1" style="">
+									<w2:row id="row2" style="">
+										<w2:column blockSelect="false" id="column23" inputType="text" style=""
+											value="No" width="50">
+										</w2:column>
+										<w2:column blockSelect="false" id="column19" inputType="text" style=""
+											value="계정코드" width="150">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column25"
+											inputType="text" removeBorderStyle="false" style="" value="계정명" width="200">
+										</w2:column>
+									</w2:row>
+								</w2:header>
+								<w2:gBody id="gBody4" style="">
+									<w2:row id="row5" style="">
+										<w2:column blockSelect="false" id="no" inputType="expression"
+											style="height:24px;" textAlign="" value="" width="50" readOnly="true" expression="rowindex()+1">
+										</w2:column>
+										<w2:column blockSelect="false" class="" id="acctCd" inputType="text"
+											style="height:24px;" textAlign="center" value="" width="150" readOnly="true">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="acctNm" inputType="text"
+											removeBorderStyle="false" style="height:24px;" value="" width="200" readOnly="true" textAlign="left">
+										</w2:column>
+									</w2:row>
+								</w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="" style="">
+							<xf:group class="defaultbox" id="" style="">
+								<w2:textbox class="df_tt" id="" label="표준내역(연계)" style="" tagname="h3"></w2:textbox>
+								<w2:udc_list_count id="dsTotalCount2"></w2:udc_list_count>
+								<xf:group class="right_wrap" id="" style="">
+									<xf:group id="" style="">
+										<w2:anchor class="btn_gcm" clickEventElement="outerDiv"
+											ev:onclick="scwin.btnSave_onclick" id="btnSave" outerDiv="false" style="">
+											<xf:label><![CDATA[저장]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+							<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsAcctMappList"
+								fixedColumnWithHidden="" focusMode="row" id="grdAcctMappList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+								rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true"
+								visibleRowNum="">
+								<w2:header id="header1" style="">
+									<w2:row id="row2" style="">
+										<w2:column blockSelect="false" id="column23" inputType="text" style=""
+											value="No" width="50">
+										</w2:column>
+										<w2:column blockSelect="false" id="column21" inputType="text" style=""
+											value="내역코드" width="100">
+										</w2:column>
+										<w2:column blockSelect="false" id="column19" inputType="text" style=""
+											value="내역명" width="150">
+										</w2:column>
+										<w2:column blockSelect="false" id="column17" inputType="text" style=""
+											value="상위공종명" width="150">
+										</w2:column>
+										<w2:column removeBorderStyle="false" width="90" inputType="text" style=""
+											id="column25" value="대표내역여부" blockSelect="false" displayMode="label">
+										</w2:column>
+									</w2:row>
+								</w2:header>
+								<w2:gBody id="gBody4" style="">
+									<w2:row id="row5" style="">
+										<w2:column blockSelect="false" id="no" inputType="expression"
+											style="height:24px;" textAlign="" value="" width="50" readOnly="true" expression="rowindex()+1">
+										</w2:column>
+										<w2:column blockSelect="false" id="stndItemiCd" inputType="text"
+											style="height:24px;" textAlign="center" value="" width="100" readOnly="true">
+										</w2:column>
+										<w2:column blockSelect="false" class="" id="stndItemiNm" inputType="text"
+											style="height:24px;" textAlign="left" value="" width="150" readOnly="true">
+										</w2:column>
+										<w2:column blockSelect="false" id="upperStndItemiNm" inputType="text"
+											style="height:24px;" textAlign="left" value="" width="150" readOnly="true">
+										</w2:column>
+										<w2:column removeBorderStyle="false" width="90" inputType="radio"
+											style="height:24px;" id="rpstItemiYn" value="" blockSelect="false" displayMode="label">
+										</w2:column>
+									</w2:row>
+								</w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+
+
+	</body>
+</html>

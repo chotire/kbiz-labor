@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsTcfOaOffrMap">
+					<w2:keyInfo>
+						<w2:key id="oaeqReqNo" name="OA신청번호" dataType="text"></w2:key>
+						<w2:key id="offrDt" name="신청일" dataType="text"></w2:key>
+						<w2:key id="offrTeamDeptCd" name="신청팀 부서코드" dataType="text"></w2:key>
+						<w2:key id="offrDeptNm" name="신청팀" dataType="text"></w2:key>
+						<w2:key id="incoTelNo" name="신청자 연락처" dataType="text"></w2:key>
+						<w2:key id="oaItemCd" name="신청기기 CD" dataType="text"></w2:key>
+						<w2:key id="oaItemNm" name="신청기기" dataType="text"></w2:key>
+						<w2:key id="aplntEmpno" name="신청자 사번" dataType="text"></w2:key>
+						<w2:key id="aplntNm" name="신청자 이름" dataType="text"></w2:key>
+						<w2:key id="dsgnNm" name="신청자 직급" dataType="text"></w2:key>
+						<w2:key id="tmpyReqDt" name="납기요청일" dataType="text"></w2:key>
+						<w2:key id="gdsRcpPlcNm" name="물품수령장소" dataType="text"></w2:key>
+						<w2:key id="ruserStafYn" name="실사용자 여부" dataType="text"></w2:key>
+						<w2:key id="oaeqStusGbCd" name="OA신청구분코드" dataType="text"></w2:key>
+						<w2:key id="oaeqGbCd" name="구분(단독,공동도급)" dataType="text"></w2:key>
+						<w2:key id="gwTeamAprvNo" name="팀 결재 번호" dataType="number"></w2:key>
+						<w2:key id="intdRsnCn" name="신청사유" dataType="text"></w2:key>
+						<w2:key id="ruserEmpno" name="실사용자사번" dataType="text"></w2:key>
+						<w2:key id="ruserNm" name="실사용자명" dataType="text"></w2:key>
+						<w2:key id="ruserJbclNm" name="실사용자 직급" dataType="text"></w2:key>
+						<w2:key id="oaeqStusGbNm" name="OA신청구분코드 명" dataType="text"></w2:key>
+						<w2:key id="oaeqGbNm" name="구분(단독,공동도급)" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsSearchParam">
+					<w2:keyInfo>
+						<w2:key id="oaeqReqNo" name="OA Item 신청 번호" dataType="number"></w2:key>
+						<w2:key id="reqItemSeq" name="OA Item 신청 Seq" dataType="number"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+ /***************************************************************************
+ * Program ID : CF05050003E.xml
+ * Program Name : OA 신청 결재화면 
+ * Author : 류상휴 (ryush)
+ * Date : 2019.07.23
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ * 2019.07.23   류상휴   최초작성
+ *     
+ **************************************************************************/ 
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+	var svcId = "";        
+	
+    /************************************************************************************ 
+     *  [2] onpageload
+     ************************************************************************************/   
+    scwin.onpageload = function() {            
+		scwin.initScreen();
+		scwin.fnSearchList();  
+//		com.commonUI();       
+    };
+
+	// 화면 초기화(필수)
+	scwin.initScreen = function() {
+    	var dsSrch = com.getAprvParam("dsKeyTcfOaOffrMap"); // 부모창의 데이터맵을 읽어온다.
+    	dsSearchParam.setJSON(dsSrch.getJSON());
+//    	console.log("dsSearchParam=={}",dsSearchParam.get);
+	}; 
+	
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+	/**************************************************************************
+	 * 함 수 명: scwin.fnSearchList
+	 * 기 능: 결재현황 정보를 리스트 조회
+	 **************************************************************************/
+    scwin.fnSearchList = function() {
+
+        svcId = "selectTcfOaOffrDtl";
+        ajaxLib.ajax("/cf/CF05050000U/selectTcfOaOffrDtl", {
+        	mode : "asynchronous"
+        	, method : "POST"
+            , requestData : dsSearchParam.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        }); 
+    };
+
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+	/** 오류시 처리 **/
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+    }
+	
+	 /** 정상시 후처리 **/
+	scwin.fnCallback = function(result, e) {
+	
+	   	switch(svcId) {
+	   		case "selectTcfOaOffrDtl" :	   			
+				//페이지 조회결과 표시
+				dsTcfOaOffrMap.setJSON(result.data.tcfOaOffr);
+				break;
+
+			default :
+				break;
+		}
+	};
+    
+    // 미리보기, 확인 버튼 클릭했을 경우 업무페이지에서 별도로 함수를 실행
+    scwin.fnStartImportMainScript = function() {
+        console.log("TEST");
+    };
+		]]></script>
+
+		
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="elec_body">
+			<!-- <w2:wframe id="wfm_title" src="/publish/common/navigator.xml" style=""></w2:wframe> -->
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="1.신청내용" style="" tagname="h3"></w2:textbox>
+			</xf:group>
+
+
+		<xf:group class="w2tb" id="" style="width:100%;" summary="" tagname="table"><xf:group tagname="colgroup"><xf:group style="width:180px;" tagname="col"></xf:group><xf:group style="width:250px;" tagname="col"></xf:group><xf:group style="width:80px;" tagname="col"></xf:group><xf:group style="width:110px;" tagname="col"></xf:group><xf:group style="width:120px;" tagname="col"></xf:group><xf:group style="" tagname="col"></xf:group></xf:group><thead><xf:group style="" tagname="tr">
+		<xf:group class="w2tb_th" style="" tagname="th">
+				<w2:span id="" label="신청팀" style=""></w2:span>
+		</xf:group>
+		<xf:group class="w2tb_th" style="" tagname="th">
+				<w2:span id="" label="신청품목" style=""></w2:span>
+		</xf:group>
+		<xf:group class="w2tb_th" style="" tagname="th">
+				<w2:span id="" label="수량" style=""></w2:span>
+		</xf:group>
+		<xf:group class="w2tb_th" style="" tagname="th"><w2:span id="" label="실사용자" style=""></w2:span></xf:group>
+		<xf:group class="w2tb_th" style="" tagname="th">
+				<w2:span id="" label="직위" style=""></w2:span>
+		</xf:group>
+		<xf:group class="w2tb_th" style="" tagname="th"><w2:span id="" label="신청사유" style=""></w2:span></xf:group></xf:group></thead><tbody><xf:group style="" tagname="tr">
+		<xf:group class="w2tb_td" style="" tagname="td"><w2:span class="txt_unit" id="offrDeptNm" label="" style="" ref="data:dsTcfOaOffrMap.offrDeptNm"></w2:span></xf:group>
+		<xf:group class="w2tb_td" style="" tagname="td"><w2:span class="txt_unit" id="oaItemNm" label="" style="" ref="data:dsTcfOaOffrMap.oaItemNm"></w2:span></xf:group>
+		<xf:group class="w2tb_td ac" style="" tagname="td"><w2:span class="txt_unit" id="" label="1" style=""></w2:span></xf:group>
+		<xf:group class="w2tb_td ac" style="" tagname="td"><w2:span class="txt_unit" id="ruserNm" label="" style="" ref="data:dsTcfOaOffrMap.ruserNm"></w2:span></xf:group>
+		<xf:group class="w2tb_td ac" style="" tagname="td"><w2:span class="txt_unit" id="ruserJbclNm" label="" style="" ref="data:dsTcfOaOffrMap.ruserJbclNm"></w2:span></xf:group>
+		<xf:group class="w2tb_td" style="" tagname="td"><w2:span class="txt_unit" id="intdRsnCn" label="" style="" ref="data:dsTcfOaOffrMap.intdRsnCn"></w2:span></xf:group></xf:group></tbody><tfoot><xf:group style="height:30px;" tagname="tr">
+		<xf:group class="w2tb_th" style="" tagname="th">
+				<w2:attributes>
+						<w2:colspan>2</w2:colspan>
+						<w2:rowspan>1</w2:rowspan>
+				</w2:attributes>
+				<w2:span id="" label="합계" style=""></w2:span>
+		</xf:group>
+		<xf:group class="w2tb_td ac" style="" tagname="td">
+				<w2:span class="txt_unit" id="" label="1" style=""></w2:span>
+		</xf:group>
+		<xf:group class="w2tb_td" style="" tagname="td"><w2:attributes><w2:colspan>3</w2:colspan><w2:rowspan>1</w2:rowspan></w2:attributes></xf:group></xf:group></tfoot></xf:group></xf:group>
+	</body>
+</html>

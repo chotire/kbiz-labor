@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfAuthGrpList" saveRemovedData="true" ev:ondataload="scwin.dsTcfAuthGrpList_ondataload">
+					<w2:columnInfo>
+						<w2:column id="authGrpId" name="권한그룹ID" dataType="text"></w2:column>
+						<w2:column id="authGrpNm" name="권한그룹명" dataType="text"></w2:column>
+						<w2:column id="prcgAttrCd" name="처리숙성코드[CF069]" dataType="text"></w2:column>
+						<w2:column id="prcgAuthGrpCd" name="처리권한그룹코드[CF039]" dataType="text"></w2:column>
+						<w2:column id="concatSctrLvCd" name="부분레벨코드CONCAT(구분값 ,)" dataType="text"></w2:column>
+						<w2:column id="concatSctrLvCdNm" name="부분레벨명CONCAT(구분값 ,)" dataType="text" importFormatter=""></w2:column>
+						<w2:column id="aplyTargCnt" name="적용대상CNT" dataType="text"></w2:column>
+						<w2:column id="inqrSctrCnt" name="조회부문CNT" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="false"></w2:data>
+				</w2:dataList>
+                <w2:dataList baseNode="list" id="dsTcfMenuAuthMngList" repeatNode="map" saveRemovedData="true" style="">
+                    <w2:columnInfo>
+                        <w2:column id="authGrpId" name="권한그룹ID" dataType="text"></w2:column>
+                        <w2:column id="menuId" name="메뉴ID" dataType="text"></w2:column>
+                        <w2:column id="menuNm" name="메뉴명" dataType="text"></w2:column>
+                    </w2:columnInfo>
+                    <w2:data use="true"></w2:data>
+                </w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfAuthGrpChkList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="authChk" name="권한체크" dataType="text"></w2:column>
+						<w2:column id="authGrpId" name="권한그룹ID" dataType="text"></w2:column>
+						<w2:column id="authGrpNm" name="권한그룹명" dataType="text"></w2:column>
+						<w2:column id="prcgAttrCd" name="처리숙성코드[CF069]" dataType="text"></w2:column>
+						<w2:column id="prcgAuthGrpCd" name="처리권한그룹코드[CF039]" dataType="text"></w2:column>
+						<w2:column id="aplyTargCnt" name="적용대상CNT" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="false"></w2:data>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID   : CF00150003U.xml
+ * Program Name : 메뉴권한관리
+ * Author       : 송준영 (tpsongjy)
+ * Date         : 2019.04.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    scwin.svcId   = "";
+    scwin.authGrpId = "";
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+
+        var opt = [
+                     {"CF069":["grdAuthGrpSel:prcgAttrCd"]}     // 처리숙성코드[CF069]
+                    ,{"CF039":["grdAuthGrpSel:prcgAuthGrpCd"]}      // 처리권한그룹코드[CF039]
+                    ,{"CF070":["grdAuthGrpSel:concatSctrLvCd"]}     // 부문레벨코드[CF070]
+                   ];
+        com.setCdComp(opt);
+
+        scwin.initScreen();
+
+        //권한그룹그리드 조회
+        scwin.fnGrdAuthGrpSearch();
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function() {
+
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+	* 함 수 명: scwin.fnGrdAuthGrpSearch
+	* 기 능: 권한그룹 조회
+	**************************************************************************/
+	scwin.fnGrdAuthGrpSearch = function(){
+		scwin.svcId = "selectTcfAuthGrp";
+        ajaxLib.ajax("/cf/CF00150000U/selectTcfAuthGrpMasterList", {
+        	  mode        : "asynchronous"
+        	, method      : "POST"
+            , requestData : "" 
+            , callback    : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+	
+	};
+
+    /**************************************************************************
+    * 함 수 명: scwin.fnGrdMenuSelSearch
+    * 기 능: 권한그룹별 메뉴 조회
+    **************************************************************************/
+    scwin.fnGrdMenuSelSearch = function(authGrpId){
+        scwin.svcId = "selectTcfMenuAuthMngList";
+        scwin.authGrpId = authGrpId;
+        ajaxLib.ajax("/cf/CF00150001U/selectTcfMenuAuthMngList", {
+              mode        : "synchronous"
+            , method      : "POST"
+            , requestData : {authGrpId : authGrpId} 
+            , callback    : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+    
+    }; 
+
+    /**************************************************************************
+     * 함수명: scwin.fnTreeList
+     * 기 능: 적용 그룹 선택 조회 
+     **************************************************************************/
+    scwin.authGrpSearch = function (authGrpId) {
+        scwin.svcId = "selectMenuByAuthGrpList";
+        ajaxLib.ajax("/cf/CF00150002U/selectMenuByAuthGrpList", {
+              mode        : "synchronous"
+            , method      : "POST"
+            , requestData : { authGrpId : authGrpId, chkYn : "M" }
+            , callback    : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+
+    };
+    
+    /**************************************************************************
+    * 함 수 명: scwin.fnSave
+    * 기 능: 저장
+    **************************************************************************/
+    scwin.fnSave = function() {
+        var rowCount = dsTcfMenuAuthMngList.getRowCount();
+        if(rowCount == 0) {
+            com.showMessage('CFW0010','메뉴 그리드의 데이터가 없습니다.'); //$
+            return;
+        }
+        
+        var chkCound = grdAuthGrpSelChk.getCheckedJSON("authChk").length;
+        if(rowCount == 0) {
+            com.showMessage('CFW0010','적용 그룹 선택 데이터가 없습니다.'); //$
+            return;
+        }
+    
+        scwin.svcId = "saveMenuByAuthGrp";
+        ajaxLib.ajax("/cf/CF00150002U/saveMenuByAuthGrp", {
+             mode        : "asynchronous"
+            ,method      : "POST"
+            ,requestData : {
+                                menuAuthMngList : scwin.fnSetSaveData()
+                              , authGrpIds      : scwin.fnSetAuthGrpIdSaveData()
+                           }
+            ,callback    : "fnCallback"
+            ,errCallback : "fnErrCallBack"
+        });
+        
+    };
+
+    /**************************************************************************
+    * 함 수 명: scwin.fnSetSaveData
+    * 기 능: 저장할 권한그룹데이터 set 
+    **************************************************************************/
+    scwin.fnSetSaveData = function(){
+        var array  = new Array();
+        var chkObj =  grdAuthGrpSelChk.getCheckedJSON("authChk");
+        var menuIds = dsTcfMenuAuthMngList.getColData("menuId");
+        $.each(chkObj,function(index, item){
+            $.each(menuIds,function(x, y){
+                var vo = new Object();
+                vo.menuId = y;
+                vo.authGrpId = item.authGrpId;
+                array.push(vo);
+            });
+        });
+
+        return array
+    };
+    
+    /**************************************************************************
+    * 함 수 명: scwin.fnSetAuthGrpIdSaveData
+    * 기 능: 저장할 권한그룹ID리스트 set 
+    **************************************************************************/
+    scwin.fnSetAuthGrpIdSaveData = function(){
+        var array  = new Array();
+        var chkObj =  grdAuthGrpSelChk.getCheckedJSON("authChk");
+        $.each(chkObj,function(index, item){
+            array.push(item.authGrpId);
+        });
+        return array
+    };    
+    
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    
+    /* 결과 후처리*/
+    scwin.fnCallback = function(result, e) {
+        console.log(e);
+        switch(scwin.svcId) {
+            case "selectTcfAuthGrp" :
+                dsTcfAuthGrpList.setJSON(result.data.tcfAuthGrpMasterList);
+                break;
+            case "selectTcfMenuAuthMngList" :
+                dsTcfMenuAuthMngList.setJSON(result.data.menuAuthList);
+                break;
+            case "selectMenuByAuthGrpList" :
+                dsTcfAuthGrpChkList.setJSON(result.data.menuByAuthGrpList);
+                break;
+            case "saveMenuByAuthGrp" :
+                
+                com.showMessage("SCN0002", "저장");			//$1 되었습니다.
+                
+                grdMenuSel.initGrid();
+                grdAuthGrpSelChk.initGrid();
+                
+                scwin.fnGrdAuthGrpSearch();
+                break;
+       }        
+    };
+    
+    /* 에러 후처리 */
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+        switch(scwin.svcId) {
+            case "selectTcfAuthGrp" :
+                console.log('search Error!!!!!!!!!!!');
+                break;
+            case "selectTcfMenuAuthMngList" :
+                console.log('search Error!!!!!!!!!!!');
+                break;
+            case "selectMenuByAuthGrpList" :
+                console.log('search Error!!!!!!!!!!!');
+                break;
+            case "saveMenuByAuthGrp" :
+                console.log('save Error!!!!!!!!!!!');
+                break;
+       }        
+    };
+
+   /************************************************************************************
+    *  [5] Event 함수 
+    ************************************************************************************/
+    /**************************************************************************
+    * Event: scwin.dsTcfAuthGrpList_ondataload
+    * 기 능: 권한그룹 그리드 데이터 load시 처리권한에 따른 조회부분 cell 
+    **************************************************************************/
+    scwin.dsTcfAuthGrpList_ondataload = function() {
+        
+        $.each(dsTcfAuthGrpList.getAllJSON(),function(index, item){
+        
+            if(item.prcgAuthGrpCd == "CF03902")
+            {//소속사업부 일시 조회부문 cell disable fasle
+                grdAuthGrpSel.setDisabled( "cell" , index , "concatSctrLvCd" , false );
+            }
+            else
+            {//전사 , 소속팀일시 조회부문 cell disable true
+                grdAuthGrpSel.setDisabled( "cell" , index , "concatSctrLvCd" , true );
+            }
+        });
+    };
+
+    /**************************************************************************
+    * Event: scwin.grdAuthGrp_oncellclick
+    * 기 능: 권한선택그리드 원클릭 이벤트
+    **************************************************************************/
+    scwin.grdAuthGrp_oncellclick = function(row,col) {
+        var authGrpId = dsTcfAuthGrpList.getCellData( row , "authGrpId" );
+        scwin.authGrpId = authGrpId;
+        scwin.fnGrdMenuSelSearch(authGrpId);
+        scwin.authGrpSearch(authGrpId);
+    };
+    
+    /**************************************************************************
+    * Event: scwin.btnClose_onclick
+    * 기 능: 팝업닫기
+    **************************************************************************/
+	scwin.btnClose_onclick = function() {
+		com.popup_close('');
+	};
+	]]></script>
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+			<xf:group class="lybox_wrap fix_400_5_5" id="" style="">
+				<xf:group class="lybox" id="" style="">
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="" style="">
+							<xf:group class="defaultbox" id="" style="">
+								<w2:textbox class="df_tt" id="" label="적용할 그룹 선택" style="" tagname="h3"></w2:textbox>
+							</xf:group>
+                            <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcfAuthGrpList"
+                                fixedColumnWithHidden="" focusMode="row" id="grdAuthGrpSel" readOnly="true" rowNumHeaderValue="No" rowNumVisible=""
+                                rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height:404px;"
+                                useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdAuthGrp_oncellclick">
+                                <w2:header id="header1" style="">
+                                    <w2:row id="row2" style="">
+                                        <w2:column blockSelect="false" id="column23" inputType="text" style=""
+                                            value="권한그룹" width="150">
+                                        </w2:column>
+                                        <w2:column blockSelect="false" displayMode="label" id="column27"
+                                            inputType="text" removeBorderStyle="false" style="" value="처리권한" width="150">
+                                        </w2:column>
+                                        <w2:column blockSelect="false" displayMode="label" id="column25"
+                                            inputType="text" removeBorderStyle="false" style="" value="처리범위" width="100">
+                                        </w2:column>
+                                        <w2:column removeBorderStyle="false" width="100" inputType="text" style=""
+                                            id="column29" value="조회부문" blockSelect="false" displayMode="label">
+                                        </w2:column>
+                                    </w2:row>
+                                </w2:header>
+                                <w2:gBody id="gBody4" style="">
+                                    <w2:row id="row5" style="">
+                                        <w2:column blockSelect="false" id="authGrpNm" inputType="text" readOnly=""
+                                            style="" textAlign="left" value="" viewType="icon" width="150">
+                                        </w2:column>
+                                        <w2:column blockSelect="false" displayMode="label" id="prcgAttrCd"
+                                            inputType="select" readOnly="true" removeBorderStyle="false" style="" value="" viewType=""
+                                            width="150">
+                                            <w2:choices></w2:choices>
+                                        </w2:column>
+                                        <w2:column blockSelect="false" displayMode="label" id="prcgAuthGrpCd" inputType="select"
+                                            readOnly="true" removeBorderStyle="false" style="" value="전사" viewType="" width="100">
+                                            <w2:choices></w2:choices>
+                                        </w2:column>
+                                        <w2:column removeBorderStyle="false" width="100" inputType="checkcombobox"
+                                            style="" id="concatSctrLvCd" value="" blockSelect="false" displayMode="label" viewType="" readOnly="true">
+                                            <w2:choices></w2:choices>
+                                        </w2:column>
+                                    </w2:row>
+                                </w2:gBody>
+                            </w2:gridView>
+						</xf:group>
+					</xf:group>
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="" style="">
+							<xf:group class="defaultbox" id="" style="">
+								<w2:textbox class="df_tt" id="" label="메뉴" style="" tagname="h3"></w2:textbox>
+							</xf:group>
+							<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcfMenuAuthMngList"
+								fixedColumnWithHidden="" focusMode="row" id="grdMenuSel" readOnly="true" rowNumHeaderValue="No" rowNumVisible=""
+								rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;"
+								useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdMenuAuth_oncellclick">
+								<w2:header id="header1" style="">
+									<w2:row id="row2" style="">
+										<w2:column blockSelect="false" colSpan="" id="column23" inputType="text"
+											readOnly="" rowSpan="" style="height:34px;" value="No" viewType="" width="60">
+										</w2:column>
+										<w2:column blockSelect="false" colSpan="" displayMode="label" id="column25"
+											inputType="text" removeBorderStyle="false" rowSpan="" style="height:34px;" value="메뉴명" width="300">
+										</w2:column>
+									</w2:row>
+								</w2:header>
+								<w2:gBody id="gBody4" style="">
+									<w2:row id="row5" style="">
+										<w2:column blockSelect="false" expression="rowindex()+1" id="column24"
+											inputType="expression" readOnly="" style="" textAlign="" value="" viewType="" width="60">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="menuNm"
+											inputType="text" readOnly="" removeBorderStyle="false" style="" value="" viewType="" width="300" textAlign="left">
+										</w2:column>
+									</w2:row>
+								</w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="" style="">
+							<xf:group class="defaultbox" id="" style="">
+								<w2:textbox class="df_tt" id="" label="적용 그룹 선택" style="" tagname="h3"></w2:textbox>
+								<xf:group class="right_wrap" id="" style="">
+									<xf:group class="" id="" style="">
+										<w2:anchor class="btn_gcm" id="anchor1" outerDiv="false" style="" ev:onclick="scwin.fnSave">
+											<xf:label><![CDATA[복사]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+							<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcfAuthGrpChkList"
+								fixedColumnWithHidden="" focusMode="row" id="grdAuthGrpSelChk" readOnly="true" rowNumHeaderValue="No" rowNumVisible=""
+								rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height:404px;"
+								useShiftKey="true" visibleRowNum="">
+								<w2:header id="header1" style="">
+									<w2:row id="row2" style="">
+										<w2:column removeBorderStyle="false" width="60" inputType="checkbox" style=""
+											id="column28" value="" blockSelect="false" displayMode="label" readOnly="false" viewType="icon">
+										</w2:column>
+										<w2:column blockSelect="false" id="column23" inputType="text" style=""
+											value="권한그룹" width="150">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column27"
+											inputType="text" removeBorderStyle="false" style="" value="처리권한" width="150">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column25"
+											inputType="text" removeBorderStyle="false" style="" value="처리범위" width="100">
+										</w2:column>
+									</w2:row>
+								</w2:header>
+								<w2:gBody id="gBody4" style="">
+									<w2:row id="row5" style="">
+										<w2:column removeBorderStyle="false" width="60" inputType="checkbox" style=""
+											id="authChk" value="" blockSelect="false" displayMode="label" readOnly="false" viewType="icon">
+										</w2:column>
+										<w2:column blockSelect="false" id="authGrpNm" inputType="text" readOnly=""
+											style="" textAlign="left" value="" viewType="icon" width="150">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="prcgAttrCd"
+											inputType="select" readOnly="true" removeBorderStyle="false" style="" value="" viewType=""
+											width="150">
+											<w2:choices></w2:choices>
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="prcgAuthGrpCd" inputType="select"
+											readOnly="true" removeBorderStyle="false" style="" value="전사" viewType="" width="100">
+											<w2:choices></w2:choices>
+										</w2:column>
+									</w2:row>
+								</w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="" id="btnClose" outerDiv="false" style="" ev:onclick="scwin.btnClose_onclick">
+					<xf:label><![CDATA[닫기]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+		
+	</body>
+</html>

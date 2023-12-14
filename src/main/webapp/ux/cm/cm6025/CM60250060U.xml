@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" id="dsList" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column id="lbatnQtyCnt" name="근로일수" dataType="number"></w2:column>
+			            <w2:column id="zipCd" name="우편번호" dataType="text"></w2:column>
+			            <w2:column id="address" name="주소" dataType="text"></w2:column>
+			            <w2:column id="ockndNm" name="직종명" dataType="text"></w2:column>
+			            <w2:column id="workYymm" name="작업년월" dataType="text"></w2:column>
+			            <w2:column id="nationality" name="국적외국인" dataType="text"></w2:column>
+			            <w2:column id="passportNumber" name="여권번호(외국인)" dataType="text"></w2:column>
+			            <w2:column id="bigo" name="비고" dataType="text"></w2:column>
+			            <w2:column id="mskWkrNm" name="근로자명 마스킹" dataType="text"></w2:column>
+			            <w2:column id="wkrNm" name="근로자명" dataType="text"></w2:column>
+			            <w2:column id="secResno" name="주민번호암호화" dataType="text"></w2:column>
+			            <w2:column id="mskSecResno" name="주민번호암호화 마스킹" dataType="text"></w2:column>
+			            <w2:column id="telNo" name="전화번호" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key id="lbatnDt" name="기준년월일" dataType="text"></w2:key>
+			            <w2:key id="workYm" name="기준년월" dataType="text"></w2:key>
+			            <w2:key id="siteNm" name="현장명" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM60250060U.xml
+ * Program Name : 퇴직공제부금신고
+ * Author : JHLEE 
+ * Date : 2022.06.24
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ * 
+ **************************************************************************/
+/**************************************************************************
+ * DataCollection description
+ *
+ *	dsSearchMap : 검색조건 Map
+ *  dsList: 퇴직공제부금신고 목록
+ **************************************************************************/
+    /**************************************************************************
+     * [1] 전역변수 선언
+     **************************************************************************/ 
+    /**************************************************************************
+     * [2] onpageload(초기화포함)
+     **************************************************************************/
+ 	scwin.initScreen = function() {
+    };
+    
+    scwin.onpageload = function() {
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+        dsSearchMap.set("workYm",$p.getCurrentServerDate( "yyyyMM" ));
+        com.commonUI();
+    };
+    /**************************************************************************
+     * [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * [4] Callback
+     **************************************************************************/
+    /************************************************************************************
+     * [5] Event 함수
+     ************************************************************************************/
+    //현장코드 변경 이벤트
+    scwin.WFrameSiteInfo_change_callback = function(){
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드
+        dsSearchMap.set("siteNm", wfmKeySiteInfo.getWindow().ibxKeySiteNm.getValue());
+        
+        if(!com.isEmpty(dsSearchMap.get("workYm")))
+        {
+            scwin.btnFind_onclick();    
+        }
+    };
+    
+	//조회 클릭
+	scwin.btnFind_onclick = function() {
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드
+
+        if (com.isEmpty(dsSearchMap.get("siteCd"))){
+            com.showMessage("CMW0025", "현장");       //$1은(는) 필수입력입니다.
+            return false;
+        }
+        
+        if (com.isEmpty(dsSearchMap.get("workYm"))){
+            com.showMessage("CMW0025", "기준년월");   //$1은(는) 필수입력입니다.
+            return false;
+        }
+        
+       dsSearchMap.set( "lbatnDt" , dsSearchMap.get("workYm") + "01"); //조회년월 세팅
+        
+       ajaxLib.ajax("/cm/cm6025/CM60250000U/selectRtirDdctInsAmtList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e) {
+                        dsList.setJSON(result.data.dsList);
+                        com.setUdcValue("dsTotalCount","udcListCount",dsList.getTotalRow());
+                       },
+            errCallback : function(result, e) {}
+        });
+	};
+
+    //엑셀다운
+	scwin.btnExcelDwn_onclick = function() {
+		let result = [];
+		//result.push(1); //checkbox 제외
+		let totalCol = grdList.getTotalCol();
+		
+		for(let i = 0; i < totalCol; i++) {
+			if (!grdList.getColumnVisible(i)) {
+				result.push(i);
+			}
+		}
+        
+        let excelOpt = {
+             fileName: "퇴직공제부금신고목록.xlsx"    //또는 xlsx 확장자 사용
+            ,removeColumns: result.join(",")
+            ,useSubTotal: true                //colMerge된 컬럼을 Merge해서 출력 할 지 여부
+            ,colMergeTextAlign: "center"    //colMerge된 컬럼의 textAlign설정 (bottom, center, top 설정)
+            ,useStyle: "true"
+            ,indent: 1
+            ,jeaderFontColor : "#FFFFFF"     // Header Font Color
+            ,headerColor : "#D9D9D9"         // Header Back Color
+            ,subTotalColor : "#FCE4D6"       // SubTotal Back Color
+            ,footerColor : "#BDD7EE"         // Footer Color
+        };  //excel download 옵션
+        
+        grdList.advancedExcelDownload( excelOpt );   
+	};
+    
+    //년월 변경 시 이벤트
+	scwin.calYearMonth_onchange = function() {
+		scwin.btnFind_onclick();
+	};
+	]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+        <w2:require src="/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<xf:group class="navigator" id="" style="">
+					<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:194px;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기준년월" style=""></w2:span>
+						</xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td" ev:onblur="">
+							<w2:inputCalendar calendarValueType="yearMonth" class="req"
+								ev:onchange="scwin.calYearMonth_onchange" focusOnDateSelect="false" footerDiv="false" id="calYearMonth"
+								mandatory="" placeholder="____-__" ref="data:dsSearchMap.workYm" renderDiv="true" renderType="component"
+								rightAlign="false" style="width:120px">
+								<script ev:event="onchange" type="text/javascript"><![CDATA[
+			    				 ]]></script>
+							</w2:inputCalendar>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+		    <xf:group class="defaultbox" id="" style="">
+		        <w2:textbox class="df_tt" id="" label="퇴직공제부금신고" style="" tagname="h3"></w2:textbox>
+                <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+		        <xf:group class="right_wrap" id="" style="">
+		            <xf:group id="" style="">
+		                <w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+		                    outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+		                    <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+		                </w2:anchor>
+		            </xf:group>
+		        </xf:group>
+		    </xf:group>
+		    <w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsList" fixedColumnWithHidden="true"
+		        focusMode="row" id="grdList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+		        tooltipDisplay="true" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum=""
+		        checkReadOnlyOnPaste="true" enterKeyMove="down" keyMoveEditMode="true" preventAddRowOnPaste="true"
+		        ev:oncellclick="scwin.grdTcmEqpmCdList_oncellclick" preventPaste="true">
+		        <w2:header id="header1" style="">
+		            <w2:row id="row2" style="">
+		                <w2:column blockSelect="false" id="column23" inputType="text" rowSpan="" value="연번" width="50" style=""
+		                    colSpan="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" id="column106" value="피공제자&lt;br/&gt;성명"
+		                    blockSelect="false" displayMode="label" rowSpan="" class="" style="" colSpan="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column111" value="주민등록번호"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" id="column107" value="근로년월" blockSelect="false"
+		                    displayMode="label" rowSpan="" class="" style="" colSpan="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" id="column66" value="근로일수" blockSelect="false"
+		                    displayMode="label" rowSpan="" style="" colSpan="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="220" inputType="text" style="" id="column114" value="주소"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="column117" value="전화번호"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+		                </w2:column>
+		                <w2:column blockSelect="false" displayMode="label" id="column41" inputType="text" removeBorderStyle="false"
+		                    rowSpan="" value="직종" width="80" class="" style="" colSpan="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column118" value="국적&lt;br/&gt;(외국인)"
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column129"
+		                    value="여권번호&lt;br/&gt;(외국인)" blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column131" value="우편번호"
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column133" value="비고(업체명)"
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column134" value="입력자"
+		                    blockSelect="false" displayMode="label" textAlign="center">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column136" value="입력일자"
+		                    blockSelect="false" displayMode="label" textAlign="center">
+		                </w2:column>
+		            </w2:row>
+		        </w2:header>
+		        <w2:gBody id="gBody4" style="">
+		            <w2:row id="row5" style="">
+		                <w2:column blockSelect="false" expression="rowindex()+1" id="column24" inputType="expression" width="40">
+		                </w2:column>
+		                <w2:column blockSelect="false" id="wkrNm" inputType="text" removeBorderStyle="false" style="" textAlign="center"
+		                    value="" width="80" displayMode="label" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="secResno" value="" textAlign="center"
+		                    blockSelect="false" displayMode="label" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" id="workYymm" blockSelect="false"
+		                    textAlign="center" displayMode="label" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" id="lbatnQtyCnt" blockSelect="false"
+		                    textAlign="right" displayMode="label" readOnly="true" displayFormat="#,###">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="220" inputType="text" style="" id="address" value="" blockSelect="false"
+		                    displayMode="label" textAlign="left" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="telNo" value="" blockSelect="false"
+		                    displayMode="label" textAlign="center" readOnly="true" displayFormatter="com.phoneFormat">
+		                </w2:column>
+		                <w2:column blockSelect="false" displayFormat="" id="ockndNm" inputType="text" removeBorderStyle="false"
+		                    textAlign="center" width="80" displayMode="label" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="nationality" value=""
+		                    blockSelect="false" displayMode="label" textAlign="center" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="passportNumber" value=""
+		                    blockSelect="false" displayMode="label" textAlign="center" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="zipCd" value="" blockSelect="false"
+		                    displayMode="label" textAlign="center" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="bigo" value="" blockSelect="false"
+		                    displayMode="label" textAlign="center" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column135" value=""
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column137" value=""
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		            </w2:row>
+		        </w2:gBody>
+		    </w2:gridView>
+		</xf:group>
+	</body>
+</html>

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>UDC</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+        </xf:model>
+        <script type="javascript"><![CDATA[
+
+		
+		]]></script>
+    </head>
+    <body>
+    	<!--/** WEBSQUARE UDC */
+    		{
+    		"componentName": "udc_datecalendar_select",
+    		"pluginName": "udc_datecalendar_select",
+    		"company": "",
+    		"developer": "",
+    		"category": "Basic",
+    		"notSupportBrowser": "",
+    		"version": "",
+    		"htmlRender": "",
+    		"icon": "",
+    		"disableIcon": "",
+    		"description": "",
+    		"width": "",
+    		"height": "",
+    		"properties": [
+    		{
+    		"name": "id",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "Y",
+    		"hidden": "N",
+    		"description": "udc 아이디"
+    		},
+    		{
+    		"name": "date",
+    		"default": "",
+    		"type": "number",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 초기 값"
+    		},
+    		{
+    		"name": "ref",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 Ref"
+    		},
+    		{
+    		"name": "class",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "udc 클래스"
+    		},
+    		{
+    		"name": "disabled",
+    		"default": "",
+    		"type": "combobox",
+    		"option": "[true,false]",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "desc"
+    		}
+    		],
+    		"events": [],
+    		"apis": [
+    		{
+    		"name": "getDate",
+    		"description": "desc",
+    		"params": [],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		},
+    		{
+    		"name": "setDate",
+    		"description": "desc",
+    		"params": [{
+    		"type": "Number",
+    		"name": "strDate",
+    		"description": "desc"
+    		}],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		}
+    		]
+    		}
+    		}
+    	-->
+    	<xf:group class="udc_wrap udc_datecalendar_select" id="" style="" pluginName="udc_datecalendar_select">
+
+    			<w2:inputCalendar footerDiv="false" id="calDate" style="width:120px" renderDiv="true"
+    				focusOnDateSelect="false" calendarValueType="yearMonthDate" rightAlign="false" renderType="component"
+    				class="" mandatory="" placeholder="____-__-__">
+    				<script ev:event="onchange" type="text/javascript"><![CDATA[
+//var sDate = "";
+//sDate = "20190101";    if ( !com.isDate(sDate)   ){  alert(sDate) }
+//sDate = "2019.01.01";  if ( !com.isDate(sDate)   ){  alert(sDate) }
+//sDate = "2019/01/01";  if ( !com.isDate(sDate)   ){  alert(sDate) }
+//sDate = "01/01/2019";  if ( !com.isDate(sDate)   ){  alert(sDate) }
+//sDate = "2019-01-01";  if ( !com.isDate(sDate)   ){  alert(sDate) }
+//sDate = "20191301";    if ( !com.isDate(sDate)   ){  alert(sDate) }
+//sDate = "2019.13.01";  if ( !com.isDate(sDate)   ){  alert(sDate) }
+//sDate = "2019-13-01";  if ( !com.isDate(sDate)   ){  alert(sDate) }
+    				    if ( !com.isDate(calDate.getValue()) ){
+							com.showMessage("CFA0019", "일자", "", "", calDate.id);	//$1을(를) 확인하십시오.
+    				        calDate.setValue("");
+    				    }
+    				 ]]></script>
+    			</w2:inputCalendar>
+    			<xf:select1 id="calTime" chooseOption="" displayMode="label" style="width:80px;" submenuSize="auto"
+    				allOption="" disabled="false" direction="auto" appearance="minimal" disabledClass="w2selectbox_disabled" ref=""
+    				class="" mandatory="">
+    				<xf:choices>
+    					<xf:item>
+    						<xf:label><![CDATA[00시]]></xf:label>
+    						<xf:value><![CDATA[00]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[01시]]></xf:label>
+    						<xf:value><![CDATA[01]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[02시]]></xf:label>
+    						<xf:value><![CDATA[02]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[03시]]></xf:label>
+    						<xf:value><![CDATA[03]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[04시]]></xf:label>
+    						<xf:value><![CDATA[04]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[05시]]></xf:label>
+    						<xf:value><![CDATA[05]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[06시]]></xf:label>
+    						<xf:value><![CDATA[06]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[07시]]></xf:label>
+    						<xf:value><![CDATA[07]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[08시]]></xf:label>
+    						<xf:value><![CDATA[08]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[09시]]></xf:label>
+    						<xf:value><![CDATA[09]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[10시]]></xf:label>
+    						<xf:value><![CDATA[10]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[11시]]></xf:label>
+    						<xf:value><![CDATA[11]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[12시]]></xf:label>
+    						<xf:value><![CDATA[12]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[13시]]></xf:label>
+    						<xf:value><![CDATA[13]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[14시]]></xf:label>
+    						<xf:value><![CDATA[14]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[15시]]></xf:label>
+    						<xf:value><![CDATA[15]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[16시]]></xf:label>
+    						<xf:value><![CDATA[16]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[17시]]></xf:label>
+    						<xf:value><![CDATA[17]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[18시]]></xf:label>
+    						<xf:value><![CDATA[18]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[19시]]></xf:label>
+    						<xf:value><![CDATA[19]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[20시]]></xf:label>
+    						<xf:value><![CDATA[20]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[21시]]></xf:label>
+    						<xf:value><![CDATA[21]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[22시]]></xf:label>
+    						<xf:value><![CDATA[22]]></xf:value>
+    					</xf:item>
+    					<xf:item>
+    						<xf:label><![CDATA[23시]]></xf:label>
+    						<xf:value><![CDATA[23]]></xf:value>
+    					</xf:item>
+    				</xf:choices>
+    			</xf:select1>
+    	</xf:group>
+
+    	
+    </body>
+</html>

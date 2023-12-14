@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>UDC</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+        </xf:model>
+        <script type="javascript"><![CDATA[
+
+		
+		]]></script>
+    </head>
+    <body>
+    	<!--/** WEBSQUARE UDC */
+    		{
+    		"componentName": "udc_yearMonthcalendar",
+    		"pluginName": "udc_yearMonthcalendar",
+    		"company": "",
+    		"developer": "",
+    		"category": "Basic",
+    		"notSupportBrowser": "",
+    		"version": "",
+    		"htmlRender": "",
+    		"icon": "",
+    		"disableIcon": "",
+    		"description": "",
+    		"width": "",
+    		"height": "",
+    		"properties": [
+    		{
+    		"name": "id",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "Y",
+    		"hidden": "N",
+    		"description": "udc 아이디"
+    		},
+    		{
+    		"name": "date",
+    		"default": "",
+    		"type": "number",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 초기 값"
+    		},
+    		{
+    		"name": "ref",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 Ref"
+    		},
+    		{
+    		"name": "class",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "udc 클래스"
+    		},
+    		{
+    		"name": "disabled",
+    		"default": "",
+    		"type": "combobox",
+    		"option": "[true,false]",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "desc"
+    		}
+    		],
+    		"events": [],
+    		"apis": [
+    		{
+    		"name": "getDate",
+    		"description": "desc",
+    		"params": [],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		},
+    		{
+    		"name": "setDate",
+    		"description": "desc",
+    		"params": [{
+    		"type": "Number",
+    		"name": "strDate",
+    		"description": "desc"
+    		}],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		}
+    		]
+    		}
+    		}
+    	-->
+    	<xf:group class="udc_wrap udc_yearMonthcalendar" id="" style="" pluginName="udc_yearMonthcalendar">
+
+    			<w2:inputCalendar footerDiv="false" id="calYearMonth" style="width:120px" renderDiv="true" focusOnDateSelect="false"
+    				calendarValueType="yearMonth" rightAlign="false" renderType="component" class="" mandatory=""  placeholder="____-__">
+    				<script ev:event="onchange" type="text/javascript"><![CDATA[
+   				        if ( !com.isYearMonth(calYearMonth.getValue()) ){
+   				        	if( "" != calYearMonth.getValue() ){
+								com.showMessage("CFA0019", "년월", "", "", calYearMonth.id);	//$1을(를) 확인하십시오.
+                            	calYearMonth.setValue("");
+                            	calYearMonth.focus();   				        	
+   				        	}
+                        }    			
+    				 ]]></script>
+    			</w2:inputCalendar>
+    	</xf:group>
+    </body>
+</html>

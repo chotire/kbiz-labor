@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" id="dsSmsReportList" repeatNode="map" saveRemovedData="true" style="">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="gubun" name="구분"></w2:column>
+						<w2:column dataType="text" id="userId" name="사번"></w2:column>
+						<w2:column dataType="text" id="phoneNumber" name="수신자번호"></w2:column>
+						<w2:column dataType="text" id="callBack" name="발신자번호"></w2:column>
+						<w2:column dataType="text" id="statusText" name="상태"></w2:column>
+						<w2:column dataType="text" id="sendDate" name="전송일시"></w2:column>
+						<w2:column dataType="text" id="rcvMnoCd" name="통신사"></w2:column>
+						<w2:column dataType="text" id="mmsMsg" name="메시지"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSrch" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="frDate" name="시전송일자"></w2:key>
+						<w2:key dataType="text" id="toDate" name="종료전송일자"></w2:key>
+						<w2:key dataType="text" id="phoneNumber" name="수신자번호"></w2:key>
+						<w2:key dataType="text" id="callBack" name="발신자번호"></w2:key>
+						<w2:key dataType="text" id="userId" name="사번"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00352001U.xml 
+     * Program Name : SMS 전송내역 
+     * Author : 주홍원 (tpjhw)
+     * Date : 2019.03.13
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     * 2019.03.13   주홍원   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    var svcId = "";
+    var ingStatus = "";
+
+
+    /************************************************************************************ 
+     *  [2] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        var nowDate = $w.getCurrentServerDate("yyyyMMdd");
+        //전송일자 default set
+      //  com.setUdcValue("udcCalendarSrch", "frDate", $w.dateAdd(nowDate, "-7"));
+        com.setUdcValue("udcCalendarSrch", "frDate", nowDate);
+        com.setUdcValue("udcCalendarSrch", "toDate", nowDate);
+		//신청일자 필수체크
+		com.setMandatory( [com.getUdcComp("udcCalendarSrch", "frDate")]);	// 시작신청일자
+		com.setMandatory( [com.getUdcComp("udcCalendarSrch", "toDate")]);	// 종료신청일자
+    };
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function () {
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * Event: scwin.fnSearchList
+     * 기 능: SMS 전송내역을 리스트 조회
+     **************************************************************************/
+    scwin.fnSearchList = function () {
+        // udc의 코드값 가져오기.
+        dsSrch.set("frDate", com.getUdcValue("udcCalendarSrch", "frDate"));
+        dsSrch.set("toDate", com.getUdcValue("udcCalendarSrch", "toDate"));
+
+        svcId = "selectSdkSmsReportList";
+
+        ajaxLib.ajax("/cf/CF00352001U/selectSdkSmsReportList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSrch.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+        switch (svcId) {
+            case "selectSdkSmsReportList":
+                dsSmsReportList.setJSON(result.data.dsSdkSmsReportList);
+                com.setUdcValue("dsTotalCount", "udcListCount", dsSmsReportList.getTotalRow());
+                ingStatus = "S";
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function (e) {
+        com.showMessage("CFE0112");	// 작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnSend_onclick
+     * 기 능: SMS 전송내역을 리스트 조회
+     **************************************************************************/
+    scwin.btnFind_onclick = function () {
+        dsSmsReportList.clear();
+        scwin.fnSearchList();
+    };
+
+    //수신자번호 엔터시
+    scwin.ibxKeyPhoneNumber_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnFind.trigger("onclick");
+        }
+    };
+
+    //발신자번호 엔터시
+    scwin.ibxKeyCallBack_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnFind.trigger("onclick");
+        }
+    };
+
+    //사번 엔터시
+    scwin.ibxKeyUserId_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnFind.trigger("onclick");
+        }
+    };
+
+	]]></script>
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchpopup.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="wfrTitle" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>        
+        </xf:group>
+        <xf:group class="tbl_search" id="" style="">
+            <xf:group class="tb_list" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:94px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:108px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:108px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:67px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th req" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="전송일자" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:udc_periodcalendar style="" id="udcCalendarSrch" class="req"></w2:udc_periodcalendar>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="수신자번호" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="ibxKeyPhoneNumber" style="width: 140px;" ref="data:dsSrch.phoneNumber" ev:onkeypress="" enterBlur="" ev:onkeyup="scwin.ibxKeyPhoneNumber_onkeyup"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="발신자번호" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:input id="ibxKeyCallBack" style="width: 140px;" ref="data:dsSrch.callBack" ev:onkeypress="" ev:onkeyup="scwin.ibxKeyCallBack_onkeyup"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th" style="">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="사번" style=""></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                        <w2:attributes></w2:attributes>
+                        <xf:input id="ibxKeyUserId" style="width: 140px;" ref="data:dsSrch.userId" ev:onkeypress="" ev:onkeyup="scwin.ibxKeyUserId_onkeyup"></xf:input>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                        <w2:attributes></w2:attributes>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="margin-top:-5px;" ev:onclick="scwin.btnFind_onclick">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <xf:group style="" id="" class="defaultbox">
+            <w2:textbox label="SMS전송내역" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+            <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+        </xf:group>
+        <w2:gridView readOnly="true" autoFit="allColumn" dataList="data:dsSmsReportList" fixedColumnWithHidden="true" id="" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" rowNumVisible="" rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue="" focusMode="row" class="autoHeight" sortable="true" showSortableUseFilterList="true" useFilterList="true">
+            <w2:header id="header1" style="">
+                <w2:row id="row2" style="">
+                    <w2:column blockSelect="false" id="column23" inputType="text" value="NO" width="40"></w2:column>
+                    <w2:column blockSelect="false" id="column21" inputType="text" value="구분" width="60"></w2:column>
+                    <w2:column removeBorderStyle="false" width="120" inputType="text" id="column39" value="사번" blockSelect="false" displayMode="label">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column19" inputType="text" value="수신자번호" width="130">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column17" inputType="text" value="발신자번호" width="130">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column15" inputType="text" value="상태" width="150">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="150" inputType="text" id="column37" value="전송일시" blockSelect="false" displayMode="label">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="120" inputType="text" id="column35" value="통신사" blockSelect="false" displayMode="label">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="350" inputType="text" id="column33" value="메시지" blockSelect="false" displayMode="label">
+                    </w2:column>
+                </w2:row>
+            </w2:header>
+            <w2:gBody id="gBody4" style="">
+                <w2:row id="row5" style="">
+                    <w2:column blockSelect="false" id="column1" inputType="expression" style="height:24px;" width="40" expression="rowindex()+1">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="gubun" inputType="text" style="height:24px;" width="60">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:24px;" id="userId" blockSelect="false" displayMode="label">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="phoneNumber" inputType="text" style="height:24px;" width="130">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="callBack" inputType="text" style="height:24px;" width="130">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="statusText" inputType="text" style="height:24px;" width="150">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="150" inputType="text" style="height:24px;" id="sendDate" blockSelect="false" displayMode="label">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:24px;" id="rcvMnoCd" blockSelect="false" displayMode="label">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="350" inputType="text" style="height:24px;" id="mmsMsg" blockSelect="false" displayMode="label" textAlign="left">
+                    </w2:column>
+                </w2:row>
+            </w2:gBody>
+        </w2:gridView>
+    </xf:group>
+</body>
+</html>

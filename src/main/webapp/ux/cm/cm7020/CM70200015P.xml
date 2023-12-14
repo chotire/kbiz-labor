@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcfTradeJobtypInfoList" saveRemovedData="true">
+				    <w2:columnInfo>
+				        <w2:column id="tradeCd" name="거래처코드" dataType="text"></w2:column>
+				        <w2:column id="tradeNm" name="거래처명" dataType="text"></w2:column>
+				        <w2:column id="poJobtypCd" name="공종코드" dataType="text"></w2:column>
+				        <w2:column id="poJobtypNm" name="공종명" dataType="text"></w2:column>
+				    </w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+				    <w2:keyInfo>
+				        <w2:key id="tradeCd" name="거래처코드" dataType="text"></w2:key>
+				        <w2:key id="tradeNm" name="거래처명" dataType="text"></w2:key>
+				    </w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM70200015P.xml 
+ * Program Name : 외주업체(거래처 및 공종)조회 팝업
+ * Author : 표성빈(sbPyo)
+ * Date : 2022.06.20
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+/************************************************************************************
+    DataCollection description
+
+    dsTcfTradeJobtypInfoList: 거래처 및 공종 조회 List
+    dsSearchMap: 검색조건 parameter
+ ************************************************************************************/
+/************************************************************************************
+ *  [1] 전역변수
+ ************************************************************************************/
+/************************************************************************************
+ *  [2] onpageload(초기화포함)
+ ************************************************************************************/
+    scwin.onpageload = function() {
+    
+        //파라미터 셋팅
+        dsSearchMap.setJSON(JSON.parse($p.getPopupParam()).data);  
+
+        grdTcfTradeJobtypInfoList.initGrid();   //GRID 초기화
+        
+        //UI팀용 함수 호출
+        com.commonUI();
+        
+        let tradeCd = ibxTradeCd.getValue();
+        let tradeNm = ibxTradeNm.getValue();
+        
+        // 입력된 파라미터 있으면 자동 조회
+        if(tradeCd != "" || tradeNm != ""){
+			scwin.btnFind_onclick();
+        }
+        
+    };
+
+    scwin.onpageunload = function() {
+    };
+
+/************************************************************************************
+ *  [3] 사용자 정의함수 함수
+ ************************************************************************************/
+    //return data
+    scwin.fnReturnValue = function() {
+        let nRowIndex = dsTcfTradeJobtypInfoList.getRowPosition();
+        
+        if (nRowIndex == null) {
+            com.showMessage("CMW0065"); //내역을 선택 후 확인버튼을 클릭하세요.
+            return false;
+        }
+
+		var _jsn = dsTcfTradeJobtypInfoList.getRowJSON(grdTcfTradeJobtypInfoList.getFocusedRowIndex());
+        com.popup_close(_jsn);
+    }
+/************************************************************************************
+ *  [4] Callback 함수
+ ************************************************************************************/
+/************************************************************************************
+ *  [5] Event 함수
+ ************************************************************************************/
+    //조회
+	scwin.btnFind_onclick = function() {
+        let tradeCd = ibxTradeCd.getValue();
+        let tradeNm = ibxTradeNm.getValue();
+        
+        if(tradeCd == "" && tradeNm == ""){
+            com.showMessage("CMW0025", "업체코드 혹은 업체명");//$1은(는) 필수입력사항입니다.
+            return false;
+        }
+        
+        ajaxLib.ajax("/cm/cm7020/CM70200015P/selectTcfTradeJobtypInfoList", {
+              method : "POST",
+              requestData : dsSearchMap.getJSON(),
+              callback : function(result,e) {
+                            dsTcfTradeJobtypInfoList.setJSON(result.data.dsTcfTradeJobtypInfoList);
+                            com.setUdcValue("dsTotalCount","udcListCount",grdTcfTradeJobtypInfoList.getTotalRow()); //GRID ROW COUNT
+                         },
+              errCallback : function(result, e) {
+                         }
+        });
+	};
+
+    //확인
+	scwin.btnConfirm_onclick = function() {
+		scwin.fnReturnValue();
+	};
+
+    //취소
+	scwin.btnCancel_onclick = function() {
+		com.popup_close("");
+	};
+
+    //GRID 더블 클릭
+	scwin.grdTradeJobtypInfoList_oncelldblclick = function(row,col) {
+		scwin.fnReturnValue();
+	};
+    
+    //업체코드 keydown event
+	scwin.ibxTradeCd_onkeydown = function(e) {
+        if (e.keyCode === 13){
+            dsSearchMap.set("tradeCd" , ibxTradeCd.getValue());
+            scwin.btnFind_onclick();
+        }
+	};
+
+    //업체명 keydown event
+	scwin.ibxTradeNm_onkeydown = function(e) {
+        if (e.keyCode === 13){
+            dsSearchMap.set("tradeNm" , ibxTradeNm.getValue());
+            scwin.btnFind_onclick();
+        }
+	};
+	]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+			<xf:group class="tbl_search" id="grpSearch" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:80px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+					    <xf:group class="w2tb_th" style="" tagname="th">
+                            <w2:span class="" id="" label="업체코드" style=""></w2:span>
+                        </xf:group>
+					    <xf:group class="w2tb_td" style="" tagname="td">
+					        <xf:input allowChar="" class="" dataType="" disabled="" id="ibxTradeCd" mandatory=""
+					            ref="data:dsSearchMap.tradeCd" style="width:150px;" ev:onkeydown="scwin.ibxTradeCd_onkeydown">
+					        </xf:input>
+					    </xf:group>
+                        
+					    <xf:group class="w2tb_th req" style="" tagname="th">
+					        <w2:span class="" id="" label="업체명" style=""></w2:span>
+                        </xf:group>
+					    <xf:group class="w2tb_td" style="" tagname="td">
+					        <xf:input allowChar="" class="" dataType="" disabled="" id="ibxTradeNm" mandatory=""
+					            ref="data:dsSearchMap.tradeNm" style="width:250px;" ev:onkeydown="scwin.ibxTradeNm_onkeydown">
+					        </xf:input>
+					    </xf:group>
+					</xf:group>
+				</xf:group>
+                <xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+							<w2:udc_list_count style="position: absolute;" id="dsTotalCount"></w2:udc_list_count>
+						</xf:group>
+			<w2:gridView readOnly="true" rowNumVisible="" rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No"
+			    scrollByColumn="false" rowStatusHeaderValue="" focusMode="row" rowStatusVisible="" fixedColumnWithHidden="true"
+			    dataList="data:dsTcfTradeJobtypInfoList" style="height:450px;" autoFit="allColumn" id="grdTcfTradeJobtypInfoList" visibleRowNum=""
+			    class="autoHeight" ev:oncelldblclick="scwin.grdTradeJobtypInfoList_oncelldblclick">
+			    <w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
+			    <w2:header style="" id="header3">
+			        <w2:row style="" id="row9">
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="" value="No"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="" value="코드"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="" value="업체명" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="" value="공종명"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			        </w2:row>
+			    </w2:header>
+			    <w2:gBody style="" id="gBody6">
+			        <w2:row style="" id="row10">
+    					<w2:column removeBorderStyle="false" width="30" inputType="expression" id="no" blockSelect="false" displayMode="label"
+    						expression="rowindex()+1">
+    					</w2:column>
+    			        <w2:column removeBorderStyle="false" width="100" style="" id="tradeCd" value="" blockSelect="false"
+    			                displayMode="" readOnly = "true">
+    			        </w2:column>
+    			        <w2:column removeBorderStyle="false" width="200" style="" id="tradeNm" value="" blockSelect="false"
+    			                displayMode="" readOnly = "true">
+    			        </w2:column>
+    			        <w2:column removeBorderStyle="false" width="200" style="" id="poJobtypNm" value="" blockSelect="false"
+    			                displayMode="" readOnly = "true">
+    			        </w2:column>
+
+			        </w2:row>
+			    </w2:gBody>
+			</w2:gridView>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancel_onclick">
+					<xf:label><![CDATA[취소]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+
+
+	</body>
+</html>

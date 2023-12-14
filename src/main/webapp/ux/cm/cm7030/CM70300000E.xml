@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+    <?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dsSearchParamSubMap">
+                    <w2:keyInfo>
+                        <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+                        <w2:key id="workDt" name="작업일자" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+                <w2:dataMap baseNode="list" ev:onrowpositionchange="" id="dsTcmJobRptMmDtlMap" repeatNode="map"
+                    saveRemovedData="true" style="">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" id="workDt" name="작업일자"></w2:key>
+                        <w2:key dataType="text" id="mmStrtDt" name="주간_시작_일자"></w2:key>
+                        <w2:key dataType="text" id="mmEndDt" name="주간_종료_일자"></w2:key>
+                        <w2:key dataType="text" id="bfPlanCn" name="이전_계획_내용"></w2:key>
+                        <w2:key dataType="text" id="bfPfmcCn" name="이전_실적_내용"></w2:key>
+                        <w2:key dataType="text" id="afPlanCn" name="이후_계획_내용"></w2:key>
+                        <w2:key dataType="text" id="notiPrpaCn" name="공지_건의_내용"></w2:key>
+                        <w2:key dataType="text" id="aproGbVal" name="승인구분값"></w2:key>
+                        <w2:key dataType="text" id="reqDtm" name="요청일자"></w2:key>
+                        <w2:key dataType="text" id="aproDtm" name="승인일자"></w2:key>
+                        <w2:key dataType="text" id="mmWbsRt" name="주간_공정_율"></w2:key>
+                        <w2:key dataType="text" id="mmPlanRt" name="주간_계획_율"></w2:key>
+                        <w2:key dataType="text" id="bfMmPlanRt" name="전주_주간_계획_율"></w2:key>
+                        <w2:key dataType="text" id="fstConstDt" name="최초_공사_기간"></w2:key>
+                        <w2:key dataType="text" id="chgConstDt" name="변경_공사_기간"></w2:key>
+                        <w2:key dataType="text" id="tflar" name="연면적"></w2:key>
+                        <w2:key dataType="text" id="pltgArea" name="대지_면적"></w2:key>
+                        <w2:key dataType="text" id="workPeriod" name="작업기간"></w2:key>
+                        <w2:key dataType="text" id="bfWorkPeriod" name="전주_작업기간"></w2:key>
+                        <w2:key dataType="text" id="afWorkPeriod" name="금주_작업기간"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+            <w2:workflowCollection></w2:workflowCollection>
+        </xf:model>
+
+        <script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM70200010E.xml 
+ * Program Name : 작업일보 결재
+ * Author : 표성빈(sbPyo)
+ * Date : 2022.07.20
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ *     
+ **************************************************************************/ 
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/    
+	scwin.svcId;		//callback 처리용 서비스ID
+	var option = {progress_bar:true};
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/  
+    scwin.onpageload = function() {
+    
+    	com.commonUI();
+		scwin.fnInitial();
+        
+    };
+     
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {   
+  
+	   debugger;
+	   //UI팀용 함수 호출
+	   com.commonUI();
+        
+	   let dsSrch = com.getAprvParam("dsSearchParamSubMap"); // 부모창의 데이터맵을 읽어온다.
+        
+	   dsSearchParamSubMap.setJSON(dsSrch.getJSON());
+       
+	   scwin.fnAprvMmMstr();
+         
+    };        
+      
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수 
+     ************************************************************************************/
+	
+    /* 조회 */
+    scwin.fnAprvMmMstr = function() {
+    
+        ajaxLib.ajax("/cm/cm7030/CM70300000U/selectAprvMmMstr", {
+        	method : "POST"
+            , requestData : dsSearchParamSubMap.getJSON()
+            , callback: function(result, e) {
+               dsTcmJobRptMmDtlMap.setJSON(result.data.dsTcmJobRptMmDtlMap);
+            }
+            , errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+
+    };
+    
+    /************************************************************************************
+     *  [4] Callback 함수 
+     ************************************************************************************/
+      
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/      
+]]></script>
+
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <xf:group style="" id="" class="elec_body">
+            <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>월간업무계획 상세정보 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:20%;" tagname="col"></xf:group>
+                    <xf:group style="width:35%;" tagname="col"></xf:group>
+                    <xf:group style="width:20%;" tagname="col"></xf:group>
+                    <xf:group style="width:25%;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr" class="">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="작업일자" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="text-align:left;" tagname="td">
+                        <w2:inputCalendar footerDiv="false" id="calYearMonthDate" style="width:120px" renderDiv="true"
+                            focusOnDateSelect="false" calendarValueType="yearMonthDate" rightAlign="false" renderType="component"
+                            class="req" mandatory="" placeholder="____-__-__"
+                            ref="data:dsTcmJobRptMmDtlMap.workDt" readOnly="true">
+                        </w2:inputCalendar>
+                        <w2:span class="txt_unit" id="txtWorkPeriod" label=""
+                            style="margin-left:5px; width:200px; text-align:center;" ref="data:dsTcmJobRptMmDtlMap.workPeriod"></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:span class="" id="" label="결재상태" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:span class="txt_unit" id="" label="" style="width:100%; text-align:left;"
+                            ref="data:dsTcmJobRptMmDtlMap.aproGbVal"></w2:span>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:span id="" label="대지면적" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:span class="txt_unit" id="" label="" style="width:100%;" ref="data:dsTcmJobRptMmDtlMap.pltgArea"></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:span id="" label="연면적" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:span class="txt_unit" id="" label="" style="width:100%;" ref="data:dsTcmJobRptMmDtlMap.tflar"></w2:span>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:span id="" label="공사기간(당초)" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:span class="txt_unit" id="" label="" style="width:100%;" ref="data:dsTcmJobRptMmDtlMap.fstConstDt"></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:span id="" label="공사기간(변경)" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:span class="txt_unit" id="" label="" style="width:100%;" ref="data:dsTcmJobRptMmDtlMap.chgConstDt"></w2:span>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group style="" id="" class="lybox_wrap">
+                <xf:group style="" id="" class="lybox">
+                    <xf:group style="width:50%; height:100%;" id="" class="lycolumn">
+                        <xf:group style="height:100%;" id="" class="lyinner">
+                            <xf:group style="" id="" class="defaultbox">
+                                <xf:group style="" id="" class="left_wrap">
+                                    <w2:textbox tagname="h3" style="margin-top:9px;" id="" label="전월계획" class="df_tt"></w2:textbox>
+                                </xf:group>
+                                <xf:group style="" id="" class="right_wrap">
+                                    <xf:group id="" style="margin-top:9px; margin-right:2px;">
+                                        공정율(%) : 
+                                    </xf:group>
+                                   <w2:span style="text-align:right; margin-top:9px;" class="txt_unit" id="txtbfMmPlanRt" label="" ref="data:dsTcmJobRptMmDtlMap.bfMmPlanRt" displayFormat="#.00" dataType="number"></w2:span>
+                                </xf:group>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group style="width:50%; height:100%" id="" class="lycolumn">
+                        <xf:group style="height:100%;" id="" class="lyinner">
+                            <xf:group style="" id="" class="defaultbox">
+                                <xf:group style="" id="" class="left_wrap">
+                                    <w2:textbox tagname="h3" style="margin-top:9px;" id="" label="전월실적" class="df_tt"></w2:textbox>
+                                </xf:group>
+                                <xf:group style="" id="" class="right_wrap">
+                                    <xf:group id="" style="margin-top:9px; margin-right:2px;">
+                                        공정율(%) : 
+                                    </xf:group>
+                                   <w2:span style="text-align:right; margin-top:9px;" class="txt_unit" id="txtMmWbsRt" label="" ref="data:dsTcmJobRptMmDtlMap.mmWbsRt" displayFormat="#.00" dataType="number"></w2:span>
+                                </xf:group>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>월간업무계획등록 실적 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="text-align:center;" tagname="th">
+                        <w2:span id="" label="전월계획" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="text-align:center;" tagname="th">
+                        <w2:span id="" label="전월실적" style=""></w2:span>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:span style="white-space:pre;" class="txt_unit" id="txtBfPlanCn" label="" ref="data:dsTcmJobRptMmDtlMap.bfPlanCn" ></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:span style="white-space:pre;" class="txt_unit" id="txtBfPfmcCn" label="" ref="data:dsTcmJobRptMmDtlMap.bfPfmcCn" ></w2:span>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+
+            <xf:group style="" id="" class="lybox_wrap">
+                <xf:group style="" id="" class="lybox">
+                    <xf:group style="width:50%; height:100%;" id="" class="lycolumn">
+                        <xf:group style="height:100%;" id="" class="lyinner">
+                            <xf:group style="" id="" class="defaultbox">
+                                <xf:group style="" id="" class="left_wrap">
+                                    <w2:textbox tagname="h3" style="margin-top:9px;" id="" label="금월계획" class="df_tt"></w2:textbox>
+                                </xf:group>
+                                <xf:group style="" id="" class="right_wrap">
+                                    <xf:group id="" style="margin-top:9px; margin-right:2px;">
+                                        공정율(%) : 
+                                    </xf:group>
+                                   <w2:span style="text-align:right; margin-top:9px;" class="txt_unit" id="txtMmPlanRt" label="" ref="data:dsTcmJobRptMmDtlMap.mmPlanRt" displayFormat="#.00" dataType="number"></w2:span>
+                                </xf:group>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group style="width:50%; height:100%" id="" class="lycolumn">
+                        <xf:group style="height:100%;" id="" class="lyinner">
+                            <xf:group style="" id="" class="defaultbox">
+                                <xf:group style="" id="" class="left_wrap">
+                                    <w2:textbox tagname="h3" style="margin-top:9px;" id="" label="공지/건의사항" class="df_tt"></w2:textbox>
+                                </xf:group>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>월간업무계획등록 계획 테이블입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="text-align:center;" tagname="th">
+                        <w2:span id="" label="금월계획" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="text-align:center;" tagname="th">
+                        <w2:span id="" label="공지/건의사항" style=""></w2:span>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:span style="white-space:pre;" class="txt_unit" id="txtAfPlanCn" label="" ref="data:dsTcmJobRptMmDtlMap.afPlanCn" ></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:span style="white-space:pre;" class="txt_unit" id="txtNotiPrpaCn" label="" ref="data:dsTcmJobRptMmDtlMap.notiPrpaCn" ></w2:span>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <br></br>
+            <br></br>
+        </xf:group>
+    </body>
+</html>

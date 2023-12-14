@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+                <w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfCourtDocList" saveRemovedData="true">
+                    <w2:columnInfo>
+                        <w2:column id="rowNum" name="페이지 글번호" dataType="text"></w2:column>
+                        <w2:column id="codocRcvDt" name="수신일" dataType="text"></w2:column>
+                        <w2:column id="codocSeq" name="법원문서순번" dataType="text"></w2:column>
+                        <w2:column id="codocConfStusCd" name="상태코드" dataType="text"></w2:column>
+                        <w2:column id="codocConfStusNm" name="상태" dataType="text"></w2:column>
+                        <w2:column id="docNm" name="문서명" dataType="text"></w2:column>
+                        <w2:column id="sndlcNm" name="발신처" dataType="text"></w2:column>
+                        <w2:column id="evtNo" name="사건번호" dataType="text"></w2:column>
+                        <w2:column id="pltfNm" name="원고" dataType="text"></w2:column>
+                        <w2:column id="dfdntNm" name="피고" dataType="text"></w2:column>
+                        <w2:column id="deptNm" name="담당팀" dataType="text"></w2:column>
+                        <w2:column id="chrgrNm" name="담당자" dataType="text"></w2:column>
+                        <w2:column id="chrgTm1Yn" name="1차" dataType="text"></w2:column>
+                        <w2:column id="chrgTm2Yn" name="2차" dataType="text"></w2:column>
+                        <w2:column id="jdafNm1" name="담당자" dataType="text"></w2:column>
+                        <w2:column id="jdafTm1Yn" name="1차" dataType="text"></w2:column>
+                        <w2:column id="jdafNm2" name="확인자" dataType="text"></w2:column>
+                        <w2:column id="jdafTm2Yn" name="2차" dataType="text"></w2:column>
+                        <w2:column id="redDiff" name="붉은색" dataType="text"></w2:column>
+                        <w2:column id="blueDiff1" name="푸른색1" dataType="text"></w2:column>
+                        <w2:column id="blueDiff2" name="푸른색2" dataType="text"></w2:column>
+                    </w2:columnInfo>
+                    <w2:data use="true"></w2:data>
+                </w2:dataList>
+                <w2:dataMap baseNode="map" id="dsTcfCourtDocMap">
+                    <w2:keyInfo>
+                        <w2:key id="codocConfStusCd" name="상태코드" dataType="text"></w2:key>
+                        <w2:key id="sndlcNm" name="발신처" dataType="text"></w2:key>
+                        <w2:key id="evtNo" name="사건번호" dataType="text"></w2:key>
+                        <w2:key id="rcvStartDt" name="수신시작일" dataType="text"></w2:key>
+                        <w2:key id="rcvEndDt" name="수신종료일" dataType="text"></w2:key>
+                        <w2:key id="docNm" name="문서명" dataType="text"></w2:key>
+                        <w2:key id="pltfNm" name="원고" dataType="text"></w2:key>
+                        <w2:key id="dfdntNm" name="피고" dataType="text"></w2:key>
+                        <w2:key id="deptNm" name="담당팀" dataType="text"></w2:key>
+                        <w2:key id="pageRowStart" name="페이지 시작행번호" dataType="number"></w2:key>
+                        <w2:key id="pageRowCount" name="페이지 요청건수" dataType="number"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+
+            </w2:dataCollection>
+            <w2:workflowCollection></w2:workflowCollection>
+        </xf:model>
+
+        <style style="width: 100px;height: 100px;">
+        .docNmUnderLine {color:blue;cursor:pointer;text-decoration:underline;}
+        </style>
+
+        <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID   : CF05100000U.xml
+     * Program Name : 법원문서관리
+     * Author       : 송준영 (tpsongjy)
+     * Date         : 2019.04.23
+     *
+     * History
+     * ========================================
+     * 변경일자     수정자   내 용
+     * ========================================
+     *
+     **************************************************************************/
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    scwin.svcId = "";
+    scwin.nowPage = 1;
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+
+        // 화면초기화
+        scwin.initScreen();
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function() {
+    
+        // 페이지리스트 초기화
+        com.pageListObj.init();
+        
+        // 페이지목록 초기화
+        grdScrList.initGrid();
+        
+        com.setUdcValue("dsTotalCount", "udcListCount", 0);
+        com.selCdList( "codocConfStusCd", "CF03301", "Y", "","");
+        com.setUdcValue( "udcPeriodcalendar", "frDate", com.transDateType("frDay180"));
+        com.setUdcValue( "udcPeriodcalendar", "toDate", com.transDateType("toDay180"));
+
+        if( com.getAllParam().courtSearchParam != undefined ) {
+        	//param Data remove
+            dsTcfCourtDocMap.setJSON(JSON.parse(com.getAllParam().courtSearchParam));
+            com.setUdcValue("udcPeriodcalendar", "frDate", dsTcfCourtDocMap.get("rcvStartDt"));
+            com.setUdcValue("udcPeriodcalendar", "toDate", dsTcfCourtDocMap.get("rcvEndDt"));
+        	com.setParam('MNU_CF_108210');
+        }
+        
+        // 리스트 조회
+        scwin.nowPage = dsTcfCourtDocMap.get("pageRowStart")/11+1;  // 현재페이지
+        scwin.pageMove(scwin.nowPage);
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnGrdCourtDocSearch
+     * 기 능: 법원문서관리 조회
+     **************************************************************************/
+    scwin.fnGrdCourtDocSearch = function(){
+        //유효성체크
+        if( !scwin.fnValidate() ) return;
+
+        dsTcfCourtDocMap.set("rcvStartDt",com.getUdcValue("udcPeriodcalendar", "frDate"));
+        dsTcfCourtDocMap.set("rcvEndDt", com.getUdcValue("udcPeriodcalendar", "toDate"));
+
+        scwin.svcId = "selectTcfCourtDocList";
+        ajaxLib.ajax("/cf/CF05100000U/selectTcfCourtDocList", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData : dsTcfCourtDocMap.getJSON()
+            , callback    : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnValidate
+     * 기 능: 유효성체크
+     **************************************************************************/
+    scwin.fnValidate = function() {
+        var frDate = com.getUdcValue("udcPeriodcalendar", "frDate");
+        var toDate = com.getUdcValue("udcPeriodcalendar", "toDate");
+        if (frDate == "") {
+            var frdate = com.getUdcComp("udcPeriodcalendar", "frDate").id;
+            com.showMessage("CFW0009","수신일", "", "", frdate);
+            return false;
+        }
+
+        if (toDate == "") {
+            var toDate = com.getUdcComp("udcPeriodcalendar", "toDate").id;
+            com.showMessage("CFW0009","수신일", "", "", toDate);
+            return false;
+        }
+        return true;
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    /* 결과 후처리*/
+    scwin.fnCallback = function(result, e) {
+        console.log(e);
+
+        switch(scwin.svcId) {
+            case "selectTcfCourtDocList" :
+
+                //전체 조회건수
+                var pageTotalCount = result.data.pageTotalCount;
+
+                //페이지 네비게이션 값 설정
+                var pageRowCount = 10;
+                var pageSelectCount = sbx_SelectCount.getValue();
+                if(pageSelectCount != null && pageSelectCount > 0){
+                    pageRowCount = pageSelectCount;
+                }
+                var pageNaviCount = Math.ceil(pageTotalCount / pageRowCount);
+
+                //전체 조회 건수
+                com.setUdcValue("dsTotalCount", "udcListCount", pageTotalCount);
+
+                //페이지 조회목록
+                dsTcfCourtDocList.setJSON(result.data.tcfCourtDocList);
+
+                //페이지 네비게이션
+                var paramObj = {
+                       max:pageNaviCount   // 페이지의 총 Count를 입력
+                     , svcId:scwin.svcId   // 해당서비스 id 고정
+                     , current:scwin.nowPage // 현재페이지
+                };
+
+                com.pageListObj.max(paramObj);
+
+                // 건수
+                confReqCnt.setValue(  "(" + result.data.confReqCnt   + ")" );
+                confChg1Cnt.setValue( "(" + result.data.confChg1Cnt  + ")" );
+                confJdaf1Cnt.setValue("(" + result.data.confJdaf1Cnt + ")" );
+                confDoneCnt.setValue( "(" + result.data.confDoneCnt  + ")" );
+
+                break;
+       }
+    };
+
+    /* 에러 후처리 */
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+
+        switch(scwin.svcId) {
+            case "selectTcfCourtDocList" :
+                console.log('search Error!!!!!!!!!!!');
+                break;
+       }
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+
+    /**************************************************************************
+     * 함 수 명: scwin.pageMove
+     * 기 능: 조회 시작값, 가져올 행수 지정후 리스트 조회
+     **************************************************************************/
+    scwin.pageMove = function(current){
+        var end = sbx_SelectCount.getValue();
+        if( end == null || end == "") end = 10;
+        var start = Math.abs( (current-1) ) * end;
+        
+        scwin.nowPage = current;
+        
+        dsTcfCourtDocMap.set( "pageRowStart" , start );
+        dsTcfCourtDocMap.set( "pageRowCount" , end );
+        scwin.fnGrdCourtDocSearch(); //조회
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 법원문서관리 선택 그리드 조회 이벤트
+     **************************************************************************/
+    scwin.btnFind_onclick = function() {
+        scwin.pageMove(1);
+    };
+
+    /**************************************************************************
+     * Event: scwin.sbx_SelectCount_onviewchange
+     * 기 능: 페이지 목록 갯수 선택이벤트(10개,20개,30개,40개,50개)
+     **************************************************************************/
+    scwin.sbx_SelectCount_onviewchange = function(info) {
+        if(info.oldValue != info.newValue) {
+            grdScrList.options.visibleRowNum = sbx_SelectCount.getValue();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.grdScrList_oncellclick
+     * 기 능: 그리드 클릭 시 상세페이지 이동
+     **************************************************************************/
+    scwin.grdScrList_oncellclick = function(row,col) {
+        var sColName = grdScrList.getColumnID( col );
+        if( sColName == "docNm" ) {
+            var objSelParam = { "codocSeq" : dsTcfCourtDocList.getCellData(row, "codocSeq") };
+            var param = { "courtDocParam" : JSON.stringify(objSelParam)
+                        , "courtSearchParam" : JSON.stringify(dsTcfCourtDocMap.getJSON()) // 돌려받을 조회조건
+                        , "scrnId" : "CF0510"
+                        , "rtnUrl" : "/ux/cf/cf0510/CF05100000U.xml"
+                        };
+            // 상세페이지 이동
+            com.detailOpen("법원문서관리(상세)", "CF05100001U", "/ux/cf/cf0510/CF05100001U.xml", "1", param);
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnWrite_onclick
+     * 기 능: 클릭 시 신규작성 페이지로 이동
+     **************************************************************************/
+    scwin.btnWrite_onclick = function() {
+        // 신규페이지 이동
+        var param = { "courtDocParam" : ""
+                    , "courtSearchParam" : JSON.stringify(dsTcfCourtDocMap.getJSON()) // 돌려받을 조회조건
+                    , "scrnId" : "CF0510"
+                    , "rtnUrl" : "/ux/cf/cf0510/CF05100000U.xml"
+                    };
+        // 상세페이지 이동
+        com.detailOpen("법원문서관리(상세)", "CF05100001U", "/ux/cf/cf0510/CF05100001U.xml", "1", param);
+    };
+
+    /************************************************************************************
+     *  기타 Formatter 함수
+     ************************************************************************************/
+    /**************************************************************************
+     * Formatter : scwin.fnGetYnImg
+     * 기 능: Y/N에 따라 이미지를 보여주는 포메팅 처리
+     **************************************************************************/
+    scwin.fnGetYnImgFormatter = function(value) {
+        if( value != "" && value == "Y" ) {
+            return '<img src="/resources/images/content/ico_check.png" />'
+        } else {
+            return "";
+        }
+    };
+
+    /**************************************************************************
+     * Formatter : scwin.fnGetColorFormatter
+     * 기 능: Y/N에 따라 컬럼의 색상을 변경해주는 처리
+     **************************************************************************/
+    scwin.fnGetColorFormatter = function(_obj) {
+        var idx = _obj.realRowIndex;
+        var blue1 = dsTcfCourtDocList.getCellData( idx, "blueDiff1" );
+        var blue2 = dsTcfCourtDocList.getCellData( idx, "blueDiff2" );
+        var red = dsTcfCourtDocList.getCellData( idx, "redDiff" );
+
+        if( blue1 == "Y" || blue2 == "Y" ) {
+            grdScrList.setRowColor( idx, "blue" ); // 전체 파란색 제외
+          //  grdScrList.setCellColor( idx, "codocConfStusNm" , "blue" );
+        }else{
+            grdScrList.setRowColor( idx, "" );
+        }
+
+        if( red == "Y" ) {
+            grdScrList.setCellColor( idx, "codocConfStusNm" , "red" );
+        }else {
+           if( blue1 == "Y" || blue2 == "Y" ) {
+              grdScrList.setCellColor( idx, "codocConfStusNm" , "blue" );
+            }else{
+              grdScrList.setCellColor( idx, "codocConfStusNm" , "" );
+            }
+        }
+
+        grdScrList.setCellColor( idx, "docNm" , "blue" );
+        grdScrList.setCellClass( idx, "docNm" , "docNmUnderLine" );
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnExcelDown_onclick
+     * 기 능: 엑셀 다운로드 버튼 클릭 이벤트
+    **************************************************************************/     
+    scwin.btnExcelDown_onclick = function() {
+        var infoArr = {};
+        var fileNm = "CourtDoc_"+com.transDateType("now")+".xlsx";
+        var options = { fileName : fileNm };
+        com.gridDataDownLoad(grdScrList, options, infoArr);
+    };
+
+    // 담당팀 확인요청 카운트 클릭
+    scwin.confReq_onclick = function() {
+        dsTcfCourtDocMap.set("codocConfStusCd", "CF03301002");
+        scwin.fnGrdCourtDocSearch();
+    };
+
+    // 담당팀 확인(1차) 카운트 클릭
+    scwin.confChg1_onclick = function() {
+        dsTcfCourtDocMap.set("codocConfStusCd", "CF03301003");
+        scwin.fnGrdCourtDocSearch();
+    };
+
+    // 법무팀 확인(1차) 카운트 클릭
+    scwin.confJdaf1_onclick = function() {
+        dsTcfCourtDocMap.set("codocConfStusCd", "CF03301004");
+        scwin.fnGrdCourtDocSearch();
+    };
+
+    // 승인완료 카운트 클릭
+    scwin.confDone_onclick = function() {
+        dsTcfCourtDocMap.set("codocConfStusCd", "CF03301007");
+        scwin.fnGrdCourtDocSearch();
+    };
+]]></script>
+        <w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <xf:group style="" id="" class="content_body">
+            <xf:group class="navigator_wrap" id="" style="">
+                <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            </xf:group>
+            <xf:group class="tbl_search" id="" style="">
+                <xf:group class="tb_list" id="grpScrSearchInfo" style="" tagname="table">
+                    <w2:attributes>
+                        <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                    </w2:attributes>
+                    <xf:group tagname="colgroup">
+                        <xf:group style="width:71px;" tagname="col"></xf:group>
+                        <xf:group style="width:auto;" tagname="col"></xf:group>
+                        <xf:group style="width:106px;" tagname="col"></xf:group>
+                        <xf:group style="width:auto;" tagname="col"></xf:group>
+                        <xf:group style="width:106px;" tagname="col"></xf:group>
+                        <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group tagname="col" style="width:71px;"></xf:group><xf:group tagname="col" style="width:auto;"></xf:group></xf:group>
+                    <xf:group style="" tagname="tr">
+                        <xf:group class="w2tb_th" style="" tagname="th"><w2:attributes><w2:scope>row</w2:scope></w2:attributes><w2:span class="" id="" label="상태" style=""></w2:span></xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            <xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="codocConfStusCd" ref="data:dsTcfCourtDocMap.codocConfStusCd" style="width:200px;" submenuSize="auto" textAlign="left" mandatory="true">
+                                <xf:choices></xf:choices>
+                            </xf:select1>
+                        </xf:group>
+                        <xf:group class="w2tb_th" tagname="th"><w2:span label="발신처"></w2:span></xf:group>
+                        <xf:group class="w2tb_td" tagname="td"><xf:input id="sndlcNm" ref="data:dsTcfCourtDocMap.sndlcNm" style="width:200px;"></xf:input></xf:group>
+                        <xf:group class="w2tb_th" tagname="th"><w2:span label="사건번호"></w2:span></xf:group>
+                        <xf:group class="w2tb_td" tagname="td"><xf:input id="evtNo" ref="data:dsTcfCourtDocMap.evtNo" style="width:200px;"></xf:input></xf:group>
+                        <xf:group class="w2tb_th" tagname="th"><w2:span label="수신일"></w2:span></xf:group>
+                        <xf:group class="w2tb_td" tagname="td"><w2:udc_periodcalendar id="udcPeriodcalendar"></w2:udc_periodcalendar></xf:group></xf:group>
+                    <xf:group style="" tagname="tr">
+                        <xf:group class="w2tb_th" tagname="th"><w2:span label="문서명"></w2:span></xf:group>
+                        <xf:group class="w2tb_td" tagname="td"><xf:input id="docNm" ref="data:dsTcfCourtDocMap.docNm" style="width:200px;"></xf:input></xf:group>
+                        <xf:group class="w2tb_th" tagname="th"><w2:span label="원고(채권자)"></w2:span></xf:group>
+                        <xf:group class="w2tb_td" tagname="td"><xf:input id="pltfNm" ref="data:dsTcfCourtDocMap.pltfNm" style="width:200px;"></xf:input></xf:group>
+                        <xf:group class="w2tb_th" tagname="th"><w2:span label="피고(채무자)"></w2:span></xf:group>
+                        <xf:group class="w2tb_td" tagname="td"><xf:input id="dfdntNm" ref="data:dsTcfCourtDocMap.dfdntNm" style="width:200px;"></xf:input></xf:group>
+                        <xf:group class="w2tb_th" tagname="th"><w2:span label="담당팀"></w2:span></xf:group>
+                        <xf:group class="w2tb_td" tagname="td"><xf:input id="deptNm" ref="data:dsTcfCourtDocMap.deptNm" style="width:234px;"></xf:input></xf:group></xf:group>
+                </xf:group>
+                <xf:group class="btn_tbl_search" style="" tagname="">
+                    <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick"><xf:label><![CDATA[조회]]></xf:label></w2:anchor>
+                </xf:group>
+
+            </xf:group>
+
+            <xf:group style="" id="" class="defaultbox">
+                <w2:textbox label="법원문서관리" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+                <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+                <xf:group class="right_wrap" id="" style="" tagname="">
+                
+                    <xf:group class="catabox" id="">
+                        <xf:group class="" id="" tagname="ul">
+                            <xf:group class="" id="" tagname="li">
+                                <xf:group class="" id="" tagname="a">
+                                    <w2:textbox id="confReq" label="담당팀확인요청" class="txt" ev:onclick="scwin.confReq_onclick"></w2:textbox>
+                                    <w2:textbox class="count" id="confReqCnt" label="(0)" style="" ref=""></w2:textbox>
+                                </xf:group>
+                            </xf:group>
+                            <xf:group class="" id="" style="" tagname="li">
+                                <xf:group class="" id="" tagname="a">
+                                    <w2:textbox class="txt" id="confChg1" label="담당팀확인1차" ev:onclick="scwin.confChg1_onclick"></w2:textbox>
+                                    <w2:textbox class="count" id="confChg1Cnt" label="(0)" ref=""></w2:textbox>
+                                </xf:group>
+                            </xf:group>
+                            <xf:group class="" id="" style="" tagname="li">
+                                <xf:group class="" id="" tagname="a">
+                                    <w2:textbox class="txt" id="confJdaf1" label="법무팀확인1차" ev:onclick="scwin.confJdaf1_onclick"></w2:textbox>
+                                    <w2:textbox class="count" id="confJdaf1Cnt" label="(0)" ref=""></w2:textbox>
+                                </xf:group>
+                            </xf:group>
+                            <xf:group class="" id="" style="" tagname="li">
+                                <xf:group class="" id="" tagname="a">
+                                    <w2:textbox class="txt" id="confDone" label="승인완료" ev:onclick="scwin.confDone_onclick"></w2:textbox>
+                                    <w2:textbox class="count" id="confDoneCnt" label="(0)" ref=""></w2:textbox>
+                                </xf:group>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                
+                    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnWrite" outerDiv="false" style="" ev:onclick="scwin.btnWrite_onclick"><xf:label><![CDATA[신규]]></xf:label></w2:anchor>
+                    <w2:anchor class="btn_gcm excel_down" toolTip="엑셀다운로드" clickEventElement="outerDiv" id="btnExcelDwn" outerDiv="false" style="" ev:onclick="scwin.btnExcelDown_onclick"><xf:label><![CDATA[엑셀다운]]></xf:label></w2:anchor>                    
+                </xf:group>
+            </xf:group>
+            <w2:gridView readOnly="true" autoFit="allColumn" dataList="data:dsTcfCourtDocList" fixedColumnWithHidden="true"
+                id="grdScrList" scrollByColumn="false" style="height:300px;" useShiftKey="true" visibleRowNum="11" rowNumVisible=""
+                rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue="" focusMode="row"
+                class="autoHeight" ev:oncellclick="scwin.grdScrList_oncellclick">
+                <w2:header id="header1" style="">
+                    <w2:row id="row2" style="">
+                        <w2:column id="column23" width="60"  inputType="text" value="No." rowSpan="2"></w2:column>
+                        <w2:column id="column21" width="150" inputType="text" value="상태" rowSpan="2"></w2:column>
+                        <w2:column id="column19" width="100" inputType="text" value="발신처" rowSpan="2"></w2:column>
+                        <w2:column id="column17" width="100" inputType="text" value="사건번호" rowSpan="2"></w2:column>
+                        <w2:column id="column15" width="150" inputType="text" value="수신일" rowSpan="2"></w2:column>
+                        <w2:column id="column37" width="200" inputType="text" value="문서명" rowSpan="2"></w2:column>
+                        <w2:column id="column51" width="100" inputType="text" value="원고&lt;BR&gt;(채권자)" rowSpan="2"></w2:column>
+                        <w2:column id="column48" width="100" inputType="text" value="피고&lt;BR&gt;(채무자)" rowSpan="2"></w2:column>
+                        <w2:column id="column35" width="100" inputType="text" value="담당팀" colSpan="4" style="height:34px;"></w2:column>
+                        <w2:column id="column27" width="100" inputType="text" value="법무팀" colSpan="4" style="height:34px;"></w2:column>
+                    </w2:row>
+                    <w2:row style="" id="row6">
+                        <w2:column id="column47" width="100" inputType="text" value="담당팀"></w2:column>
+                        <w2:column id="column46" width="100" inputType="text" value="담당자"></w2:column>
+                        <w2:column id="column45" width="100" inputType="text" value="1차"></w2:column>
+                        <w2:column id="column44" width="100" inputType="text" value="2차"></w2:column>
+                        <w2:column id="column43" width="100" inputType="text" value="담당자"></w2:column>
+                        <w2:column id="column42" width="100" inputType="text" value="1차"></w2:column>
+                        <w2:column id="column54" width="100" inputType="text" value="확인자"></w2:column>
+                        <w2:column id="column56" width="100" inputType="text" value="2차"></w2:column>
+                    </w2:row>
+                </w2:header>
+                <w2:gBody id="gBody4" style="">
+                    <w2:row id="row5" style="">
+                        <w2:column id="rowNum"          width="60"  inputType="text"></w2:column>
+                        <w2:column id="codocConfStusNm" width="150" inputType="custom" typeGetter="scwin.fnGetColorFormatter"></w2:column>
+                        <w2:column id="sndlcNm"         width="100" inputType="text" textAlign="left"></w2:column>
+                        <w2:column id="evtNo"           width="100" inputType="text" textAlign="left"></w2:column>
+                        <w2:column id="codocRcvDt"      width="150" inputType="text"></w2:column>
+                        <w2:column id="docNm"           width="200" inputType="text" textAlign="left"></w2:column>
+                        <w2:column id="pltfNm"          width="100" inputType="text" textAlign="left"></w2:column>
+                        <w2:column id="dfdntNm"         width="100" inputType="text" textAlign="left"></w2:column>
+                        <w2:column id="deptNm"          width="100" inputType="text" textAlign="left"></w2:column>
+                        <w2:column id="chrgrNm"         width="100" inputType="text"></w2:column>
+                        <w2:column id="chrgTm1Yn"       width="100" inputType="text" displayFormatter="scwin.fnGetYnImgFormatter"></w2:column>
+                        <w2:column id="chrgTm2Yn"       width="100" inputType="text" displayFormatter="scwin.fnGetYnImgFormatter"></w2:column>
+                        <w2:column id="jdafNm1"         width="100" inputType="text"></w2:column>
+                        <w2:column id="jdafTm1Yn"       width="100" inputType="text" displayFormatter="scwin.fnGetYnImgFormatter"></w2:column>
+                        <w2:column id="jdafNm2"         width="100" inputType="text"></w2:column>
+                        <w2:column id="jdafTm2Yn"       width="100" inputType="text" displayFormatter="scwin.fnGetYnImgFormatter"></w2:column>
+                    </w2:row>
+                </w2:gBody>
+            </w2:gridView>
+
+            <xf:group style="" id="" class="pagination">
+                <w2:pageList displayButtonType="display" displayFormat="#" pageSize="10" pagingType="0" style=""
+                    id="pageNavi" displaySelectedIndex="true" ev:onviewchange="scwin.pageNavi_onviewchange"
+                    ev:oninputblur="scwin.pageNavi_oninputblur" userData1="selectTcfCourtDocList" userData2="scwin.pageMove">
+                </w2:pageList>
+                <xf:select1 allOption="" appearance="minimal" chooseOption="" class="page_slt" direction="auto" selectedData="true"
+                    disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbx_SelectCount" optionOrder="false" ref=""
+                    style="width:120px;" submenuSize="auto" ev:onviewchange="scwin.sbx_SelectCount_onviewchange">
+                    <xf:choices>
+                        <xf:item>
+                            <xf:label><![CDATA[11건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[11]]></xf:value>
+                        </xf:item>
+                        <xf:item>
+                            <xf:label><![CDATA[20건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[20]]></xf:value>
+                        </xf:item>
+                        <xf:item>
+                            <xf:label><![CDATA[30건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[30]]></xf:value>
+                        </xf:item>
+                        <xf:item>
+                            <xf:label><![CDATA[40건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[40]]></xf:value>
+                        </xf:item>
+                        <xf:item>
+                            <xf:label><![CDATA[50건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[50]]></xf:value>
+                        </xf:item>
+                    </xf:choices>
+                </xf:select1>
+            </xf:group>
+
+        </xf:group>
+    </body>
+</html>

@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key id="siteNm" name="현장명" dataType="text"></w2:key>
+			            <w2:key dataType="text" id="dirmgExctNo" name="직영_집행_번호"></w2:key>
+
+			            <w2:key id="chgDgr" name="변경차수" dataType="text"></w2:key>
+			            <w2:key id="aprvTtl" name="결재제목" dataType="text"></w2:key>
+			            <w2:key id="dirmgExctAproCd" name="직영집행승인코드[CM004013]" dataType="text"></w2:key>
+			            <w2:key id="aflId" name="첨부파일" dataType="text"></w2:key>
+			            <w2:key id="pbsvOpinCn" name="공무의견내용" dataType="text"></w2:key>
+			            <w2:key id="listSearchYn" name="목록화면 자동조회여부" dataType="text"></w2:key>
+			            <w2:key id="aprvLinkYn" name="결재링크용_여부" dataType="text"></w2:key>
+			            <w2:key id="searchSiteNm" name="현장명" dataType="text"></w2:key>
+			            <w2:key id="searchDirmgExctAproCd" name="직영집행승인코드" dataType="text"></w2:key>
+			            <w2:key id="searchRvwReqStrtDtm" name="요청시작일" dataType="text"></w2:key>
+			            <w2:key id="seachRvwReqEndDtm" name="요청종료일" dataType="text"></w2:key>
+			            <w2:key id="searchAproStrtDt" name="승인시작일" dataType="text"></w2:key>
+			            <w2:key id="searchAproEndDt" name="승인종료일" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" ev:oncelldatachange="scwin.dsActbgtConfmList_oncelldatachange"
+			        ev:ondataload="scwin.dsActbgtConfmList_ondataload" id="dsTcmDirmgExctItemiList" repeatNode="map"
+			        saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+			            <w2:column dataType="text" id="dirmgExctNo" name="직영_집행_번호"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiCd" name="예산내역코드"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiNm" name="예산_내역_명"></w2:column>
+			            <w2:column dataType="text" id="upperBgtItemiCd" name="상위_예산내역코드"></w2:column>
+			            <w2:column dataType="number" id="bgtItemiLv" name="예산_내역_레벨"></w2:column>
+			            <w2:column id="itemiYn" name="내역_여부" dataType="text"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiStdr" name="예산_내역_규격"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiUnit" name="예산_내역_단위"></w2:column>
+			            <w2:column dataType="number" id="itexpGb" name="비목구분"></w2:column>
+			            <w2:column dataType="number" id="contQty" name="도급_수량"></w2:column>
+			            <w2:column dataType="number" id="contUct" name="도급_단가"></w2:column>
+			            <w2:column dataType="number" id="contAmt" name="도급_금액"></w2:column>
+			            <w2:column dataType="number" id="actbgtQty" name="실행예산_수량"></w2:column>
+			            <w2:column dataType="number" id="actbgtUct" name="실행예산_단가"></w2:column>
+			            <w2:column id="actbgtAmt" name="실행예산_금액" dataType="number"></w2:column>
+			            <w2:column id="aproMtrctUct" name="승인_재료비_단가" dataType="number"></w2:column>
+			            <w2:column id="aproLbctUct" name="승인_노무비_단가" dataType="number"></w2:column>
+			            <w2:column id="aproExpnsUct" name="승인_경비_단가" dataType="number"></w2:column>
+			            <w2:column id="aproQty" name="승인_수량" dataType="number"></w2:column>
+			            <w2:column id="aproUct" name="승인_단가" dataType="number"></w2:column>
+			            <w2:column id="aproAmt" name="승인_금액" dataType="number"></w2:column>
+			            <w2:column id="reduceUct" name="절감 수량" dataType="number"></w2:column>
+			            <w2:column id="reduceAmt" name="절감 금액" dataType="number"></w2:column>
+			            <w2:column id="contAproRt" name="승인금액비율(%)_도급대비      */" dataType="number"></w2:column>
+			            <w2:column id="contActbgtRt" name="승인금액비율(%)_실행예산대비  */" dataType="number"></w2:column>
+			            <w2:column id="dstbBgtItemiCd" name="배분_예산내역코드" dataType="text"></w2:column>
+			            <w2:column id="sortOdr" name="정렬 순서" dataType="number"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSrch" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key dataType="text" id="siteNm" name="현장명"></w2:key>
+			            <w2:key dataType="text" id="dirmgExctNo" name="직영_집행_번호"></w2:key>
+			            <w2:key dataType="text" id="chgDgr" name="변경차수"></w2:key>
+			            <w2:key dataType="text" id="aprvTtl" name="결재제목"></w2:key>
+			            <w2:key dataType="text" id="dirmgExctAproCd" name="직영집행승인코드[CM004013]"></w2:key>
+			            <w2:key dataType="text" id="aflId" name="첨부파일"></w2:key>
+			            <w2:key dataType="text" id="pbsvOpinCn" name="공무의견내용"></w2:key>
+			            <w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/**************************************************************************
+ * [1] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {
+        if (typeof reqJsonParam == 'undefined') {
+            if (com.isEmpty(gcm.tab_main)) {
+                dsSearchMap.setJSON(JSON.parse($w.getPopupParam()).data);
+            } else {
+                dsSearchMap.setJSON(com.getAllParam());
+            }
+        } else {
+            var jsonArray = JSON.parse(reqJsonParam);
+            $.each(jsonArray, function(idx, item){
+                dsSearchMap.setJSON(item);
+            });
+        }
+
+        com.selCdListVrbl("grdTcmDirmgExctItemiList:itexpGb", {
+                "upperCd": "CM004100",
+                "setCd": "charValN1"
+            },
+            scwin.fnSearch()
+        );
+        com.commonUI();
+        $("body").css("overflow","scroll");
+    };
+
+/************************************************************************************
+ *  [2] 사용자 정의 함수
+ ************************************************************************************/
+
+    //조회
+    scwin.fnSearch = function() {
+        ajaxLib.ajax("/cm/cm1505/CM15051010/notifyDirmgExctNoList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e){
+
+                dsTcmDirmgExctItemiList.setJSON(result.data.selectDirmgExctNoList);
+                dsSearchMap.set("aprvTtl", result.data.selectTcmDirmgExctApro.aprvTtl);
+                dsSearchMap.set("dirmgExctAproCd", result.data.selectTcmDirmgExctApro.dirmgExctAproCd);
+                com.setUdcValue("dsTotalCount", "udcListCount", dsTcmDirmgExctItemiList.getTotalRow());
+
+                //공종인 경우 파란색 폰트와 금액은 모두 null 처리.
+                for (var i=0; i<dsTcmDirmgExctItemiList.getTotalRow(); i++){
+                    if (dsTcmDirmgExctItemiList.getCellData(i, "itemiYn") == "N"){
+                        grdTcmDirmgExctItemiList.setRowColor(i, "blue");
+                        dsTcmDirmgExctItemiList.setRowJSON(i, {
+                                contQty: null,
+                                contUct: null,
+                                contAmt: null,
+                                actbgtQty: null,
+                                actbgtUct: null,
+                                actbgtAmt: null,
+                                aproQty: null,
+                                aproUct: null,
+                                aproAmt: null,
+                                reduceUct: null,
+                                reduceAmt: null,
+                                contAproRt: null,
+                                contActbgtRt: null
+                            },
+                            true
+                        );
+                    }
+                }
+            },
+            errCallback: function(result, e){
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+    };
+
+
+/************************************************************************************
+ *  [3] Event 함수
+ ************************************************************************************/
+
+	]]></script>
+
+
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <!-- 결재이벤트 페이지 임포트 -->
+        <xf:group>
+            <w2:wframe style="display:none" id="importAprvMain" src="/ux/cf/CF00350500U.xml"></w2:wframe>
+        </xf:group>
+        <!-- #결재이벤트 페이지 임포트 -->
+		<xf:group style="" id="" class="content_body">
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>거래처 정보 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:120.00px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="현장" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="" label="평택 S1291 지붕보수" style="" ref="data:dsSearchMap.siteNm"></w2:span>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="직영집행승인내역" style="" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount" style=""></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="height:27px;">
+
+
+
+
+
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="lastColumn" class="autoHeight" dataList="data:dsTcmDirmgExctItemiList" fixedColumn="5"
+				fixedColumnWithHidden="true" focusMode="row" id="grdTcmDirmgExctItemiList" readOnly="false" rowNumHeaderValue="No" rowNumVisible=""
+				rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height:357px;"
+				useShiftKey="true" visibleRowNum="" ev:onviewchange="scwin.grdTcmDirmgExctItemiList_onviewchange">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column15" inputType="text" style="height:73px;" value="No."
+							width="60" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column260" inputType="text"
+							removeBorderStyle="false" style="height:73px;" value="Item" width="201" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column263" inputType="text"
+							removeBorderStyle="false" style="height:73px;" value="규격" width="151" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column266" inputType="text"
+							removeBorderStyle="false" style="height:73px;" value="단위" width="81" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column237" inputType="text"
+							removeBorderStyle="false" style="height:73px;" value="비목" width="80" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column241" inputType="text"
+							removeBorderStyle="false" style="height:34px;" value="도급" width="300" colSpan="3" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="300" inputType="text" style="height:34px;"
+							id="column295" value="(예비)실행예산" blockSelect="false" displayMode="label" colSpan="3" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:34px;"
+							id="column286" value="승인" blockSelect="false" displayMode="label" colSpan="6" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column334"
+							value="절감" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="240" inputType="text" style="" id="column328"
+							value="승인금액 비율" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column280"
+							value="수량" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column302"
+							value="단가" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column299"
+							value="금액" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column296"
+							value="수량" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column293"
+							value="단가" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column290"
+							value="금액" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column287"
+							value="수량" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column317"
+							value="재료비&lt;br/&gt;단가" blockSelect="false" displayMode="label" hidden="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column314"
+							value="노무비&lt;br/&gt;단가" blockSelect="false" displayMode="label" hidden="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column311"
+							value="경비&lt;br/&gt;단가" blockSelect="false" displayMode="label" hidden="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column308"
+							value="총단가" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column305"
+							value="금액" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column335"
+							value="단가" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column332"
+							value="금액" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column329"
+							value="도급대비(%)" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column326"
+							value="실행예산대비(%)" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" id="column24" inputType="expression" style="" textAlign=""
+							value="" width="60" expression="rowindex()+1">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="bgtItemiNm" inputType="drilldown"
+						    removeBorderStyle="false" style="" value="현장관리비" width="201" textAlign="left" readOnly="true" depthType="div"
+						    depthColumn="bgtItemiLv" showDepth="10">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="bgtItemiStdr" inputType="text"
+							removeBorderStyle="false" style="" value="" width="151" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="bgtItemiUnit" inputType="text"
+							removeBorderStyle="false" style="" value="" width="81" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="itexpGb" inputType="select"
+						    removeBorderStyle="false" style="" textAlign="center" value="" width="80" readOnly="true">
+						    <w2:choices></w2:choices>
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="contQty" inputType="text"
+							removeBorderStyle="false" style="" textAlign="right" value="" width="100" displayFormat="#,##0.00" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="contUct"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="contAmt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="actbgtQty"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0.00" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="actbgtUct"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="actbgtAmt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="aproQty"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0.00" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="aproMtrctUct"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="false">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="aproLbctUct"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="false">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="aproExpnsUct"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="false">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="select" style="" id="aproUct"
+						    value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="false">
+						    <w2:choices></w2:choices>
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="aproAmt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="reduceUct"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="reduceAmt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="contAproRt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0.00" textAlign="right" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="contActbgtRt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0.00" textAlign="right" readOnly="true">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+				<w2:footer style="" id="footer1">
+					<w2:row style="" id="row7">
+						<w2:column removeBorderStyle="false" width="60" inputType="text" style="" id="column358"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="201" inputType="text" style="" id="column357"
+							value="합 계" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="151" inputType="text" style="" id="column356"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="81" inputType="text" style="" id="column355"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column354"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column353"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0.00">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column352"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column351"
+						    value="" blockSelect="false" displayMode="label" displayFormat="#,##0" expression="sum('contAmt')" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column350"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0.00" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column349"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column348"
+						    value="" blockSelect="false" displayMode="label" displayFormat="#,##0" expression="sum('actbgtAmt')"
+						    textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column347"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0.00" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column346"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column345"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column344"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column343"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column342"
+						    value="" blockSelect="false" displayMode="label" displayFormat="#,##0" expression="sum('aproAmt')"
+						    textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column341"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column340"
+						    value="" blockSelect="false" displayMode="label" displayFormat="#,##0" expression="sum('reduceAmt')"
+						    textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column339"
+						    value="" blockSelect="false" displayMode="label" displayFormat="#,##0.00" expression="" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column338"
+						    value="" blockSelect="false" displayMode="label" displayFormat="#,##0.00" expression="" textAlign="right">
+						</w2:column>
+					</w2:row>
+				</w2:footer>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

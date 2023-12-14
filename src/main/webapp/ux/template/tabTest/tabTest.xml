@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" id="dsSmsReportList" repeatNode="map" saveRemovedData="true" style="">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="msgId" name="순번"></w2:column>
+						<w2:column dataType="text" id="userId" name="사번"></w2:column>
+						<w2:column dataType="text" id="phoneNumber" name="수신자번호"></w2:column>
+						<w2:column dataType="text" id="callBack" name="발신자번호"></w2:column>
+						<w2:column dataType="text" id="statusText" name="상태"></w2:column>
+						<w2:column dataType="text" id="sendDate" name="전송일시"></w2:column>
+						<w2:column dataType="text" id="rcvMnoCd" name="통신사"></w2:column>
+						<w2:column dataType="text" id="mmsMsg" name="메시지"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSrch" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="frDate" name="시전송일자"></w2:key>
+						<w2:key dataType="text" id="toDate" name="종료전송일자"></w2:key>
+						<w2:key dataType="text" id="phoneNumber" name="수신자번호"></w2:key>
+						<w2:key dataType="text" id="callBack" name="발신자번호"></w2:key>
+						<w2:key dataType="text" id="userId" name="사번"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsTcfSlipMaster">
+					<w2:keyInfo>
+						<w2:key id="jobGbn" name="업무구분" dataType="text"></w2:key>
+						<w2:key id="sendFlag" name="전송구분" dataType="text"></w2:key>
+						<w2:key id="slipJnlzTypeCd" name="전표분개유형코드[CF064]" dataType="text"></w2:key>
+						<w2:key id="acDocNo" name="전표번호" dataType="text"></w2:key>
+						<w2:key id="headerTxt" name="전표헤더텍스트" dataType="text"></w2:key>
+						<w2:key id="docDate" name="증빙일" dataType="text"></w2:key>
+						<w2:key id="pstngDate" name="전기일" dataType="text"></w2:key>
+						<w2:key id="xref1Hd" name="name18" dataType="text"></w2:key>
+						<w2:key id="xref2Hd" name="name17" dataType="text"></w2:key>
+						<w2:key id="zzissid" name="세금계산서 승인번호" dataType="text"></w2:key>
+						<w2:key id="zzapprno" name="결재문서번호" dataType="text"></w2:key>
+						<w2:key id="zzdeptCode" name="부서코드" dataType="text"></w2:key>
+						<w2:key id="zzdeptName" name="부서명" dataType="text"></w2:key>
+						<w2:key id="zzusrId" name="사용자번호" dataType="text"></w2:key>
+						<w2:key id="zzusrName" name="사용자명" dataType="text"></w2:key>
+						<w2:key id="orgSlipNo" name="원전표번호" dataType="text"></w2:key>
+						<w2:key id="reasonRev" name="역분개사유코드[CF060]" dataType="text"></w2:key>
+						<w2:key id="procFlag" name="처리구분" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="map" id="dsTcfSlipDetail">
+					<w2:columnInfo>
+						<w2:column id="acDocNo" name="전표번호" dataType="text"></w2:column>
+						<w2:column id="itemnoAcc" name="개별항목번호" dataType="text"></w2:column>
+						<w2:column id="itemText" name="적요" dataType="text"></w2:column>
+						<w2:column id="refKey1" name="참조키1" dataType="text"></w2:column>
+						<w2:column id="refKey2" name="참조키2" dataType="text"></w2:column>
+						<w2:column id="refKey3" name="참조키3" dataType="text"></w2:column>
+						<w2:column id="valueDate" name="기산일" dataType="text"></w2:column>
+						<w2:column id="customer" name="고객코드" dataType="text"></w2:column>
+						<w2:column id="vendorNo" name="구매처코드" dataType="text"></w2:column>
+						<w2:column id="allocNmbr" name="지정" dataType="text"></w2:column>
+						<w2:column id="costcenter" name="코스트센터" dataType="text"></w2:column>
+						<w2:column id="profitCtr" name="손익센터" dataType="text"></w2:column>
+						<w2:column id="wbsElement" name="WBS코드" dataType="text"></w2:column>
+						<w2:column id="assetNo" name="고정자산코드" dataType="text"></w2:column>
+						<w2:column id="blineDate" name="만기일" dataType="text"></w2:column>
+						<w2:column id="pmnttrms" name="지급조건" dataType="text"></w2:column>
+						<w2:column id="pymtMeth" name="지급방법" dataType="text"></w2:column>
+						<w2:column id="pmtmthsupl" name="지급방법보증" dataType="text"></w2:column>
+						<w2:column id="amtDoccur" name="거래금액" dataType="text"></w2:column>
+						<w2:column id="amtBase" name="공급가액" dataType="text"></w2:column>
+						<w2:column id="cleBelnr" name="반제대상 SAP전표번호" dataType="text"></w2:column>
+						<w2:column id="cleGjahr" name="반제대상 회계연도" dataType="text"></w2:column>
+						<w2:column id="cleBuzei" name="반제대상 개별항목번호" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+	var svcId = "";
+	var popupId = "";
+
+    /************************************************************************************
+     *  [2] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+	    var nowDate  = $w.getCurrentServerDate( "yyyyMMdd" );
+
+	    //전송일자 default set
+	    com.setUdcValue("udcCalendarSrch", "frDate", $w.dateAdd( nowDate , "-7" ));
+	    com.setUdcValue("udcCalendarSrch", "toDate", nowDate);
+    };
+
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+	/**************************************************************************
+	 * Event: scwin.fnSearchList
+	 * 기 능: SMS 전송내역을 리스트 조회
+	 **************************************************************************/
+    scwin.fnSearchList = function() {
+        // udc의 코드값 가져오기.
+        dsSrch.set("frDate", com.getUdcValue("udcCalendarSrch","frDate"));
+        dsSrch.set("toDate", com.getUdcValue("udcCalendarSrch","toDate"));
+
+        svcId = "selectSdkSmsReportList";
+
+        ajaxLib.ajax("/cf/CF00352001U/selectSdkSmsReportList", {
+        	mode : "asynchronous"
+        	, method : "POST"
+            , requestData : dsSrch.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+    };
+
+
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+	// Popup Callback
+	scwin.fnPopupCallback = function(arg) {
+
+	alert("Popup Callback : " + popupId);
+
+	   	switch(popupId) {
+	   		case "intAprvPopup" :
+				alert("intAprvPopup 호출 결과 : [" + arg.intAprvNo + "]");
+				break;
+	   		case "sendSmsPopup" :
+				alert("sendSmsPopup 호출 결과");
+				break;
+		}
+	}
+
+	// 결과 후처리
+	scwin.fnCallback = function(result, e) {
+	   	switch(svcId) {
+	   		case "selectSdkSmsReportList" :
+				dsSmsReportList.setJSON(result.data.dsSdkSmsReportList);
+				com.setUdcValue("dsTotalCount", "udcListCount", dsSmsReportList.getTotalRow());
+		   		ingStatus = "S";
+
+		   		for (var i = 0; i < dsSmsReportList.getTotalRow(); i++) {
+		   			$('.activeGrid .grid_body_row').eq(i).addClass('active');
+		   		}
+
+	   			break;
+
+	   		case "checkSlipJournalizing" :
+	   			alert("EAI 전송되었습니다.");
+	   			break;
+
+	   		case "checkReverseJournalizing" :
+	   			alert("EAI 전송되었습니다.");
+	   			break;
+	   }
+	};
+
+	// 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+    }
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	/**************************************************************************
+	 * Event: scwin.btnSend_onclick
+	 * 기 능: SMS 전송내역을 리스트 조회
+	 **************************************************************************/
+	scwin.btnFind_onclick = function() {
+        dsSmsReportList.clear();
+		scwin.fnSearchList();
+	};
+
+	//수신자번호 엔터시
+	scwin.ibxKeyPhoneNumber_onkeyup = function(e) {
+		if ( e.keyCode == 13 ){
+			btnFind.trigger("onclick");
+		}
+	};
+
+	//발신자번호 엔터시
+	scwin.ibxKeyCallBack_onkeyup = function(e) {
+		if ( e.keyCode == 13 ){
+			btnFind.trigger("onclick");
+		}
+	};
+
+	//사번 엔터시
+	scwin.ibxKeyUserId_onkeyup = function(e) {
+		if ( e.keyCode == 13 ){
+			btnFind.trigger("onclick");
+		}
+	};
+
+	scwin.btnSmsSend_onclick = function() {
+		var title = "SMS 전송";
+		var id = "openTarget";
+		var url = "/ux/template/tabTest/openTarget.xml";
+		var openOpt = ibxTabTest.getValue();
+		var data = {
+					tabData:"탭으로 오픈"
+				  	,browserData:"Browser로 오픈"
+					};
+
+        popupId = "sendSmsPopup";
+
+		com.detailOpen(title, id, url, openOpt, data);
+	};
+
+	scwin.btnApro_onclick = function() {
+
+		var popOps = {
+				popup_name:"승인요청"
+		               		,url:"/ux/cf/CF00350502P.xml"
+   						    ,data:{ gubunCd:gcm.APPR_REQUEST		// gcm.APPR_REQUEST, gcm.APPR_PROC, gcm.APPR_FIND
+				                  , intAprvNo:""
+				                  , cancelYn:"" 			// 승인을 취소할 수 있는 경우 “Y”
+				                  , intAprvTtl:"내부결제 테스트"			// 내부결재제목
+					        	  , intAprvReqOpinCn:""		// 내부_결재_요청_의견_내용
+					        	  , apprEmpno:"A00004"			// 승인자사번
+					        	  , apprEmpNm:"테스트"			// 승인자명
+					        	  , intAprvAproOpinCn:""	// 내부_결재_승인_의견_내용
+					        	  , jobGbCd:""				// 업무구분코드
+					        	  , menuId:""				// 메뉴ID
+					        	  , scrUrl:""				// 화면_URL
+	      						  }
+					        ,width:"600"
+					        ,height:"500"
+		               		,callbackFn:"scwin.fnPopupCallback"
+		    };
+
+		popupId = "intAprvPopup";
+
+		com.popup_open(popOps);
+	};
+
+	scwin.btnTest_onclick = function() {
+
+        svcId = "checkSlipJournalizing";
+
+		dsTcfSlipMaster.reset();
+		dsTcfSlipMaster.reform();
+
+		dsTcfSlipDetail.removeAll();
+		dsTcfSlipDetail.reform();
+
+		scwin.setMaster();
+		scwin.setDetail();
+
+        ajaxLib.ajax("/cf/cf0520/CF05200000E/checkSlipJournalizing", {
+        	mode : "asynchronous"
+        	, method : "PUT"
+            , requestData: {
+                    "tcfSlipMasterVO": dsTcfSlipMaster.getJSON()
+                  , "tcfSlipDetailVO": dsTcfSlipDetail.getAllJSON()
+                }
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+	};
+
+	scwin.setMaster = function() {
+        var nowDate = $w.getCurrentServerDate("yyyyMMdd");
+
+		dsTcfSlipMaster.set("jobGbn"		, "C");		// 업무구분 C : CM (공사_공동도급)
+		dsTcfSlipMaster.set("sendFlag"		, "Y");		// Y : EAI 전송, N : 미전송
+
+		dsTcfSlipMaster.set("pstngDate"	, nowDate);
+
+		if (svcId == "checkSlipJournalizing") {
+			dsTcfSlipMaster.set("slipJnlzTypeCd", "SA0010");	// 전표분개유형
+
+			dsTcfSlipMaster.set("acDocNo"	, "C190403-150278B-0001");
+			dsTcfSlipMaster.set("headerTxt"	, "19년04월 공동원가배분");
+			dsTcfSlipMaster.set("docDate"	, nowDate);
+			dsTcfSlipMaster.set("zzissid"	, "1048131309137811078820");
+			dsTcfSlipMaster.set("zzapprno"	, "");
+			dsTcfSlipMaster.set("zzdeptCode", "K400120");
+			dsTcfSlipMaster.set("zzdeptName", "자금팀");
+			dsTcfSlipMaster.set("zzusrId"	, "tpkpg");
+			dsTcfSlipMaster.set("zzusrName"	, "김판규");
+			dsTcfSlipMaster.set("orgSlipNo"	, "");
+			dsTcfSlipMaster.set("reasonRev"	, "");
+		} else {
+			dsTcfSlipMaster.set("acDocNo"	, "C190403-150278B-0002");
+			dsTcfSlipMaster.set("orgSlipNo"	, "C190403-150278B-0001");		// 원전표번호
+			dsTcfSlipMaster.set("reasonRev"	, "CF06003");					// 역분개사유코드
+		}
+
+		dsTcfSlipMaster.set("procFlag"		, "1");		// 1 : 전표 검증, 2 : 전표생성
+	};
+
+	scwin.setDetail = function() {
+
+		dsTcfSlipDetail.insertRow( 0 );
+
+		dsTcfSlipDetail.setCellData(0, "acDocNo"		, "C190403-150278B-0001");
+		dsTcfSlipDetail.setCellData(0, "itemnoAcc"		, "1");
+		dsTcfSlipDetail.setCellData(0, "itemText"		, "19년04월 공동원가배분(외주비)");
+		dsTcfSlipDetail.setCellData(0, "refKey1"		, "K400120");
+		dsTcfSlipDetail.setCellData(0, "refKey2"		, "");
+		dsTcfSlipDetail.setCellData(0, "refKey3"		, "");
+		dsTcfSlipDetail.setCellData(0, "valueDate"		, "");
+		dsTcfSlipDetail.setCellData(0, "customer"		, "1000018"); //1000010
+		dsTcfSlipDetail.setCellData(0, "vendorNo"		, "Y");
+		dsTcfSlipDetail.setCellData(0, "allocNmbr"		, "");
+		dsTcfSlipDetail.setCellData(0, "costcenter"		, "");
+		dsTcfSlipDetail.setCellData(0, "profitCtr"		, "150278");
+		dsTcfSlipDetail.setCellData(0, "wbsElement"		, "");
+		dsTcfSlipDetail.setCellData(0, "assetNo"		, "");
+		dsTcfSlipDetail.setCellData(0, "blineDate"		, "");
+		dsTcfSlipDetail.setCellData(0, "pmnttrms"		, "1000");
+		dsTcfSlipDetail.setCellData(0, "pymtMeth"		, "");
+		dsTcfSlipDetail.setCellData(0, "amtDoccur"		, "220000");
+		dsTcfSlipDetail.setCellData(0, "amtBase"		, "200000");
+
+		dsTcfSlipDetail.insertRow( 1 );
+
+		dsTcfSlipDetail.setCellData(1, "acDocNo"		, "C190403-150278B-0001");
+		dsTcfSlipDetail.setCellData(1, "itemnoAcc"		, "2");
+		dsTcfSlipDetail.setCellData(1, "itemText"		, "19년04월 공동원가배분(외주비)");
+		dsTcfSlipDetail.setCellData(1, "refKey1"		, "K400120");
+		dsTcfSlipDetail.setCellData(1, "refKey2"		, "");
+		dsTcfSlipDetail.setCellData(1, "refKey3"		, "");
+		dsTcfSlipDetail.setCellData(1, "valueDate"		, "");
+		dsTcfSlipDetail.setCellData(1, "customer"		, "");
+		dsTcfSlipDetail.setCellData(1, "vendorNo"		, "");
+		dsTcfSlipDetail.setCellData(1, "allocNmbr"		, "");
+		dsTcfSlipDetail.setCellData(1, "costcenter"		, "");
+		dsTcfSlipDetail.setCellData(1, "profitCtr"		, "");
+		dsTcfSlipDetail.setCellData(1, "wbsElement"		, "150278B");
+		dsTcfSlipDetail.setCellData(1, "assetNo"		, "");
+		dsTcfSlipDetail.setCellData(1, "blineDate"		, "");
+		dsTcfSlipDetail.setCellData(1, "pmnttrms"		, "1000");
+		dsTcfSlipDetail.setCellData(1, "pymtMeth"		, "");
+		dsTcfSlipDetail.setCellData(1, "amtDoccur"		, "200000");
+		dsTcfSlipDetail.setCellData(1, "amtBase"		, "200000");
+
+		dsTcfSlipDetail.insertRow( 2 );
+
+		dsTcfSlipDetail.setCellData(2, "acDocNo"		, "C190403-150278B-0001");
+		dsTcfSlipDetail.setCellData(2, "itemnoAcc"		, "3");
+		dsTcfSlipDetail.setCellData(2, "itemText"		, "19년04월 공동원가배분(외주비)");
+		dsTcfSlipDetail.setCellData(2, "refKey1"		, "K400120");
+		dsTcfSlipDetail.setCellData(2, "refKey2"		, "");
+		dsTcfSlipDetail.setCellData(2, "refKey3"		, "");
+		dsTcfSlipDetail.setCellData(2, "valueDate"		, "");
+		dsTcfSlipDetail.setCellData(2, "customer"		, "");
+		dsTcfSlipDetail.setCellData(2, "vendorNo"		, "");
+		dsTcfSlipDetail.setCellData(2, "allocNmbr"		, "");
+		dsTcfSlipDetail.setCellData(2, "costcenter"		, "");
+		dsTcfSlipDetail.setCellData(2, "profitCtr"		, "");
+		dsTcfSlipDetail.setCellData(2, "wbsElement"		, "");
+		dsTcfSlipDetail.setCellData(2, "assetNo"		, "");
+		dsTcfSlipDetail.setCellData(2, "blineDate"		, "");
+		dsTcfSlipDetail.setCellData(2, "pmnttrms"		, "1000");
+		dsTcfSlipDetail.setCellData(2, "pymtMeth"		, "");
+		dsTcfSlipDetail.setCellData(2, "amtDoccur"		, "20000");
+		dsTcfSlipDetail.setCellData(2, "amtBase"		, "200000");
+	};
+
+
+	scwin.btnReverse_onclick = function() {
+
+        svcId = "checkReverseJournalizing";
+
+		dsTcfSlipMaster.reset();
+		dsTcfSlipMaster.reform();
+
+		scwin.setMaster();
+
+        ajaxLib.ajax("/cf/cf0520/CF05200000E/checkReverseJournalizing", {
+        	mode : "asynchronous"
+        	, method : "PUT"
+            , requestData: dsTcfSlipMaster.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+
+	};
+
+	scwin.anchor1_onclick = function() {
+	    if (input1.getValue() != "") {
+			dsSmsReportList.setColumnFilter(
+			{ type:'row'
+			, colIndex:'callBack'
+			, key:input1.getValue()
+			, condition:'and'
+			, exactMatch:true
+			} );
+
+	    	if (input3.getValue() != "") {
+				dsSmsReportList.setColumnFilter(
+				{ type:'row'
+				, colIndex:'callBack'
+				, key:input3.getValue()
+				, condition:'or'
+				, exactMatch:true
+				} );
+			}
+
+		} else {
+			dsSmsReportList.clearFilter();
+		}
+	};
+	]]></script>
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchpopup.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<xf:group class="navigator" id="" style="">
+					<w2:textbox class="tit" id="screenTitle" label="화면 타이틀" style="" tagname="h2" userData1=""></w2:textbox>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:108px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:108px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="전송일자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:udc_periodcalendar style="" id="udcCalendarSrch" class="req"></w2:udc_periodcalendar>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="수신자번호" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxKeyPhoneNumber" style="width: 140px;" ref="data:dsSrch.phoneNumber"
+								ev:onkeypress="" enterBlur="" ev:onkeyup="scwin.ibxKeyPhoneNumber_onkeyup">
+							</xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="발신자번호" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:input id="ibxKeyCallBack" style="width: 140px;" ref="data:dsSrch.callBack"
+								ev:onkeypress="" ev:onkeyup="scwin.ibxKeyCallBack_onkeyup">
+							</xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th" style="">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="사번" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes></w2:attributes>
+							<xf:input id="ibxKeyUserId" style="width: 140px;" ref="data:dsSrch.userId" ev:onkeypress=""
+								ev:onkeyup="scwin.ibxKeyUserId_onkeyup">
+							</xf:input>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes></w2:attributes>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="margin-top:-5px;"
+						ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+					<!-- <w2:anchor class="btn_cm" id="anchor44" outerDiv="false" style="">
+						<xf:label><![CDATA[상세조회]]></xf:label>
+						</w2:anchor> -->
+				</xf:group>
+
+			</xf:group>
+
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="SMS전송내역" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+				<xf:input adjustMaxLength="false" id="input1" style="width:113px;height:21px;"></xf:input>
+				<xf:input adjustMaxLength="false" id="input3" style="width:113px;height:21px;"></xf:input><w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.anchor1_onclick" id="anchor1"
+					outerDiv="false" style="">
+					<xf:label><![CDATA[필터]]></xf:label>
+				</w2:anchor>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="" id="" style="">
+						<w2:textbox class="df_tt" id="" label="Tab Test ( 1:Overlay, 2:New Tab, 3:Browser) &amp;nbsp; "
+							style="" tagname="h3">
+						</w2:textbox>
+						<xf:input adjustMaxLength="false" id="ibxTabTest" style="width:27px;height:21px;"></xf:input>
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnSmsSend_onclick"
+							id="btnSmsSend" outerDiv="false" style="">
+							<xf:label><![CDATA[TAB / Browser 열기]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnApro_onclick"
+							id="btnApro" outerDiv="false" style="">
+							<xf:label><![CDATA[내부결제]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnTest_onclick"
+							id="btnTest" outerDiv="false" style="">
+							<xf:label><![CDATA[전표 검증 테스트]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnReverse_onclick"
+							id="btnReverse" outerDiv="false" style="">
+							<xf:label><![CDATA[전표 역분개 테스트]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+
+
+
+			</xf:group>
+			<w2:gridView readOnly="true" autoFit="allColumn" dataList="data:dsSmsReportList"
+				fixedColumnWithHidden="true" id="grdSmsList" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum=""
+				rowNumVisible="" rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue=""
+				focusMode="row" class="autoHeight activeGrid" ev:oncellclick="scwin.grdSmsList_oncellclick">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column23" inputType="text" value="NO" width="40"></w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" value="순번" width="120">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" id="column39" value="사번"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" value="수신자번호" width="150">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" value="발신자번호" width="150">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" value="상태" width="120">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" id="column37" value="전송일시"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" id="column35" value="통신사"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="300" inputType="text" id="column33" value="메시지"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" id="column1" inputType="expression" style="height:24px;"
+							width="40" expression="rowindex()+1">
+						</w2:column>
+						<w2:column blockSelect="false" id="msgId" inputType="text" style="height:24px;" width="120">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="height:24px;"
+							id="userId" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" id="phoneNumber" inputType="text" style="height:24px;"
+							width="150">
+						</w2:column>
+						<w2:column blockSelect="false" id="callBack" inputType="text" style="height:24px;"
+							width="150">
+						</w2:column>
+						<w2:column blockSelect="false" id="statusText" inputType="text" style="height:24px;"
+							width="120">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="height:24px;"
+							id="sendDate" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="height:24px;"
+							id="rcvMnoCd" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="300" inputType="text" style="height:24px;"
+							id="mmsMsg" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

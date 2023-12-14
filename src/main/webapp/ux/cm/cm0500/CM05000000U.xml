@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+						<w2:key dataType="text" id="siteNm" name="현장명"></w2:key>
+						<!-- 현장포탈 페이지 구분해서 사용하기위해 만듬 -->
+						<w2:key dataType="text" id="callPage" name="호출 페이지"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false" />
+		<script src="/resources/js/commonUI.js" type="javascript" lazy="false" />
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM05000000U.xml
+ * Program Name : 공사개요
+ * Author : sychoi (tpcsy)
+ * Date : 2019.04.01
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ /**************************************************************************
+ * DataCollection description
+ *
+ *	dsSearchMap : 검색조건 Map
+ **************************************************************************/
+
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+    var svcId = "";
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    };
+
+    scwin.onpageload = function() {
+
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+    	var site_cd = $w.getParameter( "site_cd" );
+    	
+		if(site_cd != null && site_cd != "") { //해외공사시스템에서 호출시
+   			scwin.fnSiteNm(site_cd);
+		} else {
+			var wframeParam = scwin.$w.getParameter("wframeParam") || "";
+			
+			if(wframeParam != "") {
+				/** w2:wframe으로 해당 페이지를 참조시 
+					(MG30254001U.xml(현장포탈)에서 참조중) 
+				**/
+				var setSiteCd = wframeParam["siteCd"] || "";
+				var callPage = wframeParam["callPage"] || "";
+				
+				if(callPage == "/ux/mg/mg3025/MG30254001U.xml") {
+					//현장포탈
+					cm05000000Unav_area.setStyle("display","none");
+					cm05000000Usearch_area.setStyle("display","none");
+					cm05000000UContent.setStyle("padding", "0px");
+					//경영실적 숨김
+					tacSiteInfo.hideTab(1);
+				}
+				
+				dsSearchMap.set("callPage", callPage);
+				wfmKeySiteInfo.getWindow().ibxKeySiteCd.setValue(setSiteCd);   //현장 코드
+				//wfmKeySiteInfo.getWindow().ibxKeySiteNm.setValue(setSiteNm); //현장 명
+				// 최초 공사개요 탭 호출
+				scwin.tacSiteInfo_ontabclick();
+        		//UI팀용 함수 호출
+        		com.commonUI();	
+			} else {
+				/** 일반적으로 메뉴 클릭으로 진입 시 **/
+				scwin.fnAfterProc();
+			}
+		}	
+
+    };
+    
+/************************************************************************************
+ *  [3] 사용자 정의함수 함수
+ ************************************************************************************/
+   	/**************************************************************************
+	 * 함 수 명: scwin.fnSiteNm
+	 * 기 능: 현장명 조회
+	 **************************************************************************/
+	scwin.fnSiteNm = function(site_cd) {
+        ajaxLib.ajax("/cm/cm0500/CM05000001P/selectSiteNm", {
+            mode : "asynchronous"
+            , method : "POST"
+            , requestData : {siteCd : site_cd.substring(0, 6)}
+            , callback : function(result, e){
+            	sessionStorage.setItem("cmSiteCd", site_cd.substring(0, 6));
+                sessionStorage.setItem("cmSiteNm", result.data.siteNm);
+                scwin.fnAfterProc();
+            }
+            , errCallback : "fnErrCallBack"
+        });			
+	}
+
+   	/**************************************************************************
+	 * 함 수 명: scwin.fnAfterProc
+	 * 기 능: 초기화 셋팅
+	 **************************************************************************/	
+	scwin.fnAfterProc = function() {
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());				
+
+		// 최초 공사개요 탭 호출
+		scwin.tacSiteInfo_ontabclick();
+		
+        //UI팀용 함수 호출
+        com.commonUI();			
+	}
+	
+/************************************************************************************
+ *  [5] Event 함수
+ ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.WFrameSiteInfo_change_callback
+     * 기 능: 현장코드 변경 이벤트
+     **************************************************************************/
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+	};
+
+    /**************************************************************************
+     * Event: scwin.tacSiteInfo_ontabclick
+     * 기 능: 공사개요 탭 Click 이벤트
+     **************************************************************************/
+	scwin.tacSiteInfo_ontabclick = function(tabID,idx) {
+		var sTabId = tacSiteInfo.getSelectedTabID();
+		var _selectedTabFrame = tacSiteInfo.getFrame( sTabId );
+		var _localScwin = _selectedTabFrame.getObj("scwin");
+		_localScwin["fnInitial"]();	//이벤트명
+	};
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 공사개요 조회 버튼 Click 이벤트
+     **************************************************************************/
+	scwin.btnFind_onclick = function() {
+	    if ( dsSearchMap.get("siteCd").length == 0){
+	        com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+	        return false;
+	    }
+
+		scwin.tacSiteInfo_ontabclick();
+	};
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+
+		<xf:group style="" id="cm05000000UContent" class="content_body" >
+			<xf:group class="navigator_wrap" id="cm05000000Unav_area" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="cm05000000Usearch_area" style="">
+
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th" id="">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style=""
+						ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+					<!-- <w2:anchor class="btn_cm" id="anchor44" outerDiv="false" style="">
+						<xf:label><![CDATA[상세조회]]></xf:label>
+						</w2:anchor> -->
+				</xf:group>
+
+			</xf:group>
+			<w2:tabControl alwaysDraw="false" class="cm_tab" confirmFalseAction="new" confirmTrueAction="exist"
+				id="tacSiteInfo" style="" useConfirmMessage="false" useMoveNextTabFocus="false" useTabKeyOnly="true"
+				ev:ontabclick="scwin.tacSiteInfo_ontabclick">
+				<w2:tabs disabled="false" id="tabs2" label="공사개요" style=""></w2:tabs>
+				<!-- <w2:tabs disabled="false" id="tabs7" label="경영실적" style=""></w2:tabs> -->
+				<w2:tabs disabled="false" id="tabs6" label="착공/준공 자료" style=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs8" label="회의/보고자료" style=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs3" label="월간공사사진" style=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs4" label="조직도" style=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs5" label="조감도" style=""></w2:tabs>
+				<w2:content alwaysDraw="false" id="content1" src="/ux/cm/cm0500/CM05000005T.xml" style=""></w2:content>
+				<!-- <w2:content alwaysDraw="false" id="content6" src="/ux/cm/cm0500/CM05000030T.xml" style=""></w2:content> -->
+				<w2:content alwaysDraw="false" id="content5" src="/ux/cm/cm0500/CM05000035T.xml" style=""></w2:content>
+				<w2:content alwaysDraw="false" id="content7" src="/ux/cm/cm0500/CM05000040T.xml" style=""></w2:content>
+				<w2:content alwaysDraw="false" id="content2" src="/ux/cm/cm0500/CM05000015T.xml" style=""></w2:content>
+				<w2:content alwaysDraw="false" id="content3" src="/ux/cm/cm0500/CM05000020T.xml" style=""></w2:content>
+				<w2:content alwaysDraw="false" id="content4" src="/ux/cm/cm0500/CM05000025T.xml" style=""></w2:content>
+			</w2:tabControl>
+
+		</xf:group>
+	</body>
+</html>

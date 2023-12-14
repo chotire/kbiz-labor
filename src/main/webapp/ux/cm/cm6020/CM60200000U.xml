@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataList baseNode="list" repeatNode="map" id="dsTcmCodeReqList" saveRemovedData="true">
+                <w2:columnInfo>
+                    <w2:column id="ockndCd" name="직종코드" dataType="text"></w2:column>
+                    <w2:column id="ockndNm" name="직종명" dataType="text"></w2:column>
+                    <w2:column id="ockndUct" name="직종단가" dataType="number"></w2:column>
+
+                    <w2:column id="chkDel" name="삭제" dataType="text"></w2:column>
+                    <w2:column id="fstRegprEmpno" name="최초등록자사번" dataType="text"></w2:column>
+                    <w2:column id="fnlModprEmpno" name="최종수정자사번" dataType="text"></w2:column>
+                    <w2:column id="col50" name="name7" dataType="text"></w2:column>
+                    <w2:column id="cnt" name="노무자기본사항에있는지" dataType="text"></w2:column>
+                </w2:columnInfo>
+            </w2:dataList>
+            <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+                <w2:keyInfo>
+                    <w2:key dataType="text" id="ockndNm" name="직종명"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[
+	/***************************************************************************
+	 * Program ID : CM60200000U.xml
+	 * Program Name : 직종코드등록
+	 * Author : jhlee
+	 * Date : 2022.06.03
+	 *
+	 * History
+	 * ========================================
+	 * 변경일자     수정자   내 용
+	 * ========================================
+	 *
+	 **************************************************************************/
+
+	/************************************************************************************
+		DataCollection description
+
+		dsTcmCodeReqList: 목록
+	 ************************************************************************************/
+
+	/************************************************************************************
+	 *  [1] 전역변수
+	 ************************************************************************************/
+	/************************************************************************************
+	 *  [2] onpageload(초기화포함)
+	 ************************************************************************************/
+	scwin.onpageload = function() {
+		//추가 코드값 맵핑 호출
+		scwin.fnInitial();
+	};
+
+	scwin.onpageunload = function() {
+	};
+
+	/** 화면초기화 **/
+	scwin.fnInitial = function() {
+		//목록 초기화
+		grdSrcList.initGrid();
+		//UI팀용 함수 호출
+		com.commonUI();
+		//조회
+		scwin.fnSearch();
+	};
+
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+	// 직종코드 목록 조회
+	scwin.fnSearch = function() {
+		ajaxLib.ajax("/cm/cm6020/CM60200000U/selectTcmJobCodeList", {
+			method : "POST",
+			requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){      
+                dsTcmCodeReqList.setJSON(result.data.dsTcmJobCodeList);        
+            },            
+            errCallback: function(result, e) {
+                console.log(result);
+            }
+		});
+	};
+
+	//직종코드 저장
+	scwin.fnSave = function() {
+		let saveList = dsTcmCodeReqList.getModifiedJSON();
+        let ockndCompareNm = "";    //직종명
+         
+		// 수정여부 체크
+		if (saveList.length == 0) {
+			com.showMessage("SCA0007", "", "", ""); // 저장(변경된)할 목록이 없습니다.
+			return;
+		}
+
+        // 유효성 체크
+        for (let si = 0; si < dsTcmCodeReqList.getRowCount(); si++)
+        {
+            let ockndCd = dsTcmCodeReqList.getCellData( si , "ockndCd" );
+            let ockndNm = dsTcmCodeReqList.getCellData( si , "ockndNm" );
+            
+            if(com.isEmpty(ockndCd))
+            {
+                com.showMessage("CMW0025", (si + 1) + "행의 직종코드"); //$1은(는) 필수입력사항입니다.
+                return false;
+            }
+            
+            if (com.isEmpty(ockndNm)) {
+                com.showMessage("CMW0025", (si + 1) + "행의 직종명");  //$1은(는) 필수입력사항입니다.
+                return false;
+            }
+            
+            /*저장 시 코드 중복 체크*/
+            for (let sj = si + 1; sj < dsTcmCodeReqList.getRowCount(); sj++) {
+                let ockndCompareCd = dsTcmCodeReqList.getCellData( sj , "ockndCd");
+                ockndCompareNm = dsTcmCodeReqList.getCellData( sj , "ockndNm");    //직종명
+                
+                if (ockndCd == ockndCompareCd) {
+                    com.showMessage("SAW0001", "직종코드 [" + ockndCompareCd + "]"); // 중복 된 $1가(이) 존재합니다.
+                    return false;
+                }
+                
+                if (ockndNm == ockndCompareNm) {
+                    com.showMessage("SAW0001", "직종명 [" + ockndCompareNm + "]"); // 중복 된 $1가(이) 존재합니다.
+                    return false;
+                }
+            }
+        }
+
+		if (confirm("저장 하시겠습니까?")) {
+            ajaxLib.ajax("/cm/cm6020/CM60200000U/insertTcmJobCode", {
+				method : "POST",
+				requestData : {
+					tcmJobCodeList : dsTcmCodeReqList.getModifiedJSON()
+				},
+                callback : function(result, e){      
+                    com.showMessage("CFA0012"); //저장되었습니다.
+                    scwin.fnSearch();
+                },
+				errCallback: function(result, e) {
+                   com.showMessage("CFE0200","직종코드등록");// $1 처리시 오류가 발생하였습니다.
+                }
+			});
+		}
+	};
+
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+     
+	/************************************************************************************
+	 *  [5] Event 함수 
+	 ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 조회 버튼 Click 이벤트
+     **************************************************************************/
+    scwin.btnFind_onclick = function() {
+        scwin.fnSearch();
+    };
+    
+	// 그리드 행 추가
+	scwin.btnAddRow_onclick = function() {
+		let rowIndex = dsTcmCodeReqList.insertRow();
+
+		grdSrcList.setCellReadOnly(rowIndex, "chkDel", false);    //chkDel
+		grdSrcList.setCellReadOnly(rowIndex, "ockndCd", false);   //직종코드
+		grdSrcList.setCellReadOnly(rowIndex, "ockndNm", false);   //직종명
+		grdSrcList.setCellReadOnly(rowIndex, "ockndUct", false);  //직종단가
+		
+        dsTcmCodeReqList.setCellData(rowIndex, "ockndUct", 0);    //단가 default 0
+	};
+
+	//그리드 행 삭제
+	scwin.btnDelRow_onclick = function() {
+		let idxArr = grdSrcList.getCheckedIndex("chkDel");
+
+		if (idxArr.length == 0) {
+			com.showMessage("SMA0031", "삭제"); //$1할 행이 선택되지 않았습니다.
+			return;
+		}
+	
+        //노무자기본사항에 직종이 사용되어진건지 체크 
+        for(var i = 0; i < idxArr.length; i++)
+        {
+            let cnt = dsTcmCodeReqList.getCellData( idxArr[i] , "cnt");
+            if(cnt > 0 && cnt != null && cnt != undefined)  
+            {
+               com.showMessage("SAA0076", "노무자기본사항에 사용중인 직종"); //$1는 삭제할수없습니다.       
+               return;
+            }
+        }
+    
+		dsTcmCodeReqList.removeRows( idxArr );
+	};
+
+	// 저장 버튼 클릭시
+	scwin.btnSave_onclick = function() {
+		scwin.fnSave();
+	};
+
+	//엑셀다운 버튼
+	scwin.btnExcelDwn_onclick = function() {
+        let result = [];
+        result.push(1);//checkbox 제외
+       
+        let totalCol = grdSrcList.getTotalCol();
+       
+        for(let ex = 0; ex < totalCol; ex++) {
+            if (!grdSrcList.getColumnVisible(ex)) {
+                result.push(ex);
+            }
+        }
+        
+        let excelOpt = {
+             fileName: "직종코드등록.xlsx"        //또는 xlsx 확장자 사용
+            ,removeColumns: result.join(",")
+            ,useSubTotal: true                  //colMerge된 컬럼을 Merge해서 출력 할 지 여부
+            ,colMergeTextAlign: "center"        //colMerge된 컬럼의 textAlign설정 (bottom, center, top 설정)
+            //,useStyle: "true"
+            ,indent: 1
+            , headerFontColor : "#FFFFFF"    // Header Font Color
+            , headerColor : "#D9D9D9"        // Header Back Color
+            , subTotalColor : "#FCE4D6"      // SubTotal Back Color
+            , footerColor : "#BDD7EE"         // Footer Color
+        };  //excel download 옵션
+        
+        grdSrcList.advancedExcelDownload( excelOpt );
+	};
+    
+    /**************************************************************************
+     * Event: scwin.ibxOckndNm_onkeydown
+     * 기 능: 직종명 입력 후 엔터시 직종정보 조회 이벤트
+     **************************************************************************/
+    scwin.ibxOckndNm_onkeydown = function(e) {
+        if (e.keyCode === 13) {
+            scwin.fnSearch();   //직종코드정보 조회
+        }       
+    }; 
+	
+
+	]]></script>
+	
+	   	<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchCode.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body" id="" style="">
+
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe><!-- 직종관리 -->
+			</xf:group>
+            <xf:group class="tbl_search" id="" style="">
+                <xf:group class="tb_list" id="" style="" tagname="table">
+                    <w2:attributes>
+                        <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                    </w2:attributes>
+                    <xf:group tagname="colgroup">
+                        <xf:group style="width:100px;" tagname="col"></xf:group>
+                        <xf:group style="width:52.33%;" tagname="col"></xf:group>
+                        <xf:group style="width:auto;" tagname="col"></xf:group>
+                    </xf:group>
+                    <xf:group style="" tagname="tr">
+                        <xf:group class="w2tb_th" style="" tagname="th">
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                            <w2:span class="" id="" label="직종명" style=""></w2:span>
+                        </xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            <xf:input allowChar="" class="" dataType="" disabled="" ev:onkeydown="scwin.ibxOckndNm_onkeydown" id="ibxOckndNm" autocomplete="off"
+                                mandatory="" ref="data:dsSearchMap.ockndNm" style="width:200px;">
+                                <w2:attributes>
+                                    <w2:value></w2:value>
+                                </w2:attributes>
+                            </xf:input>
+                        </xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="btn_tbl_search" style="" tagname="">
+                    <w2:anchor class="btn_sh" ev:onclick="scwin.fnSearch" id="anchor2" outerDiv="false" style="">
+                        <xf:label><![CDATA[조회]]></xf:label>
+                    </w2:anchor>
+                </xf:group>
+
+            </xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="" id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnSave_onclick" id="btnSave" outerDiv="false"
+							style="">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_add" clickEventElement="" ev:onclick="scwin.btnAddRow_onclick" id="btnAddRow"
+							outerDiv="false" style="" toolTip="행추가">
+							<xf:label><![CDATA[행추가]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_del" clickEventElement="" ev:onclick="scwin.btnDelRow_onclick" id="btnDelRow"
+							outerDiv="false" style="" toolTip="행삭제">
+							<xf:label><![CDATA[행삭제]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef="" outerDiv="false" style=""
+							toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmCodeReqList" fixedColumnWithHidden="true"
+				focusMode="row" id="grdSrcList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="false" rowStatusWidth="30"
+				scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" ev:onrowindexchange="" editModeEvent="onclick"
+				ev:oncellclick="scwin.grdSrcList_oncellclick" readOnly="true" tooltipDisplay="true" preventPaste="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column21" inputType="text" style="height:24px;" value="No." width="60">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="checkbox" style="height:24px;" width="40"></w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" style="height:24px;" value="직종코드" width="180"
+							class="req" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" style="height:24px;" value="직종명" width="800"
+							class="req" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" id="column16" inputType="text" style="height:24px;" value="단가" width="205"
+							displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column removeBorderStyle="false" inputType="expression" id="col50" blockSelect="false" readOnly="true"
+							width="60" expression=" rowindex()+1">
+						</w2:column>
+						<w2:column removeBorderStyle="false" inputType="checkbox" id="chkDel" blockSelect="false" readOnly="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" inputType="text" id="ockndCd" blockSelect="false" readOnly="true" displayMode="label"></w2:column>
+						<w2:column width="300" inputType="text" id="ockndNm" blockSelect="false" readOnly="false" textAlign="left" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" id="ockndUct" blockSelect="false"
+							displayMode="label" readOnly="false" textAlign="right" allowChar="0-9-,\s" applyFormat="all" dataType="number" 
+							displayFormat="#,##0" maxLength="19">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

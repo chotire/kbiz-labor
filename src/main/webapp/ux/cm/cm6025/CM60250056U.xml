@@ -1,0 +1,862 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" id="dsList" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+			            <w2:column id="siteNm" name="현장명" dataType="text"></w2:column>
+			            <w2:column id="mskSecResno" name="주민번호마스킹" dataType="text"></w2:column>
+			            <w2:column id="workMonth" name="작업년월" dataType="text"></w2:column>
+			            <w2:column id="wkrNm" name="성명" dataType="text"></w2:column>
+			            <w2:column id="bankName" name="은행명" dataType="text"></w2:column>
+			            <w2:column id="bnactNo" name="계좌번호" dataType="text"></w2:column>
+			            <w2:column id="achdrNm" name="예금주" dataType="text"></w2:column>
+			            <w2:column id="day" name="일수" dataType="text"></w2:column>
+			            <w2:column id="dailywork" name="공수" dataType="text"></w2:column>
+			            <w2:column id="payAmt" name="소득금액" dataType="number"></w2:column>
+			            <w2:column id="gontAmt" name="공제금액" dataType="number"></w2:column>
+			            <w2:column id="chaAmt" name="차감금액" dataType="number"></w2:column>
+			            <w2:column id="compVal" name="계좌계,월계 그룹바이 변수" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key id="frmLbatnDt" name="검색년월FROM" dataType="text"></w2:key>
+			            <w2:key id="frmWorkYm" name="검색년월_from" dataType="text"></w2:key>
+			            <w2:key id="pgmType" name="프로그램type" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" id="dsList_Decrypt" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+			            <w2:column dataType="text" id="siteNm" name="현장명"></w2:column>
+			            <w2:column id="secResno" name="주민등록번호" dataType="text"></w2:column>
+			            <w2:column dataType="text" id="workMonth" name="작업년월"></w2:column>
+			            <w2:column dataType="text" id="wkrNm" name="성명"></w2:column>
+			            <w2:column dataType="text" id="bankName" name="은행명"></w2:column>
+			            <w2:column dataType="text" id="bnactNo" name="계좌번호"></w2:column>
+			            <w2:column dataType="text" id="achdrNm" name="예금주"></w2:column>
+			            <w2:column dataType="text" id="day" name="일수"></w2:column>
+			            <w2:column dataType="text" id="dailywork" name="공수"></w2:column>
+			            <w2:column dataType="number" id="payAmt" name="소득금액"></w2:column>
+			            <w2:column dataType="number" id="gontAmt" name="공제금액"></w2:column>
+			            <w2:column dataType="number" id="chaAmt" name="차감금액"></w2:column>
+			            <w2:column dataType="text" id="compVal" name="계좌계,월계 그룹바이 변수"></w2:column>
+
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="list" repeatNode="map" id="dsPrivacyUseHist" saveRemovedData="true">
+			        <w2:keyInfo>
+			            <w2:key id="userId" name="사용자ID" dataType="text"></w2:key>
+			            <w2:key id="menuId" name="메뉴ID" dataType="text"></w2:key>
+			            <w2:key id="prvDocGb" name="개인정보자료구분_EXCEL_REPORT" dataType="text"></w2:key>
+			            <w2:key id="prvUseReason" name="개인정보_사용_사유" dataType="text"></w2:key>
+			            <w2:key id="prvUseDesc" name="조회조건_현장/조회년월등" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM60250056U.xml
+ * Program Name : 본사_노무비지급총괄표(계좌별)
+ * Author : 신동훈 
+ * Date : 2022.11.29
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ * 
+ **************************************************************************/
+/**************************************************************************
+ * DataCollection description
+ *	dsSearchMap : 검색조건 Map
+ *  dsList: 
+ **************************************************************************/
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/ 
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+ 	scwin.initScreen = function() {
+    };
+    
+    scwin.onpageload = function() {
+        //조회기간 set
+        dsSearchMap.set("frmWorkYm",$p.getCurrentServerDate( "yyyyMM" ));
+        
+        //노무 지급 계좌별 (orderby 때문에 정의)
+        //AS-IS는 ORDER BY가 현장코드,작업년월,은행명,계좌번호,근로자번호순인데 계좌번호 암호화데이터를 가지고 정렬하므로
+        //TO-BE와는 정렬 순서가 다르다.  AS-IS의 계좌번호를 복호화 된 걸로 ORDER BY 하면 TO-BE와 정렬이 맞음
+        dsSearchMap.set("pgmType","A");
+        
+        
+        com.commonUI();
+        
+        //grdList_Decrypt.hide();
+    };
+/**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+/**************************************************************************
+ * [4] Callback
+ **************************************************************************/
+/************************************************************************************
+ * [5] Event 함수
+ ************************************************************************************/
+    //현장코드 변경 이벤트
+    scwin.WFrameSiteInfo_change_callback = function(){
+        if(!com.isEmpty(dsSearchMap.get("frmWorkYm"))  )
+        {
+            scwin.btnFind_onclick();    
+        }
+    };
+    
+    
+	//조회 클릭
+	scwin.btnFind_onclick = function() {
+        dsSearchMap.set("frmLbatnDt", dsSearchMap.get("frmWorkYm"));                    //검색 시작 날짜
+        
+        
+        if (com.isEmpty(dsSearchMap.get("frmWorkYm"))){
+            com.showMessage("CMW0025", "조회기간 From");    //$1은(는) 필수입력입니다.
+            return false;
+        }
+        
+        ajaxLib.ajax("/cm/cm6025/CM60250000U/selectTotalPaymentListMainCompany",{
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e) {
+                        dsList.setJSON(result.data.dsList);
+                        com.setUdcValue("dsTotalCount","udcListCount",dsList.getTotalRow());
+                        for(let si = 0; si < dsList.getRowCount(); si++)
+                        {
+                            let sLbatnQty = dsList.getCellData( si ,  "dailywork");
+                            if(sLbatnQty.indexOf(".") == -1)
+                            {
+                                dsList.setCellData( si , "dailywork" , sLbatnQty + ".0");
+                            }
+                        }   
+                       },
+            errCallback : function(result, e) {}
+        });
+        
+             
+	};
+    
+    
+    scwin.excelDwn = function() {
+        let result = [];
+        //let totalCol = grdListDecrypt.getTotalCol();
+        let totalCol = grdList.getTotalCol();
+        
+        
+        for(let i = 0; i < totalCol; i++) {
+            //if (!grdListDecrypt.getColumnVisible(i)) {
+            if (!grdList.getColumnVisible(i)) {
+                result.push(i);
+            }
+        }
+        
+        let excelOpt = {
+             fileName: "본사-노무비지급총괄표(계좌별).xlsx"    //또는 xlsx 확장자 사용
+            ,removeColumns: result.join(",")
+            ,useSubTotal: true                //colMerge된 컬럼을 Merge해서 출력 할 지 여부
+            ,colMergeTextAlign: "center"      //colMerge된 컬럼의 textAlign설정 (bottom, center, top 설정)
+            ,colMerge : false
+            ,useStyle: "true"
+            ,indent: 1
+            ,useDataFormat : true
+            , headerColor : "#D9D9D9"        // Header Back Color
+            , subTotalColor : "#FCE4D6"      // SubTotal Back Color
+            , footerColor : "#BDD7EE"         // Footer Color
+        };  //excel download 옵션
+        
+        
+        grdListDecrypt.advancedExcelDownload( excelOpt );   
+        scwin.savePrivUseHist();
+               
+    }
+
+    //엑셀다운
+	scwin.btnExcelDwn_onclick = function() {
+		
+        if (ibxDownloadReason.getValue() == "")
+        {
+            com.showMessage("CMW0025", "사유");    //$1은(는) 필수입력입니다.;
+            return false;
+        }
+
+
+        
+        dsSearchMap.set("frmLbatnDt", dsSearchMap.get("frmWorkYm"));                    //검색 시작 날짜
+        
+        if (com.isEmpty(dsSearchMap.get("frmWorkYm"))){
+            com.showMessage("CMW0025", "조회기간 From");    //$1은(는) 필수입력입니다.
+            return false;
+        }
+        
+        ajaxLib.ajax("/cm/cm6025/CM60250000U/selectTotalPaymentList_Decrypt",{
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e) {
+                        dsList_Decrypt.setJSON(result.data.dsList_Decrypt);
+                        com.setUdcValue("dsTotalCount","udcListCount",dsList_Decrypt.getTotalRow());
+                        for(let si = 0; si < dsList_Decrypt.getRowCount(); si++)
+                        {
+                            let sLbatnQty = dsList_Decrypt.getCellData( si ,  "dailywork");
+                            if(sLbatnQty.indexOf(".") == -1)
+                            {
+                                dsList_Decrypt.setCellData( si , "dailywork" , sLbatnQty + ".0");
+                            }
+                        } 
+                        scwin.excelDwn();  
+                       },
+            errCallback : function(result, e) {}
+        });
+        
+	};
+    
+    scwin.savePrivUseHist = function()
+    {
+        dsPrivacyUseHist.set("menuId", "CM60250056U" );
+        dsPrivacyUseHist.set("prvDocGb", "EXCEL");
+        dsPrivacyUseHist.set("prvUseDesc", "이런저런 파라메터");
+    
+        ajaxLib.ajax("/cf/insertTcfPrivacyUseHist",{
+                method : "POST",
+                requestData : dsPrivacyUseHist.getJSON(),
+                callback : function(result, e){      
+                        scwin.btnFind_onclick();
+                },
+                 errCallback: function(result, e) {
+                    com.showMessage("CFE0200","개인정보사용이력 저장");// $1 처리시 오류가 발생하였습니다.
+                }
+        });                    
+    }
+    
+    
+	
+    scwin.subtotal_function = function(tc,val)
+    {
+        let rtnVal = "";
+        let currRow = -1;
+        let compVal = "";
+        
+        if(val == 1)      //계좌번호
+        {
+            rtnVal  = tc;
+            compVal = rtnVal.split(':');
+            rtnVal  = compVal[0]
+        }
+        else if(val == 2) //은행명
+        {
+            currRow = dsList.getMatchedIndex( "bnactNo" , tc , true , 0 , dsList.getTotalRow())[0];
+            rtnVal = dsList.getCellData( currRow , "bankName");
+        }
+        else if(val == 3)             //예금주
+        {
+            currRow = dsList_Decrypt.getMatchedIndex( "bnactNo" , tc , true , 0 , dsList_Decrypt.getTotalRow())[0];
+            rtnVal = dsList_Decrypt.getCellData( currRow , "achdrNm");
+        }
+        else if (val == 4) // 현장
+        {
+            currRow = dsList_Decrypt.getMatchedIndex( "siteCd" , tc , true , 0 , dsList_Decrypt.getTotalRow())[0];
+            rtnVal = dsList_Decrypt.getCellData( currRow , "siteNm");
+        }
+        
+        return rtnVal;
+    }
+    
+    scwin.subtotalDecrypt_function = function(tc,val)
+    {
+        let rtnVal = "";
+        let currRow = -1;
+        let compVal = "";
+        
+        if(val == 1)      //계좌번호
+        {
+            rtnVal  = tc;
+            compVal = rtnVal.split(':');
+            rtnVal  = compVal[0]
+        }
+        else if(val == 2) //은행명
+        {
+            currRow = dsList_Decrypt.getMatchedIndex( "bnactNo" , tc , true , 0 , dsList_Decrypt.getTotalRow())[0];
+            rtnVal = dsList_Decrypt.getCellData( currRow , "bankName");
+        }
+        else if(val == 3)             //예금주
+        {
+            currRow = dsList_Decrypt.getMatchedIndex( "bnactNo" , tc , true , 0 , dsList_Decrypt.getTotalRow())[0];
+            rtnVal = dsList_Decrypt.getCellData( currRow , "achdrNm");
+        }
+        else if (val == 4) // 현장
+        {
+            currRow = dsList_Decrypt.getMatchedIndex( "siteCd" , tc , true , 0 , dsList_Decrypt.getTotalRow())[0];
+            rtnVal = dsList_Decrypt.getCellData( currRow , "siteNm");
+        }
+        
+        return rtnVal;
+    }    
+    
+    //검색년월 from change event
+	scwin.calYearMonth_onchange = function() {
+        if( !com.isEmpty(dsSearchMap.get("frmWorkYm")) )
+        {
+            scwin.btnFind_onclick();    
+        }		
+	};
+	
+	]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+        <w2:require src="/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+	    <xf:group style="margin-top:0px;" id="" class="content_body">
+	        <xf:group class="navigator_wrap" id="" style="">
+	            <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+	        </xf:group>
+	        <xf:group class="tbl_search" id="" style="">
+	            <xf:group class="tb_list" id="" style="" tagname="table">
+	                <w2:attributes>
+	                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+	                </w2:attributes>
+	                <xf:group tagname="colgroup">
+	                    <xf:group style="width:94.00px;" tagname="col"></xf:group>
+	                    <xf:group style="width:363.00px;" tagname="col"></xf:group>
+	                    <xf:group style="width:195px;" tagname="col"></xf:group>
+	                    <xf:group style="width:auto;" tagname="col"></xf:group>
+	                    <xf:group tagname="col" style="width:-0.14%;"></xf:group>
+	                    <xf:group style="width:0.00px;" tagname="col"></xf:group>
+	                    <xf:group style="width:auto;" tagname="col"></xf:group>
+	                </xf:group>
+	                <xf:group style="" tagname="tr">
+	                    <xf:group class="w2tb_th req" style="" tagname="th">
+	                        <w2:attributes>
+	                            <w2:scope>row</w2:scope>
+	                        </w2:attributes>
+	                        <w2:span class="" id="" label="조회기간" style=""></w2:span>
+	                    </xf:group>
+	                    <xf:group class="w2tb_td" style="" tagname="td">
+	                        <w2:inputCalendar calendarValueType="yearMonth" class="req" ev:onchange="scwin.calYearMonth_onchange"
+	                            focusOnDateSelect="false" footerDiv="false" id="calYearMonth" mandatory="" placeholder="____-__"
+	                            ref="data:dsSearchMap.frmWorkYm" renderDiv="true" renderType="component" rightAlign="false"
+	                            style="width:120px">
+	                            <script ev:event="onchange" type="text/javascript"><![CDATA[
+			    				 ]]></script>
+	                        </w2:inputCalendar>
+	                    </xf:group>
+	                    <xf:group class="w2tb_th req" style="" tagname="th">
+	                        <w2:attributes>
+	                            <w2:scope>row</w2:scope>
+	                        </w2:attributes>
+	                        <w2:span class="" id="" label="엑셀 다운로드 사유" style=""></w2:span>
+	                    </xf:group>
+	                    <xf:group class="w2tb_td" style="width:30%;" tagname="td">
+	                        <xf:input allowChar="" autocomplete="off" id="ibxDownloadReason" initValue=""
+	                            ref="data:dsPrivacyUseHist.prvUseReason" style="width:272px;" dataType="text">
+	                        </xf:input>
+	                    </xf:group>
+	                    <xf:group tagname="td" class="w2tb_td">
+	                        <w2:attributes></w2:attributes>
+	                        <w2:anchor class="btn_gcm excel_down" clickEventElement="" ev:onclick="scwin.btnExcelDwn_onclick" id="anchor1"
+	                            localeRef="" outerDiv="false" style="" toolTip="엑셀다운로드">
+	                            <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+	                        </w2:anchor>
+	                    </xf:group>
+	                </xf:group>
+	            </xf:group>
+	            <xf:group class="btn_tbl_search" style="" tagname="">
+	                <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+	                    <xf:label><![CDATA[조회]]></xf:label>
+	                </w2:anchor>
+	            </xf:group>
+	        </xf:group>
+	        <xf:group class="defaultbox" id="" style="">
+	            <w2:textbox class="df_tt" id="" label="노무지급총괄표(계좌별)" style="" tagname="h3"></w2:textbox>
+	            <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+	            <xf:group class="right_wrap" id="" style="">
+	                <xf:group id="" style="">
+	                    <w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef="" outerDiv="false"
+	                        style="display:none" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+	                        <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+	                    </w2:anchor>
+	                </xf:group>
+	            </xf:group>
+	        </xf:group>
+	        <w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsList" fixedColumnWithHidden="true"
+	            focusMode="row" id="grdList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+	            rowStatusWidth="30" scrollByColumn="false" style="height:300px;" useShiftKey="true" visibleRowNum=""
+	            checkReadOnlyOnPaste="true" enterKeyMove="down" keyMoveEditMode="true" preventAddRowOnPaste="true"
+	            ev:oncellclick="scwin.grdTcmEqpmCdList_oncellclick" rowNumBackgroundColor="" tooltipDisplay="true" mergeCells=""
+	            preventPaste="true" useFilterList="">
+	            <w2:header id="header1" style="">
+	                <w2:row id="row2" style="">
+	                    <w2:column removeBorderStyle="false" width="160" inputType="text" id="column106" value="현장명" blockSelect="false"
+	                        displayMode="label" style="height:68px;" colSpan="" rowSpan="2" useFilter="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="100" inputType="text" id="column111" value="작업년월" blockSelect="false"
+	                        displayMode="label" style="height:68px;" colSpan="" rowSpan="2">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="90" inputType="text" style="height:68px;" id="column140" value="성명"
+	                        blockSelect="false" displayMode="label" colSpan="" rowSpan="2" useFilter="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" id="column107" value="주민번호" blockSelect="false"
+	                        displayMode="label" style="height:68px;" colSpan="" rowSpan="2">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="125" inputType="text" id="column66" value="계좌정보" blockSelect="false"
+	                        displayMode="label" style="height:34px;" colSpan="3" rowSpan="">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column41" inputType="text" removeBorderStyle="false"
+	                        value="근로" width="140" style="height:34px;" colSpan="2" rowSpan="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:34px;" id="column194" value="노임지급현황"
+	                        blockSelect="false" displayMode="label" colSpan="3" rowSpan="" textAlign="center">
+	                    </w2:column>
+	                </w2:row>
+	                <w2:row style="" id="row9">
+	                    <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column171" value="은행"
+	                        blockSelect="false" displayMode="label" useFilter="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="125" inputType="text" style="" id="column183" value="계좌번호"
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column177" value="예금주"
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column170" value="일수"
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column189" value="공수"
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column195" value="소득금액"
+	                        blockSelect="false" displayMode="label" textAlign="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column169" value="공제금액"
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column168" value="차감지급"
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:header>
+	            <w2:gBody id="gBody4" style="">
+	                <w2:row id="row5" style="">
+	                    <w2:column blockSelect="false" id="siteNm" inputType="text" removeBorderStyle="false" textAlign="left" width="160"
+	                        displayMode="label" dataType="text" colMerge="true">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="100" inputType="text" id="workMonth" textAlign="center"
+	                        blockSelect="false" displayMode="label" colMerge="true" dataType="" displayFormat="####-##">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="wkrNm" value="" blockSelect="false"
+	                        displayMode="label" dataType="text" textAlign="center">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" id="mskSecResno" blockSelect="false"
+	                        textAlign="center" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="80" inputType="text" id="bankName" blockSelect="false" textAlign="left"
+	                        displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="125" inputType="text" style="" id="bnactNo" value="" blockSelect="false"
+	                        displayMode="label" textAlign="left">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="achdrNm" value="" blockSelect="false"
+	                        displayMode="label" textAlign="left">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" id="day" inputType="text" removeBorderStyle="false" textAlign="right" width="70"
+	                        displayMode="label" displayFormat="#,###">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="dailywork" value=""
+	                        blockSelect="false" displayMode="label" textAlign="right" displayFormat="" dataType="text">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="payAmt" value="" blockSelect="false"
+	                        displayMode="label" displayFormat="#,###" textAlign="right" dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" id="gontAmt" blockSelect="false"
+	                        displayMode="label" textAlign="right" displayFormat="#,###" dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" id="chaAmt" blockSelect="false"
+	                        displayMode="label" textAlign="right" displayFormat="#,###" dataType="number">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:gBody>
+	            <w2:subTotal targetColumnID="compVal" style="" id="subTotal1">
+	                <w2:row style="" id="row6">
+	                    <w2:column removeBorderStyle="false" width="160" inputType="text" style="" id="column130" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column129" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="column142" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column128" value="계좌계"
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="80" inputType="expression" style="" id="" value="" blockSelect="false"
+	                        displayMode="label" expression="scwin.subtotal_function(targetColValue(),'2')" excelExpression=""
+	                        textAlign="left">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="125" inputType="expression" style="" id='column185' value=""
+	                        blockSelect="false" displayMode="label" expression="scwin.subtotal_function(targetColValue(),'1')"
+	                        textAlign="left" excelExpression="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="150" inputType="expression" style="" id="column179" value=""
+	                        blockSelect="false" displayMode="label" expression="scwin.subtotal_function(targetColValue(),'3')"
+	                        textAlign="left" excelExpression="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="70" inputType="expression" style="" id="column124" value=""
+	                        blockSelect="false" displayMode="label" expression="sum('day')" textAlign="right" displayFormat="#,###">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="70" inputType="expression" style="" id="column191" value=""
+	                        blockSelect="false" displayMode="label" textAlign="right" displayFormat="#.0" expression="sum('dailywork')"
+	                        displayFormatter="" dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column197" value=""
+	                        blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,###" expression="sum('payAmt')"
+	                        dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column123" value=""
+	                        blockSelect="false" displayMode="label" expression="sum('gontAmt')" textAlign="right" displayFormat="#,###"
+	                        dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column122" value=""
+	                        blockSelect="false" displayMode="label" expression="sum('chaAmt')" textAlign="right" displayFormat="#,###"
+	                        dataType="number">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:subTotal>
+	            <w2:subTotal targetColumnID="siteCd" style="" id="subTotal3">
+	                <w2:row style="" id="row8">
+	                    <w2:column removeBorderStyle="false" width="160" inputType="text" style="" id="column200" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column201" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="column202" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column203" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column204" value="계"
+	                        blockSelect="false" displayMode="label" textAlign="left">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="125" inputType="text" style="" id="column205" value="현장계"
+	                        blockSelect="false" displayMode="label" textAlign="left">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column206" value=""
+	                        blockSelect="false" displayMode="label" textAlign="left">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="70" inputType="expression" style="" id="column207" value=""
+	                        blockSelect="false" displayMode="label" expression="sum('day')" textAlign="right" displayFormat="#,###">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="70" inputType="expression" style="" id="column208" value=""
+	                        blockSelect="false" displayMode="label" textAlign="right" displayFormat="#.0" expression="sum('dailywork')"
+	                        displayFormatter="" dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column209" value=""
+	                        blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,###" expression="sum('payAmt')"
+	                        dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column210" value=""
+	                        blockSelect="false" displayMode="label" expression="sum('gontAmt')" textAlign="right" displayFormat="#,###"
+	                        dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column211" value=""
+	                        blockSelect="false" displayMode="label" expression="sum('chaAmt')" textAlign="right" displayFormat="#,###"
+	                        dataType="number">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:subTotal>
+	            <w2:footer style="" id="footer1">
+	                <w2:row style="" id="row9">
+	                    <w2:column removeBorderStyle="false" width="160" inputType="text" style="" id="column139" value="합계"
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column138" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="column143" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column137" value=""
+	                        blockSelect="false" displayMode="label">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column136" value=""
+	                        blockSelect="false" displayMode="label" textAlign="left">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="125" inputType="text" style="" id="column187" value=""
+	                        blockSelect="false" displayMode="label" textAlign="left">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column181" value=""
+	                        blockSelect="false" displayMode="label" textAlign="left">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="70" inputType="expression" style="" id="column133" value=""
+	                        blockSelect="false" displayMode="label" expression="sum('day')" textAlign="right" displayFormat="#,###">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="70" inputType="expression" style="" id="column193" value=""
+	                        blockSelect="false" displayMode="label" textAlign="right" displayFormat="#.0" expression="sum('dailywork')"
+	                        displayFormatter="" dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column199" value=""
+	                        blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,###" expression="sum('payAmt')"
+	                        dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column132" value=""
+	                        blockSelect="false" displayMode="label" expression="sum('gontAmt')" displayFormat="#,###" textAlign="right"
+	                        dataType="number">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column131" value=""
+	                        blockSelect="false" displayMode="label" expression="sum('chaAmt')" displayFormat="#,###" textAlign="right"
+	                        dataType="number">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:footer>
+	        </w2:gridView>
+	    </xf:group>
+	    <w2:gridView autoFit="none" checkReadOnlyOnPaste="true" class="autoHeight" dataList="data:dsList_Decrypt" enterKeyMove="down"
+	        ev:oncellclick="" fixedColumnWithHidden="true" focusMode="row" id="grdListDecrypt"
+	        keyMoveEditMode="true" mergeCells="" preventAddRowOnPaste="true" preventPaste="true" readOnly="true" rowNumBackgroundColor=""
+	        rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false"
+	        style="height:193px;margin-left:25px;margin-top:20px;left:-23px;top:2px;" tooltipDisplay="true" useShiftKey="true" visible="false"
+	        visibleRowNum="">
+	        <w2:header id="header1" style="">
+	            <w2:row id="row2" style="">
+	                <w2:column blockSelect="false" colSpan="" displayMode="label" id="column106" inputType="text" removeBorderStyle="false"
+	                    rowSpan="2" style="height:68px;" value="현장명" width="160">
+	                </w2:column>
+	                <w2:column blockSelect="false" colSpan="" displayMode="label" id="column111" inputType="text" removeBorderStyle="false"
+	                    rowSpan="2" style="height:68px;" value="작업년월" width="100">
+	                </w2:column>
+	                <w2:column blockSelect="false" colSpan="" displayMode="label" id="column140" inputType="text" removeBorderStyle="false"
+	                    rowSpan="2" style="height:68px;" value="성명" width="90">
+	                </w2:column>
+	                <w2:column blockSelect="false" colSpan="" displayMode="label" id="column107" inputType="text" removeBorderStyle="false"
+	                    rowSpan="2" style="height:68px;" value="주민번호" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" colSpan="3" displayMode="label" id="column66" inputType="text" removeBorderStyle="false"
+	                    rowSpan="" style="height:34px;" value="계좌정보" width="125">
+	                </w2:column>
+	                <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column41" inputType="text" removeBorderStyle="false"
+	                    rowSpan="" style="height:34px;" value="근로" width="140">
+	                </w2:column>
+	                <w2:column blockSelect="false" colSpan="3" displayMode="label" id="column194" inputType="text" removeBorderStyle="false"
+	                    rowSpan="" style="height:34px;" textAlign="center" value="노임지급현황" width="120">
+	                </w2:column>
+	            </w2:row>
+	            <w2:row id="row9" style="">
+	                <w2:column blockSelect="false" displayMode="label" id="column171" inputType="text" removeBorderStyle="false" style=""
+	                    value="은행" width="80">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column183" inputType="text" removeBorderStyle="false" style=""
+	                    value="계좌번호" width="125">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column177" inputType="text" removeBorderStyle="false" style=""
+	                    value="예금주" width="150">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column170" inputType="text" removeBorderStyle="false" style=""
+	                    value="일수" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column189" inputType="text" removeBorderStyle="false" style=""
+	                    value="공수" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column195" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="" value="소득금액" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column169" inputType="text" removeBorderStyle="false" style=""
+	                    value="공제금액" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column168" inputType="text" removeBorderStyle="false" style=""
+	                    value="차감지급" width="120">
+	                </w2:column>
+	            </w2:row>
+	        </w2:header>
+	        <w2:gBody id="gBody4" style="">
+	            <w2:row id="row5" style="">
+	                <w2:column blockSelect="false" colMerge="true" dataType="text" displayMode="label" id="siteNm" inputType="text"
+	                    removeBorderStyle="false" style="" textAlign="left" width="160">
+	                </w2:column>
+	                <w2:column blockSelect="false" colMerge="true" dataType="" displayFormat="####-##" displayMode="label" id="workMonth"
+	                    inputType="text" removeBorderStyle="false" style="" textAlign="center" width="100">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="text" displayMode="label" id="wkrNm" inputType="text" removeBorderStyle="false"
+	                    style="" textAlign="center" value="" width="90">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="secResno" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="center" value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="bankName" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="left" width="80">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="bnactNo" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="left" value="" width="125">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="achdrNm" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="left" value="" width="150">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayFormat="#,###" displayMode="label" id="day" inputType="text"
+	                    removeBorderStyle="false" style="" textAlign="right" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="text" displayFormat="" displayMode="label" id="dailywork" inputType="text"
+	                    removeBorderStyle="false" style="" textAlign="right" value="" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" id="payAmt" inputType="text"
+	                    removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" id="gontAmt" inputType="text"
+	                    removeBorderStyle="false" style="" textAlign="right" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" id="chaAmt" inputType="text"
+	                    removeBorderStyle="false" style="" textAlign="right" width="120">
+	                </w2:column>
+	            </w2:row>
+	        </w2:gBody>
+	        <w2:subTotal id="subTotal1" style="" targetColumnID="bnactNo">
+	            <w2:row id="row6" style="">
+	                <w2:column blockSelect="false" displayMode="label" id="column130" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="160">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column129" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="100">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column142" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="90">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column128" inputType="text" removeBorderStyle="false" style=""
+	                    value="계좌계" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" excelExpression="" expression='' id="" inputType="text"
+	                    removeBorderStyle="false" style="" textAlign="left" value="" width="80">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" expression='targetColValue("bnactNo")'
+	                    id="column185" inputType="expression" removeBorderStyle="false" style="" textAlign="left" value="" width="125" excelExpression="">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" expression='' id="column179"
+	                    inputType="text" removeBorderStyle="false" style="" textAlign="left" value="" width="150" excelExpression="">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayFormat="#,###" displayMode="label" expression="sum('day')" id="column124"
+	                    inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#.0" displayFormatter="" displayMode="label"
+	                    expression="sum('dailywork')" id="column191" inputType="expression" removeBorderStyle="false" style=""
+	                    textAlign="right" value="" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" expression="sum('payAmt')"
+	                    id="column197" inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" expression="sum('gontAmt')"
+	                    id="column123" inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" expression="sum('chaAmt')"
+	                    id="column122" inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	            </w2:row>
+	        </w2:subTotal>
+	        <w2:subTotal id="subTotal3" style="" targetColumnID="siteCd">
+	            <w2:row id="row8" style="">
+	                <w2:column blockSelect="false" displayMode="label" id="column200" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="160" expression="">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column201" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="100">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column202" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="90">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column203" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column204" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="left" value="계" width="80">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column205" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="left" value="현장계" width="125">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column206" inputType="expression" removeBorderStyle="false"
+	                    style="" textAlign="left" value="" width="150" excelExpression="" expression="targetColValue()">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayFormat="#,###" displayMode="label" expression="sum('day')" id="column207"
+	                    inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#.0" displayFormatter="" displayMode="label"
+	                    expression="sum('dailywork')" id="column208" inputType="expression" removeBorderStyle="false" style=""
+	                    textAlign="right" value="" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" expression="sum('payAmt')"
+	                    id="column209" inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" expression="sum('gontAmt')"
+	                    id="column210" inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" expression="sum('chaAmt')"
+	                    id="column211" inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	            </w2:row>
+	        </w2:subTotal>
+	        <w2:footer id="footer1" style="">
+	            <w2:row id="row9" style="">
+	                <w2:column blockSelect="false" displayMode="label" id="column139" inputType="text" removeBorderStyle="false" style=""
+	                    value="합계" width="160">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column138" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="100">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column143" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="90">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column137" inputType="text" removeBorderStyle="false" style=""
+	                    value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column136" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="left" value="" width="80">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column187" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="left" value="" width="125">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayMode="label" id="column181" inputType="text" removeBorderStyle="false" style=""
+	                    textAlign="left" value="" width="150">
+	                </w2:column>
+	                <w2:column blockSelect="false" displayFormat="#,###" displayMode="label" expression="sum('day')" id="column133"
+	                    inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#.0" displayFormatter="" displayMode="label"
+	                    expression="sum('dailywork')" id="column193" inputType="expression" removeBorderStyle="false" style=""
+	                    textAlign="right" value="" width="70">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" expression="sum('payAmt')"
+	                    id="column199" inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" expression="sum('gontAmt')"
+	                    id="column132" inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	                <w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" expression="sum('chaAmt')"
+	                    id="column131" inputType="expression" removeBorderStyle="false" style="" textAlign="right" value="" width="120">
+	                </w2:column>
+	            </w2:row>
+	        </w2:footer>
+	    </w2:gridView>
+	</body>
+</html>

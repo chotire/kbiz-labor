@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dataList1" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="gubun" name="구분" dataType="text"></w2:column>
+						<w2:column id="actbgtAmt1" name="실행예산(최초)" dataType="text"></w2:column>
+						<w2:column id="actbgtAmt2" name="실행예산(변경)" dataType="text"></w2:column>
+						<w2:column id="prevYearAmt" name="전년도_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt1" name="01월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt2" name="02월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt3" name="03월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt4" name="04월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt5" name="05월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt6" name="06월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt7" name="07월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt8" name="08월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt9" name="09월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt10" name="10월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt11" name="11월_실적" dataType="text"></w2:column>
+						<w2:column id="monAmt12" name="12월_실적" dataType="text"></w2:column>
+						<w2:column id="totAmt" name="누계_실적" dataType="text"></w2:column>
+						<w2:column id="diffAmt" name="익년이후" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="false">
+					</w2:data>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM05000025T.xml
+ * Program Name : 경영실적 T
+ * Author : 고규호 (tpkogh)
+ * Date : 2019.06.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+ /**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+
+	var pMap;
+
+ /**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+
+	scwin.onpageload = function() {
+		//tab main의 map정보
+		pMap = $p.getFrame().getParentFrame().getObj("dsSearchMap");
+
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+    	console.log("경영실적T fnInitial Call");
+
+		//화면로딩 시 자동 조회
+		scwin.fnTcmSiteAchv();
+
+        com.commonUI();
+    };
+
+ /**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnTcmSiteAchv
+	 * 기 능: 경영실적 조회
+	 **************************************************************************/
+     scwin.fnTcmSiteAchv = function() {
+     	var currYear = dateLib.getCurrentDate("yyyy");
+     	grdData.setHeaderValue( "title1" , (Number(currYear)-1) + "년 까지" );
+     	grdData.setHeaderValue( "title2" , currYear + "년 실적" );
+     	grdData.setHeaderValue( "title3" , currYear + "년<br>까지" );
+     	grdData.setHeaderValue( "title4" , (Number(currYear)+1) + "년<br>이후" );
+        ajaxLib.ajax("/cm/cm0500/CM05000030T/execPcmSiteMagrPfmcSelect", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : $p.getFrame().getParentFrame().getObj("dsSearchMap").getJSON(),
+            callback : function(result, e) {
+		    	dataList1.setJSON( result.data );
+		    },
+            errCallback : function(result, e) {
+       			console.log(result);
+    		}
+        });
+    };
+]]></script>
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="tab_body">
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="경영실적" style="" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="descbox" id="">
+						<w2:textbox class="" id="" label="(단위:백만원, VAT별도, 기성은 VAT 포함)" tagname=""></w2:textbox>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dataList1" fixedColumnWithHidden="true"
+				focusMode="row" id="grdData" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+				rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height:219px" useShiftKey="true"
+				visibleRowNum="">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column27" inputType="text"
+							removeBorderStyle="false" style="height:39px;" value="구분" width="100" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column25" inputType="text"
+							removeBorderStyle="false" style="height:39px;" value="실행예산&lt;br/&gt;(최초)" width="100" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:39px;"
+							id="column48" value="실행예산&lt;br/&gt;(현재)" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:39px;"
+							id="title1" value="" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:39px;"
+							id="title2" value="" blockSelect="false" displayMode="label" colSpan="12" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="height:39px;"
+							id="title3" value="" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:39px;"
+							id="title4" value="" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column58"
+							value="1월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column57"
+							value="2월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column56"
+							value="3월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column55"
+							value="4월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column54"
+							value="5월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column53"
+							value="6월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column52"
+							value="7월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column51"
+							value="8월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column50"
+							value="9월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column73"
+							value="10월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column70"
+							value="11월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column67"
+							value="12월" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" id="gubun" inputType="text"
+							removeBorderStyle="false" style="" value="" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="actbgtAmt1" inputType="text"
+							removeBorderStyle="false" style="" value="" width="100" displayFormat="#,###.##" dataType="number"
+							textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="actbgtAmt2"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,###.##" dataType="number"
+							textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="prevYearAmt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,###.##" dataType="number"
+							textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt1" value=""
+							blockSelect="false" displayMode="label" displayFormat="#,###.##" dataType="number" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt2" value=""
+							blockSelect="false" displayMode="label" displayFormat="#,###.##" dataType="number" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt3" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt4" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt5" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt6" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt7" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt8" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt9" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt10" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt11" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="monAmt12" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="totAmt" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="diffAmt" value=""
+							blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.##" textAlign="right" displayFormatter="">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+
+
+	</body>
+</html>

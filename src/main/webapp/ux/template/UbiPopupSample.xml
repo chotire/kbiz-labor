@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map"></w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<!--  화면 캡춰 라이브러리 -->
+		<script type="text/javascript" src="/resources/js/html2canvas/html2canvas.js"></script>
+		
+		<!--  #화면 캡춰 라이브러리 -->
+		<script type="javascript" lazy="false"><![CDATA[
+	/***************************************************************************
+	 * Program ID : UbiPopupSample.xml
+	 * Program Name : UBI리포트팝업샘플
+	 * Author : 송준영(tpsongjy)
+	 * Date : 2019.06.13
+	 * 
+	 * History 
+	 * ======================================== 
+	 * 변경일자     수정자   내 용 
+	 * ======================================== 
+	 * 2019.06.13 송준영   최초작성
+	 *     
+	 **************************************************************************/
+
+	/************************************************************************************
+	 *  [1] 초기화 
+	 ************************************************************************************/
+	scwin.onpageload = function() {
+		scwin.initScreen();
+	};
+
+	// 화면 초기화
+	scwin.initScreen = function() {
+	};
+
+    /**************************************************************************
+     *  [2] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.btnUbiPopupView_onclick
+     * 기 능: 결재문서 조회 : UBI리포트 팝업 이벤트
+     **************************************************************************/
+    scwin.btnUbiPopupView_onclick = function() {
+        // UBI리포트 샘플 팝업 실행 : 개발서버에서 실행
+        // 로컬에서 실행 시 팝업은 개발의 UBI리포트 팝업페이지가 호출되며 콜백URL은 실행 되지 않는다.
+        com.ubiReportPopup("ubi_sample.jrf", {test1:'test'}, "CF", "/cf/ubi4/callbackUbiTest");
+    };
+]]></script>
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+	    <xf:group style="" id="menuInfoView" class="content_body">
+	        <xf:group class="navigator_wrap" id="" style="">
+	            <xf:group class="navigator" id="" style="">
+	                <w2:textbox class="tit" id="screenTitle" label="UBI리포트팝업" style="" tagname="h2" userData1=""></w2:textbox>
+	            </xf:group>
+	        </xf:group>
+	        <xf:group style="left:0px;top:0px;" id="">
+	            <w2:anchor ev:onclick="scwin.btnUbiPopupView_onclick" outerDiv="false" clickEventElement="outerDiv" style="" id="btnUbiRequest" class="btn_gcm">
+	                <xf:label><![CDATA[UBI리포트팝업]]></xf:label>
+	            </w2:anchor>
+	        </xf:group>
+	    </xf:group>
+	</body>
+</html>

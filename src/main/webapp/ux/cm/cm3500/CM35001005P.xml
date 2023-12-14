@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsSafeItemDetailList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="siteNm" name="현장명" dataType="text"></w2:column>
+						<w2:column id="actbgtAmt" name="공사비총액" dataType="text"></w2:column>
+						<w2:column id="safeActbgtAmt" name="안전관리비총액" dataType="text"></w2:column>
+						<w2:column id="thCostSum" name="당월실적" dataType="text"></w2:column>
+						<w2:column id="bfCostSum" name="전월실적" dataType="text"></w2:column>
+						<w2:column id="safeThActbgtAmt" name="예산누계" dataType="text"></w2:column>
+						<w2:column id="allCostSum" name="실적" dataType="text"></w2:column>
+						<w2:column id="leftActbgtAmt" name="차이" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true">
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+					</w2:data>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM35001005P.xml
+ * Program Name : 항목별, 아이템별 세부내역(팝업)
+ * Author : jungjy1 (jungjy1)
+ * Date : 2019.07.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/    			
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/		
+	
+	
+	scwin.onpageload = function() {
+			
+		 grdSafeItemDetailList.initGrid();   //GRID 초기화
+        //UI팀용 함수 호출
+        com.commonUI();
+			stndItemiNm.setValue( JSON.parse($p.getPopupParam()).data.paramKeyStndItemiNm );
+			scwin.fnSearch();
+		
+	};
+	
+	scwin.onpageunload = function() {
+		
+	};
+
+			 	
+	scwin.fnSearch = function(){
+	
+			var stndItemiCd = JSON.parse($p.getPopupParam()).data.paramKeyStndItemiCd;
+			var stdYm = JSON.parse($p.getPopupParam()).data.paramKeyDate;
+		//	alert ( stndItemiCd);
+	        ajaxLib.ajax("/cm/cm3500/CM35001005P/selectSafeItemDetailList", {
+            method : "POST",
+            requestData : {
+            
+       			stndItemiCd : stndItemiCd,
+       			stdYm : stdYm
+            },
+            callback : function(result, e){
+            
+                dsSafeItemDetailList.setJSON( result.data );             
+                        
+            },
+            errCallback: function(result, e) {
+
+                console.log(result);
+
+            }
+        });	
+	
+	};
+	
+	scwin.btnConfirm_onclick = function() {
+		com.popup_close("");
+	};
+
+	
+	scwin.btnExcelDwn_onclick = function() {
+			grdSafeItemDetailList.advancedExcelDownload({
+            fileName:"SafeItemDetailList.xlsx",
+            //removeColumns:"0"
+        });			
+	};
+	]]></script>
+
+
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		
+		<xf:group style="" id="" class="content_body popup">
+			<xf:group class="defaultbox" id="" style="">
+			<w2:textbox class="df_tt" id="" label="항목별, 아이템별 세부내역" style="" tagname="h3"></w2:textbox>
+		</xf:group><xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary></w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:120.00px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="분류" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="stndItemiNm" label="개인보호구" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="descbox" id="" style="">
+						<w2:textbox class="" id="" label="(단위:원)" tagname=""></w2:textbox>
+					</xf:group>
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+							outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsSafeItemDetailList" fixedColumnWithHidden="true"
+				focusMode="row" id="grdSafeItemDetailList" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+				rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 311px;" useShiftKey="true"
+				visibleRowNum="">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" colSpan="" id="column19" inputType="text" rowSpan="" style=""
+							value="현장명" width="200">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="" id="column17" inputType="text" rowSpan="" style=""
+							value="공사비총액" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" rowSpan="" style="" value="안전관리비총액" width="200">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column56"
+							value="당월실적" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="" displayMode="label" id="column35" inputType="text"
+							removeBorderStyle="false" rowSpan="" style="" value="전월실적" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="" displayMode="label" id="column41" inputType="text"
+							removeBorderStyle="false" rowSpan="" style="" value="예산누계" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="" displayMode="label" id="column51" inputType="text"
+							removeBorderStyle="false" rowSpan="" style="" value="실적" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="" displayMode="label" id="column53" inputType="text"
+							removeBorderStyle="false" rowSpan="" style="" value="차이" width="120">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" class="" id="siteNm" inputType="text" style="" textAlign=""
+							value="가평마을하수도" width="200">
+						</w2:column>
+						<w2:column blockSelect="false" id="actbgtAmt" inputType="text" style="" textAlign="right"
+							value="10,027,928,332" width="120" dataType="number" displayFormat="#,###">
+						</w2:column>
+						<w2:column blockSelect="false" dataType="number" displayFormat="#,###" displayMode="label" id="safeActbgtAmt"
+							inputType="text" removeBorderStyle="false" style="" textAlign="right" value="10,027,928,332" width="200">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="thCostSum"
+							value="10,027,928,332" blockSelect="false" displayMode="label" textAlign="right" dataType="number" displayFormat="#,###">
+						</w2:column>
+						<w2:column blockSelect="false" displayFormat="#,###" displayMode="label" id="bfCostSum"
+							inputType="text" removeBorderStyle="false" style="" textAlign="right" value="0" width="120" dataType="number">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="safeThActbgtAmt" inputType="text"
+							removeBorderStyle="false" style="" textAlign="right" value="0" width="120" dataType="number" displayFormat="#,###">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="allCostSum" inputType="text"
+							removeBorderStyle="false" style="" textAlign="right" value="7.095.000" width="120" dataType="number" displayFormat="#,###">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="leftActbgtAmt" inputType="text"
+							removeBorderStyle="false" style="" textAlign="right" value="0" width="120" dataType="number" displayFormat="#,###">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+
+		</xf:group>
+	</body>
+</html>

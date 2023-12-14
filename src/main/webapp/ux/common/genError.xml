@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dataList1" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="column24" name="name2" dataType="text"></w2:column>
+						<w2:column id="column22" name="name3" dataType="text"></w2:column>
+						<w2:column id="column20" name="name4" dataType="text"></w2:column>
+						<w2:column id="column18" name="name5" dataType="text"></w2:column>
+						<w2:column id="column16" name="name6" dataType="text"></w2:column>
+						<w2:column id="column14" name="name7" dataType="text"></w2:column>
+						<w2:column id="column12" name="name8" dataType="text"></w2:column>
+						<w2:column id="column10" name="name9" dataType="text"></w2:column>
+						<w2:column id="column8" name="name10" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true">
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+					</w2:data>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+	/***************************************************************************
+	 * Program ID : genError.xml 
+	 * Program Name : 일반 에러 페이지 
+	 * Author : 강상국 (tpksg)
+	 * Date : 2019.08.26
+	 * 
+	 * History 
+	 * =================ㅇ======================= 
+	 * 변경일자     	  수정자   내 용 
+	 * ======================================== 
+	 * 2019.08.26   강상국   최초작성
+	 *     
+	 **************************************************************************/ 	
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [2] 초기화 
+     ************************************************************************************/   
+	scwin.onpageload = function() {
+		
+	};
+	
+	scwin.onpageunload = function() {
+		
+	};
+	
+    
+    /************************************************************************************
+     *  [3] Event 함수 
+     ************************************************************************************/		
+	scwin.btnConfirm_onclick = function() {
+		//$w.url("/ux/cf/CF00050000U.xml",{"forceReload" : true, "replaceHistory":true});
+		com.popup_close("");	
+	};
+	]]></script>
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group style="" id="" class="content_body popup">
+			
+			<!-- 
+			아이콘 타입 클래스
+			type1 : 컨펌/알림, 확인, 조회시 타임아웃
+			type2 : 삭제여부 확인, 다음단계 진행여부
+			type3 : 오류
+			 -->
+			<xf:group class="img_icon type3" id=""></xf:group>
+			<!-- 
+			메세지는 기본 가운데 정렬입니다.
+			좌측정렬로 메세지를 보여주고 싶다면 al클래스를 textbox에 추가하시면 됩니다.
+			 -->
+			<w2:textbox id="" label='&lt;span class="ert1"&gt;요청하신 페이지가&lt;/span&gt;&lt;br/&gt;정상적으로 처리되지 않았습니다.&lt;br/&gt;&lt;p class="ert2"&gt;시스템 담당자에게 문의하시기 바랍니다.&lt;/p&gt;' class="txt_msg ert"></w2:textbox>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

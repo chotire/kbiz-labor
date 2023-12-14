@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsMagrSituFile" saveRemovedData="true">
+						<w2:columnInfo>
+								<w2:column id="magrSituNo" name="경영현황번호" dataType="text"></w2:column>
+								<w2:column id="ptupTtl" name="게시제목" dataType="text"></w2:column>
+								<w2:column id="dataStdDt" name="자료기준일자" dataType="text"></w2:column>
+								<w2:column id="aflId" name="첨부파일ID" dataType="text"></w2:column>
+								<w2:column id="aflSeq" name="첨부파일순번" dataType="text"></w2:column>
+								<w2:column id="aflNm" name="첨부파일명" dataType="text"></w2:column>
+								<w2:column id="aflp" name="첨부파일암호화" dataType="text"></w2:column>
+						</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : index_tab_genMagrPop.xml
+ * Program Name : 경영현황 PDF파일팝업
+ * Author : 
+ * Date : 2019
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ /**************************************************************************
+ * DataCollection description
+ *
+ **************************************************************************/
+
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+	var currRow = 0;
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    };
+
+    scwin.onpageload = function() {
+		scwin.fnMagrSituFile();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+		//화면로딩 시 자동 조회
+		scwin.fnMagrSituFile();
+
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+ /**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnMagrSituFile
+	 * 기 능: 경영현황 파일 LIST SELECT
+	 **************************************************************************/
+     scwin.fnMagrSituFile = function() {
+     	var magrSituNo = JSON.parse($p.getPopupParam()).data.magrSituNo;//현장코드
+     	
+        ajaxLib.ajax("/ep/EP20030001U/selectTepMagrSituMngFile", {
+            method : "POST",
+		    requestData : {
+            	magrSituNo : magrSituNo
+            },
+            callback : function(result, e){
+            	dsMagrSituFile.setJSON(result.data.magrSituMngFileList);
+            	com.setUdcValue("dsTotalCount","udcListCount",grdMagrSituFile.getTotalRow());
+            },
+            errCallback : "fnErrCallback"
+        });
+    };
+
+/************************************************************************************
+ *  [4] Event 함수
+ ************************************************************************************/
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.grdMagrSituFile_oncellclick
+	 * 기 능: 경영현황 pdf파일
+	 **************************************************************************/
+	scwin.grdMagrSituFile_oncellclick = function(row,col) {
+		var aflp = dsMagrSituFile.getCellData( row , "aflp" );
+	    var fileDownloadUrl = "/cf/CF00350000P/downloadMAV?aflp="+aflp;
+		var popOps = {
+					  	  url        :"/ux/common/pdfView.xml"
+                    	, type       :"browser"
+						, modal      :false
+						, height     :"900"
+						, width      :"1000"
+						, popup_name :gcm.MENU_TITLE
+						, resizable  :true
+						, data       :{fileDownloadUrl:fileDownloadUrl}
+		};
+		com.popup_open(popOps);
+		//iframePdfView.setSrc("/resources/js/pdfjs-2.0.943-dist/web/viewer.html?file="+fileDownloadUrl);
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.popCnvnAflCallback
+	 * 기 능: 
+	 **************************************************************************/
+	scwin.popAflCallback = function(result){
+//		var fileId = result.aflId;
+//		var fileArr = result.allParam;
+//		var row = grdMagrSituFile.getFocusedRowIndex();
+//		var fileCnt = 0;
+//		for (var i = 0; i < fileArr.length; i++) {
+//			if (fileArr[i].scssYn == "Y") {
+//				fileCnt++;
+//			}
+//		}
+//		dsMagrSituFile.setCellData( row , "aflId" , fileId );
+//		dsMagrSituFile.setCellData( row , "aflCnt" , fileCnt );
+		//aflId.setValue("");
+		//aflId.setValue(fileId);
+	}]]></script>
+	<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	<w2:require src="/WEB-INF/ux/common/udc/udcImgFileList.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="tab_body">			
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="경영현황PDF" style="" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount" style=""></w2:udc_list_count>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="" dataList="data:dsMagrSituFile" fixedColumnWithHidden="true" focusMode="row" id="grdMagrSituFile" readOnly="" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height:405px;" useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdMagrSituFile_oncellclick" checkReadOnlyOnCut="true" checkReadOnlyOnPaste="true">
+					<w2:header id="header1" style="">
+							<w2:row id="row2" style="">
+									<w2:column blockSelect="false" id="column1" inputType="text" value="No" width="50"></w2:column>
+									<w2:column removeBorderStyle="false" width="620" inputType="text" id="column2" value="파일명" blockSelect="false" displayMode="label"></w2:column>
+							</w2:row>
+					</w2:header>
+					<w2:gBody id="gBody4" style="">
+							<w2:row id="row5" style="">
+									<w2:column blockSelect="false" id="aflSeq" inputType="text" width="50" readOnly="true" removeBorderStyle="false"></w2:column>
+									<w2:column blockSelect="false" id="aflNm" inputType="text" width="620" readOnly="true" removeBorderStyle="false" displayMode="label" ></w2:column>
+							</w2:row>
+					</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

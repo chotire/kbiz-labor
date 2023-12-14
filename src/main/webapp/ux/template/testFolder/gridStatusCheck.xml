@@ -1,0 +1,1972 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dma_fileDesc">
+					<w2:keyInfo>
+						<w2:key id="desc" name="" dataType="text"></w2:key>
+						<w2:key id="test" name="" dataType="text"></w2:key>
+					</w2:keyInfo>
+					<w2:data use="true">
+						<desc>
+                        <![CDATA[
+<pre class="textNor">
+<div class="etcbox">그리드뷰의 데이터를 상태에 따라 처리하는 가이드를 제공한다.
+
+</div> 
+</pre>
+						]]>
+						</desc>
+						<test>
+                        <![CDATA[
+<pre class="textNor">
+<div class="etc_tit">갱신</div>
+  1. [1.조회] 버튼을 클릭하여 데이터를 조회한다.
+  2. [2.수정하기]그리드의 데이터를 수정합니다.
+  3. [3.상태보기] 버튼을 클릭하여 rowStatus값이 "U"인 데이터를 확인합니다.  
+  4. 추출된 데이터를 서버로 전송합니다.
+     추출 케이스: 변경된 모든데이터 처리시 :dlt_advancedExcel_update.getModifiedJSON() 
+                          수정된 데이터만 처리시: dlt_advancedExcel_update.getUpdatedJSON(); 	
+<div class="etc_tit">삽입</div>
+  1. [1.조회] 버튼을 클릭하여 데이터를 조회한다.   
+  2. [2.삽입하기]row 1개를 삽입합니다.
+  3. [3.상태보기] 버튼을 클릭하여 rowStatus값이 "C"인 데이터를 확인합니다.
+  4. 추출된 데이터를 서버로 전송합니다.
+     추출 케이스: 변경된 모든데이터 처리시 :dlt_advancedExcel_insert.getModifiedJSON() 
+                          삽입된 데이터만 처리시: dlt_advancedExcel_insert.getInsertedJSON();
+<div class="etc_tit">삭제</div>
+  1. [1.조회] 버튼을 클릭하여 데이터를 조회한다.   
+  2. [2.삭제대상 선택하기]row 1개를 선택합니다.
+  3. [3.삭제대상 삭제하기]row 1개를 삭제합니다.
+  4. [4.상태보기] 버튼을 클릭하여 rowStatus값이 "D"인 데이터를 확인합니다.
+  5. 추출된 데이터를 서버로 전송합니다.
+     추출 케이스: 변경된 모든데이터 처리시 :dlt_advancedExcel_delete.getModifiedJSON() 
+                          삭제된 데이터만 처리시: dlt_advancedExcel_delete.getDeletedJSON();
+<div class="etc_tit">삽입후 삭제</div>
+  1. [1.조회] 버튼을 클릭하여 데이터를 조회한다.   
+  2. [2.삽입하기]row 1개를 삽입합니다.
+  3. [3.삽입대상 삭제하기]row 1개를 삭제합니다.
+  4. [4.상태보기] 버튼을 클릭하여 rowStatus값이 "D"인 데이터를 확인합니다.
+            //   이때 삽입한 데이터는 추출되지않습니다.기존에 있던 데이터만이 대상이 됩니다.
+      
+               삽입하고 삭제하지 않은 데이터는 [삽입]부분을 참고한다.
+  5. 추출된 데이터를 서버로 전송합니다.
+     추출 케이스: 변경된 모든데이터 처리시 :dlt_advancedExcel_insertdelete.getModifiedJSON();
+                          --> 새로추가되었다가 삭제되는 대상은 제외됨
+                          수정된 데이터만 처리시 : dlt_advancedExcel_insertdelete.getUpdatedJSON(); 
+                          삭제된 데이터만 처리시: dlt_advancedExcel_insertdelete.getDeletedJSON();
+                          --> 새로 추가되었다가 삭제되는 대상은 rowStatus가 "V"로 표시됨
+                          --> 기존의 데이터가 삭제되는 대상은 rowStatus가 "D"로표시됨
+<div class="etc_tit">제거</div>
+  1. [1.조회] 버튼을 클릭하여 데이터를 조회한다.   
+  2. [2.제거대상 선택하기]row 1개를 선택합니다.
+  3. [3.제거대상 제거하기]row 1개를 제거합니다.
+  4. [4.상태보기] 버튼을 클릭하여 rowStatus값이 "E"인 데이터를 확인합니다.
+            이때 삽입한 데이터를 제거시에는 추출되지않는다.  
+  5. 추출된 데이터를 서버로 전송합니다.
+     추출 케이스: 변경된 모든데이터 처리시 :dlt_advancedExcel_remove.getModifiedJSON()
+                          제거된 데이터만 처리시 : dlt_advancedExcel_remove.getRemovedJSON(); 
+<div class="etc_tit">삽입후 제거</div>
+  1. [1.조회] 버튼을 클릭하여 데이터를 조회한다.   
+  2. [2.삽입하기]row 1개를 삽입합니다.
+  3. [3.삽입대상 제거하기]row 1개를 제거합니다.
+  4. [4.상태보기] 버튼을 클릭하여 rowStatus값이 "E"인 데이터를 확인합니다.
+            이때 삽입한 데이터를 제거시에는 추출되지않는다.  
+  5. 추출된 데이터를 서버로 전송합니다.
+     추출 케이스: 변경된 모든데이터 처리시 :dlt_advancedExcel_insertremove.getModifiedJSON()
+                          제거된 데이터만 처리시 : dlt_advancedExcel_insertremove.getRemovedJSON();
+                          --> 새로 추가되었다가 삭제되는 대상은 관리하지않음
+                          --> 기존의 데이터가 삭제되는 대상은 rowStatus가 "E"로표시됨                          
+</pre>
+						]]>
+						</test>
+					</w2:data>
+				</w2:dataMap>
+				<w2:dataList id="dlt_advancedExcel" baseNode="list" saveRemovedData="true" repeatNode="map" ev:onremoverow="scwin.dlt_advancedExcel_onremoverow" ev:ondataload="scwin.dlt_advancedExcel_ondataload">
+					<w2:columnInfo>
+						<w2:column id="MENU_CD" name="메뉴코드" dataType="text"></w2:column>
+						<w2:column id="MENU_NM" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_NM" name="부모메뉴명" dataType="text"></w2:column>
+						<w2:column id="MENU_LEVEL" name="메뉴레벨" dataType="text"></w2:column>
+						<w2:column id="SRC_PATH" name="경로" dataType="text"></w2:column>
+						<w2:column id="IS_USE" name="사용여부" dataType="text"></w2:column>
+						<w2:column id="SORT_ORDER" name="순서" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_CD" name="부모메뉴코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				
+				<w2:dataList id="dlt_advancedExcel_insert" baseNode="list" saveRemovedData="true" repeatNode="map" ev:onremoverow="scwin.dlt_advancedExcel_onremoverow" ev:ondataload="scwin.dlt_advancedExcel_ondataload">
+					<w2:columnInfo>
+						<w2:column id="MENU_CD" name="메뉴코드" dataType="text"></w2:column>
+						<w2:column id="MENU_NM" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_NM" name="부모메뉴명" dataType="text"></w2:column>
+						<w2:column id="MENU_LEVEL" name="메뉴레벨" dataType="text"></w2:column>
+						<w2:column id="SRC_PATH" name="경로" dataType="text"></w2:column>
+						<w2:column id="IS_USE" name="사용여부" dataType="text"></w2:column>
+						<w2:column id="SORT_ORDER" name="순서" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_CD" name="부모메뉴코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				
+				<w2:dataList id="dlt_advancedExcel_delete" baseNode="list" saveRemovedData="true" repeatNode="map" ev:onremoverow="scwin.dlt_advancedExcel_onremoverow" ev:ondataload="scwin.dlt_advancedExcel_ondataload">
+					<w2:columnInfo>					
+						<w2:column id="chk" name="체크" dataType="text" ignoreStatus="true"></w2:column>
+						<w2:column id="MENU_CD" name="메뉴코드" dataType="text"></w2:column>
+						<w2:column id="MENU_NM" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_NM" name="부모메뉴명" dataType="text"></w2:column>
+						<w2:column id="MENU_LEVEL" name="메뉴레벨" dataType="text"></w2:column>
+						<w2:column id="SRC_PATH" name="경로" dataType="text"></w2:column>
+						<w2:column id="IS_USE" name="사용여부" dataType="text"></w2:column>
+						<w2:column id="SORT_ORDER" name="순서" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_CD" name="부모메뉴코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				
+				<w2:dataList id="dlt_advancedExcel_update" baseNode="list" saveRemovedData="true" repeatNode="map" ev:onremoverow="scwin.dlt_advancedExcel_onremoverow" ev:ondataload="scwin.dlt_advancedExcel_ondataload">
+					<w2:columnInfo>
+						<w2:column id="MENU_CD" name="메뉴코드" dataType="text"></w2:column>
+						<w2:column id="MENU_NM" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_NM" name="부모메뉴명" dataType="text"></w2:column>
+						<w2:column id="MENU_LEVEL" name="메뉴레벨" dataType="text"></w2:column>
+						<w2:column id="SRC_PATH" name="경로" dataType="text"></w2:column>
+						<w2:column id="IS_USE" name="사용여부" dataType="text"></w2:column>
+						<w2:column id="SORT_ORDER" name="순서" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_CD" name="부모메뉴코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				
+				<w2:dataList id="dlt_advancedExcel_remove" baseNode="list" saveRemovedData="true" repeatNode="map" ev:onremoverow="scwin.dlt_advancedExcel_onremoverow" ev:ondataload="scwin.dlt_advancedExcel_ondataload">
+					<w2:columnInfo>
+						<w2:column id="chk" name="체크" dataType="text" ignoreStatus="true"></w2:column>
+						<w2:column id="MENU_CD" name="메뉴코드" dataType="text"></w2:column>
+						<w2:column id="MENU_NM" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_NM" name="부모메뉴명" dataType="text"></w2:column>
+						<w2:column id="MENU_LEVEL" name="메뉴레벨" dataType="text"></w2:column>
+						<w2:column id="SRC_PATH" name="경로" dataType="text"></w2:column>
+						<w2:column id="IS_USE" name="사용여부" dataType="text"></w2:column>
+						<w2:column id="SORT_ORDER" name="순서" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_CD" name="부모메뉴코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				
+				<w2:dataList id="dlt_advancedExcel_insertdelete" baseNode="list" saveRemovedData="true" repeatNode="map" ev:onremoverow="scwin.dlt_advancedExcel_onremoverow" ev:ondataload="scwin.dlt_advancedExcel_ondataload">
+					<w2:columnInfo>
+						<w2:column id="chk" name="체크" dataType="text" ignoreStatus="true"></w2:column>
+						<w2:column id="MENU_CD" name="메뉴코드" dataType="text"></w2:column>
+						<w2:column id="MENU_NM" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_NM" name="부모메뉴명" dataType="text"></w2:column>
+						<w2:column id="MENU_LEVEL" name="메뉴레벨" dataType="text"></w2:column>
+						<w2:column id="SRC_PATH" name="경로" dataType="text"></w2:column>
+						<w2:column id="IS_USE" name="사용여부" dataType="text"></w2:column>
+						<w2:column id="SORT_ORDER" name="순서" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_CD" name="부모메뉴코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				
+				<w2:dataList id="dlt_advancedExcel_insertremove" baseNode="list" saveRemovedData="true" repeatNode="map" ev:onremoverow="scwin.dlt_advancedExcel_onremoverow" ev:ondataload="scwin.dlt_advancedExcel_ondataload">
+					<w2:columnInfo>
+						<w2:column id="chk" name="체크" dataType="text" ignoreStatus="true"></w2:column>
+						<w2:column id="MENU_CD" name="메뉴코드" dataType="text"></w2:column>
+						<w2:column id="MENU_NM" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_NM" name="부모메뉴명" dataType="text"></w2:column>
+						<w2:column id="MENU_LEVEL" name="메뉴레벨" dataType="text"></w2:column>
+						<w2:column id="SRC_PATH" name="경로" dataType="text"></w2:column>
+						<w2:column id="IS_USE" name="사용여부" dataType="text"></w2:column>
+						<w2:column id="SORT_ORDER" name="순서" dataType="text"></w2:column>
+						<w2:column id="PARENT_MENU_CD" name="부모메뉴코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script type="text/javascript" lazy="false">
+        <![CDATA[
+ /**
+ * DataList는 row 마다 사용자 제어에 따른 삽입/수정/삭제 등의 상태값을 가지고 있으며 getter API로 상태별 데이터를 꺼내올 수 있다. 상세 내용은 아래와 같다.
+ * status : R / statusValue : 0 - 초기 상태. (변화없음)
+ * status : U / statusValue : 1 - 갱신. (update API 호출 시)
+ * status : C / statusValue : 2 - 삽입. (insert API 호출 시)
+ * status : D / statusValue : 3 - 삭제. (delete API 호출 시)
+ * status : V / statusValue : 4 - 삽입 후 삭제. (insert API 후 delete API 호출)
+ * status : E / statusValue : 5 - 제거. (remove API 호출 시)
+ */
+ 
+ var _data = {
+    "dlt_advancedExcel": [{
+
+        "MENU_CD": "010000",
+        "MENU_NM": "SETUP",
+        "PARENT_MENU_NM": "Parent Category",
+        "MENU_LEVEL": 1,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "000000"
+
+    }, {
+
+        "MENU_CD": "010100",
+        "MENU_NM": "Menu",
+        "PARENT_MENU_NM": "SETUP",
+        "MENU_LEVEL": 2,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "010000"
+
+    }, {
+
+        "MENU_CD": "010101",
+        "MENU_NM": "공통코드관리",
+        "PARENT_MENU_NM": "Menu",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/BM/BM001M01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "010100"
+
+    }, {
+
+        "MENU_CD": "010102",
+        "MENU_NM": "권한관리",
+        "PARENT_MENU_NM": "Menu",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/BM/BM002M01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "010100"
+
+    }, {
+
+        "MENU_CD": "010103",
+        "MENU_NM": "메뉴관리",
+        "PARENT_MENU_NM": "Menu",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/BM/BM003M01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 3,
+        "PARENT_MENU_CD": "010100"
+
+    }, {
+
+        "MENU_CD": "010104",
+        "MENU_NM": "TransData",
+        "PARENT_MENU_NM": "Menu",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/transData.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "010100"
+
+    }, {
+
+        "MENU_CD": "010105",
+        "MENU_NM": "ReceiveData",
+        "PARENT_MENU_NM": "Menu",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/receiveData.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "010100"
+
+    }, {
+
+        "MENU_CD": "010106",
+        "MENU_NM": "gridViewAdvancedExcel",
+        "PARENT_MENU_NM": "Menu",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/gridViewAdvancedExcel.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 3,
+        "PARENT_MENU_CD": "010100"
+
+    }, {
+
+        "MENU_CD": "010200",
+        "MENU_NM": "Authorization",
+        "PARENT_MENU_NM": "SETUP",
+        "MENU_LEVEL": 2,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "010000"
+
+    }, {
+
+        "MENU_CD": "010201",
+        "MENU_NM": "조직기본관리",
+        "PARENT_MENU_NM": "Authorization",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/HM/HM001M01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "010200"
+
+    }, {
+
+        "MENU_CD": "010202",
+        "MENU_NM": "인사기본관리",
+        "PARENT_MENU_NM": "Authorization",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/HM/HM002M01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "010200"
+
+    }, {
+
+        "MENU_CD": "010300",
+        "MENU_NM": "LargeData",
+        "PARENT_MENU_NM": "SETUP",
+        "MENU_LEVEL": 2,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "010000"
+
+    }, {
+
+        "MENU_CD": "010301",
+        "MENU_NM": "largeResult.xml",
+        "PARENT_MENU_NM": "LargeData",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/cm/common/largeResult.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "010300"
+
+    }, {
+
+        "MENU_CD": "020000",
+        "MENU_NM": "Publishing",
+        "PARENT_MENU_NM": "Parent Category",
+        "MENU_LEVEL": 1,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "000000"
+
+    }, {
+
+        "MENU_CD": "020100",
+        "MENU_NM": "Component",
+        "PARENT_MENU_NM": "Publishing",
+        "MENU_LEVEL": 2,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "020000"
+
+    }, {
+
+        "MENU_CD": "020101",
+        "MENU_NM": "01.title",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/01.title.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020102",
+        "MENU_NM": "02.button",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/02.button.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020103",
+        "MENU_NM": "03.checkbox_radio",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/03.checkbox_radio.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 3,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020104",
+        "MENU_NM": "04.table",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/04.table.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 4,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020105",
+        "MENU_NM": "05.gridview",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/05.gridview.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 5,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020106",
+        "MENU_NM": "06.searchbox",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/06.searchbox.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 6,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020107",
+        "MENU_NM": "07.groupbox",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/07.groupbox.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 7,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020108",
+        "MENU_NM": "08.icon_images",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/08.icon_images.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 8,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020109",
+        "MENU_NM": "09.pagelist.xml",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/09.pagelist.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 9,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020110",
+        "MENU_NM": "10.tabcontrol",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/10.tabcontrol",
+        "IS_USE": "Y",
+        "SORT_ORDER": 10,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020111",
+        "MENU_NM": "11.inputcalendar_combo",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/11.inputcalendar_combo.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 11,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020112",
+        "MENU_NM": "12.upload",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/12.upload.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 12,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020113",
+        "MENU_NM": "13.autocomplete",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/13.autocomplete.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 13,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020114",
+        "MENU_NM": "14.generator",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/14.generator.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 14,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020115",
+        "MENU_NM": "15.inputcalendar",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/15.inputcalendar.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 15,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020116",
+        "MENU_NM": "16.html5_layout",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/16.html5_layout.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 16,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020117",
+        "MENU_NM": "17.html5_layout2",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/17.html5_layout2.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 17,
+        "PARENT_MENU_CD": "020100"
+    }, {
+
+        "MENU_CD": "020118",
+        "MENU_NM": "18.treeview",
+        "PARENT_MENU_NM": "Component",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/component/18.treeview.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 18,
+        "PARENT_MENU_CD": "020100"
+
+    }, {
+
+        "MENU_CD": "020200",
+        "MENU_NM": "Page",
+        "PARENT_MENU_NM": "Publishing",
+        "MENU_LEVEL": 2,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "020000"
+
+    }, {
+
+        "MENU_CD": "020201",
+        "MENU_NM": "board_list.xml",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/board_list.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020202",
+        "MENU_NM": "board_news_list",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/board_news_list.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020203",
+        "MENU_NM": "board_photo_list",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/board_photo_list.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 3,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020204",
+        "MENU_NM": "board_read",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/board_read.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 4,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020205",
+        "MENU_NM": "board_update",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/board_update.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 5,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020206",
+        "MENU_NM": "board_write",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/board_write.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 6,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020207",
+        "MENU_NM": "faq",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/faq.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 7,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020208",
+        "MENU_NM": "layer_popup",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/layer_popup.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 8,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020209",
+        "MENU_NM": "pop_L",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/pop_L.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 9,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020210",
+        "MENU_NM": "pop_M",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/pop_M.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 10,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020211",
+        "MENU_NM": "pop_S",
+        "PARENT_MENU_NM": "Page",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/page/pop_S.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 11,
+        "PARENT_MENU_CD": "020200"
+
+    }, {
+
+        "MENU_CD": "020300",
+        "MENU_NM": "Template",
+        "PARENT_MENU_NM": "Publishing",
+        "MENU_LEVEL": 2,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 3,
+        "PARENT_MENU_CD": "020000"
+
+    }, {
+
+        "MENU_CD": "020301",
+        "MENU_NM": "template01",
+        "PARENT_MENU_NM": "Template",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/template/template01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "020300"
+
+    }, {
+
+        "MENU_CD": "020302",
+        "MENU_NM": "template02",
+        "PARENT_MENU_NM": "Template",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/template/template02.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "020300"
+
+    }, {
+
+        "MENU_CD": "020303",
+        "MENU_NM": "template03",
+        "PARENT_MENU_NM": "Template",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/template/template03.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 3,
+        "PARENT_MENU_CD": "020300"
+
+    }, {
+
+        "MENU_CD": "020304",
+        "MENU_NM": "template04",
+        "PARENT_MENU_NM": "Template",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/template/template04.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 4,
+        "PARENT_MENU_CD": "020300"
+
+    }, {
+
+        "MENU_CD": "020305",
+        "MENU_NM": "template05",
+        "PARENT_MENU_NM": "Template",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/template/template05.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 5,
+        "PARENT_MENU_CD": "020300"
+
+    }, {
+
+        "MENU_CD": "020306",
+        "MENU_NM": "template06",
+        "PARENT_MENU_NM": "Template",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/template/template06.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 6,
+        "PARENT_MENU_CD": "020300"
+
+    }, {
+
+        "MENU_CD": "020307",
+        "MENU_NM": "template07",
+        "PARENT_MENU_NM": "Template",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/template/template07.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 7,
+        "PARENT_MENU_CD": "020300"
+
+    }, {
+
+        "MENU_CD": "020308",
+        "MENU_NM": "template08",
+        "PARENT_MENU_NM": "Template",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/template/template08.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 8,
+        "PARENT_MENU_CD": "020300"
+
+    }, {
+
+        "MENU_CD": "020309",
+        "MENU_NM": "template09",
+        "PARENT_MENU_NM": "Template",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/template/template09.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 9,
+        "PARENT_MENU_CD": "020300"
+
+    }, {
+
+        "MENU_CD": "020400",
+        "MENU_NM": "Training",
+        "PARENT_MENU_NM": "Publishing",
+        "MENU_LEVEL": 2,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 4,
+        "PARENT_MENU_CD": "020000"
+
+    }, {
+
+        "MENU_CD": "020401",
+        "MENU_NM": "expand_01",
+        "PARENT_MENU_NM": "Training",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/expand_01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "020400"
+
+    }, {
+
+        "MENU_CD": "020402",
+        "MENU_NM": "list_detail_01",
+        "PARENT_MENU_NM": "Training",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/pattern/list_detail_01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "020400"
+
+    }, {
+
+        "MENU_CD": "030000",
+        "MENU_NM": "Sample",
+        "PARENT_MENU_NM": "Parent Category",
+        "MENU_LEVEL": 1,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "000000"
+
+    }, {
+
+        "MENU_CD": "030100",
+        "MENU_NM": "Basic",
+        "PARENT_MENU_NM": "Sample",
+        "MENU_LEVEL": 2,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "030000"
+
+    }, {
+
+        "MENU_CD": "030101",
+        "MENU_NM": "01",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030102",
+        "MENU_NM": "02",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/02.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030103",
+        "MENU_NM": "03",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/03.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 3,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030104",
+        "MENU_NM": "04",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/04.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 4,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030105",
+        "MENU_NM": "05",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/05.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 5,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030107",
+        "MENU_NM": "06_01",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/06_01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 7,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030108",
+        "MENU_NM": "06_02",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/06_02.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 8,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030109",
+        "MENU_NM": "06_04",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/06_04.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 9,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030110",
+        "MENU_NM": "06_05",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/06_05.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 10,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030111",
+        "MENU_NM": "07",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/07.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 11,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030112",
+        "MENU_NM": "08",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/08.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 12,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030113",
+        "MENU_NM": "09",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/09.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 13,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030114",
+        "MENU_NM": "09-1",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/09-1.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 14,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030115",
+        "MENU_NM": "10",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/10.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 15,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030116",
+        "MENU_NM": "12",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/12.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 16,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030117",
+        "MENU_NM": "12-popup",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/12-popup.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 17,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030118",
+        "MENU_NM": "13",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/13.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 18,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030119",
+        "MENU_NM": "14",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/14.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 19,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030120",
+        "MENU_NM": "15",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/15.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 20,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030121",
+        "MENU_NM": "15_org",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/15_org.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 21,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030122",
+        "MENU_NM": "leftMenu",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/leftMenu.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 22,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030123",
+        "MENU_NM": "main_iframe",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/main_iframe.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 23,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030124",
+        "MENU_NM": "main_windowContainer",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/main_windowContainer.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 24,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030125",
+        "MENU_NM": "main_without_spa",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/main_without_spa.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 25,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030126",
+        "MENU_NM": "basic_main",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/BASIC/basic_main.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 26,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030127",
+        "MENU_NM": "inputbox_01",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/ADVANCE/inputbox_01.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030128",
+        "MENU_NM": "inputbox_02",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/ADVANCE/inputbox_02.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030129",
+        "MENU_NM": "inputbox_03",
+        "PARENT_MENU_NM": "Basic",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/ADVANCE/inputbox_03.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 3,
+        "PARENT_MENU_CD": "030100"
+
+    }, {
+
+        "MENU_CD": "030200",
+        "MENU_NM": "Advance",
+        "PARENT_MENU_NM": "Sample",
+        "MENU_LEVEL": 2,
+        "SRC_PATH": "",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "030000"
+    }, {
+
+        "MENU_CD": "030201",
+        "MENU_NM": "validation_check",
+        "PARENT_MENU_NM": "Advance",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/ADVANCE/validation_check.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "030200"
+    }, {
+
+        "MENU_CD": "030203",
+        "MENU_NM": "gridView_PageList",
+        "PARENT_MENU_NM": "Advance",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/ADVANCE/gridView_PageList.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 1,
+        "PARENT_MENU_CD": "030200"
+
+    }, {
+
+        "MENU_CD": "030204",
+        "MENU_NM": "gridView_onScrollEnd_Paging",
+        "PARENT_MENU_NM": "Advance",
+        "MENU_LEVEL": 3,
+        "SRC_PATH": "/ui/SP/ADVANCE/gridView_onScrollEnd_Paging.xml",
+        "IS_USE": "Y",
+        "SORT_ORDER": 2,
+        "PARENT_MENU_CD": "030200"
+
+    }]
+};
+/**
+ * 초기 스크립트 수행 함수 정의
+ */
+scwin.onpageload = function () {
+};
+
+scwin.onpageunload = function () {
+};
+
+/** 
+ * 데이터를 읽어온다.
+ */
+scwin.btn_search_onclick = function () {
+    dlt_advancedExcel_update.setJSON(_data.dlt_advancedExcel);
+};
+
+/**
+ * 그리드의 데이터가 지워진다.
+ */
+scwin.btn_gridRemoveExcelBasic_onclick = function () {
+    dlt_advancedExcel_update.removeAll();
+};
+	
+	scwin.dlt_advancedExcel_ondataload = function() {
+		scwin.dlt_advancedExcel_data = this.getAllJSON();
+	};
+	
+	scwin.btn_statusUpdate_onclick = function() {
+		//update 상태보기
+		alert("getModifiedJSON : "+JSON.stringify(dlt_advancedExcel_update.getModifiedJSON(),null,4));		
+		
+		alert("getUpdatedJSON : "+JSON.stringify(dlt_advancedExcel_update.getUpdatedJSON(),null,4));
+		//getUpdatedJSON
+	};
+	
+	scwin.btn_insert_onclick = function() {
+		//삽입
+		dlt_advancedExcel_insert.insertRow();
+	};
+	
+	scwin.btn_insertedStatus_onclick = function() {
+		//삽입한 상태 보기
+		alert("getModifiedJSON : "+JSON.stringify(dlt_advancedExcel_insert.getModifiedJSON(),null,4));
+		
+		alert("getInsertedJSON : "+JSON.stringify(dlt_advancedExcel_insert.getInsertedJSON(),null,4));
+		//getInsertedJSON()
+	};
+	
+	scwin.btn_insertReq_onclick = function() {
+		//삽입에 사용할 조회버튼
+		//btn_insertReq
+		dlt_advancedExcel_insert.setJSON(_data.dlt_advancedExcel);
+	};
+	
+	scwin.btn_deletedStatus_onclick = function() {
+		//btn_deletedStatus
+		//삭제..
+		//삭제한 상태 보기
+		alert("getModifiedJSON : "+JSON.stringify(dlt_advancedExcel_delete.getModifiedJSON(),null,4));
+		//mf_dlt_advancedExcel_delete.getDeletedJSON()
+		alert("getDeletedJSON : "+JSON.stringify(dlt_advancedExcel_delete.getModifiedJSON(),null,4));
+		
+	};
+	
+	scwin.btn_deletedRemoveAll_onclick = function() {
+		//btn_deletedRemoveAll
+		dlt_advancedExcel_delete.removeAll();
+		dlt_advancedExcel_delete.reform();
+		
+		
+	};
+	
+	scwin.btn_deletedReq_onclick = function() {
+		//btn_deletedReq
+		dlt_advancedExcel_delete.setJSON(_data.dlt_advancedExcel);
+	};
+	
+	scwin.btn_delete_onclick = function() {
+		//삭제
+		var idxArr = grd_delete.getCheckedIndex("chk");
+		if(idxArr.length == 0){
+			alert("삭제할 행이 선택되지 않았습니다.");
+		}else{
+			if(idxArr.length == 1){//1건인 경우 또는 건별 삭제할경우 
+				dlt_advancedExcel_delete.deleteRow(idxArr[0]);
+			}else{//다건인경우
+				dlt_advancedExcel_delete.deleteRows(idxArr);
+			}
+		}
+	};
+	
+	scwin.btn_insertdeletedReq_onclick = function() {
+		//inserted and delete 데이터 조회
+		//dlt_advancedExcel_insertdelete
+		dlt_advancedExcel_insertdelete.setJSON(_data.dlt_advancedExcel);
+	};
+	scwin.insertedRow = 0;
+	scwin.btn_insert2_onclick = function() {
+		//
+		scwin.insertedRow = dlt_advancedExcel_insertdelete.insertRow();
+	};
+	
+	scwin.btn_delete2_onclick = function() {
+		//삽입후 삭제
+		var idxArr = grd_insertDelete.getCheckedIndex("chk");
+		if(idxArr.length == 0){
+			alert("삭제할 행이 선택되지 않았습니다.");
+		}else{
+			dlt_advancedExcel_insertdelete.deleteRows(idxArr);
+		}
+	};
+	
+	scwin.btn_insertdeletedStatus_onclick = function() {
+		//삽입후 삭제 상태 보기
+		alert("getModifiedJSON : "+JSON.stringify(dlt_advancedExcel_insertdelete.getModifiedJSON(),null,4));
+		//getInsertedJSON
+		alert("getUpdatedJSON : "+JSON.stringify(dlt_advancedExcel_insertdelete.getUpdatedJSON(),null,4));
+		//getUpdatedJSON
+		alert("getDeletedJSON : "+JSON.stringify(dlt_advancedExcel_insertdelete.getDeletedJSON(),null,4));
+		//getDeletedJSON
+		
+	};
+	
+	scwin.btn_removeReq_onclick = function() {
+		//조회
+		dlt_advancedExcel_remove.setJSON(_data.dlt_advancedExcel);
+	};
+	
+	scwin.btn_remove_onclick = function() {
+		//제거
+		
+		var idxArr = grd_remove.getCheckedIndex("chk");
+		if(idxArr.length == 0){
+			alert("제거할 행이 선택되지 않았습니다.");
+		}else{
+			if(idxArr.length == 1){
+				dlt_advancedExcel_remove.removeRow(idxArr[0]);
+			}else{
+				dlt_advancedExcel_remove.removeRows(idxArr);
+			}
+		}
+	};
+	
+	scwin.btn_removeStatus_onclick = function() {
+		//제거상태보기
+		alert("getModifiedJSON : "+JSON.stringify(dlt_advancedExcel_remove.getModifiedJSON(),null,4));
+		//getRemovedJSON()
+		alert("getRemovedJSON : "+JSON.stringify(dlt_advancedExcel_remove.getRemovedJSON(),null,4));
+	};
+	
+	scwin.btn_removeRemoveAll_onclick = function() {
+		//제거 
+		dlt_advancedExcel_remove.removeAll();
+		dlt_advancedExcel_remove.reform();
+	};
+	
+	scwin.btn_statusUpdate2_onclick = function() {
+		//수정하기
+		dlt_advancedExcel_update.setCellData( 0 , 1 , "수정함" );
+		grd_excelGrid.setFocusedCell( 0,1 );
+	};
+	
+	scwin.btn_delete_select_onclick = function() {
+		//삭제대상 선택하기
+		dlt_advancedExcel_delete.setCellData( 3 , "chk" , 1 );
+		grd_delete.setFocusedCell( 3, "chk" );
+	};
+	
+	scwin.btn_delete2_select_onclick = function() {
+		//삭제행 선택하기
+		alert("테스트를 위해 3,5,"+scwin.insertedRow+"번째 를 선택합니다.");
+		dlt_advancedExcel_insertdelete.setCellData( 3 , "chk" , 1 );
+		dlt_advancedExcel_insertdelete.setCellData( 5 , "chk" , 1 );
+		dlt_advancedExcel_insertdelete.setCellData( scwin.insertedRow , "chk" , 1 );
+		grd_insertDelete.setFocusedCell( scwin.insertedRow, "chk" );
+	};
+	
+	scwin.btn_removeSelect_onclick = function() {
+		//제거될 행 선택하기
+		dlt_advancedExcel_remove.setCellData( 15 , "chk" , 1 );
+		grd_remove.setFocusedCell( 15, "chk" );
+	};
+	
+	scwin.btn_insertRemove_req_onclick = function() {
+		//삽입후 제거 조회
+		dlt_advancedExcel_insertremove.setJSON(_data.dlt_advancedExcel);
+	};
+	
+	
+	scwin.btn_insertRemove_removeAll_onclick = function() {
+		dlt_advancedExcel_insertremove.removeAll();
+		dlt_advancedExcel_insertremove.reform();
+	};
+	
+	scwin.btn_insertRemove_insert_onclick = function() {
+		//삽입후 제거 삽입
+		scwin.insertedRow = dlt_advancedExcel_insertremove.insertRow();
+	};
+	
+	
+	scwin.btn_insertRemove_select_onclick = function() {
+		//삽입후 제거행 선택하기
+		alert("테스트를 위해 7,20,"+scwin.insertedRow+"번째 를 선택합니다.");
+		dlt_advancedExcel_insertremove.setCellData( 7 , "chk" , 1 );
+		dlt_advancedExcel_insertremove.setCellData( 20 , "chk" , 1 );
+		dlt_advancedExcel_insertremove.setCellData( scwin.insertedRow , "chk" , 1 );
+		grd_insertRemove.setFocusedCell( scwin.insertedRow, "chk" );
+	};
+	
+	
+	
+	scwin.btn_insertRemove_remove_onclick = function() {
+		//삽입후 제거행 선택된행 제거하기
+		var idxArr = grd_insertRemove.getCheckedIndex("chk");
+		if(idxArr.length == 0){
+			alert("제거할 행이 선택되지 않았습니다.");
+		}else{
+			if(idxArr.length == 1){
+				dlt_advancedExcel_insertremove.removeRow(idxArr[0]);
+			}else{
+				dlt_advancedExcel_insertremove.removeRows(idxArr);
+			}
+		}
+	};
+	
+	scwin.btn_insertRemove_status_onclick = function() {
+		// 상태 보기		
+		alert("getModifiedJSON : "+JSON.stringify(dlt_advancedExcel_insertremove.getModifiedJSON(),null,4));
+		//getRemovedJSON()
+		alert("getRemovedJSON : "+JSON.stringify(dlt_advancedExcel_insertremove.getRemovedJSON(),null,4));
+	};
+	]]>
+		</script>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body" id="" style="">
+			<w2:wframe id="" src="/ux/template/wf/wf_titleDesc.xml" scope=""></w2:wframe>
+			<xf:group id="" style="" class="section">
+				<xf:group id="" style="" class="defaultbox">
+					<xf:group id="" style="" class="ofh">
+						<w2:span id="" dataType="text" style="" class="" label="[갱신]"></w2:span>
+						<w2:span id="spn_excelBasicCnt" dataType="number" style="" class="df_total" label=""
+							displayFormat="총 #,###건">
+						</w2:span>
+						<xf:group id="" style="" class="ml5 fr">
+							<w2:anchor id="btn_statusUpdate2" style="" toolTip="" clickEventElement=""
+								ev:onclick="scwin.btn_statusUpdate2_onclick" class="btn_gcm" outerDiv="false">
+								<xf:label>
+									<![CDATA[2.수정하기]]>
+								</xf:label>
+							</w2:anchor>
+							<w2:anchor id="btn_statusUpdate" style="" toolTip="" clickEventElement=""
+								ev:onclick="scwin.btn_statusUpdate_onclick" class="btn_gcm" outerDiv="false">
+								<xf:label>
+									<![CDATA[3.상태보기]]>
+								</xf:label>
+							</w2:anchor>
+							<w2:anchor id="btn_gridRemoveExcelBasic" style="" toolTip="" clickEventElement="outerDiv"
+								ev:onclick="scwin.btn_gridRemoveExcelBasic_onclick" class="btn_gcm" outerDiv="false">
+								<xf:label>
+									<![CDATA[지우기]]>
+								</xf:label>
+							</w2:anchor>
+							<w2:anchor id="btn_search" style="" toolTip="" clickEventElement=""
+								ev:onclick="scwin.btn_search_onclick" class="btn_gcm" outerDiv="false">
+								<xf:label>
+									<![CDATA[1.조회]]>
+								</xf:label>
+							</w2:anchor>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<w2:gridView ignoreCellClick="false" rowNumHeaderValue="순서" autoFit="allColumn" visibleRowNum=""
+					sortable="true" sortEvent="ondblclick" class="autoHeight" rowNumVisible="true" fixedColumnWithHidden="true"
+					dataList="data:dlt_advancedExcel_update" id="grd_excelGrid" ev:onfilereadend="scwin.grd_excelGrid_onfilereadend"
+					style="height:300px;" useShiftKey="true" scrollByColumn="false" rowStatusVisible="true" ev:onafteredit=""
+					rowStatusHeaderValue="상태" columnMoveWithFooter="" columnMove="">
+					<w2:header id="header1" style="">
+						<w2:row id="row2" style="">
+							<w2:column id="column11" blockSelect="false" style="height:25px;" width="50"
+								inputType="text" value="메뉴코드" displayMode="label">
+							</w2:column>
+							<w2:column id="column9" blockSelect="false" style="height:25px;" width="40" inputType="text"
+								value="메뉴명" displayMode="label">
+							</w2:column>
+							<w2:column id="column7" blockSelect="false" style="height:25px;" width="50" inputType="text"
+								value="부모메뉴명" displayMode="label">
+							</w2:column>
+							<w2:column id="column3" blockSelect="false" style="height:25px;" width="50" inputType="text"
+								value="메뉴레벨" displayMode="label">
+							</w2:column>
+							<w2:column id="column12" blockSelect="false" style="" width="50" inputType="text"
+								value="경로">
+							</w2:column>
+							<w2:column id="column15" blockSelect="false" style="height:25px" width="70" inputType="text"
+								value="부모메뉴코드" displayMode="label">
+							</w2:column>
+						</w2:row>
+					</w2:header>
+					<w2:gBody id="gBody4" style="">
+						<w2:row id="row5" style="">
+							<w2:column id="MENU_CD" blockSelect="false" style="height:25px;" width="50" inputType="text"
+								displayMode="label">
+							</w2:column>
+							<w2:column id="MENU_NM" blockSelect="false" readOnly="" style="height:25px;" width="40"
+								inputType="text" displayMode="label">
+							</w2:column>
+							<w2:column id="PARENT_MENU_NM" blockSelect="false" style="height:25px;" width="50"
+								inputType="text" displayMode="label" textAlign="left">
+							</w2:column>
+							<w2:column id="MENU_LEVEL" blockSelect="false" trueValue="Y" style="height:25px;"
+								falseValue="N" width="50" inputType="text" value="" displayMode="" textAlign="left" valueType="other"
+								defaultValue="">
+							</w2:column>
+							<w2:column id="SRC_PATH" blockSelect="false" style="" width="50" inputType="text"></w2:column>
+							<w2:column id="PARENT_MENU_CD" blockSelect="false" style="height:25px" width="70"
+								inputType="text" displayMode="label">
+							</w2:column>
+						</w2:row>
+					</w2:gBody>
+				</w2:gridView>
+			</xf:group>
+			<xf:group class="section" id="" style="">
+				<xf:group class="defaultbox" id="" style="">
+					<xf:group class="ofh" id="" style="">
+						<w2:span class="" dataType="text" id="" label="[삽입]" style=""></w2:span>
+						<w2:span class="df_total" dataType="number" displayFormat="총 #,###건" id="span1" label=""
+							style="">
+						</w2:span>
+						<xf:group class="ml5 fr" id="" style="">
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_insert_onclick"
+								id="btn_insert" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[2.삽입]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement=""
+								ev:onclick="scwin.btn_insertedStatus_onclick" id="btn_insertedStatus" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[3.상태보기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="outerDiv"
+								ev:onclick="scwin.btn_gridRemoveExcelBasic_onclick" id="anchor2" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[지우기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_insertReq_onclick"
+								id="btn_insertReq" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[1.조회]]></xf:label>
+							</w2:anchor>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<w2:gridView autoFit="allColumn" class="autoHeight" columnMove="" columnMoveWithFooter=""
+					dataList="data:dlt_advancedExcel_insert" ev:onafteredit="" ev:onfilereadend="scwin.grd_excelGrid_onfilereadend"
+					fixedColumnWithHidden="true" id="gridView1" ignoreCellClick="false" rowNumHeaderValue="순서" rowNumVisible="true"
+					rowStatusHeaderValue="상태" rowStatusVisible="true" scrollByColumn="false" sortEvent="ondblclick" sortable="true"
+					style="height:300px;" useShiftKey="true" visibleRowNum="">
+					<w2:header id="header1" style="">
+						<w2:row id="row2" style="">
+							<w2:column blockSelect="false" displayMode="label" id="column11" inputType="text"
+								style="height:25px;" value="메뉴코드" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column9" inputType="text"
+								style="height:25px;" value="메뉴명" width="40">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column7" inputType="text"
+								style="height:25px;" value="부모메뉴명" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column3" inputType="text"
+								style="height:25px;" value="메뉴레벨" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" id="column12" inputType="text" style="" value="경로"
+								width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column15" inputType="text"
+								style="height:25px" value="부모메뉴코드" width="70">
+							</w2:column>
+						</w2:row>
+					</w2:header>
+					<w2:gBody id="gBody4" style="">
+						<w2:row id="row5" style="">
+							<w2:column blockSelect="false" displayMode="label" id="MENU_CD" inputType="text"
+								style="height:25px;" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="MENU_NM" inputType="text" readOnly=""
+								style="height:25px;" width="40">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_NM" inputType="text"
+								style="height:25px;" textAlign="left" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" defaultValue="" displayMode="" falseValue="N" id="MENU_LEVEL"
+								inputType="text" style="height:25px;" textAlign="left" trueValue="Y" value="" valueType="other" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" id="SRC_PATH" inputType="text" style="" width="50"></w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_CD" inputType="text"
+								style="height:25px" width="70">
+							</w2:column>
+						</w2:row>
+					</w2:gBody>
+				</w2:gridView>
+			</xf:group>
+			<xf:group class="section" id="" style="">
+				<xf:group class="defaultbox" id="" style="">
+					<xf:group class="ofh" id="" style="">
+						<w2:span class="" dataType="text" id="" label="[삭제]" style=""></w2:span>
+						<w2:span class="df_total" dataType="number" displayFormat="총 #,###건" id="span2" label=""
+							style="">
+						</w2:span>
+						<xf:group class="ml5 fr" id="" style="">
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_delete_select_onclick"
+								id="btn_delete_select" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[2.삭제대상 선택하기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_delete_onclick"
+								id="btn_delete" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[3.삭제대상 삭제하기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_deletedStatus_onclick"
+								id="btn_deletedStatus" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[4.상태보기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="outerDiv"
+								ev:onclick="scwin.btn_deletedRemoveAll_onclick" id="btn_deletedRemoveAll" outerDiv="false" style=""
+								toolTip="">
+								<xf:label><![CDATA[지우기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_deletedReq_onclick"
+								id="btn_deletedReq" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[1.조회]]></xf:label>
+							</w2:anchor>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<w2:gridView autoFit="allColumn" class="autoHeight" columnMove="" columnMoveWithFooter=""
+					dataList="data:dlt_advancedExcel_delete" ev:onafteredit="" ev:onfilereadend="scwin.grd_excelGrid_onfilereadend"
+					fixedColumnWithHidden="true" id="grd_delete" ignoreCellClick="false" rowNumHeaderValue="순서" rowNumVisible="true"
+					rowStatusHeaderValue="상태" rowStatusVisible="true" scrollByColumn="false" sortEvent="ondblclick" sortable="true"
+					style="height:300px;" useShiftKey="true" visibleRowNum="">
+					<w2:header id="header1" style="">
+						<w2:row id="row2" style="">
+							<w2:column removeBorderStyle="false" width="10" inputType="checkbox" style="" id="column16"
+								value="" blockSelect="false" displayMode="label">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column11" inputType="text"
+								style="height:25px;" value="메뉴코드" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column9" inputType="text"
+								style="height:25px;" value="메뉴명" width="40">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column7" inputType="text"
+								style="height:25px;" value="부모메뉴명" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column3" inputType="text"
+								style="height:25px;" value="메뉴레벨" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" id="column12" inputType="text" style="" value="경로"
+								width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column15" inputType="text"
+								style="height:25px" value="부모메뉴코드" width="70">
+							</w2:column>
+						</w2:row>
+					</w2:header>
+					<w2:gBody id="gBody4" style="">
+						<w2:row id="row5" style="">
+							<w2:column removeBorderStyle="false" width="10" inputType="checkbox" style="" id="chk"
+								value="" blockSelect="false" displayMode="label">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="MENU_CD" inputType="text"
+								style="height:25px;" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="MENU_NM" inputType="text" readOnly=""
+								style="height:25px;" width="40">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_NM" inputType="text"
+								style="height:25px;" textAlign="left" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" defaultValue="" displayMode="" falseValue="N" id="MENU_LEVEL"
+								inputType="text" style="height:25px;" textAlign="left" trueValue="Y" value="" valueType="other" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" id="SRC_PATH" inputType="text" style="" width="50"></w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_CD" inputType="text"
+								style="height:25px" width="70">
+							</w2:column>
+						</w2:row>
+					</w2:gBody>
+				</w2:gridView>
+			</xf:group>
+			<xf:group class="section" id="" style="">
+				<xf:group class="defaultbox" id="" style="">
+					<xf:group class="ofh" id="" style="">
+						<w2:span class="" dataType="text" id="" label="[삽입 후 삭제]" style=""></w2:span>
+						<w2:span class="df_total" dataType="number" displayFormat="총 #,###건" id="span3" label=""
+							style="">
+						</w2:span>
+						<xf:group class="ml5 fr" id="" style="">
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_insert2_onclick"
+								id="btn_insert2" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[2.삽입]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_delete2_select_onclick"
+								id="btn_delete2_select" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[3.삭제행 선택하기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_delete2_onclick"
+								id="btn_delete2" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[4.삭제하기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement=""
+								ev:onclick="scwin.btn_insertdeletedStatus_onclick" id="btn_insertdeletedStatus" outerDiv="false" style=""
+								toolTip="">
+								<xf:label><![CDATA[5.상태보기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick=""
+								id="btn_insertdeletedStatusRemoveAll" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[지우기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement=""
+								ev:onclick="scwin.btn_insertdeletedReq_onclick" id="btn_insertdeletedReq" outerDiv="false" style=""
+								toolTip="">
+								<xf:label><![CDATA[1.조회]]></xf:label>
+							</w2:anchor>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<w2:gridView autoFit="allColumn" class="autoHeight" columnMove="" columnMoveWithFooter=""
+					dataList="data:dlt_advancedExcel_insertdelete" ev:onafteredit=""
+					ev:onfilereadend="scwin.grd_excelGrid_onfilereadend" fixedColumnWithHidden="true" id="grd_insertDelete"
+					ignoreCellClick="false" rowNumHeaderValue="순서" rowNumVisible="true" rowStatusHeaderValue="상태"
+					rowStatusVisible="true" scrollByColumn="false" sortEvent="ondblclick" sortable="true" style="height:300px;"
+					useShiftKey="true" visibleRowNum="">
+					<w2:header id="header1" style="">
+						<w2:row id="row2" style="">
+							<w2:column blockSelect="false" displayMode="label" id="column16" inputType="checkbox"
+								removeBorderStyle="false" style="" value="" width="10">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column11" inputType="text"
+								style="height:25px;" value="메뉴코드" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column9" inputType="text"
+								style="height:25px;" value="메뉴명" width="40">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column7" inputType="text"
+								style="height:25px;" value="부모메뉴명" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column3" inputType="text"
+								style="height:25px;" value="메뉴레벨" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" id="column12" inputType="text" style="" value="경로"
+								width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column15" inputType="text"
+								style="height:25px" value="부모메뉴코드" width="70">
+							</w2:column>
+						</w2:row>
+					</w2:header>
+					<w2:gBody id="gBody4" style="">
+						<w2:row id="row5" style="">
+							<w2:column blockSelect="false" displayMode="label" id="chk" inputType="checkbox"
+								removeBorderStyle="false" style="" value="" width="10">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="MENU_CD" inputType="text"
+								style="height:25px;" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="MENU_NM" inputType="text" readOnly=""
+								style="height:25px;" width="40">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_NM" inputType="text"
+								style="height:25px;" textAlign="left" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" defaultValue="" displayMode="" falseValue="N" id="MENU_LEVEL"
+								inputType="text" style="height:25px;" textAlign="left" trueValue="Y" value="" valueType="other" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" id="SRC_PATH" inputType="text" style="" width="50"></w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_CD" inputType="text"
+								style="height:25px" width="70">
+							</w2:column>
+						</w2:row>
+					</w2:gBody>
+				</w2:gridView>
+			</xf:group>
+			<xf:group class="section" id="" style="">
+				<xf:group class="defaultbox" id="" style="">
+					<xf:group class="ofh" id="" style="">
+						<w2:span class="" dataType="text" id="" label="[제거]" style=""></w2:span>
+						<w2:span class="df_total" dataType="number" displayFormat="총 #,###건" id="span4" label=""
+							style="">
+						</w2:span>
+						<xf:group class="ml5 fr" id="" style="">
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_removeSelect_onclick"
+								id="btn_removeSelect" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[2.제거될 행선택]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_remove_onclick"
+								id="btn_remove" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[3.제거]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_removeStatus_onclick"
+								id="btn_removeStatus" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[4.상태보기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="outerDiv"
+								ev:onclick="scwin.btn_removeRemoveAll_onclick" id="btn_removeRemoveAll" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[지우기]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_removeReq_onclick"
+								id="btn_removeReq" outerDiv="false" style="" toolTip="">
+								<xf:label><![CDATA[1.조회]]></xf:label>
+							</w2:anchor>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<w2:gridView autoFit="allColumn" class="autoHeight" columnMove="" columnMoveWithFooter=""
+					dataList="data:dlt_advancedExcel_remove" ev:onafteredit="" ev:onfilereadend="scwin.grd_excelGrid_onfilereadend"
+					fixedColumnWithHidden="true" id="grd_remove" ignoreCellClick="false" rowNumHeaderValue="순서" rowNumVisible="true"
+					rowStatusHeaderValue="상태" rowStatusVisible="true" scrollByColumn="false" sortEvent="ondblclick" sortable="true"
+					style="height:300px;" useShiftKey="true" visibleRowNum="">
+					<w2:header id="header1" style="">
+						<w2:row id="row2" style="">
+							<w2:column blockSelect="false" displayMode="label" id="column16" inputType="checkbox"
+								removeBorderStyle="false" style="" value="" width="10">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column11" inputType="text"
+								style="height:25px;" value="메뉴코드" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column9" inputType="text"
+								style="height:25px;" value="메뉴명" width="40">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column7" inputType="text"
+								style="height:25px;" value="부모메뉴명" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column3" inputType="text"
+								style="height:25px;" value="메뉴레벨" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" id="column12" inputType="text" style="" value="경로"
+								width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="column15" inputType="text"
+								style="height:25px" value="부모메뉴코드" width="70">
+							</w2:column>
+						</w2:row>
+					</w2:header>
+					<w2:gBody id="gBody4" style="">
+						<w2:row id="row5" style="">
+							<w2:column blockSelect="false" displayMode="label" id="chk" inputType="checkbox"
+								removeBorderStyle="false" style="" value="" width="10">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="MENU_CD" inputType="text"
+								style="height:25px;" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="MENU_NM" inputType="text" readOnly=""
+								style="height:25px;" width="40">
+							</w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_NM" inputType="text"
+								style="height:25px;" textAlign="left" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" defaultValue="" displayMode="" falseValue="N" id="MENU_LEVEL"
+								inputType="text" style="height:25px;" textAlign="left" trueValue="Y" value="" valueType="other" width="50">
+							</w2:column>
+							<w2:column blockSelect="false" id="SRC_PATH" inputType="text" style="" width="50"></w2:column>
+							<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_CD" inputType="text"
+								style="height:25px" width="70">
+							</w2:column>
+						</w2:row>
+					</w2:gBody>
+				</w2:gridView>
+				<xf:group class="section" id="" style="">
+					<xf:group class="defaultbox" id="" style="">
+						<xf:group class="ofh" id="" style="">
+							<w2:span class="" dataType="text" id="" label="[삽입 후 제거]" style=""></w2:span>
+							<w2:span class="df_total" dataType="number" displayFormat="총 #,###건" id="span5" label=""
+								style="">
+							</w2:span>
+							<xf:group class="ml5 fr" id="" style="">
+								<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_insertRemove_insert_onclick"
+									id="btn_insertRemove_insert" outerDiv="false" style="" toolTip="">
+									<xf:label><![CDATA[2.삽입]]></xf:label>
+								</w2:anchor>
+								<w2:anchor class="btn_gcm" clickEventElement=""
+									ev:onclick="scwin.btn_insertRemove_select_onclick" id="btn_insertRemove_select" outerDiv="false" style="" toolTip="">
+									<xf:label><![CDATA[3.제거행 선택하기]]></xf:label>
+								</w2:anchor>
+								<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btn_insertRemove_remove_onclick"
+									id="btn_insertRemove_remove" outerDiv="false" style="" toolTip="">
+									<xf:label><![CDATA[4.제거하기]]></xf:label>
+								</w2:anchor>
+								<w2:anchor class="btn_gcm" clickEventElement=""
+									ev:onclick="scwin.btn_insertRemove_status_onclick" id="btn_insertRemove_status" outerDiv="false" style="" toolTip="">
+									<xf:label><![CDATA[5.상태보기]]></xf:label>
+								</w2:anchor>
+								<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btn_insertRemove_removeAll_onclick" id="btn_insertRemove_removeAll"
+									outerDiv="false" style="" toolTip="">
+									<xf:label><![CDATA[지우기]]></xf:label>
+								</w2:anchor>
+								<w2:anchor class="btn_gcm" clickEventElement=""
+									ev:onclick="scwin.btn_insertRemove_req_onclick" id="btn_insertRemove_req" outerDiv="false" style="" toolTip="">
+									<xf:label><![CDATA[1.조회]]></xf:label>
+								</w2:anchor>
+							</xf:group>
+						</xf:group>
+					</xf:group>
+					<w2:gridView autoFit="allColumn" class="autoHeight" columnMove="" columnMoveWithFooter=""
+						dataList="data:dlt_advancedExcel_insertremove" ev:onafteredit=""
+						ev:onfilereadend="scwin.grd_excelGrid_onfilereadend" fixedColumnWithHidden="true" id="grd_insertRemove"
+						ignoreCellClick="false" rowNumHeaderValue="순서" rowNumVisible="true" rowStatusHeaderValue="상태"
+						rowStatusVisible="true" scrollByColumn="false" sortEvent="ondblclick" sortable="true" style="height:300px;"
+						useShiftKey="true" visibleRowNum="">
+						<w2:header id="header1" style="">
+							<w2:row id="row2" style="">
+								<w2:column blockSelect="false" displayMode="label" id="column16" inputType="checkbox"
+									removeBorderStyle="false" style="" value="" width="10">
+								</w2:column>
+								<w2:column blockSelect="false" displayMode="label" id="column11" inputType="text"
+									style="height:25px;" value="메뉴코드" width="50">
+								</w2:column>
+								<w2:column blockSelect="false" displayMode="label" id="column9" inputType="text"
+									style="height:25px;" value="메뉴명" width="40">
+								</w2:column>
+								<w2:column blockSelect="false" displayMode="label" id="column7" inputType="text"
+									style="height:25px;" value="부모메뉴명" width="50">
+								</w2:column>
+								<w2:column blockSelect="false" displayMode="label" id="column3" inputType="text"
+									style="height:25px;" value="메뉴레벨" width="50">
+								</w2:column>
+								<w2:column blockSelect="false" id="column12" inputType="text" style="" value="경로"
+									width="50">
+								</w2:column>
+								<w2:column blockSelect="false" displayMode="label" id="column15" inputType="text"
+									style="height:25px" value="부모메뉴코드" width="70">
+								</w2:column>
+							</w2:row>
+						</w2:header>
+						<w2:gBody id="gBody4" style="">
+							<w2:row id="row5" style="">
+								<w2:column blockSelect="false" displayMode="label" id="chk" inputType="checkbox"
+									removeBorderStyle="false" style="" value="" width="10">
+								</w2:column>
+								<w2:column blockSelect="false" displayMode="label" id="MENU_CD" inputType="text"
+									style="height:25px;" width="50">
+								</w2:column>
+								<w2:column blockSelect="false" displayMode="label" id="MENU_NM" inputType="text"
+									readOnly="" style="height:25px;" width="40">
+								</w2:column>
+								<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_NM" inputType="text"
+									style="height:25px;" textAlign="left" width="50">
+								</w2:column>
+								<w2:column blockSelect="false" defaultValue="" displayMode="" falseValue="N"
+									id="MENU_LEVEL" inputType="text" style="height:25px;" textAlign="left" trueValue="Y" value="" valueType="other"
+									width="50">
+								</w2:column>
+								<w2:column blockSelect="false" id="SRC_PATH" inputType="text" style="" width="50"></w2:column>
+								<w2:column blockSelect="false" displayMode="label" id="PARENT_MENU_CD" inputType="text"
+									style="height:25px" width="70">
+								</w2:column>
+							</w2:row>
+						</w2:gBody>
+					</w2:gridView>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

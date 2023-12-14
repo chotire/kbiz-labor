@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="siteNm" name="현장명" dataType="text"></w2:key><w2:key id="workYm" name="기준년월" dataType="text"></w2:key>
+						<w2:key id="tradeCd" name="거래처코드" dataType="text"></w2:key>
+						<w2:key id="tradeNm" name="거래처명" dataType="text"></w2:key>
+
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsAcctTrnmList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="acctNm" name="계정명" dataType="text"></w2:column>
+						<w2:column id="pyrqBfAmt" name="전회" dataType="text"></w2:column>
+						<w2:column id="pyrqThAmt" name="금회" dataType="text"></w2:column>
+						<w2:column id="pyrqTotAmt" name="누계" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM20002005P.xml
+ * Program Name : 계정별원가이체청구현황
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+        DataCollection description
+
+        dsAcctTrnmList: GRID
+        dsSearchMap: 검색조건 parameter
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    //var svcId;      //callback 처리용 서비스ID
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+		//파리미터
+        dsSearchMap.set( "siteCd" , JSON.parse($p.getPopupParam()).data.paramKeySiteCd );//현장코드
+        dsSearchMap.set( "siteNm" , JSON.parse($p.getPopupParam()).data.paramKeySiteNm );//현장명
+		dsSearchMap.set( "workYm" , JSON.parse($p.getPopupParam()).data.paramKeyWorkYm );//작업연월
+		dsSearchMap.set( "tradeCd" , JSON.parse($p.getPopupParam()).data.paramKeyTradeCd );//거래처코드
+		dsSearchMap.set( "tradeNm" , JSON.parse($p.getPopupParam()).data.paramKeyTradeNm );//거래처명
+
+		spnSiteNm.setValue( dsSearchMap.get( "siteNm" ) );//현장
+		spnWorkYm.setValue( dsSearchMap.get( "workYm" ).substring(0,4) + "-" + dsSearchMap.get( "workYm" ).substring(4,6) );//작업연월
+		spnTradeNm.setValue( dsSearchMap.get( "tradeNm" ) );//공동도급사
+
+		scwin.fnSearch();
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        grdAcctTrnmList.initGrid();   //GRID 초기화
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+	//조회
+    scwin.fnSearch = function() {
+        ajaxLib.ajax("/cm/cm2000/CM20002005P/selectAcctTrnmList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+				dsAcctTrnmList.setJSON(result.data);
+			},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    //확인
+	scwin.btnConfirm_onclick = function() {
+		com.popup_close("");
+	};
+	]]></script>
+
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>계정별원가이체청구현황 팝업 관련 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:105px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+					<xf:group style="width:94px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group class="" style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="현장" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="spnSiteNm" label="" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="작업연월" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" tagname="td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" id="spnWorkYm" label="" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="공동도급사" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:attributes>
+							<w2:colspan>3</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>
+						<w2:span class="txt_unit" id="spnTradeNm" label="" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsAcctTrnmList" fixedColumnWithHidden=""
+				focusMode="row" id="grdAcctTrnmList" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+				rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 219px;" useShiftKey="true"
+				visibleRowNum="">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column27" inputType="text"
+							removeBorderStyle="false" style="height:68px;" value="계정명" width="150" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column33" inputType="text"
+							removeBorderStyle="false" style="height:34px;" value="청구" width="120" colSpan="3" rowSpan="">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column50"
+							value="전회" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column49"
+							value="금회" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column48"
+							value="누계" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" id="acctNm" inputType="text"
+							removeBorderStyle="false" style="" textAlign="left" value="" width="150">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="pyrqBfAmt" inputType="text"
+							removeBorderStyle="false" style="" textAlign="right" value="" width="120" displayFormat="#,##0"
+							dataType="number">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="pyrqThAmt" inputType="text"
+							removeBorderStyle="false" style="" textAlign="right" value="" width="120" displayFormat="#,##0"
+							dataType="number">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="pyrqTotAmt" inputType="text"
+							removeBorderStyle="false" style="" value="" width="120" textAlign="right" displayFormat="#,##0"
+							dataType="number">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+				<w2:footer style="" id="footer1">
+					<w2:row style="" id="row7">
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column59"
+							value="합 계" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column58"
+							value="" blockSelect="false" displayMode="label" dataType="number" displayFormat="#,##0" expression="sum('pyrqBfAmt')" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column57"
+							value="" blockSelect="false" displayMode="label" dataType="number" displayFormat="#,##0" expression="sum('pyrqThAmt')" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style="" id="column56"
+							value="" blockSelect="false" displayMode="label" dataType="number" displayFormat="#,##0" expression="sum('pyrqTotAmt')" textAlign="right">
+						</w2:column>
+					</w2:row>
+				</w2:footer>
+			</w2:gridView>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+
+
+		</xf:group>
+	</body>
+</html>

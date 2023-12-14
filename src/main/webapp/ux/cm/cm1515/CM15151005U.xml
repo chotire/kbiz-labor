@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="exeYy" name="기준연도" dataType="text"></w2:key>
+						<w2:key id="chgDgr" name="차수" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM15151005U.xml
+ * Program Name : 현장관리비예산승인 - 상세
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+        DataCollection description
+
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    //var svcId;      //callback 처리용 서비스ID
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+		spnSiteNm.setValue( $w.getParameter("paramKeySiteNm") );//현장명
+		spnExeYy.setValue( $w.getParameter("paramKeyExeYy") );//기준연도
+		spnChgDgr.setValue( $w.getParameter("paramKeyChgDgr") );//차수
+
+		scwin.tacTactbgtMng_ontabclick();
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//TAB 클릭 이벤트
+	scwin.tacTactbgtMng_ontabclick = function(tabID,idx) {
+		var sTabId = tacTactbgtMng.getSelectedTabID();
+		var _selectedTabFrame = tacTactbgtMng.getFrame( sTabId );
+		var _localScwin = _selectedTabFrame.getObj("scwin");
+		_localScwin["fnInitial"]();	//이벤트명
+	};
+
+	//조회
+	scwin.btnFind_onclick = function() {
+		scwin.tacTactbgtMng_ontabclick();
+	};
+	]]></script>
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body" id="" style="">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group tagname="col" style="width:94px;"></xf:group><xf:group tagname="col" style="width:auto;"></xf:group><xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th " style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:span class="txt_unit " id="spnSiteNm" label="" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="th" class="w2tb_th ">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기준연도" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="txt_unit " id="spnExeYy" label="" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="차수" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:span class="txt_unit " id="spnChgDgr" label="" style=""></w2:span>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<w2:tabControl alwaysDraw="false" class="cm_tab" confirmFalseAction="new" confirmTrueAction="exist" id="tacTactbgtMng"
+				style="" useConfirmMessage="false" useMoveNextTabFocus="false" useTabKeyOnly="true" ev:ontabclick="scwin.tacTactbgtMng_ontabclick">
+				<w2:tabs disabled="false" id="tabs1" label="상세내역(집계)" style="" localeRef=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs2" label="상세내역(조정)" style="" localeRef=""></w2:tabs>
+				<w2:content alwaysDraw="false" id="content1" style="" src='/ux/cm/cm1515/CM15151010T.xml'></w2:content>
+				<w2:content alwaysDraw="false" id="content2" style="" src="/ux/cm/cm1515/CM15151015T.xml"></w2:content>
+			</w2:tabControl>
+		</xf:group>
+	</body>
+</html>

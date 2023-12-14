@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmSitedRptsList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="pjtId" name="프로젝트 ID" dataType="text"></w2:column>
+						<w2:column id="pjtNm" name="프로젝트명" dataType="text"></w2:column>
+						<w2:column id="publCvlGbCd" name="공공민간구분코드" dataType="text"></w2:column>
+						<w2:column id="publCvlGbNm" name="공공민간구분명" dataType="text"></w2:column>
+						<w2:column id="bzpjGbCd" name="사업구분코드" dataType="text"></w2:column>
+						<w2:column id="bzpjGbNm" name="사업구분명" dataType="text"></w2:column>
+						<w2:column id="ploNm" name="발주처명" dataType="text"></w2:column>
+						<w2:column id="scdlDt" name="현설참가일자" dataType="text"></w2:column>
+						<w2:column id="reqDt" name="의뢰일자" dataType="text"></w2:column>
+						<w2:column id="sitedPrtctNm" name="현설참가자" dataType="text"></w2:column>
+
+						<w2:column id="aprvNo" name="결재번호" dataType="text"></w2:column>
+						<w2:column id="aprvChk" name="결재여부" dataType="text"></w2:column>
+						<w2:column id="aprvStusNm" name="겳재상태" dataType="text"></w2:column>
+						<w2:column id="chrgrNm" name="담당자" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true">
+						<!-- <w2:row></w2:row>
+							<w2:row></w2:row>
+							<w2:row></w2:row>
+							<w2:row></w2:row>
+							<w2:row></w2:row>
+							<w2:row></w2:row>
+							<w2:row></w2:row>
+							<w2:row></w2:row>
+							<w2:row></w2:row> -->
+					</w2:data>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchMap" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="pjtNm" name="프로젝트명"></w2:key>
+						<w2:key id="userNm" name="현설참가자" dataType="text"></w2:key>
+						<w2:key id="publCvlGbCd" name="공공민간구분코드" dataType="text"></w2:key>
+						<w2:key dataType="text" id="scdlDtFrom" name="현설일_시작"></w2:key>
+						<w2:key dataType="text" id="scdlDtTo" name="현설일_종료"></w2:key>
+						<w2:key dataType="text" id="reqDtSel" name="의뢰일조건"></w2:key>
+						<w2:key dataType="text" id="reqDtFrom" name="의뢰일_시작"></w2:key>
+						<w2:key dataType="text" id="reqDtTo" name="의뢰일_종료"></w2:key>
+
+
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" id="dsCdSA011" repeatNode="map" saveRemovedData="true" style="">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="cd" name="코드"></w2:column>
+						<w2:column dataType="text" id="cdNm" name="코드명"></w2:column>
+						<w2:column dataType="text" id="engNm" name="영문_명"></w2:column>
+						<w2:column dataType="text" id="abbNm" name="약어_명"></w2:column>
+						<w2:column dataType="text" id="upperCd" name="상위코드"></w2:column>
+						<w2:column dataType="text" id="cdLv" name="코드레벨"></w2:column>
+						<w2:column dataType="text" id="cdOdr" name="코드순서"></w2:column>
+						<w2:column dataType="text" id="charValN1" name="문자_값_1"></w2:column>
+						<w2:column dataType="text" id="charValN2" name="문자_값_2"></w2:column>
+						<w2:column dataType="text" id="charValN3" name="문자_값_3"></w2:column>
+						<w2:column dataType="text" id="charValN4" name="문자_값_4"></w2:column>
+						<w2:column dataType="text" id="charValN5" name="문자_값_5"></w2:column>
+						<w2:column dataType="text" id="nmbrValN1" name="숫자_값_1"></w2:column>
+						<w2:column dataType="text" id="nmbrValN2" name="숫자_값_2"></w2:column>
+						<w2:column dataType="text" id="nmbrValN3" name="숫자_값_3"></w2:column>
+						<w2:column dataType="text" id="nmbrValN4" name="숫자_값_4"></w2:column>
+						<w2:column dataType="text" id="nmbrValN5" name="숫자_값_5"></w2:column>
+						<w2:column dataType="text" id="useYn" name="사용유무"></w2:column>
+						<w2:column dataType="text" id="epntYn" name="말단_여부"></w2:column>
+						<w2:column dataType="text" id="commCd" name="공통코드"></w2:column>
+						<w2:column dataType="text" id="commDtlCd" name="공통상세코드"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="false"></w2:data>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM00000500U.xml
+ * Program Name : 현설청취보고서 목록
+ * Author : sychoi (tpcsy)
+ * Date : 2019.03.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+/**************************************************************************
+ * DataCollection description
+ *
+ *	dsSearchMap : 검색조건 Map
+ *  dsTcmSitedRptsList : 그리드
+ *  [공통코드]
+ *  dsCdSA011: 민간/공공구분 - 검색조건
+ **************************************************************************/
+
+
+  /**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+    var svcId = "";
+
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    };
+
+    scwin.onpageload = function() {
+
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+    var jobFlag = "";
+        if (com.isEmpty(gcm.tab_main)) {
+			console.log("1");
+            dsSearchMap.setJSON({
+	            pjtNm: JSON.parse($w.getPopupParam()).data.schPjtNm,
+	            userNm: JSON.parse($w.getPopupParam()).data.schUserNm,
+	            publCvlGbCd: JSON.parse($w.getPopupParam()).data.schPublCvlGbCd,
+	            scdlDtFrom: JSON.parse($w.getPopupParam()).data.schScdlDtFrom,
+	            scdlDtTo: JSON.parse($w.getPopupParam()).data.schScdlDtTo,
+	            reqDtSel: JSON.parse($w.getPopupParam()).data.schReqDtSel,
+	            reqDtFrom: JSON.parse($w.getPopupParam()).data.schReqDtFrom,
+	            reqDtTo: JSON.parse($w.getPopupParam()).data.schReqDtTo
+            });
+        } else {
+			console.log("2");
+            dsSearchMap.setJSON({
+                pjtNm: com.getParam("schPjtNm"),
+                userNm: com.getParam("schUserNm"),
+                publCvlGbCd: com.getParam("schPublCvlGbCd"),
+                scdlDtFrom: com.getParam("schScdlDtFrom"),
+                scdlDtTo: com.getParam("schScdlDtTo"),
+                reqDtSel: com.getParam("schReqDtSel"),
+                reqDtFrom: com.getParam("schReqDtFrom"),
+                reqDtTo: com.getParam("schReqDtTo")
+            });
+        }
+
+		if (dsSearchMap.get( "reqDtSel" ).length == 0) {
+	    	// 기간(의뢰일) : 3개월 기본
+	    	dsSearchMap.set("reqDtSel", "3");
+	    	// 기간(의뢰일) TO : 현재일자 SET
+			com.setUdcValue("udc_reqDt", "toDate", WebSquare.date.getCurrentServerDate("yyyyMMdd"));
+		} else {
+			// 이전 파라미터 값이 존재 : 상세에서 목록을 클릭하여 넘어온 경우
+        	jobFlag = "1";
+        	if(dsSearchMap.get( "reqDtTo" ) == ""){
+        		com.setUdcValue("udc_reqDt", "toDate", WebSquare.date.getCurrentServerDate("yyyyMMdd"));
+        		dsSearchMap.set("reqDtSel", "3");
+        	}else{
+        		com.setUdcValue("udc_reqDt", "toDate", dsSearchMap.get( "reqDtTo" ));
+        	}
+		}
+
+		//공통코드 : 민간/공공구분(영업)
+		com.selCdList("sbxPublCvlGbCd", "SA011", "Y");
+
+		//상세->목록으로 전환 시 자동으로 조회
+		if (jobFlag == "1") {
+			scwin.btnFind_onclick();
+		}
+
+        com.commonUI();
+        //grpSearch.init();                   //조회그룹 초기화
+    };
+
+
+ /**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnAddMonth
+	 * 기 능: 기간에 대한 날짜 계산 함수
+	 **************************************************************************/
+     scwin.fnAddMonth = function(pYear, pMonth, pDay, pDiff) {
+		var sDate; // 계산에 사용할 날짜 객체 선언
+		var objDate; // 리턴할 날짜 객체 선언
+		var sYear, sMonth, sDay // 계산된 날짜값이 할당될 변수
+
+		pMonth = pMonth*1 + ((pDiff*1)-1); // 월은 0~11 이므로 하나 빼준다
+		sDate = new Date(pYear, pMonth, pDay) // 계산된 날짜 객체 생성 (객체에서 자동 계산)
+		sYear = sDate.getFullYear(); // 계산된 년도 할당
+		sMonth = (sDate.getMonth()+1); // 계산된 월 할당
+		sDay = sDate.getDate(); // 계산된 일자 할당
+		objDate = (pDay == sDay) ? sDate : new Date(sYear, sMonth, 0); // 넘어간 월의 첫쨋날 에서 하루를 뺀 날짜 객체를 생성한다.
+		return objDate;
+
+    };
+
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnReqDtCalc
+	 * 기 능: 기간(의뢰일)의 TO DATE를 기준으로 FROM DATE를 조건기준 자동계산
+	 **************************************************************************/
+    scwin.fnReqDtCalc = function(sReqDtTo) {
+		var sDate;
+		var sYear,sMonth,sDay,nDiff;
+		var sNowDt;
+		var sNewMonth;
+		var sNewDate;
+		var sResDate;
+
+		sNowDt = WebSquare.date.getCurrentServerDate("yyyyMMdd");
+
+		if (sReqDtTo.length == 8) {
+			sYear = sReqDtTo.substr(0, 4);
+			sMonth = sReqDtTo.substr(4, 2);
+			sDay = sReqDtTo.substr(6, 2);
+		} else {
+			sYear = sNowDt.substr(0, 4);
+			sMonth = sNowDt.substr(4, 2);
+			sDay = sNowDt.substr(6, 2);
+		}
+
+		nDiff =  -(eval(dsSearchMap.get("reqDtSel")));
+
+		sDate = scwin.fnAddMonth(sYear, sMonth, sDay, nDiff);
+
+       	sNewMonth = sDate.getMonth();
+
+       	if(sNewMonth < 9)
+          	sNewMonth = "0" + eval(sDate.getMonth()+1);
+       	else
+        	sNewMonth = eval(sDate.getMonth()+1);
+
+       	sNewDate = sDate.getDate();
+
+       	if(sNewDate < 10)
+          	sNewDate = "0" + eval(sDate.getDate());
+       	else
+         	sNewDate = eval(sDate.getDate());
+
+		sResDate = sDate.getFullYear();
+		sResDate = sResDate + "" + sNewMonth;
+		sResDate = sResDate + sNewDate;
+
+		return sResDate;
+    };
+
+
+ /**************************************************************************
+ * [4] Callback
+ **************************************************************************/
+    scwin.fnCallback = function(result, e) {
+        switch(svcId) {
+            case "selectTcmSitedRptsList" :
+                dsTcmSitedRptsList.setJSON(result.data);
+                com.setUdcValue("dsTcmSitedRptsListCount", "udcListCount", selectTcmSitedRptsList.getRowCount());
+                break;
+        }
+    }
+
+    scwin.fnErrCallback = function(result, e) {
+       console.log(result);
+    }
+
+
+ /**************************************************************************
+ * [5] Event 정의
+ **************************************************************************/
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 조회버튼 클릭 이벤트
+     **************************************************************************/
+	scwin.btnFind_onclick = function() {
+		// 기간(입찰일), 기간(의뢰일) 검색조건 DS 에 SET
+    	dsSearchMap.set("scdlDtFrom", com.getUdcValue("udc_scdlDt", "frDate"));
+    	dsSearchMap.set("scdlDtTo", com.getUdcValue("udc_scdlDt", "toDate"));
+    	dsSearchMap.set("reqDtFrom", com.getUdcValue("udc_reqDt", "frDate"));
+    	dsSearchMap.set("reqDtTo", com.getUdcValue("udc_reqDt", "toDate"));
+
+		svcId = "selectTcmSitedRptsList";
+        ajaxLib.ajax("/cm/cm0000/CM00000500U/selectTcmSitedRptsList", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"
+        });
+	};
+
+    /**************************************************************************
+     * Event: scwin.sbxReqDtSel_onchange
+     * 기 능: 기간(의뢰일) 구간 선택 이벤트
+     **************************************************************************/
+	scwin.sbxReqDtSel_onchange = function() {
+		var sResDate;
+		var sReqDtTo;
+		sReqDtTo = com.getUdcValue("udc_reqDt", "toDate");
+		sResDate = scwin.fnReqDtCalc(sReqDtTo);
+		com.setUdcValue("udc_reqDt", "frDate", sResDate);
+	};
+
+
+
+    /**************************************************************************
+     * Event: scwin.grdTcmSitedRptsList_oncellclick
+     * 기 능: 그리드 클릭 시 상세페이지 이동
+     **************************************************************************/
+	scwin.grdTcmSitedRptsList_oncellclick = function(row,col) {
+        var sColName = grdTcmSitedRptsList.getColumnID( col );
+
+        if( sColName == "pjtNm"){
+            com.detailOpen("현설청취보고서", "CM00000505U", "/ux/cm/cm0000/CM00000505U.xml", "1", {
+                pjtId: dsTcmSitedRptsList.getCellData(row, "pjtId"),
+
+                // 상단검색조건 GET
+				schPjtNm : dsSearchMap.get("pjtNm"),			//프로젝트명
+				schUserNm : dsSearchMap.get("userNm"),			//현설참가자
+				schPublCvlGbCd : dsSearchMap.get("publCvlGbCd"),//공공민간구분코드
+				schScdlDtFrom : dsSearchMap.get("scdlDtFrom"),	//현설참가일_시작
+				schScdlDtTo : dsSearchMap.get("scdlDtTo"),		//현설참가일_종료
+				schReqDtSel : dsSearchMap.get("reqDtSel"),		//의뢰일조건
+				schReqDtFrom : dsSearchMap.get("reqDtFrom"),	//의뢰일_시작
+				schReqDtTo	: dsSearchMap.get("reqDtTo")		//의뢰일_종료
+            });
+        }
+	};
+
+	//프로젝트명 keydown 이벤트
+	scwin.ibxPjtNm_onkeydown = function(e) {
+		if (e.keyCode == 13){
+			dsSearchMap.set( "pjtNm" , ibxPjtNm.getValue() );
+			scwin.btnFind_onclick();
+		}
+	};
+
+	//현설참가자 keydown 이벤트
+	scwin.ibxUserNm_onkeydown = function(e) {
+		if (e.keyCode == 13){
+			dsSearchMap.set( "userNm" , ibxUserNm.getValue() );
+			scwin.btnFind_onclick();
+		}
+	};
+
+    //엑셀다운
+	scwin.btnExcelDwn_onclick = function() {
+
+		var result = [];
+		var totalCol = grdTcmSitedRptsList.getTotalCol();
+		for(var i = 0; i < totalCol; i++) {
+			if (!grdTcmSitedRptsList.getColumnVisible(i)) {
+				result.push(i);
+			}
+		}
+
+        grdTcmSitedRptsList.advancedExcelDownload({
+            fileName:"현설참가목록.xlsx",
+            removeColumns:result.join(",")
+        });
+	};
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+			<xf:group class="navigator" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+		</xf:group><xf:group class="tbl_search" id="" style="">
+
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:110px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:110px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="프로젝트명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxPjtNm" style="width: 233px;" ref="data:dsSearchMap.pjtNm" ev:onkeydown="scwin.ibxPjtNm_onkeydown"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현설참가자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxUserNm" style="width:120px;" ref="data:dsSearchMap.userNm" ev:onkeydown="scwin.ibxUserNm_onkeydown"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="민간/공공" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxPublCvlGbCd"
+								ref="data:dsSearchMap.publCvlGbCd" style="width:100px;" submenuSize="auto" textAlign="left"
+								chooseOptionLabel="전체" ev:onchange="scwin.sbxPublCvlGbCd_onchange">
+								<xf:choices>
+									<xf:itemset nodeset="data:dsCdSA011">
+										<xf:label ref="cdNm"></xf:label>
+										<xf:value ref="cd"></xf:value>
+									</xf:itemset>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span class="" id="" label="기간(현설일)" style=""></w2:span></xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:udc_periodcalendar class="req" id="udc_scdlDt" style=""></w2:udc_periodcalendar>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span class="" id="" label="기간(의뢰일)" style=""></w2:span></xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:attributes>
+								<w2:colspan>3</w2:colspan>
+								<w2:rowspan>1</w2:rowspan>
+							</w2:attributes>
+							<xf:select1 allOption="" appearance="minimal" chooseOption="" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxReqDtSel"
+								ref="data:dsSearchMap.reqDtSel" style="width:100px;" submenuSize="auto" textAlign="left" chooseOptionLabel="3개월"
+								ev:onchange="scwin.sbxReqDtSel_onchange">
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[1개월]]></xf:label>
+										<xf:value><![CDATA[1]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[2개월]]></xf:label>
+										<xf:value><![CDATA[2]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[3개월]]></xf:label>
+										<xf:value><![CDATA[3]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[6개월]]></xf:label>
+										<xf:value><![CDATA[6]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[1년]]></xf:label>
+										<xf:value><![CDATA[12]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[3년]]></xf:label>
+										<xf:value><![CDATA[36]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[ALL]]></xf:label>
+										<xf:value><![CDATA[1200]]></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+							<w2:udc_periodcalendar class="req" id="udc_reqDt" style=""></w2:udc_periodcalendar>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+					<!-- <w2:anchor class="btn_cm" id="anchor44" outerDiv="false" style="">
+						<xf:label><![CDATA[상세조회]]></xf:label>
+						</w2:anchor> -->
+				</xf:group>
+
+			</xf:group>
+
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="현설참가목록" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTcmSitedRptsListCount"></w2:udc_list_count>
+				<w2:anchor class="btn_gcm excel_down" clickEventElement="" ev:onclick="scwin.btnExcelDwn_onclick"
+					id="btnExcelDwn" localeRef="" outerDiv="false" style="float: right;" toolTip="엑셀다운로드">
+					<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+			<w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsTcmSitedRptsList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdTcmSitedRptsList" rowNumHeaderValue="No" rowNumVisible=""
+				rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;"
+				useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdTcmSitedRptsList_oncellclick" checkReadOnlyOnCut="true"
+				checkReadOnlyOnPaste="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column49" inputType="text"
+							removeBorderStyle="false" style="" value="No." width="40" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="height:68px;"
+							id="column67" value="코드" blockSelect="false" displayMode="label" colSpan="" rowSpan="2" sortable="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" style="" value="프로젝트명" width="300"
+							sortable="true" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" style="" value="민간공공" width="100"
+							colSpan="" rowSpan="2" sortable="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" style="" value="사업부구분" width="100"
+							colSpan="" rowSpan="2" sortable="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" style="" value="발주처" width="150"
+							colSpan="" rowSpan="2" sortable="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" style="" value="현설참가일" width="100" colSpan="" rowSpan="2" sortable="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column41" inputType="text"
+							removeBorderStyle="false" style="" value="의뢰일" width="100" colSpan="" rowSpan="2" sortable="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="250" inputType="text" style="height:68px;"
+							id="column53" value="현설참가자" blockSelect="false" displayMode="label" colSpan="" rowSpan="2" sortable="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:34px;"
+							id="column62" value="현설청취보고서" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column57"
+							value="담당자" blockSelect="false" displayMode="label" colSpan="" rowSpan="2" sortable="true">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column63"
+							value="작성" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column66"
+							value="결재" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="column50"
+							inputType="expression" removeBorderStyle="false" style="" value="" width="40">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="pjtId" value=""
+							blockSelect="false" displayMode="label" textAlign="center">
+						</w2:column>
+						<w2:column blockSelect="false" id="pjtNm" inputType="link" style="" textAlign="left" value=""
+							width="300">
+						</w2:column>
+						<w2:column blockSelect="false" class="" id="publCvlGbNm" inputType="text" style="" textAlign=""
+							value="" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="bzpjGbNm" inputType="text" style="" textAlign="" value=""
+							width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="ploNm" inputType="text" style="" textAlign="left" value=""
+							width="150">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="scdlDt" inputType="text"
+							removeBorderStyle="false" style="" textAlign="" value="" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="reqDt" inputType="text"
+							removeBorderStyle="false" style="" value="" width="100">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="sitedPrtctNm"
+							value="" blockSelect="false" displayMode="label" textAlign="left">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="checkbox" style="" id="aprvChk"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="aprvStusNm"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="chrgrNm" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

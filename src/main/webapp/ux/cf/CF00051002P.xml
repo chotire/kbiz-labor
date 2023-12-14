@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataList baseNode="list" id="dsTcmSiteList" repeatNode="map" saveRemovedData="true" style="">
+                <w2:columnInfo>
+                    <w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+                    <w2:column dataType="text" id="siteNm" name="현장_명"></w2:column>
+                    <w2:column dataType="text" id="sitePrgsStusCd" name="현장상태코드"></w2:column>
+                    <w2:column dataType="text" id="siteStusCdNm" name="현장상태코드명"></w2:column>
+                    <w2:column dataType="text" id="bzpjHqtDeptCd" name="사업_본부_부서코드"></w2:column>
+                    <w2:column dataType="text" id="bzpjHqtDeptCdNm" name="사업_본부_부서코드명"></w2:column>
+                </w2:columnInfo>
+            </w2:dataList>
+            <w2:dataMap baseNode="map" id="dsTcmSiteMap" style="">
+                <w2:keyInfo>
+                    <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+                    <w2:key dataType="text" id="siteNm" name="현장_명"></w2:key>
+                    <w2:key dataType="text" id="sitePrgsStusCd" name="현장상태코드"></w2:key>
+                    <w2:key dataType="text" id="siteStusCdNm" name="현장상태코드명"></w2:key>
+                    <w2:key dataType="text" id="bzpjHqtDeptCd" name="사업본부부서코드"></w2:key>
+                    <w2:key id="bzpjHqtDeptCdNm" name="사업본부부서코드명" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF000051002P.xml 
+     * Program Name : 현장조회
+     * Author : 김환섭 (tpkhs1)
+     * Date : 2019.03.12
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     * 2019.03.12   김환섭   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************ 
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        //추가 코드값 맵핑 호출 
+        scwin.fnInitial();
+
+        //현장상태 코드값 맵핑
+        com.selCdList("sbxBzpjHqtDeptCd", "CF074", "Y");				//사업구분[CF074] : PMS사업부
+        com.selCdList("sbxSitePrgsStusCd", "CM100005", "Y", "", "Y");	//업무구분코드[CM100005] : 현장상태코드
+
+        //INPUT값이 있으면 바로 조회
+        cond = JSON.parse($p.getPopupParam()).data.cond;
+        var pSiteNm = JSON.parse($p.getPopupParam()).data.siteNm;
+        if ( !strLib.isEmpty(pSiteNm) ) {
+            dsTcmSiteMap.set("siteNm", pSiteNm);
+            scwin.fnSelectTcmSiteList();
+        }
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function () {
+        grpSearch.init(); //조회그룹 초기화        
+        grdTcmSiteList.initGrid(); //부서목록 초기화
+    };
+
+    /************************************************************************************ 
+     *  [2] 전역변수  
+     ************************************************************************************/
+    var svcId = ""; //callback 처리용 서비스ID 
+    var ingStatus = "";
+
+    /************************************************************************************ 
+     *  [3] Callback 함수  
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallback = function (result, e) {
+        alert("fnErrCallback result:" + result);
+        console.log(result);
+        console.log(e);
+    };
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function (result, e) {
+        switch (svcId) {
+            case "selectTcmSiteList":
+                //서버에서 넘겨주는 값 세팅
+                dsTcmSiteList.setJSON(result.data.dsTcmSiteList);
+                break;
+
+            default:
+                break;
+        }
+    };
+
+    /************************************************************************************ 
+     *  [4] Event 함수  -->
+     ************************************************************************************/
+    /** 부서 리스트 조회 **/
+    scwin.btnSearch_onclick = function () {
+        scwin.fnSelectTcmSiteList();
+    };
+
+
+    /************************************************************************************
+     *  [5] 사용자 정의함수 함수 
+     ************************************************************************************/
+    scwin.fnSelectTcmSiteList = function () {
+        svcId = "selectTcmSiteList";
+        //서비스 호출 
+        ajaxLib.ajax("/cf/CF00051002P/selectTcmSiteList", {
+            mode: "asynchronous",
+            method: "Post",
+            requestData: dsTcmSiteMap.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallback"
+        });
+    };
+
+
+    // 확인 버튼 클릭
+    scwin.btnConfirm_onclick = function () {
+        scwin.fnSelectData();
+    };
+
+
+    scwin.btnCancelOnClick = function () {
+        com.popup_close("");
+    };
+
+    // 그리드 더블클릭
+    scwin.grdTcmSiteList_oncelldblclick = function (row, col) {
+        scwin.fnSelectData();
+    };
+
+    // 데이터 선택 후 처리
+    scwin.fnSelectData = function () {
+        var pRowIndex = 0;
+
+        pRowIndex = grdTcmSiteList.getFocusedRowIndex();
+        com.popup_close(JSON.stringify(dsTcmSiteList.getRowJSON(pRowIndex)));
+    };
+
+
+    /**************************************************************************
+     * Event: scwin.ibxKeySiteNm_onkeyup
+     * 기 능: 현장명 입력후 Enter시 처리
+     **************************************************************************/
+    scwin.ibxKeySiteNm_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            scwin.btnSearch_onclick();
+        }
+    };
+
+	]]></script>
+</head>
+<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="" id="" class="content_body popup">
+        <xf:group class="tbl_search" id="grpSearch" style="">
+            <xf:group class="tb_list" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:96px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:68px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:110px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="사업구분" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto"
+                        	disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxBzpjHqtDeptCd"
+                        	ref="data:dsTcmSiteMap.bzpjHqtDeptCd" style="width:140px;" submenuSize="auto" textAlign="left"
+                        	mandatory="true" chooseOptionLabel="전체">
+                        	<xf:choices></xf:choices>
+                        </xf:select1>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="상태" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxSitePrgsStusCd" mandatory="true" ref="data:dsTcmSiteMap.sitePrgsStusCd" style="width:140px;" submenuSize="auto" textAlign="left">
+                            <w2:attributes>
+                                <w2:msg>조회조건 테이블 입니다.</w2:msg>
+                            </w2:attributes>
+                        </xf:select1>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="현장명" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="ibxKeySiteNm" style="width: 140px;" ref="data:dsTcmSiteMap.siteNm" ev:onkeyup="scwin.ibxKeySiteNm_onkeyup" maxByteLength="300"></xf:input>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnSearch_onclick">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmSiteList" fixedColumnWithHidden="true" focusMode="row" id="grdTcmSiteList" readOnly="true" rowNumHeaderValue="No" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" ev:oncelldblclick="scwin.grdTcmSiteList_oncelldblclick">
+            <w2:header id="header1" style="">
+                <w2:row id="row2" style="">
+                    <w2:column removeBorderStyle="false" width="50" inputType="text" id="column48" value="NO" blockSelect="false" displayMode="label" readOnly="false">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column21" inputType="text" value="현장코드" width="80">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column19" inputType="text" value="현장명" width="200">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column17" inputType="text" value="사업구분" width="100">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column15" inputType="text" value="상태" width="80"></w2:column>
+                </w2:row>
+            </w2:header>
+            <w2:gBody id="gBody4" style="">
+                <w2:row id="row5" style="">
+                    <w2:column blockSelect="false" expression="rowindex()+1" id="column24" inputType="expression" style="height:24px;" width="40">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="siteCd" inputType="text" style="height:24px;" width="200">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="siteNm" inputType="text" style="height:24px;" textAlign="left" width="80">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="bzpjHqtDeptCdNm" inputType="text" style="height:24px;" width="100">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="siteStusCdNm" inputType="text" style="height:24px;" width="100">
+                    </w2:column>
+                </w2:row>
+            </w2:gBody>
+        </w2:gridView>
+        <xf:group class="bottombox" id="" style="">
+            <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" localeRef="" ev:onclick="scwin.btnConfirm_onclick">
+                <xf:label>
+                    <![CDATA[확인]]>
+                </xf:label>
+            </w2:anchor>
+            <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancelOnClick">
+                <xf:label>
+                    <![CDATA[취소]]>
+                </xf:label>
+            </w2:anchor>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

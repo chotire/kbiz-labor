@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>UDC</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+        </xf:model>
+        <script type="javascript"><![CDATA[
+            /*
+                file list : 2column일 경우 databox에 cols 클래스 추가
+                            3column일 경우 cols3
+                            4column일 경우 cols4
+            */
+        ]]></script>
+        <script type="text/javascript" src="/resources/js/lib/util/jquery.fileDownload.js"></script>
+    </head>
+    <body>
+        <!--/** WEBSQUARE UDC */
+            {
+            "componentName": "udc_img_file_list",
+            "pluginName": "udc_img_file_list",
+            "company": "",
+            "developer": "",
+            "category": "Basic",
+            "notSupportBrowser": "",
+            "version": "",
+            "htmlRender": "",
+            "icon": "",
+            "disableIcon": "",
+            "description": "",
+            "width": "",
+            "height": "",
+            "properties": [
+            {
+            "name": "id",
+            "default": "",
+            "type": "string",
+            "option": "",
+            "necessary": "Y",
+            "hidden": "N",
+            "bindparent": "",
+            "description": "udc 아이디"
+            },
+            {
+            "name": "date",
+            "default": "",
+            "type": "number",
+            "option": "",
+            "necessary": "N",
+            "hidden": "N",
+            "bindparent": "",
+            "description": "시작년월 초기 값"
+            },
+            {
+            "name": "class",
+            "default": "",
+            "type": "string",
+            "option": "",
+            "necessary": "N",
+            "hidden": "N",
+            "bindparent": "",
+            "description": "udc 클래스"
+            },
+            {
+            "name": "ref",
+            "default": "",
+            "type": "string",
+            "option": "",
+            "necessary": "N",
+            "hidden": "N",
+            "bindparent": "",
+            "description": "시작년월 Ref"
+            },
+            {
+            "name": "disabled",
+            "default": "",
+            "type": "combobox",
+            "option": "[true,false]",
+            "necessary": "N",
+            "hidden": "N",
+            "bindparent": "",
+            "description": "desc"
+            }
+            ],
+            "events": [],
+            "apis": [
+            {
+            "name": "getDate",
+            "description": "desc",
+            "params": [],
+            "return": [{
+            "type": "String",
+            "description": "desc"
+            }]
+            },
+            {
+            "name": "setDate",
+            "description": "desc",
+            "params": [],
+            "return": [{
+            "type": "String",
+            "description": "desc"
+            }]
+            }
+            ]
+            }
+        -->
+        <xf:group class="udc_wrap udc_file_list" id="" style="" pluginName="udc_img_file_list">
+            <link rel="stylesheet" type="text/css" href=""></link>
+            <style type="text/css"><![CDATA[ ]]></style>
+            <script type="text/javascript" src=""></script>
+            <script ev:event="oncreated(options)" type="text/javascript"><![CDATA[ 
+                //$("#"+gen_aflList.id).append($("<li>")).append($('<img class="w2image">'));
+            ]]></script>
+            <script ev:event="onattributeChanged(type,value)" type="text/javascript"><![CDATA[ ]]></script>
+            <script ev:event="ondestroyed()" type="text/javascript"><![CDATA[ ]]></script>
+
+            <xf:group class="file_img_list" id="grp_img_aflList" style="">
+                <xf:group class="btn_wrap" id="" style="">
+                    <w2:anchor class="btn_gcm" clickEventElement="" id="btnAddFile" outerDiv="false">
+                        <xf:label><![CDATA[이미지첨부]]></xf:label>
+                        <script ev:event="onclick" type="text/javascript"><![CDATA[
+                            com.udcPopup("AflImgListPopup",{comp:[aflId,""]}, jobGbCd.getValue(), menuId.getValue(), aflId.getValue(), fileExt.getValue(), usage.getValue(), "1048576");
+                        ]]></script>
+                    </w2:anchor>
+                </xf:group>
+                
+                <w2:generator class="img_databox" id="gen_aflList" tagname="ul">
+                    <w2:generator id="gen_generator" tagname="li"></w2:generator>
+                </w2:generator>
+
+                <xf:input adjustMaxLength="false" id="jobGbCd" style="display:none;width:50px"></xf:input>
+                <xf:input adjustMaxLength="false" id="menuId"  style="display:none;width:50px"></xf:input>
+                <xf:input adjustMaxLength="false" id="fileExt" style="display:none;width:50px"></xf:input>
+                <xf:input adjustMaxLength="false" id="usage"   style="display:none;width:50px"></xf:input>
+                <xf:input adjustMaxLength="false" id="aflId"   style="display:none;width:50px">
+                        <script ev:event="onchange" type="text/javascript"><![CDATA[
+                            gen_aflList.removeAll(); // 초기화
+                            if ( aflId.getValue() != "" ) {
+                                var rtnArr = com.udcAflList(aflId.getValue()) || [];
+                                $.each(rtnArr, function(key,data){
+                                    var idx = gen_aflList.insertChild();
+                                    var gen_Obj = gen_aflList.getChild(idx,"gen_generator");
+                                    var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+                                    var $imgData = $("#"+gen_Obj.id);
+                                    $imgData.append($('<img src="'+href+'" class="w2image">'));
+                                    $imgData.off("click").on("click", function() {
+                                        com.udcPopup("AflImgPopup", {comp:[aflId,""]}, $(this).find("img").attr("src"));
+                                    });
+                                });
+                            }
+                        ]]></script>
+                </xf:input>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

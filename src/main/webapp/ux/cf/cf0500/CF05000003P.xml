@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dataList1" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="column24" name="name2" dataType="text"></w2:column>
+						<w2:column id="column22" name="name3" dataType="text"></w2:column>
+						<w2:column id="column20" name="name4" dataType="text"></w2:column>
+						<w2:column id="column18" name="name5" dataType="text"></w2:column>
+						<w2:column id="column16" name="name6" dataType="text"></w2:column>
+						<w2:column id="column14" name="name7" dataType="text"></w2:column>
+						<w2:column id="column12" name="name8" dataType="text"></w2:column>
+						<w2:column id="column10" name="name9" dataType="text"></w2:column>
+						<w2:column id="column8" name="name10" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true">
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+					</w2:data>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID   : EP20050001U
+ * Program Name : QUICK 관리
+ * Author       : 남상열 (tpnsr)
+ * Date         : 2019.06.03
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ * 2019-06-03   남상열   최초작성 
+ **************************************************************************/ 
+ 
+	/************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+	scwin.svcId = "";
+	scwin.deptGubn = "";
+	scwin.deptNm   = "";         
+	
+
+    /************************************************************************************ 
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/   
+    scwin.onpageload = function() { 
+		var data =  JSON.parse($p.getPopupParam()).data;
+		
+		var useSealGbNm = "";
+		
+		if(data.deptGubn != undefined){
+			scwin.deptGubn = data.deptGubn;
+		}
+		
+		if(data.useSealGbNm != undefined){
+			useSealGbNm = data.useSealGbNm + "인감";
+		}
+		
+		if(data.deptNm != undefined){
+			scwin.deptNm = data.deptNm;
+		}
+		
+		if(scwin.deptGubn == "JADF_CONFIRM"){
+			tbxConfrimTitle.setValue( "법무팀 "+useSealGbNm+" 확인의견" );
+		} else if(scwin.deptGubn == "HR_CONFIRM"){
+			tbxConfrimTitle.setValue( "인사총무팀 "+useSealGbNm+" 확인의견" );
+		} else if(scwin.deptGubn == "JADF_TKOT"){
+			tbxConfrimTitle.setValue( "법무팀 사용인감 반출신청 확인의견" );
+		}
+		
+		scwin.initScreen();
+         
+    };
+
+    scwin.onpageunload = function() {
+		
+	};
+
+	// 화면 초기화(필수)
+	scwin.initScreen = function() {
+		
+	}; 
+
+
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+	
+	/**************************************************************************
+	* 함 수 명: scwin.fnSearchList
+	* 기 능: 조회 List
+	**************************************************************************/
+   
+		
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+	
+	/* 결과 후처리*/
+	scwin.fnCallback = function(result, e) {
+        console.log(e);
+        
+	   	switch(scwin.svcId) {
+	   		case "" :
+	   			console.log('search Error!!!!!!!!!!!');
+	   		break;
+	   }        
+	};
+	
+	/* 에러 후처리 */
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+        
+	   	switch(scwin.svcId) {
+	   		case "" :
+	   			console.log('search Error!!!!!!!!!!!');
+	   		break;
+	   }        
+    };
+	
+     
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+     /**************************************************************************
+	 * Event: scwin.btnSave_onclick
+	 * 기 능: 확인의견 저장
+	 **************************************************************************/
+	scwin.btnSave_onclick = function() {
+		
+		var obj = new Object(); 
+		var opinion = txaConfrimOpinion.getValue();
+		
+		if (scwin.deptGubn == "JADF_TKOT") {
+			if (!confirm("[법무팀] 사용인감 반출신청을 승인하시겠습니까?")) return;
+		}
+	
+		obj.deptGubn = scwin.deptGubn;
+		obj.txaConfrimOpinion = opinion;
+		
+		com.popup_close(obj);
+	};
+	
+	/**************************************************************************
+	 * Event: scwin.btnCancel_onclick
+	 * 기 능: 확인의견 취소
+	 **************************************************************************/
+	scwin.btnCancel_onclick = function() {
+		com.popup_close("");
+	};
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body popup" id="" style="">
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="tbxConfrimTitle" label="" style="" tagname="h3"></w2:textbox>
+			
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="" id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancel_onclick">
+							<xf:label><![CDATA[취소]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+					
+				</xf:group>
+			</xf:group>
+				<xf:group style="" id="">
+					<xf:textarea style="height:75px;" id="txaConfrimOpinion" minByteLength="4000"></xf:textarea>
+				</xf:group>
+			</xf:group>
+	</body>
+</html>

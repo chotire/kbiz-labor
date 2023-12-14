@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfBnactNoList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="tradeBnactGbCd" name="계좌구분" dataType="text"></w2:column>
+						<w2:column id="payBankCdNm" name="은행명" dataType="text"></w2:column>
+						<w2:column id="payBnactNo" name="계좌번호" dataType="text"></w2:column>
+						<w2:column id="payBnactAchdrNm" name="예금주명" dataType="text"></w2:column>
+						<w2:column id="payBankCd" name="은행코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+                <w2:dataMap baseNode="map" id="dsTcfBnactNoMap" style="">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" id="tradeCd" name="거래처코드"></w2:key>
+                        <w2:key dataType="text" id="tradeNm" name="거래처명"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00300004P.xml 
+     * Program Name : 은행계좌 확인 
+     * Author       : jysong (tpsongjy)
+     * Date : 2019.10.07
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     * 2019.10.07   jysong   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    scwin.svcId = ""; //callback 처리용 서비스ID
+
+    /************************************************************************************
+     *  [2] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        scwin.fnInitial();
+        
+        // 페이지목록 초기화
+        grdBankList.initGrid();
+
+        com.setUdcValue("dsTotalCount", "udcListCount", 0);
+        dsTcfBnactNoMap.set("tradeCd", JSON.parse($p.getPopupParam()).data.tradeCd);
+        dsTcfBnactNoMap.set("tradeNm", JSON.parse($p.getPopupParam()).data.tradeNm);
+        
+        com.selCdList("grdBankList:tradeBnactGbCd", "EM205");
+        
+        //조회
+        scwin.btnFind_onclick();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function () {
+    
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnSelectTcfBankAccountList
+     * 기 능: 은행계좌 리스트 조회
+     **************************************************************************/
+    scwin.btnFind_onclick = function () {
+        //callback 처리용 서비스ID 부여
+        scwin.svcId = "selectTcfBnactNoList";
+
+        //서비스 호출
+        ajaxLib.ajax("/cf/CF00300000U/selectTcfBnactNoList", {
+            mode: "asynchronous",
+            method: "Post",
+            requestData: dsTcfBnactNoMap.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallback"
+        });
+    };
+
+    /************************************************************************************
+     *  [4] Callback 함수 
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallback = function (result, e) {
+
+    }
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function (result, e) {
+        switch (scwin.svcId) {
+            case "selectTcfBnactNoList":
+                //서버에서 넘겨주는 값 세팅
+                dsTcfBnactNoList.setJSON(result.data.dsTcfBnactNoList);
+                com.setUdcValue("dsTotalCount", "udcListCount", dsTcfBnactNoList.getTotalRow());
+                break;
+            default:
+                break;
+        }
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnConfirm_onclick
+     * 기 능: 페이지 닫기
+     **************************************************************************/
+    scwin.btnConfirm_onclick = function() {
+        com.popup_close("");
+    };
+]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+			<xf:group class="tbl_search" id="" style="">
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:100.00px;" tagname="col"></xf:group>
+						<xf:group style="width:200.00px;" tagname="col"></xf:group>
+						<xf:group style="width:86.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="거래처코드" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input class="" id="ibxKeyTradeCd" ref="data:dsTcfBnactNoMap.tradeCd" mandatory="" style="width:80px;" disabled="true"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="거래처명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxKeyTradeNm" ref="data:dsTcfBnactNoMap.tradeNm" style="width:300px;" disabled="true"></xf:input>
+						</xf:group>
+					</xf:group>
+                </xf:group>
+			</xf:group>
+
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="은행계좌 확인" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+			    <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+            </xf:group>
+			<w2:gridView readOnly="true" autoFit="allColumn" dataList="data:dsTcfBnactNoList" fixedColumnWithHidden="true" id="grdBankList"
+				scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" rowNumVisible=""
+				rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue="" focusMode="row"
+				class="autoHeight">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column17" inputType="text" style="" value="계좌구분" width="120"></w2:column>
+						<w2:column blockSelect="false" id="column18" inputType="text" style="" value="은행명" width="150"></w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" style="" value="계좌번호"	width="150"></w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column20" value="예금주명" blockSelect="false" displayMode="label"></w2:column>
+                        <w2:column blockSelect="false" id="column21" inputType="text" style="" value="은행코드" width="150" hidden="true"></w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" id="tradeBnactGbCd" inputType="select" style="height:24px;" value="" width="120" readOnly="true"></w2:column>
+						<w2:column blockSelect="false" id="payBankCdNm" inputType="text" style="height:24px;" value="" width="150" class="" textAlign=""></w2:column>
+						<w2:column blockSelect="false" id="payBnactNo" inputType="text" style="height:24px;" value="" width="150" textAlign=""></w2:column>
+						<w2:column removeBorderStyle="false" id="payBnactAchdrNm" width="120" inputType="text" style="height:24px;" value="" blockSelect="false" displayMode="label"></w2:column>
+                        <w2:column blockSelect="false" id="payBankCd" inputType="text" style="height:24px;" value="" width="150" textAlign="" hidden="true"></w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+            
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

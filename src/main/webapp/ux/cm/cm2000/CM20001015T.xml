@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="workYm" name="기준년월" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsNrcgtPcostList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="acctNm" name="계정" dataType="text"></w2:column>
+						<w2:column id="evdcTypeNm" name="증빙유형" dataType="text"></w2:column>
+						<w2:column id="abstrCn" name="적요" dataType="text"></w2:column>
+						<w2:column id="bgtItemiNm" name="Item" dataType="text"></w2:column>
+						<w2:column id="bgtItemiStdr" name="규격" dataType="text"></w2:column>
+						<w2:column id="bgtItemiUnit" name="단위" dataType="text"></w2:column>
+						<w2:column id="sumPcostAmt" name="금액" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM20001015T.xml
+ * Program Name : 미인정원가내역
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+     /************************************************************************************
+        DataCollection description
+
+        dsNrcgtPcostList: 미인정원가내역 GRID
+        dsSearchMap: 검색조건 parameter
+     ************************************************************************************/
+
+    /************************************************************************************
+    *  [1] 전역변수
+    ************************************************************************************/
+    //var svcId;      //callback 처리용 서비스ID
+
+    /************************************************************************************
+    *  [2] onpageload(초기화포함)
+    ************************************************************************************/
+	scwin.onpageload = function() {
+
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function(_siteCd, _workYm) {
+
+        grdNrcgtPcostList.initGrid();//GRID 초기화
+
+        dsSearchMap.set( "siteCd" , _siteCd );  //현장코드
+        dsSearchMap.set( "workYm" , _workYm );  //현장코드
+
+        if(dsSearchMap.get( "siteCd" ) != ""){
+        	scwin.fnSearch();
+        }
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+    //조회
+    scwin.fnSearch = function() {
+    	if(dsSearchMap.get( "siteCd" ) == "") {
+			com.showMessage("CFW0004", "현장", "", "");//$1을(를) 선택하십시오.
+			return false;
+		}
+        ajaxLib.ajax("/cm/cm2000/CM20001015T/selectNrcgtPcostList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+				dsNrcgtPcostList.setJSON(result.data.dsNrcgtPcostList);
+           	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+	//Font 색상 변경
+	scwin.fnFontColor = function(value, formattedValue , rowIdx, colIdx) {
+    	if(parseInt(value, 0) < 0) {
+    		grdNrcgtPcostList.setCellColor( rowIdx , colIdx , "red" );//음수
+    	} else {
+    		grdNrcgtPcostList.setCellColor( rowIdx , colIdx , "black" );//양수
+    	}
+    	return formattedValue;
+	};
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    //엑셀다운로드
+	scwin.btnExcelDwn_onclick = function() {
+		var result = [];
+		var totalCol = grdNrcgtPcostList.getTotalCol();
+		for(var i = 0; i < totalCol; i++) {
+			if (!grdNrcgtPcostList.getColumnVisible(i)) {
+				result.push(i);
+			}
+		}
+		var excelOpt = {
+			 fileName: "공동도급 미인정원가내역.xlsx"    //또는 xlsx 확장자 사용
+			,removeColumns: result.join(",")
+		    ,useSubTotal: true    			//colMerge된 컬럼을 Merge해서 출력 할 지 여부
+		    ,colMergeTextAlign: "center"    //colMerge된 컬럼의 textAlign설정 (bottom, center, top 설정)
+			,colMerge : true
+            ,headerFontColor : "#FFFFFF"    // Header Font Color
+            ,headerColor : "#D9D9D9"        // Header Back Color
+            ,subTotalColor : "#FCE4D6"      // SubTotal Back Color
+            ,footerColor : "#BDD7EE"         // Footer Color
+		};  //excel download 옵션
+		grdNrcgtPcostList.advancedExcelDownload( excelOpt );	
+	};
+	]]></script>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="tab_body">
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="미인정원가내역" style="" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+							outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsNrcgtPcostList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdNrcgtPcostList" readOnly="true" rowNumHeaderValue="No"
+				rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false"
+				style="height: 300px;" useShiftKey="true" visibleRowNum="" sortable="true" contextMenu="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column hidden="false" removeBorderStyle="false" width="160" inputType="text" style=""
+							id="column125" value="계정" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" style="" value="증빙유형" width="140"
+							colSpan="" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="250" inputType="text" style="" id="column59"
+							value="적요" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column63"
+							value="Item" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column61"
+							value="규격" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column126"
+							value="단위" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column128"
+							value="금액" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" expression="" id="acctNm" inputType="text"
+							removeBorderStyle="false" style="" textAlign="left" value="" width="160">
+						</w2:column>
+						<w2:column blockSelect="false" class="" id="evdcTypeNm" inputType="text" style=""
+							textAlign="left" value="" width="140">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="250" inputType="text" style="" id="abstrCn" value=""
+							blockSelect="false" displayMode="label" displayFormat="" dataType="" textAlign="left">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="bgtItemiNm"
+							value="" blockSelect="false" displayMode="label" displayFormat="" dataType="" textAlign="left">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="bgtItemiStdr"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,###.#" dataType="" textAlign="left">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="bgtItemiUnit"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="sumPcostAmt"
+							value="" blockSelect="false" displayMode="label" textAlign="right" dataType="number" displayFormat="#,##0" customFormatter="scwin.fnFontColor">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+
+
+	</body>
+</html>

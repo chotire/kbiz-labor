@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false" />
+		<script src="/resources/js/commonUI.js" type="javascript" lazy="false" />
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID   : CF05300000U.xml
+ * Program Name : 업무분장(개인)
+ * Author       : 류상휴 (ryush)
+ * Date         : 2020.06.30
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ /**************************************************************************
+ * DataCollection description
+ *
+ *	 
+ **************************************************************************/
+
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+    var svcId = "";
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    };
+
+    scwin.onpageload = function() {
+
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+		var wframeParam = scwin.$w.getParameter("wframeParam") || "";
+		
+		if(wframeParam != "") {
+
+			// 최초 업무분장 탭 호출
+			scwin.tacJobChrg_ontabclick();
+       		//UI팀용 함수 호출
+       		com.commonUI();	
+		} else {
+			/** 일반적으로 메뉴 클릭으로 진입 시 **/
+			scwin.fnAfterProc();
+		}
+
+    };
+    
+/************************************************************************************
+ *  [3] 사용자 정의함수 함수
+ ************************************************************************************/
+
+   	/**************************************************************************
+	 * 함 수 명: scwin.fnAfterProc
+	 * 기 능: 초기화 셋팅
+	 **************************************************************************/	
+	scwin.fnAfterProc = function() {
+	
+		// 최초 업무분장 탭 호출
+		scwin.tacJobChrg_ontabclick();
+		
+        //UI팀용 함수 호출
+        com.commonUI();			
+	};
+	
+/************************************************************************************
+ *  [5] Event 함수
+ ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.tacJobChrg_ontabclick
+     * 기 능: 업무분장 탭 Click 이벤트
+     **************************************************************************/
+	scwin.tacJobChrg_ontabclick = function(tabID,idx) {
+		var sTabId = tacJobChrg.getSelectedTabID();
+		var _selectedTabFrame = tacJobChrg.getFrame( sTabId );
+		var _localScwin = _selectedTabFrame.getObj("scwin");
+		_localScwin["fnInitial"]();	//이벤트명
+	};
+ 
+	]]></script>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+
+		<xf:group style="" id="cf05300000UContent" class="content_body" >
+			<xf:group class="navigator_wrap" id="cf05300000Unav_area" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<w2:tabControl alwaysDraw="false" class="cm_tab" confirmFalseAction="new" confirmTrueAction="exist"
+				id="tacJobChrg" style="" useConfirmMessage="false" useMoveNextTabFocus="false" useTabKeyOnly="true"
+				ev:ontabclick="scwin.tacJobChrg_ontabclick">
+				<w2:tabs disabled="false" id="tabs2" label="업무분장(팀)" style=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs1" label="업무분장(개인)" style=""></w2:tabs>
+				<w2:content alwaysDraw="false" id="content2" src="/ux/cf/cf0530/CF05300020T.xml" style=""></w2:content>
+				<w2:content alwaysDraw="false" id="content1" src="/ux/cf/cf0530/CF05300010T.xml" style=""></w2:content>				
+			</w2:tabControl>
+
+		</xf:group>
+	</body>
+</html>

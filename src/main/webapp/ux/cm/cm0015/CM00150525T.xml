@@ -1,0 +1,828 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchParamMap">
+					<w2:keyInfo>
+						<w2:key id="pjtId" name="프로젝트ID" dataType="text"></w2:key>
+						<w2:key id="bgtItemiCd" name="예산내역코드" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsReportInfoMap">
+				    <w2:keyInfo>
+				        <w2:key id="pjtId" name="프로젝트ID" dataType="text"></w2:key>
+				        <w2:key id="pjtNm" name="프로젝트명" dataType="text"></w2:key>
+				        <w2:key id="addr" name="현장" dataType="text"></w2:key>
+				        <w2:key id="constPrdMcnt" name="공사기간" dataType="text"></w2:key>
+				        <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+				        <w2:key id="ordVendrNm" name="발주처" dataType="text"></w2:key>
+				        <w2:key id="dmndVendrNm" name="수요처" dataType="text"></w2:key>
+				        <w2:key id="spAmt" name="영업도급금액" dataType="text"></w2:key>
+				        <w2:key id="contBgtAmt" name="도급금액" dataType="text"></w2:key>
+				        <w2:key id="actbgtAmt" name="실행예산" dataType="text"></w2:key>
+				        <w2:key id="actBgtRt" name="실행원가율(%)" dataType="text"></w2:key>
+				        <w2:key id="plActbgtAmt" name="손익" dataType="text"></w2:key>
+				        <w2:key id="aprvNo" name="결재ID" dataType="text"></w2:key>
+				        <w2:key id="cnsltAflId" name="품의_첨부파일ID" dataType="text"></w2:key>
+
+				        <w2:key id="spcmtCn" name="특기사항_내용" dataType="text"></w2:key>
+
+				        <w2:key id="jvSiteGb" name="공동도급현장구분 1:단독, 2:공동" dataType="text"></w2:key>
+				        <w2:key id="jvStndCdYn" name="공동도급조정분 존재여부" dataType="text"></w2:key>
+				        <w2:key id="mainYn" name="당사가 주간사인지 여부" dataType="text"></w2:key>
+				        <w2:key id="commMtrRmkCn" name="공통_사항_비고_내용" dataType="text"></w2:key>
+				        <w2:key id="dirctRmkCn" name="직접비_비고_내용" dataType="text"></w2:key>
+				        <w2:key id="idctRmkCn" name="간접비_비고_내용" dataType="text"></w2:key>
+				        <w2:key id="rvwAflId" name="검토_첨부파일ID" dataType="text"></w2:key>
+				        <w2:key id="pjtTypCd" name="프로젝트타입코드" dataType="text"></w2:key>
+				        <w2:key id="workDt" name="공사시작일~종료일" dataType="text"></w2:key>
+				    </w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcmTactbgtItemiList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="chk" name="체크박스" dataType="text"></w2:column>
+						<w2:column id="no" name="No" dataType="text"></w2:column>
+						<w2:column id="gubun" name="구분" dataType="text"></w2:column>
+						<w2:column id="bgtItemiNm" name="품명" dataType="text"></w2:column>
+						<w2:column id="bgtItemiStdr" name="규격" dataType="text"></w2:column>
+						<w2:column id="bgtItemiUnit" name="단위" dataType="text"></w2:column>
+						<w2:column id="itexpGb" name="비목" dataType="text"></w2:column>
+						<w2:column id="contBgtQty" name="도급예산_수량" dataType="text"></w2:column>
+						<w2:column id="contBgtUct" name="도급예산_단가" dataType="text"></w2:column>
+						<w2:column id="contBgtAmt" name="도급예산_금액" dataType="text"></w2:column>
+						<w2:column id="actbgtQty" name="실행예산_수량" dataType="text"></w2:column>
+						<w2:column id="actbgtUct" name="실행예산_단가" dataType="text"></w2:column>
+						<w2:column id="actbgtAmt" name="실행예산_금액" dataType="text"></w2:column>
+						<w2:column id="actbgtRt" name="실행원가율(%)" dataType="text"></w2:column>
+						<w2:column id="rmkCn" name="비고" dataType="text"></w2:column>
+						<w2:column id="stndItemiCd" name="표준내역코드" dataType="text"></w2:column>
+						<w2:column id="stndItemiNm" name="표준내역명" dataType="text"></w2:column>
+						<w2:column id="sortOdr" name="정렬순서" dataType="text"></w2:column>
+						<w2:column id="bgtItemiLv" name="예산_내역_레벨" dataType="text"></w2:column>
+						<w2:column id="itemiYn" name="내역_여부" dataType="text"></w2:column>
+						<w2:column id="pjtId" name="프로젝트ID" dataType="text"></w2:column>
+						<w2:column id="bgtItemiCd" name="예산내역코드" dataType="text"></w2:column>
+						<w2:column id="bdmtItemCd" name="아이템코드" dataType="text"></w2:column>
+						<w2:column id="upperBgtItemiCd" name="상위_예산내역코드" dataType="text"></w2:column>
+						<w2:column id="itemiYnNext" name="하위레벨이 공종인지 내역인지 구분" dataType="text"></w2:column>
+						<w2:column id="bgtItemiLvNext" name="하위행의 레벨" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSrch">
+					<w2:keyInfo>
+						<w2:key id="pjtId" name="프로젝트ID" dataType="text"></w2:key>
+						<w2:key id="bgtItemiCd" name="예산내역코드" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsAprvInfoMap">
+					<w2:keyInfo>
+						<w2:key id="pjtId" name="프로젝트ID" dataType="text"></w2:key>
+						<w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+						<w2:key id="aprvStusCd" name="결재상태코드" dataType="text"></w2:key>
+						<w2:key id="aprvStusNm" name="결재상태명" dataType="text"></w2:key>
+						<w2:key id="userNm" name="작성자" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsEstPlanChrgrList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="pjtId" name="프로젝트ID" dataType="text"></w2:column>
+						<w2:column id="chrgrEmpno" name="담당자_사번" dataType="text"></w2:column>
+						<w2:column id="userNm" name="사용자명" dataType="text"></w2:column>
+						<w2:column id="jbclCd" name="직급코드[CF0061]" dataType="text"></w2:column>
+						<w2:column id="jbclNm" name="직급명" dataType="text"></w2:column>
+						<w2:column id="deptCd" name="부서코드" dataType="text"></w2:column>
+						<w2:column id="deptNm" name="부서명" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM00150525T.xml
+ * Program Name : 가실행예산(상세) - 집계표 TAB
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+        DataCollection description
+
+        dsReportInfoMap: 품의서 상세
+        dsTcmTactbgtItemiList: 품의내역 GRID
+        dsSearchParamMap: 검색조건 parameter
+        dsAprvInfoMap: 결재정보
+        dsSrch: 결재상신 PARAMETER
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    var svcId;      //callback 처리용 서비스ID
+    scwin.sEditYn = "Y"	//EDIT 가능여부
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        if($p.getPopupParam() != ""){//팝업으로 호출시
+        	scwin.fnInitialPopup();
+    	}
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function(pjtId) {
+
+		//검색조건 셋팅
+        dsSearchParamMap.set( "pjtId" , pjtId );//프로젝트ID
+        dsSearchParamMap.set( "bgtItemiCd" , "00000" );//예산내역코드
+
+        //품의서 조회
+        scwin.fnReportInfo();
+
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+	/** 팝업으로 호출시 **/
+	scwin.fnInitialPopup = function() {
+
+        //UI팀용 함수 호출
+        com.commonUI();
+
+		//검색조건 셋팅
+		scwin.sEditYn = JSON.parse($p.getPopupParam()).data.paramKeyEditYn;//EDIT 가능여부
+        dsSearchParamMap.set( "pjtId" , JSON.parse($p.getPopupParam()).data.paramKeyPjtId );//프로젝트ID
+        dsSearchParamMap.set( "bgtItemiCd" , "00000" );//예산내역코드
+
+        btnApprRequest.hide();//결재 button
+        btnSave.hide();//저장 button
+        btnDel.hide();//삭제 button
+        btnList.hide();//목록 button
+        txaSpcmtCn.setReadOnly( true );//특기사항
+
+		//품의서 조회
+        scwin.fnReportInfo();
+
+        //UI팀용 함수 호출
+        com.commonUI();
+	}
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+     
+    //품의서 조회
+    scwin.fnReportInfo = function(){
+        svcId = "selectReportInfo";
+        ajaxLib.ajax("/cm/cm0015/CM00150525T/selectReportInfo", {
+            mode : "asynchronous"
+            , method : "POST"
+            , requestData : dsSearchParamMap.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+    };
+
+    //품의내역 조회
+    scwin.fnTactbgtList = function(){
+        svcId = "selectTcmTactbgtItemiList";
+        ajaxLib.ajax("/cm/cm0015/CM00150515T/selectTcmTactbgtItemiList", {
+            mode : "asynchronous"
+            , method : "POST"
+            , requestData : dsSearchParamMap.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+    };
+
+	//결재정보조회
+	scwin.fnAprvInfo = function() {
+        svcId = "selectAprvInfo";
+        ajaxLib.ajax("/cm/cm0015/CM00150515T/selectAprvInfo", {
+            mode : "asynchronous"
+            , method : "POST"
+            , requestData : dsSearchParamMap.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+	}
+
+	//조회 후 후처리
+	scwin.fnSelectAfter = function(flag) {
+        // 첨부파일 LIST 3개씩 : UDC.xml 참조
+		com.getUdcComp("udcAflId", "gen_aflList").addClass("col4");
+
+		var sJobGbCd = "CM";			// 업무구분
+		var sMenuId  = "CM00150525T";	// 화면ID
+		var sAflId   = dsReportInfoMap.get("cnsltAflId");	// 첨부파일ID
+		var sFileExt = "*.*";
+
+		com.setUdcValue( "udcAflId", "jobGbCd", sJobGbCd);
+		com.setUdcValue( "udcAflId", "menuId", sMenuId);
+		com.setUdcValue( "udcAflId", "aflId", sAflId);
+		com.setUdcValue( "udcAflId", "fileExt", sFileExt);
+
+		if (flag) {
+			com.getUdcComp("udcAflId", "btnAddFile").addClass("hide");//파일첨부 비활성화
+			com.setUdcValue( "udcAflId", "usage", ""); // 버튼숨기기
+		} else {
+			com.setUdcValue( "udcAflId", "usage", "INS"); // 버튼숨기기처리 : 필수값
+		}
+
+        com.setUdcValue( "udcAflId", "fileSize", "INS"); // 용량표시안함(표시함:INS) : 필수값
+	}
+
+	//Font 색상 변경
+	scwin.fnFontColor = function(value, formattedValue , rowIdx, colIdx) {
+    	if(parseInt(value, 0) < 0) {
+    		grdTcmTactbgtItemiList.setCellColor( rowIdx , colIdx , "red" );//음수
+    	} else {
+    		grdTcmTactbgtItemiList.setCellColor( rowIdx , colIdx , grdTcmTactbgtItemiList.getCellColor( rowIdx , colIdx ) );//양수
+    	}
+    	return formattedValue;
+	};
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function(result, e) {
+        switch(svcId) {
+            //품의서 조회
+            case "selectReportInfo" :
+            	dsReportInfoMap.setEmptyValue();
+                dsReportInfoMap.setJSON(result.data);
+
+				spnPjtNm.setValue( dsReportInfoMap.get( "pjtNm" ) );//프로젝트명
+				spnAddr.setValue( dsReportInfoMap.get( "addr" ) );//현장                
+                spnWorkDt.setValue( dsReportInfoMap.get( "workDt" ) );    //공사기간
+				spnConstPrdMcnt.setValue( '(' + dsReportInfoMap.get( "constPrdMcnt" ) + ' 개월)' );//공사개월수
+				spnSiteCd.setValue( dsReportInfoMap.get( "siteCd" ) );//현장코드
+				spnOrdVendrNm.setValue( dsReportInfoMap.get( "ordVendrNm" ) );//발주처
+				spnDmndVendrNm.setValue( dsReportInfoMap.get( "dmndVendrNm" ) );//수요처
+				//spnSpAmt.setValue( dsReportInfoMap.get( "spAmt" ) );//영업도급금액
+				spnContBgtAmt.setValue( dsReportInfoMap.get( "contBgtAmt" ) );//도급금액
+				spnActbgtAmt.setValue( dsReportInfoMap.get( "actbgtAmt" ) );//실행예산
+				spnActBgtRt.setValue( dsReportInfoMap.get( "actBgtRt" ) );//실행원가율(%)
+				spnPlActbgtAmt.setValue( dsReportInfoMap.get( "plActbgtAmt" ) );//손익
+
+                scwin.fnTactbgtList();//품의내역 조회
+                break;
+            //품의내역 조회
+            case "selectTcmTactbgtItemiList" :
+            	dsTcmTactbgtItemiList.removeAll();
+                dsTcmTactbgtItemiList.setJSON(result.data.dsTcmTactbgtItemiList);
+                com.setUdcValue("dsTotalCount","udcListCount",grdTcmTactbgtItemiList.getTotalRow());   //GRID ROW COUNT
+                scwin.fnAprvInfo();//결재정보조회
+                break;
+            //저장
+            case "insertTcmTactbgtRpt" :
+                com.showMessage("CFA0012");//저장되었습니다.
+                scwin.fnReportInfo();
+                break;
+            //삭제
+            case "deleteTcmTactbgtRpt" :
+                com.showMessage("EMA0006");//삭제되었습니다.
+                scwin.fnReportInfo();
+                break;
+            //결재정보조회
+            case "selectAprvInfo" :
+            	dsAprvInfoMap.setEmptyValue();
+            	dsEstPlanChrgrList.removeAll();//담당자LIST
+
+            	dsAprvInfoMap.setJSON( result.data.dsAprvInfoMap );
+            	dsEstPlanChrgrList.setJSON( result.data.dsEstPlanChrgrList );
+
+            	if($p.parent().spnAprvStusNm != undefined){//가실행예산(전략기획팀) 메뉴에서 팝업 호출시 SKIP 처리
+	            	$p.parent().spnAprvStusNm.setValue(dsAprvInfoMap.get("aprvStusNm"));//진행상태
+	            	$p.parent().spnLbprNm.setValue(dsAprvInfoMap.get("userNm"));//작업자
+            	}
+
+            	/*
+            	 * 1.
+            	 * CF004100	: 기안중
+            	 * CF004120 : 검토요청
+            	 * CF004130 : 최종승인
+            	 * CF004999 : 부결
+            	 * 결재 상태값과 상관없이 결재번호가 존재하면 disabled 처리
+            	 * 기안취소시 결재번호를 null로 update 처리하기 때문에...
+            	 * 2.
+            	 * 견적계획 담당자일 경우만 버튼을 enabled 처리한다.
+            	 */
+            	if(dsEstPlanChrgrList.getMatchedIndex( "chrgrEmpno" , sessionStorage.userEmpno) == "" ||
+            		(dsAprvInfoMap.get( "aprvNo" ) != "" &&  dsAprvInfoMap.get( "aprvStusCd" ) != "CF004999")){
+					btnSave.setDisabled( true );//저장 button
+					btnDel.setDisabled( true );//삭제 button
+					btnApprRequest.setDisabled( true );//결재 button
+					txaSpcmtCn.setReadOnly( true );//특기사항
+					scwin.sEditYn = "N";//EDIT 가능여부
+					scwin.fnSelectAfter(true);//조회 후 후처리
+            	}else{
+            		scwin.fnSelectAfter(false);//조회 후 후처리
+            	}
+                break;
+            case "updateAprvNo" :
+                scwin.fnReportInfo();
+                break;
+            default :
+                break;
+        }
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//실행예산검토의견서
+	scwin.btnOpinion_onclick = function() {
+		var popOps = {
+						  popup_name:"가실행예산 검토의견서"
+			           	, url:"/ux/cm/cm0015/CM00150530P.xml"
+			           	, data:{
+									 paramKeyPjtId : dsReportInfoMap.get( "pjtId" )//프로젝트ID
+									,paramKeyEditYn : scwin.sEditYn	//EDIT 가능여부
+			           	       }
+			           	, callbackFn : "scwin.fnOpinionCallBack"
+			           	, widType:"M"
+			           	, height:"580"
+		             };
+		com.popup_open(popOps);
+	};
+
+	//실행예산검토의견서 CallBack
+	scwin.fnOpinionCallBack = function() {
+		com.showMessage("CFA0012");//저장되었습니다.
+		//품의서 조회
+		scwin.fnReportInfo();
+	}
+
+	//결재
+	scwin.btnApprRequest_onclick = function() {
+	
+	/* 주택현장은 영업도급금액과 공사도급금액 비교 X ,  2020.06.18 정지윤 */
+		/*
+		if((dsReportInfoMap.get( "spAmt" ) != dsReportInfoMap.get( "contBgtAmt" )) && dsReportInfoMap.get( "pjtTypCd") != "SA00102" && (dsReportInfoMap.get("pjtId") != "200422")  ) {	
+				
+			com.showMessage("CMW0144");//영업시스템의 도급금액과 내역의 도급금액이 상이합니다.
+			return;
+		}
+		*/
+		
+		//공동도급현장구분 1:단독, 2:공동
+		//1. 공동도급현장이면서
+		//2. 당사가 주간사이면서
+		//3. 내역에 표준내역코드 - 공동도급 조정분이 존재하지 않는경우
+		if(dsReportInfoMap.get( "jvSiteGb" ) == "2" && dsReportInfoMap.get( "mainYn" ) == "Y" && dsReportInfoMap.get( "jvStndCdYn" ) == "N") {
+			com.showMessage("CMW0082", "내역에 공동도급조정분");//$1가(이) 존재하지 않습니다.
+			return;
+		}
+        
+        //tsa_pjt 테이블에 siteCd가 없으면 결재 진행 안되도록 수정.
+        if (com.isEmpty(dsReportInfoMap.get("siteCd"))) {
+            com.showMessage("CMW0082", "영업 프로젝트에 등록된 현장코드");//$1가(이) 존재하지 않습니다.
+            return;
+        }
+    
+		// 첨부파일 ID SET
+		dsReportInfoMap.set( "cnsltAflId" , com.getUdcValue("udcAflId", "aflId") );
+
+		//결재시 저장 후 결재 요청 처리
+        ajaxLib.ajax("/cm/cm0015/CM00150525T/insertTcmTactbgtRpt", {
+            method : "POST",
+            requestData : dsReportInfoMap.getJSON(),
+            callback : //"fnCallback",
+                function(result, e){
+                	dsSrch.setJSON( dsSearchParamMap.getJSON() );//결재본문 조회조건
+
+			        var paramObj = new Object();
+			        paramObj.jobGbCd = "CM";                                         // 업무구분코드
+			        paramObj.importUrl = "/ux/cm/cm5500/CM55000000E.xml";            // 출력할 결재본문페이지
+			        paramObj.aprvTtl = "[" + spnPjtNm.getValue() + "] 가실행예산 품의";  // 결재제목
+			        paramObj.rvwrEmpno = "";        							 	// 검토자_사번
+			        paramObj.fnlAprprEmpno = "";                               		// 최종승인자_사번
+			        paramObj.aprvPrcgNm = "";                                        // 후처리결재처리명
+			        paramObj.aprvPrcgEventNm = "/cm/cmif/CMIfTelepiaPostProcess/notifyAprvCallTactbgtRpt";// 후처리결재처리 이벤트명
+                    paramObj.aprvDocModiPsblYn = "Y";                                // 결재문서 수정불가기능 Y/N
+                    paramObj.aprlnModiPsblYn = "N";                                  // 결재선 수정불가기능 Y/N
+                    paramObj.aprvAtchModiPsblYn = "Y";                               // 결재첨부 수정불가기능 Y/N
+			        paramObj.aprvAflId = "";                  						 // 본문링크용 첨부파일 id (콤머로 구분해서 보내준다)
+			        paramObj.popupWidth = "1200";                                    // 팝업창 가로크기
+			        paramObj.popupHeight = "800";                                    // 팝업창 세로크기
+
+			        // 텔레피아 본문에 붙는 링크페이지(필수값 아님 : 사용 업무팀만 적용)
+			        paramObj.anchorUrl = "/ux/cm/cm5500/CM55000000E.xml&pjtId="+dsReportInfoMap.get( "pjtId" )+"&bgtItemiCd=00000";
+			        paramObj.anchorUrlMsg = spnPjtNm.getValue() + "내역서 다운로드"; // 링크에 붙는 메시지
+
+			        com.aprvSend(paramObj); //일반결재 호출
+            	},
+            errCallback : "fnErrCallBack"
+        });
+	};
+
+	//저장
+	scwin.btnSave_onclick = function() {
+		// 첨부파일 ID SET
+		dsReportInfoMap.set( "cnsltAflId" , com.getUdcValue("udcAflId", "aflId") );
+
+		if (confirm("저장 하시겠습니까?")) {
+	        svcId = "insertTcmTactbgtRpt";
+	        ajaxLib.ajax("/cm/cm0015/CM00150525T/insertTcmTactbgtRpt", {
+	            mode : "asynchronous"
+	            , method : "POST"
+	            , requestData : dsReportInfoMap.getJSON()
+	            , callback : "fnCallback"
+	            , errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+
+	//삭제
+	scwin.btnDel_onclick = function() {
+		if (confirm("삭제 하시겠습니까?")) {
+	        svcId = "deleteTcmTactbgtRpt";
+	        ajaxLib.ajax("/cm/cm0015/CM00150525T/deleteTcmTactbgtRpt", {
+	            mode : "asynchronous"
+	            , method : "POST"
+	            , requestData : dsReportInfoMap.getJSON()
+	            , callback : "fnCallback"
+	            , errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+
+	//내역서다운로드
+	scwin.btnExcelDwn_onclick = function() {
+		var excelOpt = {};  //excel download 옵션
+		excelOpt.fileName = "CM00150525T.xlsx";    //또는 xlsx 확장자 사용
+		grdTcmTactbgtItemiList.advancedExcelDownload( excelOpt );
+	};
+
+	//목록버튼 클릭 이벤트
+	scwin.btnList_onclick = function() {
+		var sData = {
+       					 "paramKeyIbxPjtNm" : $w.getParameter("paramKeyIbxPjtNm")	//프로젝트명
+       					,"paramKeySbxBzpjGbCd" : $w.getParameter("paramKeySbxBzpjGbCd")	//사업구분
+       					,"paramKeySbxPublCvlGbCd" : $w.getParameter("paramKeySbxPublCvlGbCd")	//민간/공공
+                        ,"paramKeySbxSiteCdYn" : $w.getParameter("paramKeySbxSiteCdYn")    //현장코드여부
+       					,"paramKeyFromReqDtm" : $w.getParameter("paramKeyFromReqDtm")	//기간(의뢰일) 시작일자
+       					,"paramKeyToReqDtm" : $w.getParameter("paramKeyToReqDtm")	//기간(의뢰일) 종료일자
+       					,"paramKeySbxPeriod" : $w.getParameter("paramKeySbxPeriod")	//기간 SELECT BOX
+       					,"paramKeyListBack" : "Y"	//목록화면 이동 FLAG
+					};
+		com.detailOpen("가실행예산목록", "CM00150505U", "/ux/cm/cm0015/CM00150500U.xml", "1", sData);
+	};
+
+	//파일첨부 버튼 - 클릭 이벤트
+	scwin.ins_aflId_onclick = function(e) {
+		var sJobGbCd = "CM";
+		var sMenuId  = "CM00150525T";
+		var sAflId   = dsReportInfoMap.get("cnsltAflId");
+		var sFileExt = "*.*";
+
+		com.setUdcValue( "udcAflId", "jobGbCd", sJobGbCd);
+		com.setUdcValue( "udcAflId", "menuId", sMenuId);
+		com.setUdcValue( "udcAflId", "aflId", sAflId);
+		com.setUdcValue( "udcAflId", "fileExt", sFileExt);
+		com.setUdcValue( "udcAflId", "usage", "INS"); // 버튼숨기기처리 : 필수값
+        com.setUdcValue( "udcAflId", "fileSize", "INS"); // 용량표시안함(표시함:INS) : 필수값
+	};
+
+   /**************************************************************************
+	 * Event: scwin.aprvPublicAction
+	 * 기 능: 결재처리후 결재번호 받아서 처리할 자체 업무이벤트 등록
+	 **************************************************************************/
+    scwin.aprvPublicAction = function() {
+		dsReportInfoMap.set( "aprvNo" , com.getAprvNo() );//결재번호
+
+        svcId = "updateAprvNo";
+        ajaxLib.ajax("/cm/cm0015/CM00150525T/updateAprvNo", {
+            mode : "asynchronous"
+            , method : "POST"
+            , requestData : dsReportInfoMap.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+    };
+
+	//결재현황 클릭
+	scwin.btnApprCon_onclick = function() {	
+		com.aprvViewPopup(dsAprvInfoMap.get( "aprvNo" ));
+	};
+	]]></script>
+	<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+	<w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<!-- 결재이벤트 페이지 임포트 -->
+		<xf:group>
+        	<w2:wframe style="display:none" id="importAprvMain" src="/ux/cf/CF00350500U.xml"></w2:wframe>
+		</xf:group>
+		<!-- #결재이벤트 페이지 임포트 -->
+		<xf:group style="" id="" class="tab_body">
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="품의서" style="" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnOpinion" outerDiv="false"
+							style="" ev:onclick="scwin.btnOpinion_onclick">
+							<xf:label><![CDATA[실행예산검토의견서]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnApprCon_onclick"
+							id="btnApprCon" outerDiv="false" style="">
+							<xf:label><![CDATA[결재현황]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnApprRequest" outerDiv="false"
+							style="" ev:onclick="scwin.btnApprRequest_onclick">
+							<xf:label><![CDATA[결재]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnSave" outerDiv="false" style=""
+							ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnDel" outerDiv="false" style=""
+							ev:onclick="scwin.btnDel_onclick">
+							<xf:label><![CDATA[삭제]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnList_onclick" id="btnList"
+							outerDiv="false" style="">
+							<xf:label><![CDATA[목록]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>품의서 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width: 110px;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+					<xf:group style="width:110px;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+					<xf:group tagname="col" style="width:83px;"></xf:group>
+					<xf:group tagname="col" style="width:auto;"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="프로젝트명" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="spnPjtNm" label="" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th " tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="현장코드(부서)" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td ac" tagname="td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" id="spnSiteCd" label="" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th"><w2:attributes></w2:attributes><w2:span id="" label="발주처" style=""></w2:span></xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" id="spnOrdVendrNm" label="" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group tagname="th" class="w2tb_th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="현장주소" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" id="spnAddr" label="" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th ">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="공사기간" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" id="spnWorkDt" label="착공일로부터 " style=""></w2:span>
+						<w2:span class="txt_unit" id="spnConstPrdMcnt" label="" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="수요처" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" id="spnDmndVendrNm" label="" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>품의서 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:110.00px;" tagname="col"></xf:group><xf:group style="width:auto" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+					<xf:group tagname="col" style="width:auto;"></xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="공사금액" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th ac" tagname="th">
+						<w2:attributes>
+							<w2:colspan>1</w2:colspan>
+						<w2:rowspan>1</w2:rowspan></w2:attributes>
+						<w2:span id="" label="도급금액" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th ac">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="실행예산" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th ac" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="실행원가율(%)" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th ac">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="손익" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="가실행예산" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td ar" tagname="td">
+						<w2:attributes>
+							<w2:colspan>1</w2:colspan>
+						<w2:rowspan>1</w2:rowspan></w2:attributes>
+						<w2:span class="txt_unit" dataType="number" displayFormat="#,###.#" id="spnContBgtAmt" label=""
+							style="">
+						</w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td ar">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" dataType="number" displayFormat="#,###.#" id="spnActbgtAmt" label=""
+							style="">
+						</w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td ar" tagname="td">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span class="txt_unit" dataType="number" displayFormat="" id="spnActBgtRt" label="" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td ar">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" dataType="number" displayFormat="#,###.#" id="spnPlActbgtAmt" label=""
+							style="">
+						</w2:span>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="품의내역" style="" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount" style=""></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm excel_down" clickEventElement=""
+							ev:onclick="scwin.btnExcelDwn_onclick" id="btnExcelDwn" localeRef="" outerDiv="false" style=""
+							toolTip="엑셀다운로드">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="" dataList="data:dsTcmTactbgtItemiList" fixedColumnWithHidden="true"
+				focusMode="row" id="grdTcmTactbgtItemiList" readOnly="true" rowNumHeaderValue="No" rowNumVisible=""
+				rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" showSortableUseFilter="true"
+				sortable="true" style="height: 350px;" useShiftKey="true" visibleRowNum="">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column21" inputType="text" style="height:68px;" value="공종명"
+							width="200" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column67" inputType="text"
+							removeBorderStyle="false" style="height:68px;" value="레벨" width="80" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" style="height:34px;" value="가실행예산"
+							width="200" colSpan="3" rowSpan="">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row8">
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column78"
+							value="도급예산" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column77"
+							value="실행예산" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column76"
+							value="원가율" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" id="bgtItemiNm" inputType="drilldown" style="height:24px;"
+							textAlign="left" value="" width="200" depthColumn="bgtItemiLv" depthType="nbsp" displayMode="label"
+							showDepth="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="bgtItemiLv" inputType="text"
+							removeBorderStyle="false" style="height:24px;" value="" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" class="" id="contBgtAmt" inputType="text" style="height:24px;"
+							textAlign="right" value="" width="200" displayFormat="#,###.#" dataType="number" customFormatter="scwin.fnFontColor">
+						</w2:column>
+						<w2:column blockSelect="false" id="actbgtAmt" inputType="text" style="height:24px;"
+							textAlign="right" value="" width="200" displayFormat="#,###.#" dataType="number" customFormatter="scwin.fnFontColor">
+						</w2:column>
+						<w2:column blockSelect="false" id="actbgtRt" inputType="text" style="height:24px;" textAlign=""
+							value="" width="200">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>특기사항, 첨부파일 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:120.00px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="특기사항" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<xf:textarea id="txaSpcmtCn" style="" ref="data:dsReportInfoMap.spcmtCn"></xf:textarea>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group tagname="th" class="w2tb_th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="첨부파일" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<xf:group class="ar mb5" id="" style="">
+							<w2:udc_file_list id="udcAflId" style=""></w2:udc_file_list>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+
+
+	</body>
+</html>

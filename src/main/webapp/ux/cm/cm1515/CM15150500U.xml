@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsStdYyList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="cd" name="코드" dataType="text"></w2:column>
+						<w2:column id="cdNm" name="코드명" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="exeYy" name="기준연도" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM15150500U.xml
+ * Program Name : 현장관리비현황조회
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+     /************************************************************************************
+        DataCollection description
+
+        dsStdYyList: 조회조건 기준년도
+        dsSearchMap: 검색조건 parameter
+     ************************************************************************************/
+
+    /************************************************************************************
+    *  [1] 전역변수
+    ************************************************************************************/
+    //var svcId;      //callback 처리용 서비스ID
+
+    /************************************************************************************
+    *  [2] onpageload(초기화포함)
+    ************************************************************************************/
+	scwin.onpageload = function() {
+	    //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+        
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+
+        //기준년도 조회
+        scwin.fnStdYyList();
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+     //기준년도 조회
+    scwin.fnStdYyList = function() {
+        ajaxLib.ajax("/cm/cm1515/CM15150000U/selectStdYyList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : //"fnCallback",
+                function(result, e){
+                	dsStdYyList.removeAll();//기준년도
+	                dsStdYyList.setJSON(result.data);
+	                scwin.fnStdYySet();//기준년도 default 셋팅
+            	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+	//기준년도 default 셋팅
+	scwin.fnStdYySet = function() {
+		var nowYy = scwin.$w.getCurrentServerDate( "yyyy" );//현재년도
+		var _idx = dsStdYyList.getMatchedIndex( "cd" , nowYy , true );
+		if(_idx == ""){//현재년도와 매칭되는 값이 존재 하지 않으면.
+			sbxStdYy.setValue( dsStdYyList.getCellData( dsStdYyList.getTotalRow()-1 , "cd" ) );//마지막 년도로 셋팅
+		}else{
+			sbxStdYy.setValue( nowYy );//현재 년도로 셋팅
+		}
+	};
+
+	//조회
+    scwin.fnSearch = function() {
+		var siteCd = wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue();//현장코드
+		var exeYy = sbxStdYy.getValue();//기준연월
+		
+		var sTabId = tacTactbgtMng.getSelectedTabID();
+		var _selectedTabFrame = tacTactbgtMng.getFrame( sTabId );
+		var _localScwin = _selectedTabFrame.getObj("scwin");
+		_localScwin["fnInitial"](siteCd, exeYy);	//이벤트명
+    }
+
+	//현장변경시 DataSet을 초기화 한다. 	
+	scwin.fnChildInit = function(){
+		var _t1 = tacTactbgtMng.getFrame( "tabs1" );
+		_t1.getWindow().scwin.fnDataInit();
+		var _t2 = tacTactbgtMng.getFrame( "tabs2" );
+		if(_t2.getWindow().scwin.fnDataInit != undefined){
+			_t2.getWindow().scwin.fnDataInit();
+		}
+	}
+	
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//조회 클릭 이벤트
+	scwin.btnFind_onclick = function() {
+		if(wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() == ""){
+			com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+			return;
+		}
+       	scwin.fnSearch();
+	};
+
+	//기준년도 SELECT BOX 변경 이벤트
+	scwin.sbxStdYy_onchange = function() {
+		
+	};
+
+	/* 현장코드 변경 이벤트 */
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsStdYyList.removeAll();//기준년도
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );//현장코드
+		dsSearchMap.set( "exeYy" , "" );//기준년도
+		
+		//현장변경시 DataSet을 초기화 한다.	
+		scwin.fnChildInit();
+
+		//기준년도 조회
+        scwin.fnStdYyList();
+	};
+
+	//TAB 클릭 이벤트
+	scwin.tacTactbgtMng_ontabclick = function(tabID,idx) {
+		scwin.fnSearch();
+	};
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchCode.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<!--							<w2:udc_search_code id="" style=""></w2:udc_search_code>-->
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기준년도" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:attributes>
+								<w2:colspan>2</w2:colspan>
+								<w2:rowspan>1</w2:rowspan>
+							</w2:attributes>
+							<xf:select1 allOption="" appearance="minimal" chooseOption="" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxStdYy"
+								ref="data:dsSearchMap.exeYy" style="width:147px;" submenuSize="auto" textAlign="left"
+								ev:onchange="scwin.sbxStdYy_onchange">
+								<xf:choices>
+									<xf:itemset nodeset="data:dsStdYyList">
+										<xf:label ref="cdNm"></xf:label>
+										<xf:value ref="cd"></xf:value>
+									</xf:itemset>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes></w2:attributes>
+						</xf:group>
+
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style=""
+						ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<w2:tabControl alwaysDraw="false" class="cm_tab" confirmFalseAction="new" confirmTrueAction="exist"
+				ev:ontabclick="scwin.tacTactbgtMng_ontabclick" id="tacTactbgtMng" style="" useConfirmMessage="false"
+				useMoveNextTabFocus="false" useTabKeyOnly="true">
+				<w2:tabs disabled="false" id="tabs1" label="통제성" localeRef="" style=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs2" label="비통제성" localeRef="" style=""></w2:tabs>
+				<w2:content alwaysDraw="false" id="content1" src="/ux/cm/cm1515/CM15150501T.xml" style=""></w2:content>
+				<w2:content alwaysDraw="false" id="content2" src="/ux/cm/cm1515/CM15150502T.xml" style=""></w2:content>
+			</w2:tabControl>
+
+		</xf:group>
+	</body>
+</html>

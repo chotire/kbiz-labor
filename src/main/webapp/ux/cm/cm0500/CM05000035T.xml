@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsTcmSiteDocRptMap" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+						<w2:key dataType="text" id="stwkDocAflId" name="착공서류첨부파일id"></w2:key>
+						<w2:key dataType="text" id="stwkDocAflNm" name="착공서류첨부파일이름"></w2:key>
+						<w2:key dataType="text" id="stwkRptAflId" name="착공보고첨부파일id"></w2:key>
+						<w2:key dataType="text" id="stwkRptAflNm" name="착공보고첨부파일이름"></w2:key>
+
+						<w2:key id="complDocAflId" name="준공서류첨부파일id" dataType="text"></w2:key>
+						<w2:key id="complDocAflNm" name="준공서류첨부파일이름" dataType="text"></w2:key>
+						<w2:key id="complRptAflId" name="준공보고첨부파일id" dataType="text"></w2:key>
+						<w2:key id="complRptAflNm" name="준공보고첨부파일이름" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM05000035T.xml
+ * Program Name : 조직도 T
+ * Author : jungjy1 (jungjy1)
+ * Date : 2020.04.07
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ * [TO-DO]
+ * 1. 조직도(이미지) 파일 Viewer 미구현 : 공통 기능
+ **************************************************************************/
+ /**************************************************************************
+ * DataCollection description
+ *
+ *  dsTcmSiteDocRptMap : 현장개요-착준공자료파일 Map
+ **************************************************************************/
+
+
+ /**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+    var svcId = "";
+	var pMap;
+	// 공통 참고 @RequestMapping(value="/cf/CF00350000P/downloadMAV",method=RequestMethod.GET)
+ 	var fileUrlPath = "/cf/CF00350000P/downloadMAV";	// 첨부파일 다운로드 경로 Call(공통)
+
+
+ /**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    	
+    };
+
+    scwin.onpageload = function() {
+    	
+		//tab main의 map정보
+		pMap = $p.getFrame().getParentFrame().getObj("dsSearchMap");
+		
+		var callPage = pMap.get("callPage") || "";
+		if ( callPage == "/ux/mg/mg3025/MG30254001U.xml" ) {
+			/** 현장포탈 **/
+			btnSave.setStyle("display", "none");
+			btnStwkDocAfl.setStyle("display", "none");
+			btnStwkRptAfl.setStyle("display", "none");
+			btnComplDocAfl.setStyle("display", "none");
+			btnComplRptAfl.setStyle("display", "none");
+		}
+		
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+        
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+    	console.log("착준공자료T fnInitial Call");
+		 
+		//화면로딩 시 자동 조회
+		scwin.fnTcmSiteDocRpt();
+		
+        com.commonUI();
+    };
+
+
+ /**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnTcmSiteOrg
+	 * 기 능: 착준공자료관련 파일 조회
+	 **************************************************************************/
+
+
+     scwin.fnTcmSiteDocRpt = function() {
+		svcId = "selectTcmSiteDocRpt";
+        ajaxLib.ajax("/cm/cm0500/CM05000035T/selectTcmSiteDocRpt", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : $p.getFrame().getParentFrame().getObj("dsSearchMap").getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"            
+        });
+    };	
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnSave
+	 * 기 능: 착준공자료T 저장
+	 **************************************************************************/
+     scwin.fnSave = function() {
+     	console.log("착준공자료T fnSave >> Start");
+
+		if (dsTcmSiteDocRptMap.getModifiedJSON(true).length  == 0) {
+		 	com.showMessage("CFE0031");	 //수정할 자료가 없습니다.
+			return false;
+		}
+
+    	if (!confirm("저장 하시겠습니까?")) return;
+
+		svcId = "saveTcmSiteDocRpt";
+        ajaxLib.ajax("/cm/cm0500/CM05000035T/saveTcmSiteDocRpt", {
+            mode : "synchronous",
+            method : "POST",
+            requestData : {
+            		tcmSite : dsTcmSiteDocRptMap.getJSON()
+            	},
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"
+        });
+    };
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnSiteValidate
+	 * 기 능: 현장 검색조건 관련 Validate
+	 **************************************************************************/
+	scwin.fnSiteValidate = function() {
+	    if ( dsTcmSiteDocRptMap.get("siteCd").length == 0){
+	        com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+	        return false;
+	    }
+		// 검색영역의 현장코드와 비교
+		if (pMap.get("siteCd") != dsTcmSiteDocRptMap.get("siteCd")) {
+	        com.showMessage("EMW0004", "검색항목에 변경된 현장");// $1을(를) 조회 하십시오.
+	        return false;
+		}
+	    return true;
+	};
+
+/**************************************************************************
+ * [4] Callback
+ **************************************************************************/
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnCallback
+	 * 기 능: CallBack 함수
+	 **************************************************************************/
+    scwin.fnCallback = function(result, e) {
+        switch(svcId) {
+            case "selectTcmSiteDocRpt" :
+                dsTcmSiteDocRptMap.setJSON(result.data.tcmSiteDocRpt);
+                scwin.getStwkDocAflIdFile();
+                scwin.getStwkRptAflIdFile();
+                scwin.getComplDocAflIdFile();
+                scwin.getComplRptAflIdFile();                
+                break;
+            case "saveTcmSiteDocRpt" :
+	        	com.showMessage("CFA0012");// 저장되었습니다.
+				scwin.fnTcmSiteDocRpt();
+            	break;
+        }
+    }
+
+    scwin.fnErrCallback = function(result, e) {
+       console.log(result);
+    }
+
+
+ /**************************************************************************
+ * [5] Event 정의
+ **************************************************************************/
+
+   	/**************************************************************************
+	 * 함 수 명: scwin.btnSave_onclick
+	 * 기 능: 조직도 T 저장
+	 **************************************************************************/
+	scwin.btnSave_onclick = function() {
+		// 현장조건 Check
+		if (!scwin.fnSiteValidate()) return false;
+		scwin.fnSave();
+	};
+
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.getStwkDocAflIdFile
+	 * 기 능: 착공서류 조회 및 첨부파일 다운로드
+	 **************************************************************************/
+    scwin.getStwkDocAflIdFile = function() {
+    	if(dsTcmSiteDocRptMap.get( "stwkDocAflId" ) != ""){ //alert(dsTcmSiteDocRptMap.get( "stwkDocAflId" ));
+	        var aprvAflId = dsTcmSiteDocRptMap.get( "stwkDocAflId" ).split(",");
+	        for (var i = 0; i < aprvAflId.length; i++) {
+	        	//alert(i);
+	            var rtnArr = com.udcAflList(aprvAflId[i]) || [];
+
+	            $.each(rtnArr, function(key,data){
+	                var idx = gen_aflList.removeChild();
+	                idx = gen_aflList.insertChild();
+	                var gen_Obj = gen_aflList.getChild(idx,"gen_generator");	                
+	                var t = gen_Obj.insertChild();
+	                var btn_obj = gen_Obj.getChild(t,"btn_addFile");
+	                var dFileSizeInit = "<span style='display:none;'>"+data.aflNm+"("+data.fileSize+"byte)</span>";
+	                var dFileSize = "("+data.fileSize+"byte)";
+	                btn_obj.setValue(data.aflNm + dFileSize + dFileSizeInit);
+	                btn_obj.setUserData("userData",data);
+	                var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+	                $("#"+btn_obj.getID()).off("click").on("click", function() {
+	                    $.fileDownload(href);
+	                    return;
+	                });
+	            });
+	        }
+    	}
+    	else{
+    		gen_aflList.removeChild();
+    	}
+    };
+    
+      	/**************************************************************************
+	 * 함 수 명: scwin.btnOrgAfl_onclick
+	 * 기 능: 착공서류 첨부 버튼 클릭
+	 **************************************************************************/
+	scwin.btnStwkDocAfl_onclick = function() {
+		// 현장조건 Check
+		if (!scwin.fnSiteValidate()) return false;
+
+        var sAflId   = dsTcmSiteDocRptMap.get("stwkDocAflId");// 첨부파일ID
+		var sJobGbCd = "CM";							// 업무구분
+		var sMenuId  = "CM05000035T";					// 매뉴ID
+        var popOps = {
+				pid: "AflPopup"+"_" +new Date().getTime()
+		        ,url:"/ux/cf/CF00350000P.xml"
+		        ,modal : true //true || false
+		        ,popup_name:"착공서류 파일첨부"
+		        ,callbackFn : "scwin.popStwkDocAflCallback"
+		        ,widType : "M"
+		        ,height : 540
+		        ,data : {
+		                 aflId   : sAflId,
+		                 jobGbCd : sJobGbCd,
+		                 menuId  : sMenuId,
+		                 fileExt : "jpg,png,gif,pdf,ppt,pptx,xls,xlsx",
+		                 usage : "INS",
+		                 fileSize : "20971520" // 업로드 가능 파일사이즈 추가(20MB제한)
+		                }
+               };
+        com.popup_open(popOps);
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.popOrgAflCallback
+	 * 기 능: 착공서류 Callback 처리
+	 **************************************************************************/
+	scwin.popStwkDocAflCallback = function(result){
+		console.log("result.aflId >> " + result.aflId);
+		console.log("result.aflNm >> " + result.aflNm);
+	//	console.log("result.imgUrl >> " + result.imgUrl);
+		dsTcmSiteDocRptMap.set( "stwkDocAflId" ,  result.aflId);
+		dsTcmSiteDocRptMap.set( "stwkDocAflNm" ,  result.aflNm);
+		scwin.getStwkDocAflIdFile();
+//        if( result.imgUrl != "" ) {
+//            ibxFileHref.setSrc(result.imgUrl);
+//        }
+	};
+	
+	  	/**************************************************************************
+	 * 함 수 명: scwin.getStwkDocAflIdFile
+	 * 기 능: 착공서류 조회 및 첨부파일 다운로드
+	 **************************************************************************/
+    scwin.getStwkRptAflIdFile = function() {
+    	if(dsTcmSiteDocRptMap.get( "stwkRptAflId" ) != ""){  
+	        var aprvAflId = dsTcmSiteDocRptMap.get( "stwkRptAflId" ).split(",");
+	        for (var i = 0; i < aprvAflId.length; i++) {
+	        	
+	            var rtnArr = com.udcAflList(aprvAflId[i]) ;
+
+	            $.each(rtnArr, function(key,data){
+	                var idx = gen_aflList2.removeChild();
+	                idx = gen_aflList2.insertChild();
+	                var gen_Obj = gen_aflList2.getChild(idx,"gen_generator2");	                
+	                var t = gen_Obj.insertChild();
+	                var btn_obj = gen_Obj.getChild(t,"btn_addFile2");
+	                var dFileSizeInit = "<span style='display:none;'>"+data.aflNm+"("+data.fileSize+"byte)</span>";
+	                var dFileSize = "("+data.fileSize+"byte)";
+	                btn_obj.setValue(data.aflNm + dFileSize + dFileSizeInit);
+	                btn_obj.setUserData("userData",data);
+	                var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+	                $("#"+btn_obj.getID()).off("click").on("click", function() {
+	                    $.fileDownload(href);
+	                    return;
+	                });
+	            });
+	        }
+    	}
+    	else{
+    	
+    		gen_aflList2.removeChild();
+    	}
+    };
+
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.btnOrgOriAfl_onclick
+	 * 기 능: 착공보고_첨부파일 버튼 클릭
+	 **************************************************************************/
+	scwin.btnStwkRptAfl_onclick = function() {
+		// 현장조건 Check
+		if (!scwin.fnSiteValidate()) return false;
+
+		var sAflId   = dsTcmSiteDocRptMap.get("stwkRptAflId");// 첨부파일ID
+		var sJobGbCd = "CM";								// 업무구분
+		var sMenuId  = "CM05000035T";						// 매뉴ID
+
+	 	var popOps = {
+				pid: "AflPopup"+"_" +new Date().getTime()
+		        ,url:"/ux/cf/CF00350002P.xml"
+		        ,modal : true //true || false
+		        ,popup_name:"착공보고 파일첨부"
+		        ,callbackFn : "scwin.popStwkRptAflCallback"
+		        ,widType : "M"
+		        ,height : 540
+		        ,data : {
+		                 aflId   : sAflId,
+		                 jobGbCd : sJobGbCd,
+		                 menuId  : sMenuId,
+		                 fileExt : "jpg,png,gif,pdf,ppt,pptx,xls,xlsx",
+		                 usage : "INS",
+		                 fileSize : "20971520" // 업로드 가능 파일사이즈 추가(20MB제한)
+		                }
+               };
+  		com.popup_open(popOps);
+	};
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.popOrgOriAflCallback
+	 * 기 능: 착공보고_첨부파일 Callback 처리
+	 **************************************************************************/
+	scwin.popStwkRptAflCallback = function(result){
+		console.log("result.aflId >> " + result.aflId);
+		console.log("result.aflNm >> " + result.aflNm);
+		dsTcmSiteDocRptMap.set( "stwkRptAflId" ,  result.aflId);
+		dsTcmSiteDocRptMap.set( "stwkRptAflNm" ,  result.aflNm);
+		scwin.getStwkRptAflIdFile();
+	};
+	
+	  	/**************************************************************************
+	 * 함 수 명: scwin.btnOrgOriAfl_onclick
+	 * 기 능: 준공서류_첨부파일 버튼 클릭
+	 **************************************************************************/
+	scwin.btnComplDocAfl_onclick = function() {
+		// 현장조건 Check
+		if (!scwin.fnSiteValidate()) return false;
+
+		var sAflId   = dsTcmSiteDocRptMap.get("complDocAflId");// 첨부파일ID
+		var sJobGbCd = "CM";								// 업무구분
+		var sMenuId  = "CM05000035T";						// 매뉴ID
+
+	 	var popOps = {
+				pid: "AflPopup"+"_" +new Date().getTime()
+		        ,url:"/ux/cf/CF00350002P.xml"
+		        ,modal : true //true || false
+		        ,popup_name:"준공서류 파일첨부"
+		        ,callbackFn : "scwin.popComplDocAflCallback"
+		        ,widType : "M"
+		        ,height : 540
+		        ,data : {
+		                 aflId   : sAflId,
+		                 jobGbCd : sJobGbCd,
+		                 menuId  : sMenuId,
+		                 fileExt : "jpg,png,gif,pdf,ppt,pptx,xls,xlsx",
+		                 usage : "INS",
+		                 fileSize : "20971520" // 업로드 가능 파일사이즈 추가(20MB제한)
+		                }
+               };
+  		com.popup_open(popOps);
+	};
+	
+		  	/**************************************************************************
+	 * 함 수 명: scwin.getStwkDocAflIdFile
+	 * 기 능: 착공서류 조회 및 첨부파일 다운로드
+	 **************************************************************************/
+    scwin.getComplDocAflIdFile = function() {
+    	if(dsTcmSiteDocRptMap.get( "complDocAflId" ) != ""){ 
+	        var aprvAflId = dsTcmSiteDocRptMap.get( "complDocAflId" ).split(",");
+	        for (var i = 0; i < aprvAflId.length; i++) {
+	 
+	            var rtnArr = com.udcAflList(aprvAflId[i]) || [];
+
+	            $.each(rtnArr, function(key,data){
+	                var idx = gen_aflList3.removeChild();
+	                idx = gen_aflList3.insertChild();
+	                var gen_Obj = gen_aflList3.getChild(idx,"gen_generator3");	                
+	                var t = gen_Obj.insertChild();
+	                var btn_obj = gen_Obj.getChild(t,"btn_addFile3");
+	                var dFileSizeInit = "<span style='display:none;'>"+data.aflNm+"("+data.fileSize+"byte)</span>";
+	                var dFileSize = "("+data.fileSize+"byte)";
+	                btn_obj.setValue(data.aflNm + dFileSize + dFileSizeInit);
+	                btn_obj.setUserData("userData",data);
+	                var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+	                $("#"+btn_obj.getID()).off("click").on("click", function() {
+	                    $.fileDownload(href);
+	                    return;
+	                });
+	            });
+	        }
+    	}
+    	else{
+    		gen_aflList3.removeChild();
+    	}
+    	
+    	
+    };
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.popOrgOriAflCallback
+	 * 기 능: 준공서류_첨부파일 Callback 처리
+	 **************************************************************************/
+	scwin.popComplDocAflCallback = function(result){
+		console.log("result.aflId >> " + result.aflId);
+		console.log("result.aflNm >> " + result.aflNm);
+		dsTcmSiteDocRptMap.set( "complDocAflId" ,  result.aflId);
+		dsTcmSiteDocRptMap.set( "complDocAflNm" ,  result.aflNm);
+		scwin.getComplDocAflIdFile();
+	};
+	
+	  	/**************************************************************************
+	 * 함 수 명: scwin.btnOrgOriAfl_onclick
+	 * 기 능: 준공보고_첨부파일 버튼 클릭
+	 **************************************************************************/
+	scwin.btnComplRptAfl_onclick = function() {
+		// 현장조건 Check
+		if (!scwin.fnSiteValidate()) return false;
+
+		var sAflId   = dsTcmSiteDocRptMap.get("complRptAflId");// 첨부파일ID
+		var sJobGbCd = "CM";								// 업무구분
+		var sMenuId  = "CM05000035T";						// 매뉴ID
+
+	 	var popOps = {
+				pid: "AflPopup"+"_" +new Date().getTime()
+		        ,url:"/ux/cf/CF00350002P.xml"
+		        ,modal : true //true || false
+		        ,popup_name:"준공보고 파일첨부"
+		        ,callbackFn : "scwin.popComplRptAflCallback"
+		        ,widType : "M"
+		        ,height : 540
+		        ,data : {
+		                 aflId   : sAflId,
+		                 jobGbCd : sJobGbCd,
+		                 menuId  : sMenuId,
+		                 fileExt : "jpg,png,gif,pdf,ppt,pptx,xls,xlsx",
+		                 usage : "INS",
+		                 fileSize : "20971520" // 업로드 가능 파일사이즈 추가(20MB제한)
+		                }
+               };
+  		com.popup_open(popOps);
+	};
+	
+			  	/**************************************************************************
+	 * 함 수 명: scwin.getStwkDocAflIdFile
+	 * 기 능: 착공서류 조회 및 첨부파일 다운로드
+	 **************************************************************************/
+    scwin.getComplRptAflIdFile = function() {
+    	if(dsTcmSiteDocRptMap.get( "complRptAflId" ) != ""){ //alert(dsTcmSiteDocRptMap.get( "stwkDocAflId" ));
+	        var aprvAflId = dsTcmSiteDocRptMap.get( "complRptAflId" ).split(",");
+	        for (var i = 0; i < aprvAflId.length; i++) {
+	        	//alert(i);
+	            var rtnArr = com.udcAflList(aprvAflId[i]) || [];
+
+	            $.each(rtnArr, function(key,data){
+	                var idx = gen_aflList4.removeChild();
+	                idx = gen_aflList4.insertChild();
+	                var gen_Obj = gen_aflList4.getChild(idx,"gen_generator4");	                
+	                var t = gen_Obj.insertChild();
+	                var btn_obj = gen_Obj.getChild(t,"btn_addFile4");
+	                var dFileSizeInit = "<span style='display:none;'>"+data.aflNm+"("+data.fileSize+"byte)</span>";
+	                var dFileSize = "("+data.fileSize+"byte)";
+	                btn_obj.setValue(data.aflNm + dFileSize + dFileSizeInit);
+	                btn_obj.setUserData("userData",data);
+	                var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+	                $("#"+btn_obj.getID()).off("click").on("click", function() {
+	                    $.fileDownload(href);
+	                    return;
+	                });
+	            });
+	        }
+    	}
+    	else{
+    		gen_aflList4.removeChild();
+    	}
+    };
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.popOrgOriAflCallback
+	 * 기 능: 준공보고_첨부파일 Callback 처리
+	 **************************************************************************/
+	scwin.popComplRptAflCallback = function(result){
+		console.log("result.aflId >> " + result.aflId);
+		console.log("result.aflNm >> " + result.aflNm);
+		dsTcmSiteDocRptMap.set( "complRptAflId" ,  result.aflId);
+		dsTcmSiteDocRptMap.set( "complRptAflNm" ,  result.aflNm);
+		scwin.getComplRptAflIdFile();
+	};
+
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.ibxFileHref_onclick
+	 * 기 능: 싱글이미지 첨부 이미지 크게 보기
+	 **************************************************************************/
+    scwin.ibxFileHref_onclick = function(e) {
+        com.udcPopup("AflImgPopup", "", ibxFileHref.getSrc());
+    };
+
+
+	]]></script>
+	
+	<w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="tab_body">
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="착공 자료" style="" tagname="h3"></w2:textbox>
+				
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+					
+				 첨부가능 파일 및 용량제한 ( pdf, ppt, pptx, xls, xlsx : 50MB / jpg, gif, png : 1MB ) 
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style=""
+							ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>조직도 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:131px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+					<xf:group tagname="col" style="width:60px;"></xf:group><xf:group style="width:131px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+				<xf:group tagname="col" style="width:60px;"></xf:group></xf:group>
+				<xf:group class="" style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="*착공서류" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td " style="" tagname="td">
+						<w2:generator class="databox" id="gen_aflList" style="" tagname="ul" >
+							<w2:generator id="gen_generator" tagname="li">
+								<w2:anchor id="btn_addFile" outerDiv="false">
+									<xf:label></xf:label>
+								</w2:anchor>
+							</w2:generator>
+						</w2:generator>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th" style=";color:#FFFFFF;background:#FFFFFF;"><w2:attributes><w2:scope>row</w2:scope></w2:attributes><w2:anchor class="btn_tcm fr" clickEventElement="" id="btnStwkDocAfl" outerDiv="false" style=";font-weight:normal;" ev:onclick="scwin.btnStwkDocAfl_onclick">
+							<xf:label><![CDATA[첨부]]></xf:label>
+						</w2:anchor></xf:group><xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="착공보고 (내부)" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td " tagname="td">
+						<w2:attributes></w2:attributes>
+
+
+						<w2:generator class="databox" id="gen_aflList2" style="" tagname="ul">
+							<w2:generator id="gen_generator2" tagname="li">
+								<w2:anchor id="btn_addFile2" outerDiv="false">
+									<xf:label></xf:label>
+								</w2:anchor>
+							</w2:generator>
+						</w2:generator>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th" style=";font-weight:normal;background-color:#FFFFFF;"><w2:attributes></w2:attributes><w2:anchor class="btn_tcm fr" clickEventElement="" id="btnStwkRptAfl" outerDiv="false" style="" ev:onclick="scwin.btnStwkRptAfl_onclick">
+							<xf:label><![CDATA[첨부]]></xf:label>
+						</w2:anchor></xf:group></xf:group>
+			</xf:group>
+
+			<xf:group class="defaultbox" id="" style="left:10px;top:6px;">
+				* 착공자료 등록 시 현장상태가 <b><u>착공준비</u></b>에서 <b><u>진행</u></b>상태로 변경 됩니다.
+			</xf:group><xf:group class="defaultbox" id="" style="left:-1px;top:6px;"></xf:group>
+			
+			<xf:group class="defaultbox" id="" style="left:-1px;top:6px;"></xf:group>
+			<xf:group class="defaultbox" id="" style="left:-1px;top:6px;"></xf:group>
+		</xf:group>
+		<xf:group class="tab_body" id="" style="">
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="준공 자료" style="" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>조직도 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:131px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+					<xf:group tagname="col" style="width:60px;"></xf:group><xf:group style="width:131px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+				<xf:group tagname="col" style="width:60px;"></xf:group></xf:group>
+				<xf:group class="" style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="준공서류" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td " style="" tagname="td">
+						<w2:generator class="databox" id="gen_aflList3" style="" tagname="ul">
+							<w2:generator id="gen_generator3" tagname="li">
+								<w2:anchor id="btn_addFile3" outerDiv="false">
+									<xf:label></xf:label>
+								</w2:anchor>
+							</w2:generator>
+						</w2:generator>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th" style=";background:#FFFFFF;font-weight:normal;"><w2:attributes><w2:scope>row</w2:scope></w2:attributes><w2:anchor class="btn_tcm fr" clickEventElement="" ev:onclick="scwin.btnComplDocAfl_onclick" id="btnComplDocAfl" outerDiv="false" style="">
+							<xf:label><![CDATA[첨부]]></xf:label>
+						</w2:anchor></xf:group><xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="*준공보고 (내부)" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td " tagname="td">
+						<w2:attributes></w2:attributes>
+
+						<w2:generator class="databox" id="gen_aflList4" style="" tagname="ul">
+							<w2:generator id="gen_generator4" tagname="li">
+								<w2:anchor id="btn_addFile4" outerDiv="false">
+									<xf:label></xf:label>
+								</w2:anchor>
+							</w2:generator>
+						</w2:generator>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th" style=";font-weight:normal;background:#FFFFFF;"><w2:attributes></w2:attributes><w2:anchor class="btn_tcm fr" clickEventElement="" ev:onclick="scwin.btnComplRptAfl_onclick" id="btnComplRptAfl" outerDiv="false" style="">
+							<xf:label><![CDATA[첨부]]></xf:label>
+						</w2:anchor></xf:group></xf:group>
+			</xf:group>
+			
+			<xf:group class="defaultbox" id="" style="left:10px;top:6px;">
+				* 준공자료 등록 시 현장상태가 <b><u>진행</u></b>에서 <b><u>준공</u></b>상태로 변경 됩니다.
+			</xf:group><xf:group class="defaultbox" id="" style="left:-1px;top:6px;"></xf:group>
+			<xf:group class="defaultbox" id="" style="left:-1px;top:6px;"></xf:group>
+		</xf:group>
+	</body>
+</html>

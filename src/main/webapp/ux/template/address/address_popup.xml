@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+		
+	scwin.onpageload = function() {
+		var url = location.href;
+		var confmKey = "U01TX0FVVEgyMDE3MDMyMTE0MTUzOTE5ODc3";
+		var resultType = "4"; // 도로명주소 검색결과 화면 출력내용, 1 : 도로명, 2 : 도로명+지번, 3 : 도로명+상세건물명, 4 : 도로명+지번+상세건물명
+		var addRessJsn = JSON.parse(sessionStorage.getItem("addRess")) || {};
+		var inputYn= addRessJsn.i || "N"; 
+		//"http://localhost:8080/websquare/websquare.html?w2xPath=/WEB-INF/ux/template/fileUpDownload/fileupload_popup_main.xml"
+		if(inputYn != "Y"){
+			 var $form = $("<form></form>");
+	        $form.attr("action", "http://www.juso.go.kr/addrlink/addrLinkUrl.do");
+	        $form.attr("accept-language", "ko")
+	        $form.appendTo('body');
+            var $input = $("<input></input>");
+            $input.attr({type:"hidden",  name:"confmKey",  id:"confmKey",  value:confmKey});
+	        $input.appendTo($form);
+            $input = $("<input></input>");
+            $input.attr({type:"hidden",  name:"returnUrl",  id:"returnUrl",  value:location.href});
+	        $input.appendTo($form);
+            $input = $("<input></input>");
+            $input.attr({type:"hidden",  name:"resultType",  id:"resultType",  value:"4"});
+	        $input.appendTo($form);           
+	        $form.submit();
+		}else{
+			var addObj = {
+						zip:addRessJsn.z
+						,road1:addRessJsn.r1
+						,road2:addRessJsn.r2
+			};
+			com.popup_close(addObj);
+		}
+		
+	};
+	]]></script>
+	</head>
+	 <body ev:onpageload="scwin.onpageload">
+		<xf:group class="content_body popup" id="" style="">
+		</xf:group>
+	</body>
+</html>

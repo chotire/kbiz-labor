@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmWkrList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="hlthInsurAplyYn" name="건강_보험_적용_여부" dataType="text"></w2:column>
+						<w2:column id="natnpPnsnAplyYn" name="국민_연금_적용_여부" dataType="text"></w2:column>
+						<w2:column id="erndSeq" name="근로_순번" dataType="text"></w2:column>
+						<w2:column id="erndGbCd" name="근로구분코드[CM005001]" dataType="text"></w2:column>
+						<w2:column id="wkrNm" name="근로자_명" dataType="text"></w2:column>
+						<w2:column id="wkrNo" name="근로자번호" dataType="text"></w2:column>
+						<w2:column id="labrSalGbCd" name="노무급여구분코드" dataType="text"></w2:column>
+						<w2:column id="chgHorwgAmt" name="변경_시급_금액" dataType="text"></w2:column>
+						<w2:column id="entDt" name="입사_일자" dataType="text"></w2:column>
+						<w2:column id="beofYn" name="재직_여부" dataType="text"></w2:column>
+						<w2:column id="resnoEnc" name="주민등록번호_암호화" dataType="text"></w2:column>
+						<w2:column id="addr" name="주소" dataType="text"></w2:column>
+						<w2:column id="ockndCd" name="직종코드" dataType="text"></w2:column>
+						<w2:column id="ockndCdNm" name="직종코드명" dataType="text"></w2:column>
+						<w2:column id="rtirDt" name="퇴직_일자" dataType="text"></w2:column>
+						<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data></w2:data>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSrchMap" style="">
+					<w2:keyInfo>
+						<w2:key id="keySiteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="keySiteNm" name="현장명" dataType="text"></w2:key>
+						<w2:key dataType="text" id="keyWordGb" name="근로자구분"></w2:key>
+
+						<w2:key id="keyWord" name="키워드" dataType="text"></w2:key>
+						<w2:key id="keybeofYn" name="재직구분" dataType="text"></w2:key>
+						<w2:key id="laborGbn" name="원천세 구분" dataType="text"></w2:key>
+					</w2:keyInfo>
+					<w2:data use="true">
+						<keySiteCd><![CDATA[]]></keySiteCd>
+					</w2:data>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+        
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM40001000U.xml
+ * Program Name : 근로자관리
+ * Author : tpyhyoj (tpyhyoj)
+ * Date : 2019.08.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ 
+	/************************************************************************************ 
+	 *  [1] onpageload
+	 ************************************************************************************/
+	scwin.onpageload = function() {
+
+		//화면초기화
+		scwin.fnInitial();
+		
+	};
+
+	/** 화면초기화 **/
+	scwin.fnInitial = function() {
+		
+		var sFrameId = "";
+		if ( gcm.tab_main == undefined  ) {		//팝업인경우 
+			var winPopParam = JSON.parse(sessionStorage.winpopParam);
+			var parentId    = winPopParam.dataObj.data.pframeId;
+			
+			if(parentId != undefined && parentId != "") {
+           		var parentObj = opener.frames[parentId].getWindow().com;
+           		
+		        //원천세 여부
+           		//cmn_CM.js 에 있는 함수 호출 
+           		if (typeof(parentObj["getLaborGbn"]) == "function"){
+           			sLaborGbn = parentObj["getLaborGbn"](parentId,"MNU_LV_307020");
+           		}else{
+           			sLaborGbn   = cmCom.getLaborGbn(parentId, "MNU_LV_307020");
+           		}
+           		
+           		if (typeof(parentObj["getSiteDeptNm"]) == "function"){
+           			sSiteDeptNm = parentObj["getSiteDeptNm"](sLaborGbn);
+           		}else{
+           			sSiteDeptNm = cmCom.getSiteDeptNm(sLaborGbn);
+           		}
+           		
+           		if (typeof(parentObj["getLaborGbn"]) == "function"){
+           			objSiteDept = parentObj["setSiteOrDept"](sLaborGbn, wfmKeySiteInfo, wfmKeyDeptInfo, spnSiteDept);
+           		}else{
+           			objSiteDept = cmCom.setSiteOrDept(sLaborGbn, wfmKeySiteInfo, wfmKeyDeptInfo, spnSiteDept);
+           		}
+			}
+		} else {								//팝업이 아닌경우
+			sFrameId = com.getFrameId() ;
+			
+	        //원천세 여부
+			sLaborGbn   = cmCom.getLaborGbn(sFrameId, "MNU_LV_307020");
+	        sSiteDeptNm = cmCom.getSiteDeptNm(sLaborGbn);
+	        objSiteDept = cmCom.setSiteOrDept(sLaborGbn, wfmKeySiteInfo, wfmKeyDeptInfo, spnSiteDept);
+		}
+
+        //원천세 여부
+		dsSrchMap.set("laborGbn", sLaborGbn);   //원천세 구분
+	
+	   	//공통코드           
+        com.selCdList( "grdTcmWkrList:labrSalGbCd"	, "CM005019", "Y", "Y");  	//노무급여구분코드
+        com.selCdList( "grdTcmWkrList:erndGbCd"		, "CM005001", "Y", "Y");  	//근로구분코드
+        
+        if( sLaborGbn == "TX"){
+        	com.selCdList( "grdTcmWkrList:ockndCd"		, "CM005023", "Y", "Y");  	//직종구분코드
+        }else{
+	        com.selCdList( "grdTcmWkrList:ockndCd"		, "CM005013", "Y", "Y");  	//직종구분코드
+        }
+        
+        	
+		//검색조건
+        dsSrchMap.set( "keyWordGb" , $w.getParameter("keyWordGb")  );        	//근로자구분     
+        dsSrchMap.set( "keyWord"   , $w.getParameter("keyWord")  );            	//키워드
+        
+        if ( !com.isEmpty($w.getParameter("keybeofYn") ||  !com.isEmpty($w.getParameter("keySiteCd")) )) {
+            dsSrchMap.set( "keybeofYn"   , $w.getParameter("keybeofYn")  );     //재직구분
+            scwin.fnSearchList();
+        }else{
+           	dsSrchMap.set( "keybeofYn" , "Y" ); 								//재직구분
+        }     
+       
+       //UI팀용 함수 호출
+    	scwin.commonUI();
+	};
+
+	/************************************************************************************
+	 *  [2] 전역변수 
+	 ************************************************************************************/
+	var svcId = "";
+    var sLaborGbn = ""; 
+    var sSiteDeptNm = "현장"; 
+    var objSiteDept = null;
+	/************************************************************************************
+	 *  [3] Event 함수 
+	 ************************************************************************************/
+
+	// 조회 버튼
+	scwin.btnFind_onclick = function() {
+		scwin.fnSearchList();
+	};
+	
+	// 그리드 저장
+	scwin.btnSave_onclick = function() {
+		scwin.fnUpdate();		
+	};
+	
+	// 신규 버튼
+	scwin.btnNew_onclick = function() {
+	
+	   if( dsSrchMap.get("laborGbn") == "TX") {		//원천세인 경우
+        	dsSrchMap.set("keySiteCd"   , wfmKeyDeptInfo.getWindow().ibxKeySiteCd.getValue() );  //부서 코드
+       }else{
+	        dsSrchMap.set("keySiteCd"   , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );  //현장 코드
+       }
+       
+       
+       if( dsSrchMap.get("keySiteCd").length == 0  ){
+ 			if( dsSrchMap.get("laborGbn") == "TX") {
+	            var focusId = wfmKeyDeptInfo.getWindow().ibxKeySiteNm.id;
+	            com.showMessage("CMW0025", "부서", "", "", focusId);     //$1은(는) 필수입력사항입니다.
+            }else{
+	            var focusId = wfmKeySiteInfo.getWindow().ibxKeySiteNm.id;
+	            com.showMessage("CMW0025", "현장", "", "", focusId);     //$1은(는) 필수입력사항입니다.
+            }
+            return ;
+        }
+       
+       
+       scwin.fnPage(dsSrchMap.get( "keySiteCd"),"","");		
+	};
+	
+	//그리드 클릭   
+    scwin.grdTcmWkrList_oncellclick = function(row,col) {
+        var sColName = grdTcmWkrList.getColumnID( col );
+       
+        if( sColName == "wkrNm"){
+            var sSiteCd  = grdTcmWkrList.getCellData( row , "siteCd" );     //현장코드
+            var sErndSeq = grdTcmWkrList.getCellData( row , "erndSeq" );    //근로_순번
+            var sWkrNo   = grdTcmWkrList.getCellData( row , "wkrNo" );      //근로자번호
+            
+            scwin.fnPage(sSiteCd, sErndSeq, sWkrNo);	//상세 페이지 이동
+        }
+    };
+    
+    //검색조건 근로자 엔터 이벤트  
+    scwin.keyWord_onkeydown = function(e) {
+        if (e.keyCode == 13){
+            scwin.fnSearchList();
+        }
+    };
+	
+	//엑셀다운 버튼
+    scwin.btnExcelDwn_onclick = function() {
+        if(dsTcmWkrList.getTotalRow() <= 0){
+            com.showMessage("CMW0042");     //다운로드할 내역이 존재하지 않습니다.
+            return;
+        }else{
+            var excelOpt = {};  						//excel download 옵션
+            excelOpt.fileName = "근로자관리.xlsx";    	//또는 xlsx 확장자 사용
+            grdTcmWkrList.advancedExcelDownload( excelOpt );
+        }
+    };
+    
+   /**************************************************************************
+     * 함 수 명: scwin.WFrameSiteInfo_change_callback
+     * 기 능: 현장코드 변경 이벤트
+     **************************************************************************/    
+	scwin.WFrameSiteInfo_change_callback = function() {
+        dsTcmWkrList.removeAll();
+	};  
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+
+	// 결과 후처리
+	scwin.fnCallback = function(result, e) {
+		switch (svcId) {
+			case "selectTcmWkrList" :			//조회
+				dsTcmWkrList.setJSON(result.data);
+				break;
+			case "saveTcmWkr" :					//저장
+                com.showMessage("CFA0012");     //저장되었습니다.
+				scwin.fnSearchList();
+				break;
+		}
+	};
+
+	// 에러 후처리
+	scwin.fnErrCallBack = function(e) {
+		switch (svcId) {
+			case "selectTcmWkrList" :			//조회		
+				console.log('조회오류: ' + e);
+				break;
+			case "saveTcmWkr" :					//저장
+				console.log('저장오류: ' + e);
+				break;
+		}
+	}
+
+	/**************************************************************************
+	 *  [5] 사용자정의 함수
+	 **************************************************************************/
+	// 조회 List
+	scwin.fnSearchList = function() {
+		
+		//DS 매핑
+        if( dsSrchMap.get("laborGbn") == "TX") {		//원천세인 경우
+        	dsSrchMap.set("keySiteCd"   , wfmKeyDeptInfo.getWindow().ibxKeySiteCd.getValue() );  //부서 코드
+        }else{
+	        dsSrchMap.set("keySiteCd"   , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );  //현장 코드
+        }
+
+        if( dsSrchMap.get("keySiteCd").length == 0  ){
+            if( dsSrchMap.get("laborGbn") == "TX") {	//원천세인 경우
+	            var focusId = wfmKeyDeptInfo.getWindow().ibxKeySiteNm.id; 
+	            com.showMessage("CMW0025", "부서", "", "", focusId);     //$1은(는) 필수입력사항입니다.
+            }else{
+	            var focusId = wfmKeySiteInfo.getWindow().ibxKeySiteNm.id; 
+	            com.showMessage("CMW0025", "현장", "", "", focusId);     //$1은(는) 필수입력사항입니다.
+            }     
+            return ;
+        }
+
+        
+        if( dsSrchMap.get("keyWordGb") == "resno" ){
+	        if( !com.isEmpty(dsSrchMap.get("keyWord"))  ){  	//주민등록 번호
+	        	if ( !com.chkIcNo(dsSrchMap.get("keyWord")) ){
+		            com.showMessage("CFW0003", "주민번호", "", "", keyWord.id);  //$1 항목을 확인하십시오.
+		            return ;
+		            
+		    	}
+	        }
+        }
+        
+		svcId = "selectTcmWkrList";
+
+		ajaxLib.ajax("/cm/cm4000/CM40000000U/selectTcmWkrList", {
+			mode : "asynchronous",
+			method : "POST",
+			requestData : dsSrchMap.getJSON(),
+			callback : "fnCallback",
+			errCallback : "fnErrCallBack"
+		});
+
+	};
+	
+	// 저장
+	scwin.fnUpdate = function() {
+
+        //DS 매핑
+		if( dsSrchMap.get("laborGbn") == "TX") {		//원천세인 경우
+        	dsSrchMap.set("keySiteCd"   , wfmKeyDeptInfo.getWindow().ibxKeySiteCd.getValue() );  //부서 코드
+        }else{
+	        dsSrchMap.set("keySiteCd"   , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );  //현장 코드
+        }
+        
+        if( dsSrchMap.get("keySiteCd").length == 0  ){
+            if( dsSrchMap.get("laborGbn") == "TX") {	//원천세인 경우
+	            var focusId = wfmKeyDeptInfo.getWindow().ibxKeySiteNm.id; 
+	            com.showMessage("CMW0025", "부서", "", "", focusId);     //$1은(는) 필수입력사항입니다.
+            }else{
+	            var focusId = wfmKeySiteInfo.getWindow().ibxKeySiteNm.id; 
+	            com.showMessage("CMW0025", "현장", "", "", focusId);     //$1은(는) 필수입력사항입니다.
+            }
+            return ;
+        }
+		
+		if( dsTcmWkrList.getModifiedJSON().length == 0 ){
+            com.showMessage("CMW0024"); //저장(변경)할 내용이 없습니다.
+            return ;
+        }
+        
+		svcId = "saveTcmWkr";
+		
+		if (confirm("저장 하시겠습니까?")) {
+
+			ajaxLib.ajax("/cm/cm4000/CM40001000U/updateTcmWkrList", {
+				mode : "asynchronous",
+				method : "POST",
+			    requestData : {
+								param : dsSrchMap.getJSON()
+							  , tcmWkrList : dsTcmWkrList.getModifiedJSON() 
+							  },
+				callback : "fnCallback",
+				errCallback : "fnErrCallBack"
+			});
+		}
+	};
+
+	//상세 페이지 이동
+	scwin.fnPage= function(sSiteCd, sErndSeq, sWkrNo) {
+        var sTitle = "근로자 상세";
+        if( sErndSeq == ""){
+        	sTitle = "근로자 등록";
+        }
+        
+        var sId = "CM40001005U";
+        var sUrl = "/ux/cm/cm4000/CM40001005U.xml";
+        var sOpenOpt = "1";
+        var sData = {  "paramKeySiteCd"  : sSiteCd    //현장코드
+                     , "paramKeyErndSeq" : sErndSeq + ""   //근로_순번
+                     , "paramKeyWkrNo"   : sWkrNo     //근로자번호
+                     , "paramKeyLaborGbn"   : dsSrchMap.get( "laborGbn"  )     //원천세 구분
+                     
+                     , "keySiteCd"   : dsSrchMap.get( "keySiteCd"  )     //현장코드
+                     , "keySiteNm"   : dsSrchMap.get( "keySiteNm"  )     //현장코드
+                     , "keyWordGb"   : dsSrchMap.get( "keyWordGb"  )     //근로자구분
+                     , "keyWord"   	 : dsSrchMap.get( "keyWord" )     	 //키워드
+                     , "keybeofYn"   : dsSrchMap.get( "keybeofYn"  )     //재직구분
+        
+                    };
+                
+        com.detailOpen(sTitle, sId, sUrl, sOpenOpt, sData);
+	};
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchCode.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcICnumber.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcYearcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>	<!-- 근로자 -->
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;
+
+" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="spnSiteDept" label="현장명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+                            <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+                            <w2:wframe id="wfmKeyDeptInfo" src="/WEB-INF/ux/cm/cmcomm/schDeptInfo.xml" style="display: none;"></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="근로자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="keyWordGb" optionOrder="false"
+								style="width:100px;" submenuSize="auto" ref="data:dsSrchMap.keyWordGb">
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[성명]]></xf:label>
+										<xf:value><![CDATA[name]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[직종]]></xf:label>
+										<xf:value><![CDATA[ocknd]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[주민번호]]></xf:label>
+										<xf:value><![CDATA[resno]]></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+							<xf:input class="" id="keyWord" style="width:140px; " ref="data:dsSrchMap.keyWord" maxlength="20" ev:onkeydown="scwin.keyWord_onkeydown">
+								<w2:attributes>
+									<w2:value></w2:value>
+								</w2:attributes>
+							</xf:input>
+						</xf:group>
+						<xf:group tagname="th" class="w2tb_th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="재직구분" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes></w2:attributes>
+							<xf:select1 appearance="full" cols="" id="keybeofYn" rows="1" selectedIndex="0" style="" ref="data:dsSrchMap.keybeofYn"
+								renderType="radiogroup" escape="">
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[재직]]></xf:label>
+										<xf:value><![CDATA[Y]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[퇴직]]></xf:label>
+										<xf:value><![CDATA[N]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[전체]]></xf:label>
+										<xf:value><![CDATA[]]></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+						
+						
+					</xf:group>
+				</xf:group>
+
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="근로자관리" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="" id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnNew" outerDiv="false" style="" ev:onclick="scwin.btnNew_onclick">
+							<xf:label><![CDATA[신규]]></xf:label>
+						</w2:anchor>
+						
+						<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+							outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmWkrList" fixedColumnWithHidden="true"
+				focusMode="row" id="grdTcmWkrList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+				rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdTcmWkrList_oncellclick" enterKeyMove="down" keyMoveEditMode="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column49" inputType="text"
+							removeBorderStyle="false" style="" value="개인번호" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" style="" value="성명" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" style="" value="주민번호"
+							width="130">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" style="" value="구분" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" style="" value="직종명"
+							width="140">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" style="" value="급여구분" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column35" inputType="text"
+							removeBorderStyle="false" style="" value="시급" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column41" inputType="text"
+							removeBorderStyle="false" style="" value="국민연금" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column39" inputType="text"
+							removeBorderStyle="false" style="" value="건강보험" width="80">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="300" inputType="text" style="" id="column51"
+							value="주소" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column57"
+							value="재직구분" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column55"
+							value="입사일자" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column53"
+							value="퇴사일자" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" expression="" id="wkrNo" inputType="text"
+							removeBorderStyle="false" style="" value="" width="80" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" class="" id="wkrNm" inputType="link" style="" textAlign=""
+										value="" width="120" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="resnoEnc" inputType="text" style="" textAlign=""
+							value="" width="130" displayFormat="######-#######" dataType="" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="erndGbCd" inputType="select" style="" textAlign="" value=""
+							width="80" readOnly="true" allOption="" chooseOption="" ref="">
+							<w2:choices>
+								<w2:itemset nodeset="data:dsCdCM005001">
+									<w2:label ref="cdNm"></w2:label>
+									<w2:value ref="cd"></w2:value>
+								</w2:itemset>
+							</w2:choices>
+						</w2:column>
+						<w2:column blockSelect="false" id="ockndCd" inputType="select" style="" textAlign="left"
+							value="" width="140" readOnly="true" allOption="" chooseOption="" ref="" displayMode="label">
+							<w2:choices></w2:choices>
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="labrSalGbCd" inputType="select"
+							removeBorderStyle="false" style="" textAlign="" value="" width="100" dataType="" readOnly="true" allOption=""
+							chooseOption="" ref="" chooseOptionLabel="">
+							<w2:choices>
+								<w2:itemset nodeset="data:dsCdCM005019">
+									<w2:label ref="cdNm"></w2:label>
+									<w2:value ref="cd"></w2:value>
+								</w2:itemset>
+							</w2:choices>
+						</w2:column>
+						<!-- <w2:column blockSelect="false" displayMode="label" id="labrSalGbCd" inputType="select"
+							removeBorderStyle="false" style="" textAlign="" value="" width="120" dataType="" readOnly="true" allOption=""
+							chooseOption="" ref="" chooseOptionLabel="">
+							<w2:choices>
+								<w2:itemset nodeset="data:dsCdCM005019">
+									<w2:label ref="cdNm"></w2:label>
+									<w2:value ref="cd"></w2:value>
+								</w2:itemset>
+							</w2:choices>
+						</w2:column> -->
+						<w2:column blockSelect="false" class="" dataType="number" displayFormat="#,###" displayMode="label"
+							id="chgHorwgAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right" value="" width="120" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="natnpPnsnAplyYn" inputType="checkbox"
+							removeBorderStyle="false" style="" value="" width="80" readOnly="false" trueValue="Y" defaultValue="N" falseValue="N" valueType="other">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="hlthInsurAplyYn" inputType="checkbox"
+							removeBorderStyle="false" style="" value="" width="80" readOnly="false" trueValue="Y" defaultValue="N" falseValue="N" valueType="other">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="300" inputType="text" style="" id="addr"
+							value="" blockSelect="false" displayMode="label" textAlign="left" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="select" style="" id="beofYn"
+							value="" blockSelect="false" displayMode="label" readOnly="true" allOption="" chooseOption="" ref="">
+							<w2:choices>
+								<w2:item>
+									<w2:label><![CDATA[재직]]></w2:label>
+									<w2:value><![CDATA[Y]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[퇴직]]></w2:label>
+									<w2:value><![CDATA[N]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[퇴직]]></w2:label>
+									<w2:value><![CDATA[]]></w2:value>
+								</w2:item>
+							</w2:choices>
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="entDt"
+							value="" blockSelect="false" displayMode="label" dataType="date" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="rtirDt"
+							value="" blockSelect="false" displayMode="label" dataType="date" readOnly="true">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

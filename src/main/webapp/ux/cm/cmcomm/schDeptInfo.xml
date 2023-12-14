@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>DEFAULT</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            	<w2:dataMap baseNode="map" id="dsTcmSiteInfoMap">
+            	    <w2:keyInfo>
+            	        <w2:key id="siteNm" name="현장명" dataType="text"></w2:key>
+            	    </w2:keyInfo>
+            	</w2:dataMap>
+            	<w2:dataList baseNode="list" repeatNode="map" id="dsTcmSiteInfoList" saveRemovedData="true">
+            	    <w2:columnInfo>
+            	        <w2:column id="siteCd" name="현장기준" dataType="text"></w2:column>
+            	        <w2:column id="siteNm" name="현장명" dataType="text"></w2:column>
+            	        <w2:column id="bzpjHqtDeptCd" name="사업부코드" dataType="text"></w2:column>
+            	        <w2:column id="siteStusCd" name="진행상태코드" dataType="text"></w2:column>
+            	    </w2:columnInfo>
+            	</w2:dataList>
+            </w2:dataCollection>
+            <w2:workflowCollection>
+            </w2:workflowCollection>
+        </xf:model>
+         <script type="text/javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : schSiteInfo.xml
+ * Program Name : 부서
+ * Author : yanghj (tplsj)
+ * Date : 2019.05.03
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ *    
+ **************************************************************************/ 
+ 
+    /************************************************************************************
+    *  [1] 전역변수
+    ************************************************************************************/
+    var svcId;          // callback 처리용 서비스ID
+ 
+    /************************************************************************************
+    *  [2] onpageload(초기화포함)
+    ************************************************************************************/
+	scwin.onpageload = function() {
+        
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+    //현장팝업 callback
+    scwin.btnSiteCd_callback = function(obj){
+        if(obj != ""){
+			//Session Storage에 공사 현장코드/현장명 셋팅
+//			sessionStorage.setItem("cmSiteCd", obj[0]);
+//      		sessionStorage.setItem("cmSiteNm", obj[1]);
+			sessionStorage.setItem("cmDeptCd", obj[0]);
+      		sessionStorage.setItem("cmDeptNm", obj[1]);
+      		
+            ibxKeySiteCd.setValue( obj[0] );  // 현장코드
+            ibxKeySiteNm.setValue( obj[1] );    // 현장명     
+        }    
+    }
+    
+	/************************************************************************************
+    *  [4] Callback 함수
+    ************************************************************************************/
+    /** 오류시 처리 **/
+	scwin.fnErrCallback = function(result, e) {
+
+	}
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function(result, e) {
+    	switch(svcId) {
+			case "selectTcmSiteList" :
+				dsTcmSiteInfoList.setJSON(result.data);
+
+				// 1건이면 바인딩
+				if (dsTcmSiteInfoList.getRowCount() === 1){
+					//Session Storage에 공사 현장코드/현장명 셋팅
+//					sessionStorage.setItem("cmSiteCd", dsTcmSiteInfoList.getCellData( 0 , "siteCd" ));
+//        			sessionStorage.setItem("cmSiteNm", dsTcmSiteInfoList.getCellData( 0 , "siteNm" ));
+					sessionStorage.setItem("cmDeptCd", dsTcmSiteInfoList.getCellData( 0 , "siteCd" ));
+        			sessionStorage.setItem("cmDeptNm", dsTcmSiteInfoList.getCellData( 0 , "siteNm" ));
+        							
+					ibxKeySiteNm.setValue(dsTcmSiteInfoList.getCellData( 0 , "siteNm" ));
+					ibxKeySiteCd.setValue(dsTcmSiteInfoList.getCellData( 0 , "siteCd" ));
+				}
+				// 1건 이상 or 0건이면 팝업호출
+				else {
+					scwin.btnSiteCd_onclick();
+				}
+                
+				break;
+			default :
+				break;
+    	}
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    //조회
+    scwin.selectTcmSiteList = function() {
+    	svcId = "selectTcmSiteList";
+		ajaxLib.ajax("/cm/cm4030/CM40300001P/selectTcfDeptList", {
+            mode		: "synchronous",
+            method 		: "Post",
+            requestData	: dsTcmSiteInfoMap.getJSON(),
+			callback	: "fnCallback",
+            errCallback	: "fnErrCallback"
+        });
+    };
+
+    //현장코드 변경 이벤트
+	scwin.ibxKeySiteCd_onchange = function() {
+		var _sobj = $p.getFrame().getParentFrame().getObj("scwin");
+        //부모 function 호출
+		if (typeof(_sobj["WFrameSiteInfo_change_callback"]) == "function"){
+			_sobj["WFrameSiteInfo_change_callback"]();
+		}
+	};
+
+    //현장명 keydown event
+	scwin.ibxKeySiteNm_onkeydown = function(e) {
+		// 현장명 엔터 이벤트
+		if (e.keyCode === 13){
+			// 조회조건 세팅
+			dsTcmSiteInfoMap.set( "siteNm" , ibxKeySiteNm.getValue() );
+			// 현장 조회
+			scwin.selectTcmSiteList();
+		}
+	};
+
+    //현장팝업 호출
+	scwin.btnSiteCd_onclick = function() {
+		var popOps = {
+						  popup_name:"부서검색"
+			           	, url:"/ux/cm/cm4030/CM40300001P.xml"
+			           	, data:{ paramKeySiteNm : ibxKeySiteNm.getValue()
+			           	       }
+			           	, callbackFn : "scwin.btnSiteCd_callback"
+			           	, widType:"S"
+			           	, height:"569"
+		             };
+		com.popup_open(popOps);
+	};
+    	]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="height:27px;" id="">
+    	<xf:input adjustMaxLength="false" ev:onchange="" ev:onkeydown="scwin.ibxKeySiteNm_onkeydown" ev:onviewchange=""
+    		id="ibxKeySiteNm" ref="" style="width:300px;">
+    	</xf:input>
+    	<w2:anchor outerDiv="false" style="" id="btnSiteCd" class="btn_gcm_ic src"
+    		ev:onclick="scwin.btnSiteCd_onclick">
+    		<xf:label><![CDATA[조회]]></xf:label>
+    	</w2:anchor>
+    	<xf:input adjustMaxLength="false" class="req" disabled="true" ev:onchange="scwin.ibxKeySiteCd_onchange"
+    		ev:onviewchange="scwin.ibxKeySiteCd_onviewchange" id="ibxKeySiteCd" mandatory="true" ref="" style="width:60px">
+    	</xf:input>
+    </xf:group></body>
+</html>

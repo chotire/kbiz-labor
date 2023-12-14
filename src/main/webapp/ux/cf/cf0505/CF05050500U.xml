@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfOaOffrPayList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="chk" name="선택" dataType="text"></w2:column>
+						<w2:column id="oaeqReqNo" name="OA신청번호" dataType="number"></w2:column>
+						<w2:column id="offrDt" name="신청일" dataType="text"></w2:column>
+						<w2:column id="offrDeptNm" name="신청팀" dataType="text"></w2:column>
+						<w2:column id="oaItemNm" name="신청기기" dataType="text"></w2:column>
+						<w2:column id="aplntEmpno" name="신청자 사번" dataType="text"></w2:column>
+						<w2:column id="aplntNm" name="신청자 이름" dataType="text"></w2:column>
+						<w2:column id="intdRsnCn" name="신청사유" dataType="text"></w2:column>
+						<w2:column id="oaeqPayMtdCd" name="OA기기 지급 방법" dataType="text"></w2:column>
+						<w2:column id="incoTelNo" name="신청자 연락처" dataType="text"></w2:column>
+						<w2:column id="reqPrgsStusNm" name="진행상태" dataType="text"></w2:column>
+						<w2:column id="oaeqPayTypeCd" name="OA기기 지급 유형" dataType="text"></w2:column>
+						<w2:column id="oaeqGbCd" name="구분 코드" dataType="text"></w2:column>
+						<w2:column id="oaeqGbNm" name="구분" dataType="text"></w2:column>
+						<w2:column id="oaeqStusGbNm" name="신청구분명" dataType="text"></w2:column>
+						<w2:column id="ruserStafYn" name="직원구분" dataType="text"></w2:column>
+						<w2:column id="ruserNm" name="실사용자명" dataType="text"></w2:column>
+						<w2:column id="ruserJbclNm" name="실사용자 직급" dataType="text"></w2:column>
+						<w2:column id="chrgrRvwOpinCn" name="담당자_검토_의견_내용" dataType="text"></w2:column>
+						<w2:column id="reqPrgsStusCd" name="진행 상태" dataType="text"></w2:column>
+						<w2:column id="gwAprvNo" name="지급상신결재번호" dataType="number"></w2:column>
+						<w2:column id="gwTeamAprvNo" name="팀 결재번호" dataType="number"></w2:column>
+						<w2:column id="reqItemSeq" name="OA신청 품목SEQ" dataType="number"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true"></w2:data>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSchParamMap">
+					<w2:keyInfo>
+						<w2:key id="oaStartDt" name="신청시작일" dataType="text"></w2:key>
+						<w2:key id="oaEndDt" name="신청종료일" dataType="text"></w2:key>
+						<w2:key id="sbcReqPrgsStusCd" name="OA신청 진행상태" dataType="text"></w2:key>
+						<w2:key id="schOffrDeptNm" name="신청팀" dataType="text"></w2:key>
+						<w2:key id="schAplntNm" name="신청자" dataType="text"></w2:key>
+						<w2:key id="pageRowStart" name="페이지 시작행번호" dataType="number"></w2:key>
+						<w2:key id="pageRowCount" name="페이지 요청건수" dataType="number"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsKeyTcfOaOffrPayList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="oaeqReqNo" name="OA신청 번호" dataType="number"></w2:column>
+						<w2:column id="reqItemSeq" name="OA신청 품목SEQ" dataType="number"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<style style="width: 100px;height: 100px;">
+        .itemNmUnderLine {color:blue;cursor:pointer;text-decoration:underline;}
+        </style>		
+		<script type="javascript" lazy="false"><![CDATA[
+		
+    /***************************************************************************
+     * Program ID   : CF05050500U.xml
+     * Program Name : OA신청 지급관리
+     * Author       : 류상휴 (ryush)
+     * Date         : 2019.07.17
+     *
+     * History
+     * ========================================
+     * 변경일자     수정자   내 용
+     * ========================================
+     *
+     **************************************************************************/	
+     	
+    /*** [1] 전역변수  ***/
+    
+    scwin.svcId = "";
+    scwin.nowPage = 1;       
+     
+    var rowIdx = 0; //선택된 row index
+    
+    /***  [2] onpageload(초기화포함) ***/
+         	
+	scwin.onpageload = function() { 
+	    // 화면초기화
+        scwin.initScreen();
+//com.selDtlCdList("sbcReqPrgsStusCd", "OA006", "Y", "Y", "", "", "", "", "", "", "", "", "", "");
+        	var opt = [
+	        	 	 {"OA006":["sbcReqPrgsStusCd"]}    	// OA신청 진행상태
+	        		 ,{"OA008":["grdTcfOaOffrPayList:oaeqPayMtdCd"]}
+	        		 ,{"OA011":["grdTcfOaOffrPayList:oaeqPayTypeCd"]}
+	      		   ];
+	    com.setCdComp(opt,"","CD_ODR");
+	    
+	};
+	
+	scwin.onpageunload = function() {
+		
+	};
+		
+    // 화면 초기화(필수)
+    scwin.initScreen = function() { 
+        // 페이지리스트 초기화
+        com.pageListObj.init();
+   
+        // 페이지목록 초기화
+        grdTcfOaOffrPayList.initGrid();
+//        grdTcfOaOffrPayList.fixedColumn(7);
+		var nowDate   = $w.getCurrentServerDate();
+		var endDate   = $w.dateAdd( nowDate , 30 );
+		
+        com.setUdcValue("dsTotalCount", "udcListCount", 0);    
+        com.setUdcValue( "udcPeriodcalendar", "frDate", com.transDateType("frDay90"));
+        com.setUdcValue( "udcPeriodcalendar", "toDate", endDate);
+      
+ 
+        if( com.getAllParam().searchParam != undefined ) {   
+            dsSchParamMap.setJSON(JSON.parse(com.getAllParam().searchParam));
+            com.setUdcValue("udcPeriodcalendar", "frDate", dsSchParamMap.get("oaStartDt"));
+            com.setUdcValue("udcPeriodcalendar", "toDate", dsSchParamMap.get("oaEndDt"));
+        }
+ 
+        // 리스트 조회
+        scwin.nowPage = dsSchParamMap.get("pageRowStart")/14+1;  // 현재페이지
+        scwin.pageMove(scwin.nowPage);    
+    };		
+    
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnGrdCourtDocSearch
+     * 기 능: OA신청 조회
+     **************************************************************************/
+    scwin.fnGrdOaOffrPaySearch = function(){ 
+
+        dsSchParamMap.set("oaStartDt",com.getUdcValue("udcPeriodcalendar", "frDate"));
+        dsSchParamMap.set("oaEndDt", com.getUdcValue("udcPeriodcalendar", "toDate"));
+
+        scwin.svcId = "selectTcfOaOffrPayList";
+        ajaxLib.ajax("/cf/CF05050000U/selectTcfOaOffrPayList", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData : dsSchParamMap.getJSON()
+            , callback    : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+
+    };
+        
+	scwin.btnFind_onclick = function() {
+	    rowIdx = 0;
+		scwin.pageMove(1);
+	};
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnSave
+     * 기 능: OA 지급처리 저장
+     **************************************************************************/
+   scwin.fnSave = function() {
+     
+     if(!scwin.fnValidate()) return;    
+
+		if (confirm("저장 하시겠습니까?")) {
+
+	    	scwin.svcId = "updateTcfOaOffrPayList";
+	        ajaxLib.ajax("/cf/CF05050000U/updateTcfOaOffrPayList", {
+	        	  mode        : "asynchronous"
+	        	, method      : "POST"
+	            , requestData :{ oaOffrList: dsTcfOaOffrPayList.getModifiedJSON()} 
+	            , callback    : "fnCallback"
+	            , errCallback : "fnErrCallBack"
+	        });
+    	}     
+     }
+     	
+    /**************************************************************************
+     * 함 수 명: scwin.fnValidate
+     * 기 능: 유효성체크
+     **************************************************************************/
+    scwin.fnValidate = function() {
+		var retunBoolean = true;
+		
+		var cnt =0;  //체크건수
+	
+		//OA지급처리 선택 그리드에서 수정된 데이터
+		var oaOffrIdxArr = dsTcfOaOffrPayList.getModifiedIndex();
+ 
+		//OA지급처리 유효성체크
+		$.each(oaOffrIdxArr,function(index, row){
+			var obj = dsTcfOaOffrPayList.getRowJSON(row);
+//			if( obj.chk== 1 &&  obj.rowStatus == "U"){	
+            if( obj.rowStatus == "U"){	
+			     cnt ++;		 
+				if ( strLib.isEmpty(obj.oaeqPayMtdCd , false)) {
+					console.log("obj.oaeqPayMtdCd"  );
+					com.showMessage('CFW0013','지급방법',(row+1) + '번째 지급방법을'); 
+					dsTcfOaOffrPayList.setFocusedCell( row , "oaeqPayMtdCd" , true );
+					retunBoolean = false;
+					return false;
+				}
+				
+				if (strLib.isEmpty(obj.oaeqPayTypeCd, false)) {
+					com.showMessage('CFW0013','지급유형',(row+1)+'번째 지급유형을');
+					
+					dsTcfOaOffrPayList.setFocusedCell( row, "oaeqPayTypeCd" , true );
+					retunBoolean = false;
+					return false;
+				}
+				
+				if (strLib.isEmpty(obj.chrgrRvwOpinCn, false)) {
+					com.showMessage('CFW0013','지급검토의견',(row+1)+'번째 지급검토의견을');
+					
+					dsTcfOaOffrPayList.setFocusedCell( row, "chrgrRvwOpinCn" , true );
+					retunBoolean = false;
+					return false;
+				}				
+			}
+		});		
+		
+		if (cnt  == 0) {
+			com.showMessage('CFW0010','저장 할 데이터가 없습니다.<br>저장할 데이터는 체크해 주세요');
+			return false;
+		}		
+        return retunBoolean;
+    };
+    
+     
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    /* 결과 후처리*/
+    scwin.fnCallback = function(result, e) {
+        console.log(e);
+
+        switch(scwin.svcId) {
+            case "selectTcfOaOffrPayList" :           
+
+                //전체 조회건수
+                var pageTotalCount = result.data.pageTotalCount;
+
+                //페이지 네비게이션 값 설정
+                var pageRowCount = 10;
+                var pageSelectCount = sbx_SelectCount.getValue();
+                if(pageSelectCount != null && pageSelectCount > 0){
+                    pageRowCount = pageSelectCount;
+                }
+                var pageNaviCount = Math.ceil(pageTotalCount / pageRowCount);
+
+                //전체 조회 건수
+                 com.setUdcValue("dsTotalCount", "udcListCount", pageTotalCount);
+
+                //페이지 조회목록
+                dsTcfOaOffrPayList.setJSON(result.data.tcfOaOffrPayList);
+ 
+				$.each(dsTcfOaOffrPayList.getAllJSON(),function(index, item){
+				    // OA006010 승인자 반려, OA006012	담당자 검토중                  
+					if(item.reqPrgsStusCd == "OA006010" || item.reqPrgsStusCd =="OA006012"  )
+					{//소속사업부 일시 조회부문 cell disable fasle
+						grdTcfOaOffrPayList.setDisabled( "cell" , index , "chk" , false );
+					}
+					else
+					{
+					  if(item.reqPrgsStusCd == "OA006003"){//요청팀승인
+					    grdTcfOaOffrPayList.setDisabled( "cell" , index , "chk" , true );
+						grdTcfOaOffrPayList.setDisabled( "cell" , index , "chrgrRvwOpinCn" , false );
+						grdTcfOaOffrPayList.setDisabled( "cell" , index , "oaeqPayTypeCd" , false );
+						grdTcfOaOffrPayList.setDisabled( "cell" , index , "oaeqPayMtdCd" , false );					  
+					  }else{
+					//전사 , 소속팀일시 조회부문 cell disable true
+						grdTcfOaOffrPayList.setDisabled( "cell" , index , "chk" , true );
+						grdTcfOaOffrPayList.setDisabled( "cell" , index , "chrgrRvwOpinCn" , true );
+						grdTcfOaOffrPayList.setDisabled( "cell" , index , "oaeqPayTypeCd" , true );
+						grdTcfOaOffrPayList.setDisabled( "cell" , index , "oaeqPayMtdCd" , true );
+						}
+					}
+				});        
+                //페이지 네비게이션
+                var paramObj = {
+                       max:pageNaviCount   // 페이지의 총 Count를 입력
+                     , svcId:scwin.svcId   // 해당서비스 id 고정
+                     , current:scwin.nowPage // 현재페이지
+                };
+
+                com.pageListObj.max(paramObj);
+
+                break;
+              case "updateTcfOaOffrPayList" :      
+                  scwin.fnGrdOaOffrPaySearch();
+                break;
+              case "updateTcfOaOffrPayListAprvNo" :     
+                  scwin.fnGrdOaOffrPaySearch();
+                break;       
+              case "updateTcfOaOffrPayListMngRtn" :     
+                  scwin.fnGrdOaOffrPaySearch();
+                break;                         
+       }
+    };
+
+    /* 에러 후처리 */
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+
+        switch(scwin.svcId) {
+            case "selectTcfOaOffrPayList" :
+                console.log('search Error!!!!!!!!!!!');
+                break;
+              case "updateTcfOaOffrPayList" :     
+                  console.log('search Error!!!!!!!!!!!');
+                break;   
+              case "updateTcfOaOffrPayListAprvNo" :     
+                  console.log('search Error!!!!!!!!!!!');
+                break;      
+              case "updateTcfOaOffrPayListMngRtn" :     
+                  console.log('search Error!!!!!!!!!!!');
+                break;                                             
+       }
+    };
+	
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+
+    /**************************************************************************
+     * 함 수 명: scwin.pageMove
+     * 기 능: 조회 시작값, 가져올 행수 지정후 리스트 조회
+     **************************************************************************/
+    scwin.pageMove = function(current){
+        var end = sbx_SelectCount.getValue();
+        if( end == null || end == "") end = 10;
+        var start = Math.abs( (current-1) ) * end;
+
+        dsSchParamMap.set( "pageRowStart" , start );
+        dsSchParamMap.set( "pageRowCount" , end );
+
+        scwin.fnGrdOaOffrPaySearch(); //조회
+    };	
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 법원문서관리 선택 그리드 조회 이벤트
+     **************************************************************************/
+    scwin.btnFind_onclick = function() {
+         rowIdx = 0;
+         scwin.pageMove(1);
+   
+    };
+
+    /**************************************************************************
+     * Event: scwin.sbx_SelectCount_onviewchange
+     * 기 능: 페이지 목록 갯수 선택이벤트(10개,20개,30개,40개,50개)
+     **************************************************************************/
+    scwin.sbx_SelectCount_onviewchange = function(info) {
+        if(info.oldValue != info.newValue) {
+            grdTcfOaOffrPayList.options.visibleRowNum = sbx_SelectCount.getValue();
+        }
+    };
+
+    /************************************************************************************
+     *  기타 Formatter 함수
+     ************************************************************************************/
+    /**************************************************************************
+     * Formatter : scwin.fnGetYnImg
+     * 기 능: Y/N에 따라 이미지를 보여주는 포메팅 처리
+     **************************************************************************/
+    scwin.fnGetYnImgFormatter = function(value) {
+        if( value != "" && value == "Y" ) {
+            return '<img src="/resources/images/content/ico_check.png" />'
+        } else {
+            return "";
+        }
+    };
+
+    /**************************************************************************
+     * Formatter : scwin.fnGetColorFormatter
+     * 기 능: Y/N에 따라 컬럼의 색상을 변경해주는 처리
+     **************************************************************************/
+    scwin.fnGetColorFormatter = function(_obj) {
+        var idx = _obj.realRowIndex;
+        var tmpReqPrgsStusCd = dsTcfOaOffrPayList.getCellData( idx, "reqPrgsStusCd" );
+	     // OA006010 승인자 반려, OA006012	담당자 검토중                
+		if(tmpReqPrgsStusCd == "OA006010" || tmpReqPrgsStusCd =="OA006012"  )
+		{//소속사업부 일시 조회부문 cell disable fasle
+			grdTcfOaOffrPayList.setCellColor( idx, "reqPrgsStusNm" , "blue" );
+		}        
+	     // OA006003	요청팀승인              
+		if(tmpReqPrgsStusCd == "OA006003"    )
+		{//소속사업부 일시 조회부문 cell disable fasle
+			grdTcfOaOffrPayList.setCellColor( idx, "reqPrgsStusNm" , "red" );
+		}        
+ 		grdTcfOaOffrPayList.setCellColor( idx, "oaItemNm" , "blue" );   
+        grdTcfOaOffrPayList.setCellClass( idx, "oaItemNm" , "itemNmUnderLine" );
+    };
+    
+    /**************************************************************************
+     * Event: scwin.btnExcelDown_onclick
+     * 기 능: 엑셀 다운로드 버튼 클릭 이벤트
+    **************************************************************************/     
+    scwin.btnExcelDown_onclick = function() {
+        var infoArr = {};
+        var fileNm = "OA ITEM_"+com.transDateType("now")+".xlsx";
+        var options = { fileName : fileNm };
+        com.gridDataDownLoad(grdTcfOaOffrPayList, options, infoArr);
+    };
+    
+	
+	scwin.btnSave_onclick = function() {
+		scwin.fnSave();
+	};
+ 
+ // 진행상태 클릭시 지급품목 정보 등록 (Help Desk)
+	scwin.grdTcfOaOffrPayList_oncelldblclick = function(row,col) {
+	 
+        var sColName = grdTcfOaOffrPayList.getColumnID( col );
+        if( sColName == "oaItemNm" ) {
+  
+            var objSelParam = { "oaeqReqNo" : grdTcfOaOffrPayList.getCellData(row, "oaeqReqNo"),"reqItemSeq" : grdTcfOaOffrPayList.getCellData(row, "reqItemSeq") };
+ 
+            var objReqPrgsStusCd =  dsTcfOaOffrPayList.getCellData(row, "reqPrgsStusCd") ;
+            var param = { "oaOffrPayDtlParam" : JSON.stringify(objSelParam)
+                        , "searchParam" : JSON.stringify(dsSchParamMap.getJSON()) // 돌려받을 조회조건
+                        , "scrnId" : "CF0505"
+                        , "rtnUrl" : "/ux/cf/cf0505/CF05050500U.xml"
+                        };  
+             var tmpDeptCd = sessionStorage.getItem("deptCd");                               
+           // K400260	시스템지원팀 //K402080	HELP DESK //K402920	ERP구축TF
+            if(  tmpDeptCd=="K400260" || tmpDeptCd=="K402080"  || tmpDeptCd=="K402920" ){                     
+	            	// 상세페이지 이동(수정)
+	            	com.detailOpen("OA신청 상세 조회", "CF05050503U", "/ux/cf/cf0505/CF05050503U.xml", "1", param);
+	             }
+        }  
+        			 
+	};
+	
+ 
+ /**************************************************************************
+	 * Event: scwin.aprvPublicAction
+	 * 기 능: 결재처리후 결재번호 받아서 처리할 자체 업무이벤트 등록
+	 **************************************************************************/
+    scwin.aprvPublicAction = function() {
+
+		//결재번호
+		var aprvNo = com.getAprvNo();	
+
+        scwin.svcId = "updateTcfOaOffrPayListAprvNo";
+        ajaxLib.ajax("/cf/CF05050000U/updateTcfOaOffrPayListAprvNo", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : { oaOffrList: dsKeyTcfOaOffrPayList.getAllJSON(),gwAprvNo:aprvNo} ,
+            callback    : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+		
+    };
+	    	
+	/**************************************************************************
+	 * Event: scwin.btnApprForm_onclick
+	 * 기 능: 결재상신 호출 이벤트
+	 **************************************************************************/	
+	scwin.btnApprForm_onclick = function() {
+ 
+ 	  var chkObj = grdTcfOaOffrPayList.getCheckedJSON( "chk" );
+ 
+ 		if (chkObj.length  == 0) {
+			com.showMessage('CFW0010','상신 할 데이터가 없습니다.<br>저장할 데이터는 체크해 주세요');
+			return false;
+		}	
+		
+      var tmpOaeqReqNo = chkObj[0].oaeqReqNo;
+      var tmpOaDeptNm = chkObj[0].offrDeptNm;
+      var tmpOaItemNM = chkObj[0].oaItemNm;
+      var tmpCnt = Object.keys(chkObj).length;
+      var tmpWinHeight = 350;
+
+       dsKeyTcfOaOffrPayList.setJSON( chkObj );
+
+
+       var etcStr ="";
+       if(tmpCnt>1){
+           etcStr =" 외 "+(tmpCnt-1) +" 건";
+       }	
+  	   tmpWinHeight = tmpWinHeight + (tmpCnt*40);    
+  	   console.log("tmpWinHeight=={}",tmpWinHeight);    
+		/* 1. 기본 파라미터 설정 */
+        var paramObj = new Object();        
+
+        paramObj.jobGbCd = "CF";                                         // 업무구분코드
+        paramObj.importUrl = "/ux/cf/cf0505/CF05050503E.xml";                   // 출력할 결재본문페이지
+        paramObj.aprvTtl = "["+tmpOaeqReqNo +"] OA기기 승인요청 기안 [" +tmpOaDeptNm+"_"+tmpOaItemNM +etcStr+"]";  // 결재제목
+        paramObj.rvwrEmpno = "";                                   // 검토자_사번
+        paramObj.fnlAprprEmpno = "";                               // 최종승인자_사번
+        paramObj.aprvPrcgNm = "";                                        // 후처리결재처리명
+        paramObj.aprvPrcgEventNm = "/cf/CF05050000U/notifyAprvOaOffrPay";          // 후처리결재처리 이벤트명(후처리 실행을 위한 URL을 입력한다)
+        paramObj.aprvDocModiPsblYn = "Y";                                // 결재문서 수정불가기능 Y/N  //////////////////
+        paramObj.aprlnModiPsblYn = "N";                                  // 결재선 수정불가기능 Y/N    //////////////////
+        paramObj.aprvAtchModiPsblYn = "Y";                               // 결재첨부 수정불가기능 Y/N  //////////////////
+        paramObj.aprvAflId = "";                                         // 본문링크용 첨부파일 ID (콤머로 구분해서 보내준다)
+        paramObj.popupWidth = "1570";                                    // 팝업창 가로크기
+        paramObj.popupHeight = tmpWinHeight ;                                    // 팝업창 세로크기
+        paramObj.relatedDocumentIds = "";                                // 텔레피아 관련문서 ID (콤머로 구분해서 보내준다) : 필수값 아님
+        paramObj.aprvAtchAreaYn = "N";                                   // 팝업창 첨푸파일,기안의견 항목 숨김여부 Y/N
+
+        com.aprvSend(paramObj); //일반결재 호출
+	};
+	
+	//조회건수 변경시 이벤트		
+	scwin.sbx_SelectCount_onchange = function() {
+	    rowIdx = 0;
+		scwin.pageMove(1);				
+	};
+
+	/**************************************************************************
+	 * Event: scwin.btnMgrRtn_onclick
+	 * 기 능: 담당자 반려 호출 이벤트 (요청팀 저장중으로)
+	 **************************************************************************/		
+	scwin.btnMgrRtn_onclick = function() {
+	    var chkObj = grdTcfOaOffrPayList.getCheckedJSON( "chk" );
+	
+	   if(chkObj == undefined || chkObj.length<=0){
+			com.showMessage('CFW0010','저장 할 데이터가 없습니다.<br><br>저장할 데이터는 체크해 주세요');
+			return  ;	   
+	   }
+	   if (confirm("담당자 반려로 저장 하시겠습니까?")) {
+	        scwin.svcId = "updateTcfOaOffrPayListMngRtn";
+	        ajaxLib.ajax("/cf/CF05050000U/updateTcfOaOffrPayListMngRtn", {
+	            mode : "asynchronous",
+	            method : "POST",
+	            requestData :{ oaOffrList: chkObj}, 
+	            callback    : "fnCallback",
+	            errCallback : "fnErrCallBack"
+	        });
+		}		
+	};
+	]]></script>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group>
+            <w2:wframe style="display:none" id="importAprvMain" src="/ux/cf/CF00350500U.xml"/>
+        </xf:group><!-- #결재이벤트 페이지 임포트 -->	
+		<xf:group class="content_body" id="" style="">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:120.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:120.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="신청일" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:udc_periodcalendar id="udcPeriodcalendar" ></w2:udc_periodcalendar>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="진행상태" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbcReqPrgsStusCd" mandatory="true" ref="data:dsSchParamMap.sbcReqPrgsStusCd"
+								style="width:140px;" submenuSize="auto" textAlign="left" chooseOptionLabel="전체">
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[전체]]></xf:label>
+										<xf:value></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[new row]]></xf:label>
+										<xf:value></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[new row]]></xf:label>
+										<xf:value></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="신청팀" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td" >
+							<xf:input id="schOffrDeptNm" style="width:180px;" ref="data:dsSchParamMap.schOffrDeptNm"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="신청자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:input id="schAplntNm" style="width:264px;" ref="data:dsSchParamMap.schAplntNm"></xf:input>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="" tagname="">
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnMgrRtn" outerDiv="false" style="" ev:onclick="scwin.btnMgrRtn_onclick">
+								<xf:label><![CDATA[담당자반려]]></xf:label>
+						</w2:anchor>				
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnApprForm" outerDiv="false" style="" ev:onclick="scwin.btnApprForm_onclick">
+								<xf:label><![CDATA[결제상신]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+								<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm excel_down" toolTip="엑셀다운로드" clickEventElement="" id="btnExcelDwn" localeRef="" outerDiv="false" style="">
+								<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<w2:gridView readOnly="false" autoFit="none" class="" dataList="data:dsTcfOaOffrPayList" fixedColumnWithHidden="true" focusMode="row" id="grdTcfOaOffrPayList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="14" ev:oncelldblclick="" fixedColumn="10" sortOrderReverse="" sortEvent="onclick" sortable="" editModeEvent="onclick" ev:oncellclick="scwin.grdTcfOaOffrPayList_oncelldblclick">
+					<w2:header id="header1" style="">
+							<w2:row id="row2" style="">
+									<w2:column blockSelect="false" id="column23" inputType="checkbox" readOnly="false" width="40" style=""></w2:column>
+									<w2:column removeBorderStyle="false" width="90" inputType="text" id="column67" value="신청일" blockSelect="false" displayMode="label" style="" sortable="true"></w2:column>
+									<w2:column blockSelect="false" id="column21" inputType="text" value="진행상태" width="110" style="" sortable="true"></w2:column>
+									<w2:column blockSelect="false" id="column17" inputType="text" value="구분" width="100" style="" sortable="true"></w2:column>
+									<w2:column blockSelect="false" id="column15" inputType="text" value="신청품목" width="200" style="" sortable="true"></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text" removeBorderStyle="false" value="신청팀" width="120" style="" sortable="true"></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="column35" inputType="text" removeBorderStyle="false" value="직원구분" width="80" style=""></w2:column>
+									<w2:column hidden="false" removeBorderStyle="false" width="80" inputType="text" id="column62" value="실사용자" blockSelect="false" displayMode="label" style=""></w2:column>
+									<w2:column hidden="false" removeBorderStyle="false" width="50" inputType="text" id="column63" value="직위" blockSelect="false" displayMode="label" style=""></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="column51" inputType="text" removeBorderStyle="false" value="신청사유" width="450" style=""></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="column54" inputType="text" removeBorderStyle="false" value="지급방법" width="115" style=""></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="column39" inputType="text" removeBorderStyle="false" value="지급유형" width="100" style=""></w2:column>
+									<w2:column removeBorderStyle="false" width="310" inputType="text" style="" id="column69" value="지급검토의견" blockSelect="false" displayMode="label"></w2:column>
+							</w2:row>
+					</w2:header>
+					<w2:gBody id="gBody4" style="">
+							<w2:row id="row5" style="">
+									<w2:column blockSelect="false" id="chk" inputType="checkbox" readOnly="false" width="40" style=""></w2:column>
+									<w2:column removeBorderStyle="false" width="120" inputType="text" id="offrDt" blockSelect="false" displayMode="label" style="" readOnly="true"></w2:column>
+									<w2:column blockSelect="false" id="reqPrgsStusNm" inputType="custom" value="" width="120" style="" readOnly="true" typeGetter="scwin.fnGetColorFormatter"></w2:column>
+									<w2:column blockSelect="false" id="oaeqStusGbNm" inputType="text" value="" width="100" style="" readOnly="true"></w2:column>
+									<w2:column blockSelect="false" id="oaItemNm" inputType="text" textAlign="left" 	value="" width="230" style="" readOnly="true" typeGetter=""></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="offrDeptNm" inputType="text" removeBorderStyle="false" value="" width="120" style="" readOnly="true"></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="ruserStafYn" inputType="text" removeBorderStyle="false" value="" width="120" style="" readOnly="true"></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="ruserNm" inputType="text" removeBorderStyle="false" value="" width="100" style="" readOnly="true"></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="ruserJbclNm" inputType="text" removeBorderStyle="false" value="" width="100" style="" readOnly="true"></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="intdRsnCn" inputType="text" removeBorderStyle="false" width="250" textAlign="left" readOnly="true" style=""></w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="oaeqPayMtdCd"
+										removeBorderStyle="false" width="150" textAlign="left" readOnly="false" inputType="select" style=""
+										viewType="icon" allOption="" chooseOption="true" chooseOptionLabel="선택"
+										ref="data:dsTcfOaOffrPayList.oaeqPayMtdCd">
+										<w2:choices></w2:choices>
+									</w2:column>
+									<w2:column blockSelect="false" displayMode="label" id="oaeqPayTypeCd"
+										inputType="select" removeBorderStyle="false" width="150" textAlign="left" readOnly="false" style=""
+										viewType="icon" allOption="" chooseOption="true" chooseOptionLabel="선택"
+										ref="data:dsTcfOaOffrPayList.oaeqPayTypeCd">
+										<w2:choices></w2:choices>
+									</w2:column>
+									<w2:column removeBorderStyle="false" width="500" inputType="text" style="" id="chrgrRvwOpinCn" value="" blockSelect="false" displayMode="label" textAlign="left"></w2:column>
+							</w2:row>
+					</w2:gBody>
+			</w2:gridView>
+			
+	<xf:group style="" id="" class="pagination">
+                <w2:pageList displayButtonType="display" displayFormat="#" pageSize="10" pagingType="0" style=""
+                    id="pageNavi" displaySelectedIndex="true" ev:onviewchange="scwin.pageNavi_onviewchange"
+                    ev:oninputblur="scwin.pageNavi_oninputblur" userData1="selectTcfOaOffrPayList" userData2="scwin.pageMove">
+                </w2:pageList>
+                <xf:select1 allOption="" appearance="minimal" chooseOption="" class="page_slt" direction="auto" selectedData="true"
+                    disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbx_SelectCount" optionOrder="false" ref=""
+                    style="width:120px;" submenuSize="auto" ev:onviewchange="scwin.sbx_SelectCount_onviewchange" ev:onchange="scwin.sbx_SelectCount_onchange">
+                    <xf:choices>
+                        <xf:item>
+                            <xf:label><![CDATA[14건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[14]]></xf:value>
+                        </xf:item>
+                        <xf:item>
+                            <xf:label><![CDATA[20건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[20]]></xf:value>
+                        </xf:item>
+                        <xf:item>
+                            <xf:label><![CDATA[30건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[30]]></xf:value>
+                        </xf:item>
+                        <xf:item>
+                            <xf:label><![CDATA[40건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[40]]></xf:value>
+                        </xf:item>
+                        <xf:item>
+                            <xf:label><![CDATA[50건씩 조회]]></xf:label>
+                            <xf:value><![CDATA[50]]></xf:value>
+                        </xf:item>
+                    </xf:choices>
+                </xf:select1>
+            </xf:group>
+						
+		</xf:group>
+	</body>
+</html>

@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+        	<w2:dataMap baseNode="map" id="dsSrch">
+        		<w2:keyInfo>
+        			<w2:key id="inqrGb" name="조회구분" dataType="text"></w2:key>
+        			<w2:key id="solaLunaGb" name="양력음력구분" dataType="text"></w2:key>
+        			<w2:key id="frYy" name="시작년도" dataType="text"></w2:key>
+        			<w2:key id="toYy" name="종료년도" dataType="text"></w2:key>
+        			<w2:key id="mm" name="월" dataType="text"></w2:key>
+        			<w2:key id="dy" name="일" dataType="text"></w2:key>
+        			<w2:key id="pageRowStart" name="페이지 시작행번호" dataType="number"></w2:key>
+        			<w2:key id="pageRowCount" name="페이지 요청건수" dataType="number"></w2:key>
+        		</w2:keyInfo>
+        	</w2:dataMap>
+        	<w2:dataList baseNode="list" repeatNode="map" id="dsClnrList" saveRemovedData="true">
+        		<w2:columnInfo>
+        			<w2:column id="solaDt" name="양력일자" dataType="text"></w2:column>
+        			<w2:column id="wkdCd" name="요일코드" dataType="text"></w2:column>
+        			<w2:column id="wkdNm" name="요일명" dataType="text"></w2:column>
+        			<w2:column id="lunaDt" name="음력일자" dataType="text"></w2:column>
+        			<w2:column id="lpmnYn" name="윤달여부" dataType="text"></w2:column>
+        			<w2:column id="secyNm" name="간지명" dataType="text"></w2:column>
+        			<w2:column id="hldyNm" name="휴일명" dataType="text"></w2:column>
+        			<w2:column id="hldyYn" name="휴일여부" dataType="text"></w2:column>
+        			<w2:column id="saleHldyYn" name="분양휴일여부" dataType="text"></w2:column>
+        			<w2:column id="deftHldyYn" name="하자휴일여부" dataType="text"></w2:column>
+        			<w2:column id="useYn" name="사용여부" dataType="text"></w2:column>
+        		</w2:columnInfo>
+        	</w2:dataList>
+        	<w2:dataList baseNode="list" repeatNode="map" id="dsMm" saveRemovedData="true">
+        		<w2:columnInfo>
+        			<w2:column id="cd" name="코드" dataType="text"></w2:column>
+        			<w2:column id="cdNm" name="코드명" dataType="text"></w2:column>
+        		</w2:columnInfo>
+        		<w2:data use="true">
+        			<w2:row>
+        				<cd>
+        					<![CDATA[01]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[01월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[02]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[02월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[03]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[03월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[04]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[04월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[05]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[05월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[06]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[06월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[07]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[07월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[08]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[08월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[09]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[09월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[10]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[10월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[11]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[11월]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[12]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[12월]]>
+        				</cdNm>
+        			</w2:row>
+        		</w2:data>
+        	</w2:dataList>
+        	<w2:dataList baseNode="list" repeatNode="map" id="dsDy" saveRemovedData="true">
+        		<w2:columnInfo>
+        			<w2:column id="cd" name="코드" dataType="text"></w2:column>
+        			<w2:column id="cdNm" name="코드명" dataType="text"></w2:column>
+        		</w2:columnInfo>
+        		<w2:data use="true">
+        			<w2:row>
+        				<cd>
+        					<![CDATA[01]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[01일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[02]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[02일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[03]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[03일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[04]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[04일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[05]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[05일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[06]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[06일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[07]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[07일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[08]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[08일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[09]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[09일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[10]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[10일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[11]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[11일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[12]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[12일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[13]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[13일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[14]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[14일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[15]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[15일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[16]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[16일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[17]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[17일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[18]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[18일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[19]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[19일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[20]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[20일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[21]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[21일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[22]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[22일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[23]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[23일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[24]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[24일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[25]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[25일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[26]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[26일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[27]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[27일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[28]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[28일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[29]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[29일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[30]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[30일]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[31]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[31일]]>
+        				</cdNm>
+        			</w2:row>
+        		</w2:data>
+        	</w2:dataList>
+        	<w2:dataList baseNode="map" id="dsUseYn">
+        		<w2:columnInfo>
+        			<w2:column id="cd" name="name1" dataType="text"></w2:column>
+        			<w2:column id="cdNm" name="name2" dataType="text"></w2:column>
+        		</w2:columnInfo>
+        		<w2:data use="true">
+        			<w2:row>
+        				<cd>
+        					<![CDATA[Y]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[여]]>
+        				</cdNm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[N]]>
+        				</cd>
+        				<cdNm>
+        					<![CDATA[부]]>
+        				</cdNm>
+        			</w2:row>
+        		</w2:data>
+        	</w2:dataList>
+        	<w2:dataList baseNode="map" id="dsCdCF046" style="">
+        		<w2:columnInfo>
+        			<w2:column dataType="text" id="allCd" name="코드"></w2:column>
+        			<w2:column dataType="text" id="cdNm" name="코드명"></w2:column>
+        		</w2:columnInfo>
+        		<w2:data use="false"></w2:data>
+        	</w2:dataList>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00353500U.xml 
+     * Program Name : 공휴일 관리
+     * Author : 김환섭 (tpkhs1)
+     * Date : 2019.03.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     * 2019.03.15   김환섭	최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    var svcId = "";
+    var pageRowStart = 0; 	//페이지 시작행번호
+    var pageRowCount = 50; 	//페이지 요청건수
+
+    /************************************************************************************ 
+     *  [2] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        grpSearch.init();		//조회그룹 초기화
+        scwin.initScreen();		//초기화
+
+        com.selCdList("sbxSolaLunaGb", "CF044");				//양력음력구분[CF044]
+		dsCdCF046.setJSON(com.sessionTcfCodeSearch("CF046"));	//요일구분코드[CF046]
+    };
+
+	// 초기화
+    scwin.initScreen = function () {
+        grdClnrList.initGrid(); //달력목록 초기화
+        dsClnrList.reform();	//달력수정목록 초기화
+
+        com.setUdcValue("uListCount", "udcListCount", 0);
+    	pageRowStart = 0;		//페이지 시작행번호
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    // 조회 List
+    scwin.fnSearchList = function () {
+		dsSrch.set("pageRowStart", pageRowStart);
+		dsSrch.set("pageRowCount", pageRowCount);
+
+        svcId = "selectTcfClnrList";
+
+        ajaxLib.ajax("/cf/CF00353500U/selectTcfClnrList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSrch.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+
+    };
+
+    // 저장 처리
+    scwin.fnUpdate = function () {
+        if (confirm("저장 하시겠습니까?")) {
+            svcId = "updateTcfClnr";
+
+            ajaxLib.ajax("/cf/CF00353500U/updateTcfClnr", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: {
+                    param: dsSrch.getJSON(),
+                    tcfClnrList: dsClnrList.getModifiedJSON()
+                },
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+        switch (svcId) {
+            case "selectTcfClnrList":
+                dsClnrList.setJSON(result.data.dsTcfClnrList, true);
+                com.setUdcValue("uListCount", "udcListCount", dsClnrList.getTotalRow());
+                pageRowStart = pageRowStart + pageRowCount;	//다음 조회갯수 Setting
+		        dsClnrList.reform();						//달력수정목록 초기화
+
+                break;
+
+            case "updateTcfClnr":
+				com.showMessage("SCN0002", "저장");			//$1 되었습니다.
+
+                scwin.btnFind_onclick();
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function (e) {
+    }
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    // 조회시 처리
+    scwin.btnFind_onclick = function () {
+    	scwin.initScreen();		//초기화
+
+        scwin.fnSearchList();
+    };
+
+    // 그리드 scrollend시 처리
+	scwin.grdClnrList_onscrollend = function() {
+		//총건수가 (페이지 시작행번호 + 페이지 요청건수) 보다 작으면 SKIP
+		if (dsClnrList.getTotalRow() < (dsSrch.get("pageRowStart") + dsSrch.get("pageRowCount"))){
+			return;
+		}
+
+        scwin.fnSearchList();
+	};
+
+    // 저장시 처리
+	scwin.btnSave_onclick = function() {
+	    var cnt = dsClnrList.getModifiedJSON().length;
+	    if (cnt <= 0) {
+	        com.showMessage("CMW0024");	//	저장(변경)할 내용이 없습니다.
+	        return;
+	    }
+		
+        scwin.fnUpdate();
+	};
+	]]></script>
+    <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+</head>
+<body ev:onpageload="scwin.onpageload">
+    <xf:group style="" id="" class="content_body">
+    	<xf:group class="navigator_wrap" id="" style="">
+    		<w2:wframe id="navigator_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+    		<xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>
+    	</xf:group>
+    	<xf:group class="tbl_search" id="grpSearch" style="">
+    		<xf:group class="tb_list" id="" style="" tagname="table">
+    			<w2:attributes>
+    				<w2:summary>조회조건 테이블 입니다.</w2:summary>
+    			</w2:attributes>
+    			<xf:group tagname="colgroup">
+    				<xf:group style="width:121px;" tagname="col"></xf:group>
+    				<xf:group style="width:auto;" tagname="col"></xf:group>
+    				<xf:group style="width:67px;" tagname="col"></xf:group>
+    				<xf:group style="width:auto;" tagname="col"></xf:group>
+    				<xf:group style="width:56px;" tagname="col"></xf:group>
+    				<xf:group style="width:auto;" tagname="col"></xf:group>
+    				<xf:group style="width:56px;" tagname="col"></xf:group>
+    				<xf:group style="width:auto;" tagname="col"></xf:group>
+    			</xf:group>
+    			<xf:group style="" tagname="tr" id="">
+    				<xf:group class="w2tb_th req" style="" tagname="th">
+    					<w2:attributes>
+    						<w2:scope>row</w2:scope>
+    					</w2:attributes>
+    					<w2:span class="" id="" label="양력음력구분" style=""></w2:span>
+    				</xf:group>
+    				<xf:group class="w2tb_td" style="" tagname="td">
+    					<xf:select1 allOption="" appearance="minimal" chooseOption="" chooseOptionLabel="전체" class="req"
+    						direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxSolaLunaGb"
+    						ref="data:dsSrch.solaLunaGb" style="width:100px;" submenuSize="auto" textAlign="left" ev:onchange=""
+    						mandatory="true">
+    						<xf:choices></xf:choices>
+    					</xf:select1>
+    				</xf:group>
+    				<xf:group class="w2tb_th" style="" tagname="th">
+    					<w2:attributes>
+    						<w2:scope>row</w2:scope>
+    					</w2:attributes>
+    					<w2:span class="" id="" label="년도" style=""></w2:span>
+    				</xf:group>
+    				<xf:group class="w2tb_td" style="400px" tagname="td">
+    					<xf:input id="ibxFrYy" style="width:80px;" ref="data:dsSrch.frYy" maxlength="4" class=""
+    						ev:onchange="" allowChar="0-9">
+    					</xf:input>
+    					<w2:textbox label="~" style="" id="lbTide"></w2:textbox>
+    					<xf:input id="ibxToYy" style="width:80px;" ref="data:dsSrch.toYy" maxlength="4" ev:onchange=""
+    						class="" allowChar="0-9">
+    					</xf:input>
+    				</xf:group>
+    				<xf:group class="w2tb_th" tagname="th">
+    					<w2:attributes>
+    						<w2:scope>row</w2:scope>
+    					</w2:attributes>
+    					<w2:span class="" id="txtMm" label="월" style=""></w2:span>
+    				</xf:group>
+    				<xf:group class="w2tb_td" tagname="td">
+    					<w2:attributes></w2:attributes>
+    					<xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체"
+    						class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxMm"
+    						ref="data:dsSrch.mm" style="width:100px;" submenuSize="auto" textAlign="left" ev:onchange="">
+    						<xf:choices>
+    							<xf:itemset nodeset="data:dsMm">
+    								<xf:label ref="cdNm"></xf:label>
+    								<xf:value ref="cd"></xf:value>
+    							</xf:itemset>
+    						</xf:choices>
+    					</xf:select1>
+    				</xf:group>
+    				<xf:group class="w2tb_th" style="" tagname="th">
+    					<w2:attributes>
+    						<w2:scope>row</w2:scope>
+    					</w2:attributes>
+    					<w2:span class="" id="txtDy" label="일" style=""></w2:span>
+    				</xf:group>
+    				<xf:group class="w2tb_td" tagname="td">
+    					<w2:attributes></w2:attributes>
+    					<xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체"
+    						direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxDy"
+    						ref="data:dsSrch.dy" style="width:100px;" submenuSize="auto" textAlign="left" ev:onchange="" class="">
+    						<xf:choices>
+    							<xf:itemset nodeset="data:dsDy">
+    								<xf:label ref="cdNm"></xf:label>
+    								<xf:value ref="cd"></xf:value>
+    							</xf:itemset>
+    						</xf:choices>
+    					</xf:select1>
+    				</xf:group>
+    			</xf:group>
+    		</xf:group>
+    		<xf:group class="btn_tbl_search" style="" tagname="">
+    			<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+    				<xf:label>
+    					<![CDATA[조회]]>
+    				</xf:label>
+    			</w2:anchor>
+    		</xf:group>
+    	</xf:group>
+    	<xf:group style="" id="" class="defaultbox">
+    		<w2:textbox label="달력 목록" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+    		<w2:udc_list_count id="uListCount"></w2:udc_list_count>
+    		<xf:group class="right_wrap" id="" style="">
+    			<xf:group id="" style="">
+    				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnSave_onclick"
+    					id="btnSave" outerDiv="false" style="">
+    					<xf:label><![CDATA[저장]]></xf:label>
+    				</w2:anchor>
+    			</xf:group>
+    		</xf:group>
+    	</xf:group>
+    	<w2:gridView autoFit="allColumn" dataList="data:dsClnrList" fixedColumnWithHidden="true" id="grdClnrList"
+    		scrollByColumn="false" style="height: 300px;left:-3px;top:8px;" useShiftKey="true" visibleRowNum=""
+    		rowNumVisible="" rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue=""
+    		focusMode="row" class="autoHeight" ev:onscrollend="scwin.grdClnrList_onscrollend">
+    		<w2:header id="header1" style="">
+    			<w2:row id="row2" style="">
+    				<w2:column blockSelect="false" id="column23" inputType="text" value="NO" width="40" style=""></w2:column>
+    				<w2:column blockSelect="false" id="column21" inputType="text" value="양력일자" width="100" style="">
+    				</w2:column>
+    				<w2:column blockSelect="false" id="column19" inputType="text" value="요일" width="150" style="">
+    				</w2:column>
+    				<w2:column blockSelect="false" id="column17" inputType="text" value="음력일자" width="100" style="">
+    				</w2:column>
+    				<w2:column blockSelect="false" id="column15" inputType="text" value="윤달여부" width="80" style="">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="80" inputType="text" id="column37" value="간지명"
+    					blockSelect="false" displayMode="label" style="">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="130" inputType="text" id="column35" value="휴일명"
+    					blockSelect="false" displayMode="label" style="">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" id="column41" value="휴일여부"
+    					blockSelect="false" displayMode="label" style="">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" id="column39" value="분양휴일여부"
+    					blockSelect="false" displayMode="label" style="">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" id="column47" value="하자유일여부"
+    					blockSelect="false" displayMode="label" style="">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column48"
+    					value="사용여부" blockSelect="false" displayMode="label">
+    				</w2:column>
+    			</w2:row>
+    		</w2:header>
+    		<w2:gBody id="gBody4" style="">
+    			<w2:row id="row5" style="">
+    				<w2:column blockSelect="false" id="rowNum" inputType="expression" width="40"
+    					expression="rowindex()+1">
+    				</w2:column>
+    				<w2:column blockSelect="false" id="solaDt" inputType="calendar" width="100"></w2:column>
+    				<w2:column blockSelect="false" id="wkdCd" inputType="select" width="150" allOption=""
+    					chooseOption="true" chooseOptionLabel="선택" ref="">
+    					<w2:choices>
+    						<w2:itemset nodeset="data:dsCdCF046">
+    							<w2:label ref="cdNm"></w2:label>
+    							<w2:value ref="allCd"></w2:value>
+    						</w2:itemset>
+    					</w2:choices>
+    				</w2:column>
+    				<w2:column blockSelect="false" id="lunaDt" inputType="calendar" width="100"></w2:column>
+    				<w2:column blockSelect="false" id="lpmnYn" inputType="select" width="80" chooseOption="true"
+    					allOption="" chooseOptionLabel="선택" ref="">
+    					<w2:choices>
+    						<w2:itemset nodeset="data:dsUseYn">
+    							<w2:label ref="cdNm"></w2:label>
+    							<w2:value ref="cd"></w2:value>
+    						</w2:itemset>
+    					</w2:choices>
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="80" inputType="text" id="secyNm" blockSelect="false"
+    					displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="130" inputType="textarea" id="hldyNm"
+    					blockSelect="false" displayMode="label">
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="select" id="hldyYn" blockSelect="false"
+    					displayMode="label" chooseOption="true" allOption="" chooseOptionLabel="선택" ref="">
+    					<w2:choices>
+    						<w2:itemset nodeset="data:dsUseYn">
+    							<w2:label ref="cdNm"></w2:label>
+    							<w2:value ref="cd"></w2:value>
+    						</w2:itemset>
+    					</w2:choices>
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="select" id="saleHldyYn"
+    					blockSelect="false" displayMode="label" chooseOption="true" allOption="" chooseOptionLabel="선택" ref="">
+    					<w2:choices>
+    						<w2:itemset nodeset="data:dsUseYn">
+    							<w2:label ref="cdNm"></w2:label>
+    							<w2:value ref="cd"></w2:value>
+    						</w2:itemset>
+    					</w2:choices>
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="select" id="deftHldyYn"
+    					blockSelect="false" displayMode="label" chooseOption="true" allOption="" chooseOptionLabel="선택" ref="">
+    					<w2:choices>
+    						<w2:itemset nodeset="data:dsUseYn">
+    							<w2:label ref="cdNm"></w2:label>
+    							<w2:value ref="cd"></w2:value>
+    						</w2:itemset>
+    					</w2:choices>
+    				</w2:column>
+    				<w2:column removeBorderStyle="false" width="100" inputType="select" style="" id="useYn" value=""
+    					blockSelect="false" displayMode="label" allOption="" chooseOption="true" chooseOptionLabel="선택" ref="">
+    					<w2:choices>
+    						<w2:itemset nodeset="data:dsUseYn">
+    							<w2:label ref="cdNm"></w2:label>
+    							<w2:value ref="cd"></w2:value>
+    						</w2:itemset>
+    					</w2:choices>
+    				</w2:column>
+    			</w2:row>
+    		</w2:gBody>
+    	</w2:gridView>
+    </xf:group>
+</body>
+</html>

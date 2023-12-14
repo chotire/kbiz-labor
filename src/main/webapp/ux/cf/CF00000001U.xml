@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsKeyTcfCodePoolMap">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="jobGbCd" name="업무구분코드"></w2:key>
+						<w2:key dataType="text" id="commCd" name="공통코드"></w2:key>
+						<w2:key dataType="text" id="commCdNm" name="공통코드명"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsTcfCodeDtlPoolMap">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="commCd" name="공통코드"></w2:key>
+						<w2:key dataType="text" id="commDtlCd" name="공통상세코드"></w2:key>
+						<w2:key dataType="text" id="commDtlCdNm" name="공통상세코드명"></w2:key>
+						<w2:key dataType="text" id="useYn" name="사용여부"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" id="dsTcfCodePoolList" repeatNode="map" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="jobGbCdNm" name="업무구분코드명"></w2:column>
+						<w2:column dataType="text" id="commCd" name="공통코드"></w2:column>
+						<w2:column dataType="text" id="commCdNm" name="공통코드명"></w2:column>
+						<w2:column dataType="text" id="commCdDesc" name="공통코드설명"></w2:column>
+						<w2:column id="jobGbCd" name="업무구분코드" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" id="dsTcfCodeDtlPoolList" repeatNode="map" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="commDtlCd" name="공통상세코드"></w2:column>
+						<w2:column dataType="text" id="commDtlCdNm" name="공통상세코드명"></w2:column>
+						<w2:column dataType="number" id="commCdOdr" name="공통코드순서"></w2:column>
+						<w2:column dataType="text" id="useYn" name="사용여부"></w2:column>
+						<w2:column dataType="text" id="commCd" name="공통코드"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" id="dsCdCF035" repeatNode="map" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="commDtlCd" name="공통상세코드"></w2:column>
+						<w2:column dataType="text" id="cdNm" name="이름"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00000001U.xml 
+     * Program Name : 공통코드POOL 목록 
+     * Author : 이석진 (tplsj)
+     * Date : 2019.02.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     * 2019.02.15   이석진   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    var svcId; //callback 처리용 서비스ID
+
+    /************************************************************************************
+     *  [2] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+        //SelectBox 코드값 맵핑 
+		dsCdCF035.setJSON(com.sessionTcfCodeSearch("CF035"));
+    };
+
+    // 탭이 선택되면 호출되는 함수(최초 OPEN시에는 호출 안됨)
+    scwin.fnRefresh = function () {
+    	com.setAuthInfo('CF00000001U');
+        btnFind.trigger("onclick");
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function () {
+        grpSearch.init(); //조회그룹 초기화
+        grdTcfCodePoolList.initGrid(); //공통코드목록 초기화
+        grdTcfCodeDtlPoolList.initGrid(); //공통상세코드목록 초기화
+        com.setUdcValue("dsTcfCodePoolListTotalCount", "udcListCount", 0);
+        com.setUdcValue("dsTcfCodeDtlPoolListTotalCount", "udcListCount", 0);
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnSelectTcfCodePoolList
+     * 기 능: 공통상세코드POOL 정보를 리스트 조회
+     **************************************************************************/
+    scwin.fnSelectTcfCodePoolList = function () {
+        //callback 처리용 서비스ID 부여
+        svcId = "selectTcfCodeDtlPoolList";
+
+        //서비스 호출
+        ajaxLib.ajax("/cf/CF00000001U/selectTcfCodeDtlPoolList", {
+            mode: "asynchronous",
+            method: "Post",
+            requestData: dsTcfCodeDtlPoolMap.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallback"
+        });
+    };
+
+    /************************************************************************************
+     *  [4] Callback 함수 
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallback = function (result, e) {
+
+    }
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function (result, e) {
+        switch (svcId) {
+            case "selectTcfCodePoolList":
+                //서버에서 넘겨주는 값 세팅
+                dsTcfCodePoolList.setJSON(result.data.dsTcfCodePoolList);
+                com.setUdcValue("dsTcfCodePoolListTotalCount", "udcListCount", dsTcfCodePoolList.getRowCount());
+
+                //조회후 처리
+                grdTcfCodeDtlPoolList.initGrid(); //공통상세코드목록 초기화
+                com.setUdcValue("dsTcfCodeDtlPoolListTotalCount", "udcListCount", 0);
+                break;
+
+            case "selectTcfCodeDtlPoolList":
+                //서버에서 넘겨주는 값 세팅
+                dsTcfCodeDtlPoolList.setJSON(result.data.dsTcfCodeDtlPoolList);
+                com.setUdcValue("dsTcfCodeDtlPoolListTotalCount", "udcListCount", dsTcfCodeDtlPoolList.getRowCount());
+                break;
+
+            default:
+                break;
+        }
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 공통코드POOL 정보를 리스트 조회
+     **************************************************************************/
+    scwin.btnFind_onclick = function () {
+        //callback 처리용 서비스ID 부여
+        svcId = "selectTcfCodePoolList";
+
+        //서비스 호출
+        ajaxLib.ajax("/cf/CF00000001U/selectTcfCodePoolList", {
+            mode: "asynchronous",
+            method: "Post",
+            requestData: dsKeyTcfCodePoolMap.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallback"
+        });
+    };
+
+    /**************************************************************************
+     * Event: scwin.grdTcfCodePoolList_oncellclick
+     * 기 능: 공통상세코드목록 선택시 처리
+     **************************************************************************/
+    scwin.grdTcfCodePoolList_oncellclick = function (row, col) {
+        //공통상세코드POOL 정보를 리스트 조회 호출
+        dsTcfCodeDtlPoolMap.setJSON(grdTcfCodePoolList.getRowJSON(row));
+        scwin.fnSelectTcfCodePoolList();
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxKeyCommCd_onkeyup
+     * 기 능: 공통코드 입력후 Enter시 처리
+     **************************************************************************/
+    scwin.ibxKeyCommCd_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            scwin.btnFind_onclick();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxKeyCommCdNm_onkeyup
+     * 기 능: 공통코드명 입력후 Enter시 처리
+     **************************************************************************/
+    scwin.ibxKeyCommCdNm_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            scwin.btnFind_onclick();
+        }
+    };
+	]]></script>
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="wfrTitle" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>
+        </xf:group>
+        <xf:group class="tbl_search" id="grpSearch" style="">
+            <xf:group class="tb_list" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:120px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:120px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:120px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="업무구분" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxKeyJobGbCd" ref="data:dsKeyTcfCodePoolMap.jobGbCd" style="width:140px;" submenuSize="auto" textAlign="left" mandatory="true" chooseOptionLabel="전체">
+                            <xf:choices>
+                                <xf:itemset nodeset="data:dsCdCF035">
+                                    <xf:label ref="cdNm"></xf:label>
+                                    <xf:value ref="commDtlCd"></xf:value>
+                                </xf:itemset>
+                            </xf:choices>
+                        </xf:select1>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="공통코드" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="ibxKeyCommCd" ref="data:dsKeyTcfCodePoolMap.commCd" style="width: 140px;" ev:onkeyup="scwin.ibxKeyCommCd_onkeyup" allowChar="0-9 a-z A-Z" maxlength="20" displayFormatter="" customModelFormatter="com.transUpper"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="공통코드명" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:input id="ibxKeyCommCdNm" ref="data:dsKeyTcfCodePoolMap.commCdNm" style="width: 140px;" ev:onkeyup="scwin.ibxKeyCommCdNm_onkeyup" maxByteLength="50">
+                        </xf:input>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <xf:group style="" id="" class="lybox_wrap">
+            <xf:group style="" id="" class="lybox">
+                <xf:group style="" id="" class="lycolumn">
+                    <xf:group style="" id="" class="lyinner">
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" label="공통코드 목록" id="" class="df_tt"></w2:textbox>
+                            <w2:udc_list_count style="" id="dsTcfCodePoolListTotalCount"></w2:udc_list_count>
+                        </xf:group>
+                        <w2:gridView rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No" scrollByColumn="false" focusMode="row" dataList="data:dsTcfCodePoolList" style="height: 300px" autoFit="allColumn" id="grdTcfCodePoolList" class="autoHeight" ev:oncellclick="scwin.grdTcfCodePoolList_oncellclick" readOnly="true">
+                            <w2:header style="" id="header1">
+                                <w2:row style="" id="row2">
+                                    <w2:column width="80" inputType="text" id="column23" value="업무구분" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="60" inputType="text" id="column21" value="공통코드" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="200" inputType="text" id="column19" value="공통코드명" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="200" inputType="text" id="column25" value="공통코드 설명" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:header>
+                            <w2:gBody style="" id="gBody4">
+                                <w2:row style="" id="row5">
+                                    <w2:column width="80" inputType="text" style="height:24px;" id="jobGbCdNm" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="60" inputType="text" style="height:24px;" id="commCd" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column textAlign="left" width="200" inputType="text" style="height:24px;" id="commCdNm" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:24px;" id="commCdDesc" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:gBody>
+                        </w2:gridView>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" id="" class="lycolumn">
+                    <xf:group style="" id="" class="lyinner">
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" id="" label="공통상세코드 목록" class="df_tt"></w2:textbox>
+                            <w2:udc_list_count style="" id="dsTcfCodeDtlPoolListTotalCount"></w2:udc_list_count>
+                        </xf:group>
+                        <w2:gridView rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No" scrollByColumn="false" focusMode="row" dataList="data:dsTcfCodeDtlPoolList" style="height: 300px;" autoFit="allColumn" id="grdTcfCodeDtlPoolList" class="autoHeight" readOnly="true">
+                            <w2:header style="" id="header1">
+                                <w2:row style="" id="row2">
+                                    <w2:column width="100" inputType="text" style="height:24px;" id="column23" value="공통상세코드" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="200" inputType="text" style="height:24px;" id="column21" value="공통상세코드명" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="80" inputType="text" style="height:24px;" id="column19" value="순서" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="80" inputType="text" style="height:24px;" id="column17" value="사용여부" blockSelect="false">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:header>
+                            <w2:gBody style="" id="gBody4">
+                                <w2:row style="" id="row5">
+                                    <w2:column textAlign="" width="100" inputType="text" style="height:24px;" id="commDtlCd" value="" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column textAlign="left" width="200" inputType="text" style="height:24px;" id="commDtlCdNm" value="" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column textAlign="" width="80" inputType="text" style="height:24px;" id="commCdOdr" class="" value="" blockSelect="false" dataType="number">
+                                    </w2:column>
+                                    <w2:column textAlign="" width="80" inputType="text" style="height:24px;" id="useYn" value="" blockSelect="false">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:gBody>
+                        </w2:gridView>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

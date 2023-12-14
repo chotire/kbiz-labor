@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataMap baseNode="map" id="dsSearchMap">
+			        <w2:keyInfo>
+			            <w2:key id="wkrNo" name="근로자번호" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" repeatNode="map" id="dsList" saveRemovedData="true">
+			        <w2:columnInfo>
+			            <w2:column id="secResno" name="주민번호" dataType="text"></w2:column>
+			            <w2:column id="bnactNo" name="계좌번호" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM60200022P.xml
+ * Program Name : 계좌번호 확인 팝업
+ * Author : jhlee
+ * Date : 2022.09.16
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+     
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        dsSearchMap.set("wkrNo", JSON.parse($p.getPopupParam()).data.wkrNo );
+        
+        ajaxLib.ajax("/cm/cm6020/CM60200000U/selectTcmWkrInfo", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){      
+                dsList.setJSON(result.data.dsList); 
+                let type = JSON.parse($p.getPopupParam()).data.type;
+                if(dsList.getRowCount() == 1){
+                  if(type == "B") //계좌번호
+                  {
+                    ibxBnactNo.setValue(dsList.getCellData( 0 , "bnactNo"));
+                  }
+                  else            //주민번호
+                  {
+                    ibxBnactNo.setValue(dsList.getCellData( 0 , "secResno"));
+                  }
+                } 
+            },            
+            errCallback: function(result, e) {
+                console.log(result);
+            }
+        });
+    };
+
+   
+	]]></script>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+            <xf:input allowChar="" class="" dataType="" disabled="true" id="ibxBnactNo" mandatory=""
+                style="width:100%;" >
+            </xf:input>
+		</xf:group>
+	</body>
+</html>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+    <?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dsSearchParamSubMap">
+                    <w2:keyInfo>
+                        <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+                        <w2:key id="workDt" name="작업일자" dataType="text"></w2:key>
+                        <w2:key id="workGbVal" name="업무보고_구분_값" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+                <w2:dataMap baseNode="map" id="dsAprvDataMap" defaultValue="0.00">
+                    <w2:keyInfo>
+                        <w2:key id="workDt" name="작업일자" dataType="text"></w2:key>
+                        <w2:key id="wethN1GbVal" name="날씨1" dataType="text"></w2:key>
+                        <w2:key id="bfEnfceCn" name="이전_실시_내용" dataType="text"></w2:key>
+                        <w2:key id="tdyPrCn" name="금일_예정_내용" dataType="text"></w2:key>
+                        <w2:key id="dirmgEqpmNum" name="금일직영장비수" dataType="number"></w2:key>
+                        <w2:key id="scEqpmNum" name="금일외주장비수" dataType="number"></w2:key>
+                        <w2:key id="bfDirmgEqpmNum" name="전일직영장비수" dataType="number"></w2:key>
+                        <w2:key id="bfScEqpmNum" name="전일외주장비수" dataType="number"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+            <w2:workflowCollection></w2:workflowCollection>
+        </xf:model>
+
+        <script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM70200010E.xml 
+ * Program Name : 작업일보 결재
+ * Author : 표성빈(sbPyo)
+ * Date : 2022.07.20
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ *     
+ **************************************************************************/ 
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/    
+	scwin.svcId;		//callback 처리용 서비스ID
+	var option = {progress_bar:true};
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/  
+    scwin.onpageload = function() {
+    
+    	com.commonUI();
+		scwin.fnInitial();
+        
+    };
+     
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {   
+  
+	   debugger;
+	   //UI팀용 함수 호출
+	   com.commonUI();
+        
+	   let dsSrch = com.getAprvParam("dsSearchParamSubMap"); // 부모창의 데이터맵을 읽어온다.
+        
+	   dsSearchParamSubMap.setJSON(dsSrch.getJSON());
+       
+	   scwin.fnAprvDlMstr();
+         
+    };        
+      
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수 
+     ************************************************************************************/
+	
+    /* 조회 */
+    scwin.fnAprvDlMstr = function() {
+    
+        ajaxLib.ajax("/cm/cm7020/CM70200010U/selectAprvDlMstr", {
+        	method : "POST"
+            , requestData : dsSearchParamSubMap.getJSON()
+            , callback: function(result, e) {
+               dsAprvDataMap.setJSON(result.data.dsAprvDataMap);
+            }
+            , errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+
+    };
+    
+    /************************************************************************************
+     *  [4] Callback 함수 
+     ************************************************************************************/
+      
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/      
+]]></script>
+
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <xf:group style="" id="" class="elec_body">
+            <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>작업일보 상세정보 현황 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="작업일자" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:span class="txt_unit" id="" label="" style="width:100%; text-align:left;"
+                            ref="data:dsAprvDataMap.workDt"></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:span class="" id="" label="날씨" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:span class="txt_unit" id="" label="" style="width:100%; text-align:left;"
+                            ref="data:dsAprvDataMap.wethN1GbVal"></w2:span>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>작업일보 장비현황 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:span id="" label="전일직영장비" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="text-align:right;" tagname="td">
+                        <w2:span class="txt_unit" id="ibxBfDirmgEpqmNum" label="" ref="data:dsAprvDataMap.bfDirmgEqpmNum" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:span id="" label="전일외주장비" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="text-align:right;" tagname="td">
+                        <w2:span class="txt_unit" id="ibxBfScEpqmNum" label="" ref="data:dsAprvDataMap.bfScEqpmNum" style=""></w2:span>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:span id="" label="금일직영장비" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="text-align:right;" tagname="td">
+                        <w2:span class="txt_unit" id="ibxDirmgEpqmNum" label="" ref="data:dsAprvDataMap.dirmgEqpmNum" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:span id="" label="금일외주장비" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="text-align:right;" tagname="td">
+                        <w2:span class="txt_unit" id="ibxScEpqmNum" label="" ref="data:dsAprvDataMap.scEqpmNum" style=""></w2:span>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>작업일보 작업내용 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:span id="" label="전일 실시사항" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:span id="" label="금일 예정사항" style=""></w2:span>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:span style="white-space:pre;" class="txt_unit" id="tbxBfEnfceCn" label="" ref="data:dsAprvDataMap.bfEnfceCn" ></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:span style="white-space:pre;" class="txt_unit" id="tbxTdyPrCn" label="" ref="data:dsAprvDataMap.tdyPrCn" ></w2:span>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <br></br>
+            <br></br>
+        </xf:group>
+    </body>
+</html>

@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<websquare>
+    <upload>
+        <imgUpload>
+            <baseDir value="/Users/yongsang/Development/workspace/java/kbiz-labor/runtime/websquare_home/upload" />
+        </imgUpload>
+        <baseDir value="/Users/yongsang/Development/workspace/java/kbiz-labor/runtime/websquare_home/upload">
+            <test value="/Users/yongsang/Development/workspace/java/kbiz-labor/runtime/websquare_home/upload/sub" />
+        </baseDir>
+        <encoding value="UTF-8" />
+        <maxUploadSize value="200000000" />
+        <uploadMode value="session" />
+        <folderName value="up" />
+        <duplicatedFilePostFix value="yyyy-MM-dd_HHmmss"></duplicatedFilePostFix>
+        <allowedExtension>
+            3ga,3gp,3gpp,alz,amr,avi,bmp,csv,dmxls,dmxlsx,doc,docx,dot,dvf,dwg,egg,gif,hwp,jpeg,jpg,m4a,mdi,mp3,mp4,pcx,pdf,png,ppsx,ppt,pptx,psd,psr,rar,rtf,tif,tiff,txt,wav,wma,xls,xlsb,xlsm,xlsx,xlt,xps,zip,z01,z02,z03,z04,z05
+        </allowedExtension>
+        <deniedExtension>
+            exe
+        </deniedExtension>
+        <callback>
+            <removeKeyPath value="true" />
+        </callback>
+        <!--
+            upload 파일 경로와, 파일명을 재설정하는 사용자 정의 class를 선언한다.(optional)
+        -->
+		<fileDefiner value="com.sonoenc.sono.cmm.support.upload.FileNameDefiner"/>
+    </upload>
+
+    <dispatcher>
+        <post>
+            <!-- <encoding value="UTF-8"></encoding> -->
+            <encoding value="ISO-8859-1"></encoding>
+        </post>
+    </dispatcher>
+    <excel>
+        <read>
+            <displayType value="number" />
+        </read>
+    </excel>
+    <!--
+		라이센스 정보를 볼 수 있는 IP 대역 설정
+	-->
+
+	<licenseInfoView>
+		<allowedIP value="192.168.* *" />
+	</licenseInfoView>
+
+    <!--
+	1 : 기존 엔진 - 기본값
+	2 : 기존 엔진(debug정보 제거)
+	3 : 신규 엔진
+	4 : 신규 엔진(debug정보 제거)
+	직접 지정하는 경우 : w2xType
+
+  etag
+    support : etag값을 비교하여 일치하면 상태코드를 304로 반환 (기본값)
+    notsupport : etag값 비교 지원 안함
+	deprecated
+		1이상의 정수, ALL, NONE를 입력할 수 있다.
+		ALL이 입력된 경우 deprecated가 설정된 모든 함수를 사용할 수 없다.
+		정수가 입력된 경우 정수보다 작거나 같은 버전으로 deprecated된 함수는 사용할 수 없다.
+		소스에 있는 deprecated 버전보다 큰 값이 입력되어도 오류가 발생하지는 않는다.
+		NONE가 입력된 경우 deprecated된 함수를 포함한 모든 함수를 사용할 수 있다.
+		설정이 없는 경우 NONE와 동일하다.
+		설정에 다른 값이 들어간 경우 NONE와 동일하다.
+	 -->
+    <engineType value="5" etag="support" coverage="notsupport" deprecated="NONE" />
+    <i18n>
+        <baseDir value="/Users/yongsang/Development/workspace/java/kbiz-labor/src/main/webapp/" />
+        <!--
+        변환에사용할 다국어를서버에 넘겨주기위해사용할 파라미터. 설정이 없는경우locale를 사용한다.
+        다국어판단 우선순위
+        1.url
+        2.defaultLocale 설정(domain 별default locale 참조후 전체default locale참조)
+        -->
+        <defaultLocale value="ko">
+            <!-- <domain name="" locale=""/> -->
+            <domain name="localhost" locale="ko" />
+        </defaultLocale>
+        <localeParam value="locale" />
+        <!--
+        baseDir : 웹스퀘어XML 파일이존재하는 폴더를 지정한다. 설정이 없는경우정상동작하지 않는다.
+        cache   : true | false 변환된파일을 캐싱할지설정한다. 기본값은false  이다.
+        -->
+        <xmlInfo baseDir="/Users/yongsang/Development/workspace/java/kbiz-labor/src/main/webapp" cache="false" />
+    </i18n>
+
+    <adapter>
+        <request>
+            <convertType server="map" client="json" />
+            <chartset value="UTF-8" />
+        </request>
+        <response>
+            <immediateToStream value="true" />
+            <convertType server="map" client="json" />
+            <chartset value="UTF-8" />
+            <qutation value="true" />
+        </response>
+        <xml>
+            <valueNode use="false" />
+        </xml>
+        <extends>
+            <autoConvertServerType value="true">
+                <uri-pattern>
+                    <bean value="bean" />
+                    <map value="map" />
+                </uri-pattern>
+            </autoConvertServerType>
+        </extends>
+    </adapter>
+    <!--
+	<log>
+		<target console="true" description="basic log" dir="/Users/inswave/log/basicwebsquare" filename="websquare" level="WARNING"
+		lineNumber="true" name="websquare" retentionPeriod="10" thread="true"/>
+		<target console="true" description="error log" dir="/Users/inswave/log/errorwebsquare" filename="exception" level="WARNING"
+		lineNumber="true" name="exception" retentionPeriod="10" thread="true"/>
+	</log>
+    -->
+
+</websquare>

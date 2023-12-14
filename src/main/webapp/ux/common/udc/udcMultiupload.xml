@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>UDC</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map"></w2:dataCollection>
+		</xf:model>
+		<script type="text/javascript"><![CDATA[
+        ]]></script>
+        <script type="text/javascript" src="/resources/js/lib/util/jquery.fileDownload.js"></script>
+        <script type="text/javascript" src="/resources/js/lib/util/jquery.blockUI.js"></script>
+	</head>
+	<body>
+		<!--/** WEBSQUARE UDC */
+			{
+			"componentName": "udc_Multiupload",
+			"pluginName": "udc_Multiupload",
+			"company": "Inswave",
+			"developer": "",
+			"category": "basic",
+			"notSupportBrowser": "IE10,IE11,FireFox,Opera,Chrome,Safari",
+			"version": "1.0",
+			"htmlRender": "",
+			"icon": "",
+			"disableIcon": "",
+			"description": "html5를 지원하는 웹스퀘어 멀티 업로드",
+			"width": "600px",
+			"height": "250px",
+			"properties": [
+			{
+			"name": "id",
+			"default": "",
+			"type": "string",
+			"option": "",
+			"necessary": "Y",
+			"hidden": "N",
+			"description": "UDC Multiupload 컴포넌트의 id"
+			},
+			{
+			"name": "accept",
+			"default": "*/*",
+			"type": "combobox",
+			"option": "[*/*, image/*]",
+			"necessary": "N",
+			"hidden": "N",
+			"description": "허용할 파일 확장자로 콤마(,)를 구분자로 한다. (file_extension | media_type ) e.g: .gif, .jpg, .png, .doc"
+			},
+			{
+			"name": "action ",
+			"default": "",
+			"type": "string ",
+			"option": "",
+			"necessary": "N ",
+			"hidden": "N ",
+			"description": "업로드 처리 URL "
+			},
+			{
+			"name": "filter",
+			"default": "*:*.*",
+			"type": "combobox",
+			"option": "[그림파일:*.jpg;*.gif;*.png,*:*.*]",
+			"necessary": "N",
+			"hidden": "Y",
+			"description": "accept 설정으로 변경될 필요가 있음"
+			},
+			{
+			"name": "maxSize",
+			"default": "10",
+			"type": "number",
+			"option": "",
+			"necessary": "N",
+			"hidden": "N",
+			"description": "전송 가능한 파일의 최대 크기(MB)"
+			},
+			{
+			"name": "maxCount",
+			"default": "10",
+			"type": "number",
+			"option": "",
+			"necessary": "N",
+			"hidden": "N",
+			"description": "전송 가능한 파일의 최대 개수"
+			},
+			{
+			"name": "selectCallback",
+			"default": "",
+			"type": "string",
+			"option": "",
+			"necessary": "N",
+			"hidden": "Y",
+			"description": "파일 선택 후 실행될 콜백 함수"
+			},
+			{
+			"name": "subDir",
+			"default": "",
+			"type": "string",
+			"option": "",
+			"necessary": "N",
+			"hidden": "Y",
+			"description": "websquare.xml에 정의된 기본 디렉토리 하위의 디렉토리 노드명 "
+			},
+			{
+			"name": "dragDropUseYn ",
+			"default": "true ",
+			"type": "combobox",
+			"option": " [true, false]",
+			"necessary": "N ",
+			"hidden": "N",
+			"description": "파일 드래그드롭 사용 유무"
+			},
+			{
+			"name": "uploadBtnUseYn",
+			"default": "true",
+			"type": "combobox",
+			"option": "[true,false]",
+			"necessary": "N",
+			"hidden": "N",
+			"description": "전송 버튼 사용 유무"
+			},
+			{
+			"name": "buttonPosition",
+			"default": "TopLeft",
+			"type": "combobox",
+			"option": "[TopLeft,TopRight,BottomLeft,BottomRight]",
+			"necessary": "N",
+			"hidden": "N",
+			"description": "버튼의 위치 "
+			}
+			],
+			"events": [{
+			"name": "onDone(data)",
+			"type": "user",
+			"description": "파일 업로드가 완료되었을 때 발생 "
+			}],
+			"apis": []
+			}
+		-->
+		<xf:group id="" style="" pluginName="udc_Multiupload" >
+			<xf:group id="udc_grp_Button" style="" class="defaultbox">
+				<xf:group id="" style="" class="w5udc_btn left_wrap">
+				    <w2:textbox class="df_tt" id="" label="첨부파일 목록" style="" tagname="h3"></w2:textbox>
+
+		    	<xf:group class="udc_wrap udc_list_count" id="" style="">
+		    		<xf:group class="list_count" id="" style="">
+			    		총
+			    		<w2:span id="udcListCountForCf" label="0" style="" displayFormatter="com.transComma"></w2:span>
+			    		건
+			    	</xf:group>
+		    	</xf:group>
+
+					<xf:input adjustMaxLength="false" id="ibxJobGbCd" style="display:none;width:50px"></xf:input>
+					<xf:input adjustMaxLength="false" id="ibxMenuId" style="display:none;width:50px"></xf:input>
+					<xf:input adjustMaxLength="false" id="ibxAflId" style="display:none;width:50px">
+						<script ev:event="onchange" type="text/javascript"><![CDATA[
+    				    if ( ibxAflId.getValue() != "" ) {
+    				        udc_obj.searchAflList(ibxAflId.getValue());
+    				    }
+					 ]]></script>
+					</xf:input>
+					<xf:input adjustMaxLength="false" id="ibxFileExt" style="display:none;width:200px"></xf:input>
+					<xf:input adjustMaxLength="false" id="ibxFileLimit" style="display:none;width:200px"></xf:input>
+                    <xf:input adjustMaxLength="false" id="ibxFileCert" style="display:none;width:200px"></xf:input>
+                    <xf:input adjustMaxLength="false" id="ibxFilePathCustom" style="display:none;width:200px"></xf:input>
+                    <xf:input adjustMaxLength="false" id="ibxFileSize" style="display:none;width:200px"></xf:input>
+
+				</xf:group>
+				<xf:group id="" style="" class="w5udc_btn right_wrap">
+					<xf:group id="btnAdd" style="" class="">
+						<w2:anchor id="" style="" class="btn_gcm" outerDiv="false">
+							<xf:label><![CDATA[찾아보기]]></xf:label>
+						</w2:anchor>
+						<w2:multiupload id="udc_mpd_Attach" maxcount="" maxsize=""
+							style="position:absolute;width:80px;height:27px;cursor:pointer;top:0px;z-index:10;left:10px;" action="" hoverImage=""
+							defaultImage="" uploadButton="" filter="" wmode="false" mode="html5_transparent" selectCallback="" sizeUnit="">
+
+							<script ev:event="ondone" type="text/javascript"><![CDATA[
+								
+								var pId = $p.getFrame().id.substr(0, $p.getFrame().id.length -7);
+                                $("#"+pId).unblock();
+
+							//	console.log("====186  udc ondone === " , arguments[0]);
+
+								var strFail = "";
+							    //파일이 저장되고 저장된 결과를 넘겨줍니다.
+							 //   console.log("190line" , JSON.stringify(arguments[0],null,4));
+						
+							    for (var j = 0; j < arguments[0].length; j++){
+							        if ( arguments[0][j].deniedCode == "" ){
+							            //업로드 성공한 경우.
+							        }else{
+							            //101: 허용하지 않는 확장자, 102: 허용범위 밖의 파일 사이즈, 999: 기타 서버 오류
+							            strFail = strFail + arguments[0][j].deniedFile + ','+ arguments[0][j].deniedCode;
+							            //업로드 실패한 경우.
+							        }
+							    }
+							    
+							    if ( strFail != ""){
+							        strFail = strFail + "/n" 
+							                + "101: 허용하지 않는 확장자, 102: 허용범위 밖의 파일 사이즈, 999: 기타 서버 오류";
+//							        alert("파일 업로드에 실패하였습니다. "+ strFail );
+									com.showMessage("CFW0010", "파일 업로드에 실패하였습니다. "+strFail);  //$1
+
+							        if ( ibxAflId.getValue() != "" ){
+							            udc_obj.searchAflList(ibxAflId.getValue());
+							        }
+							        
+							    }else{
+                                
+							        // WAS 업로드 결과 파일명(중복시 변경된)으로 첨부파일 테이블 데이타 INSERT.
+								    var JSONParam = ({"aflId"      : ibxAflId.getValue() , 
+								                      "jobGbCd"    : ibxJobGbCd.getValue() , 
+                                                      "menuId"     : ibxMenuId.getValue(),
+                                                      "fileCert"   : ibxFileCert.getValue(),
+                                                      "filePathCustom" : ibxFilePathCustom.getValue()
+                                                    });
+								    var JSON_LIST = [];
+								    for (var i = 0; i < arguments[0].length; i++){
+								        JSON_LIST.push( {"chk" : "1" , 
+								                         "jobGbCd"    : ibxJobGbCd.getValue() , 
+								                         "filePathNm" : "" , 
+								                         "aflNm"      : arguments[0][i].localFile ,
+                                                         "aflNmTmp"   : arguments[0][i].file ,
+								                         "fileSize"   : arguments[0][i].size,
+								                         "menuId"     : ibxMenuId.getValue()} );
+								    }
+							        var rtnaflId = com.updateAflList(JSONParam, JSON_LIST);
+
+							        ibxAflId.setValue(rtnaflId);
+							        udc_obj.searchAflList(rtnaflId);
+							    }								
+			
+						 	]]></script>
+						</w2:multiupload>
+					</xf:group>
+					<w2:anchor id="btnDel" style="" class="btn_gcm" outerDiv="false">
+						<xf:label><![CDATA[삭제]]></xf:label>
+						<script ev:event="onclick" type="text/javascript"><![CDATA[
+						
+						   //1. 그리드에서 선택한 index를 구한다.
+							var chkIdxs = udc_grd.getCheckedIndex( "chk" );
+							if (chkIdxs.length == 0) {
+								com.showMessage("CFW0010", "삭제 대상을 선택 하세요.");  //$1
+//								alert('삭제 대상을 선택 하세요');
+								return;
+							}							
+                            
+							//2. 찾아보기로 올린 파일을 삭제합니다.                            
+						    var delIdxs = [];
+							for(var i = chkIdxs.length; i > 0; i--) {
+					            //2.1 업로드전 삭제대상 찾기
+							    if ( udc_grd._dataList.getDataRow(chkIdxs[i-1]).aflId == ""){                                                                    
+							        delIdxs.push(chkIdxs[i-1]);
+							        //2.2. 파일업로드 객체에 올라온 파일을 정리한다.
+							        udc_mpd_Attach.removeFile( udc_grd._dataList.getDataRow(chkIdxs[i-1]).aflNm );
+							    }
+							}
+					
+							//2.3. 그리드에 보여지는 데이터리스트를 정리한다.
+							udc_grd._dataList.removeRows( delIdxs );
+							
+							var fileArr = udc_mpd_Attach.fileArray;
+							udcListCountForCf.setValue(fileArr.length);
+							
+							
+					        //3. 저장소 파일 삭제
+							//scwin.fnDelFile();
+							var chkDelIdxs = udc_grd.getCheckedIndex( "chk" );
+							if ( chkDelIdxs.length == 0) {
+								return;
+							}
+                            
+                            //파일등록자와 ID가 다른지 체크 
+                            /*
+                            for(var i=chkDelIdxs.length; i>0; i--) {
+                                if (udc_grd._dataList.getDataRow(chkDelIdxs[i-1]).fnlModprEmpno != sessionStorage.userId){     
+                                    com.showMessage("CFW0010", "다른 등록자가 올린 파일은 삭제할 수 없습니다.");  //$1                           
+                                    return false;
+                                } 
+                            } 
+                            */                                                      
+
+						    var JSONParam = ({"aflId"      : ibxAflId.getValue() , 
+						                      "jobGbCd"    : ibxJobGbCd.getValue() , 
+						                      "menuId"     : ibxMenuId.getValue()});
+							var JSON_LIST = udc_grd._dataList.getMatchedJSON("chk","1");
+						    
+					        var rtnSuccYn = com.deleteAflList(JSONParam, JSON_LIST);
+					        
+					        if ( rtnSuccYn == "Y") {
+						        udc_obj.searchAflList(ibxAflId.getValue());
+					        }
+
+					 ]]></script>
+					</w2:anchor>
+					<w2:anchor id="btnUpload" style="" class="btn_gcm" outerDiv="false">
+						<xf:label><![CDATA[업로드]]></xf:label>
+						<script ev:event="onclick" type="text/javascript"><![CDATA[
+                            var resultLogChk = com.logChk();
+                            if( resultLogChk == "false" ) {
+								com.showMessage("CFW0010", "로그인 정보가 없습니다.");  //$1
+                                return;
+                            }
+                            
+                            if(udc_mpd_Attach.fileArray.length == 0){
+                            	com.showMessage("CFW0010", "업로드할 파일이 없습니다.");  //$1
+                                return;
+                            }
+                            
+                            if(udc_mpd_Attach.fileArray.length  > 10){
+                            	com.showMessage("CFW0010", "첨부파일은 동시에 10건까지 첨부 가능합니다.");  //$1
+                                return;
+                            }
+                            
+                            if( udc_mpd_Attach.fileArray.length > 0 ) {
+                                var pId = $p.getFrame().id.substr(0, $p.getFrame().id.length -7);
+                                $("#"+pId).block({
+                                    css: {border:'none',padding:'15px',backgroundColor:'#fff','-webkit-border-radius':'10px','-moz-border-radius':'10px',width:'300px',color:'#000',},
+                                    overlayCSS:{backgroundColor:'#000',opacity:0.3},
+                                    message:'Uploading...<br /><img src="/resources/images/layout/progressingbar.gif" alt="Uploading"></div>'
+                                });
+							    udc_mpd_Attach.startUpload();
+                            }
+					 ]]></script>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group id='udc_grp_DropBox' style="" >
+				<w2:gridView ignoreCellClick="false"  ignoreToggleOnDisabled="false" autoFit="allColumn" class="autoHeight"
+                    style="height:350px;"
+					fixedColumnWithHidden="true" scrollByColumnAdaptive="false" dataList=""
+					id="udc_grd" readOnly="true" scrollByColumn="false" useShiftKey="true" columnMove="true"
+					noResultMessageClass="file_icon" noResultMessage="마우스로 파일을 선택 후 끌어 놓으세요"
+					noResultMessageStyle="display:block;position:absolute;left:calc(50% - 135px);width:270px;top:50%;height:22px;padding-top:4px;padding-left:25px;" focusMode="row">
+					<w2:header id="header1" style="">
+						<w2:row id="row1" style="">
+							<w2:column id="column1" blockSelect="false" inputType="checkbox" width="70" value="chk" displayMode="label"></w2:column>
+							<w2:column id="column9" blockSelect="false" width="400" inputType="text" value="파일명" displayMode="label"></w2:column>
+							<w2:column id="column5" blockSelect="false" hidden="false" width="100" inputType="text" value="용량(byte)" displayMode="label"></w2:column>
+							<w2:column id="column11" blockSelect="false" hidden="false" width="100" inputType="text" value="등록일자" displayMode="label"></w2:column>
+							<w2:column removeBorderStyle="false" width="70" inputType="text" id="column13" blockSelect="false" displayMode="label" value="등록자"></w2:column>
+							<w2:column removeBorderStyle="false" width="70" inputType="text" id="column14" value="aflId" blockSelect="false" displayMode="label" hidden="true"></w2:column>
+							<w2:column removeBorderStyle="false" width="70" inputType="text" id="column15" value="aflSeq" blockSelect="false" displayMode="label" hidden="true"></w2:column>
+							<w2:column removeBorderStyle="false" width="70" inputType="text" id="column16" value="aflp" blockSelect="false" displayMode="label" hidden="true"></w2:column>
+						</w2:row>
+					</w2:header>
+					<w2:gBody id="gBody1" style="">
+						<w2:row id="row2" style="">
+							<w2:column id="chk" blockSelect="false" readOnly="false" style="height:20px" inputType="checkbox" width="40" displayMode="label"></w2:column>
+							<w2:column id="aflNm" blockSelect="false" style="height:20px;" width="350" inputType="text" displayMode="label" textAlign="left"></w2:column>
+							<w2:column id="fileSize" blockSelect="false" style="height:20px" displayFormat="###,###,###" width="80" inputType="text" displayMode="label" textAlign="center"></w2:column>
+							<w2:column id="fnlModiDtmStr" blockSelect="false" style="height:20px" width="100" inputType="text" displayMode="label" textAlign="center"></w2:column>
+							<w2:column removeBorderStyle="false" width="80" inputType="text" id="fnlModprEmpno" blockSelect="false" displayMode="label" textAlign="center" style="height:20px"></w2:column>
+							<w2:column removeBorderStyle="false" width="70" inputType="text" id="column17" blockSelect="false" displayMode="label"></w2:column>
+							<w2:column removeBorderStyle="false" width="70" inputType="text" id="column18" blockSelect="false" displayMode="label"></w2:column>
+							<w2:column removeBorderStyle="false" width="70" inputType="text" id="column19" blockSelect="false" displayMode="label"></w2:column>
+						</w2:row>
+					</w2:gBody>
+					<script ev:event="oncelldblclick(row,col)" type="text/javascript"><![CDATA[
+                        // 파일 비동기 다운로드 처리
+                        var rowData = udc_grd.getRowJSON(row);
+                        if( rowData.fnlModiDtmStr != "" ) {
+                            var href = "/cf/CF00350000P/downloadMAV?aflp="+rowData.aflp;
+                            $.fileDownload(href);
+                        }
+                        return;
+					 ]]></script>
+				</w2:gridView>
+			</xf:group>
+			<script ev:event="oncreated(options)" type="text/javascript"><![CDATA[
+            
+				/**
+				 *	Constant
+				 */
+				this.UDC_DLT_MPD_ID = options.id+"_dlt_UdcMultiupload";	// UDC 파일 관련 DataList id.
+				this.MAX_BYTE_SIZE = parseInt(options.maxSize)*1024*1024; // 최대 전송 크기 (Byte).
+				this.SUPPORT_HTML5;
+				this.SHOW_LOG = true;
+
+				/**
+				 *	Property 
+				 */
+				// 현재까지 속성은 static으로 구현하여야 한다. 스타일과 값을 제외하고 속성을 동적으로 바꿀 수 있는 함수가 거의 없다. udc_mpd_Attach.setAttribute () ? 
+				// 또는 기본 속성 설정 후, 초기화 시키는 함수를 제공하도록 한다. udc_mpd_Attach.initialize() ? 
+				 
+				udc_mpd_Attach.setAttribute("action", options.action); // hidden API ??  
+				udc_mpd_Attach.setAttribute("maxcount" , options.maxCount); 
+				udc_mpd_Attach.setAttribute("subDir" , options.subDir); 
+				udc_mpd_Attach.setAttribute("uploadButton", !WebSquare.util.getBoolean( options.uploadBtnUseYn ));
+			 	udc_mpd_Attach.setAttribute("selectCallback", options.id+".fileUploadReady");
+
+				// 사용자 함수 - 조회 
+				this.searchAflList = function(argAflId){
+					
+					var rtnArr = com.udcAflList(argAflId) || [];
+  				    // 초기화
+					$w.data.remove( udc_obj.UDC_DLT_MPD_ID );
+					var dcStr = '<w2:dataList id="'+ udc_obj.UDC_DLT_MPD_ID +'" baseNode="list" saveRemovedData="true" repeatNode="map">' + 
+						'<w2:columnInfo>' +
+							'<w2:column id="chk" name="chk" dataType="text"></w2:column>' + 
+							'<w2:column id="aflNm" name="aflNm" dataType="text"></w2:column>' + 
+							'<w2:column id="fileSize" name="fileSize" displayFormat="###,###,###" dataType="text"></w2:column>' +
+							'<w2:column id="fnlModiDtmStr" name="fnlModiDtmStr" dataType="text"></w2:column>' + 
+							'<w2:column id="fnlModprEmpno" name="fnlModiprEmpno" dataType="text"></w2:column>' + 
+							'<w2:column id="aflId" name="aflId" dataType="text"></w2:column>' + 
+							'<w2:column id="aflSeq" name="aflSeq" dataType="text"></w2:column>' + 
+							'<w2:column id="aflp" name="aflp" dataType="text"></w2:column>' + 
+							'<w2:column id="jobGbCd" name="jobGbCd" dataType="text"></w2:column>' + 
+							'<w2:column id="filePathNm" name="filePathNm" dataType="text"></w2:column>' + 
+							'<w2:column id="saveFileNm" name="saveFileNm" dataType="text"></w2:column>' + 
+							'<w2:column id="scssYn" name="scssYn" dataType="text"></w2:column>' + 
+							'<w2:column id="mdmVal" name="mdmVal" dataType="text"></w2:column>' + 
+							'<w2:column id="menuId" name="menuId" dataType="text"></w2:column>' + 
+						'</w2:columnInfo>' + 
+						'</w2:dataList>' ;
+					$w.data.create( dcStr );
+					
+					// 그리드와 바인딩될 dataList의 경우, dataList가 내부적으로 변경되어 그대로 사용할 수 없다.  
+					udc_grd.options.dataList = udc_obj.UDC_DLT_MPD_ID; 
+					udc_grd.setDataList();	// hidden API ?? 
+
+					udcListCountForCf.setValue(rtnArr.length);
+					// 모두 삭제한 경우 AflId를 넘겨주지 않도록 한다.
+					if (rtnArr.length == 0 ){
+					    ibxAflId.setValue("");
+					}
+					window[udc_obj.UDC_DLT_MPD_ID].setJSON( rtnArr ); // ?? window[] ??
+				};
+
+				/**
+				 *	API 
+				 */
+				// HTML5 지원 여부 검사 함수. 
+				this.isSupportHTML5Upload = function(){
+					return 'multiple' in document.createElement('input');
+				};
+				// 최초 로딩시 호출 함수
+				this.initialize = function() {
+
+					// 1. html5 지원 체크 후, 기본 속성 설정.
+					this.SUPPORT_HTML5 = this.isSupportHTML5Upload();				
+					if (this.SUPPORT_HTML5){
+						// input type=file 인 경우, accept 속성으로 (file_extension, media_type) 을 지정한다.  
+						$("#"+options.id+"_udc_mpd_Attach_file_input").attr("accept" , options.accept);
+                        $("#"+options.id+"_udc_mpd_Attach_file_input").css({"position":"absolute","cursor":"pointer"}); // 찾아보기 버튼 위치수정
+					} else {
+						if(options.accept == "*/*" ){
+							udc_mpd_Attach.setAttribute("filter", "*:*.*");
+						}
+						else if (options.accept == "image/*" ){
+							udc_mpd_Attach.setAttribute("filter", "이미지:*.jpg;*.jpeg;*.gif;*.png;*.bmp;");
+						}
+						else {
+							options.accept = options.accept.replace(/(\s*)/g, "");
+							var filterStr = options.accept.replace(/(\.)(\w+)(,?)/gi, "*$1$2;");
+							udc_mpd_Attach.setAttribute("filter", "파일:" + filterStr);
+						}
+					}
+					udc_mpd_Attach.initialize(); // hidden API ?? 
+
+					//2. dataList 생성
+					$w.data.remove( udc_obj.UDC_DLT_MPD_ID );
+					var dcStr = '<w2:dataList id="'+ udc_obj.UDC_DLT_MPD_ID +'" baseNode="list" saveRemovedData="true" repeatNode="map">' + 
+						'<w2:columnInfo>' +
+							'<w2:column id="chk" name="chk" dataType="text">1</w2:column>' + 
+							'<w2:column id="aflNm" name="aflNm" dataType="text">2</w2:column>' + 
+							'<w2:column id="fileSize" name="fileSize" displayFormat="###,###,###" dataType="text">3</w2:column>' +
+							'<w2:column id="fnlModiDtmStr" name="fnlModiDtmStr" dataType="text">4</w2:column>' + 
+							'<w2:column id="fnlModprEmpno" name="fnlModiprEmpno" dataType="text">5</w2:column>' + 
+							'<w2:column id="aflId" name="aflId" dataType="text"></w2:column>' + 
+							'<w2:column id="aflSeq" name="aflSeq" dataType="text"></w2:column>' + 
+							'<w2:column id="aflp" name="aflp" dataType="text"></w2:column>' + 
+							'<w2:column id="jobGbCd" name="jobGbCd" dataType="text"></w2:column>' + 
+							'<w2:column id="filePathNm" name="filePathNm" dataType="text"></w2:column>' + 
+							'<w2:column id="saveFileNm" name="saveFileNm" dataType="text"></w2:column>' + 
+							'<w2:column id="scssYn" name="scssYn" dataType="text"></w2:column>' + 
+							'<w2:column id="mdmVal" name="mdmVal" dataType="text"></w2:column>' + 
+							'<w2:column id="menuId" name="menuId" dataType="text"></w2:column>' + 
+						'</w2:columnInfo>' + 
+						'</w2:dataList>' ;
+					$w.data.create( dcStr );
+					
+					// 그리드와 바인딩될 dataList의 경우, dataList가 내부적으로 변경되어 그대로 사용할 수 없다.  
+					udc_grd.options.dataList = udc_obj.UDC_DLT_MPD_ID;
+					udc_grd.setDataList();
+					
+					//3. 버튼 위치 설정.
+					options.buttonPosition = options.buttonPosition.trim();
+					
+					if ( options.buttonPosition == "TopRight"){
+						$("#"+options.id+"_udc_grp_Button").after($("#"+options.id+"_udc_grp_Button"));
+						$("#"+options.id+"_udc_grp_Button .w5udc_btn").css("float", "right");
+					}
+					else if ( options.buttonPosition == "BottomLeft"){
+						$("#"+options.id+"_udc_grp_DropBox").after($("#"+options.id+"_udc_grp_Button"));
+						$("#"+options.id+"_udc_grp_Button .w5udc_btn").css("float", "left");
+					}
+					else if ( options.buttonPosition == "BottomRight"){
+						$("#"+options.id+"_udc_grp_DropBox").after($("#"+options.id+"_udc_grp_Button"));
+						$("#"+options.id+"_udc_grp_Button .w5udc_btn").css("float", "right");
+					}
+					else {
+						$("#"+options.id+"_udc_grp_Button").after($("#"+options.id+"_udc_grp_Button"));
+						$("#"+options.id+"_udc_grp_Button .w5udc_btn").css("float", "left");
+					}
+					
+					// 3. 드래그드랍 핸들러.
+					if (WebSquare.util.getBoolean(options.dragDropUseYn)){
+						var dropbox = document.getElementById(options.id+"_udc_grp_DropBox");
+						WebSquare.event.addListener( dropbox , "ondragenter" , function(e){WebSquare.event.stopEvent(e);}, false); // hidden API ?? 
+		        		WebSquare.event.addListener( dropbox , "ondragend" , function(e){WebSquare.event.stopEvent(e);}, false);
+		        		WebSquare.event.addListener( dropbox , "ondragover" , function(e){WebSquare.event.stopEvent(e);}, false);
+		        		WebSquare.event.addListener( dropbox , "ondrop" , this.doHandleDrop, false);
+					}
+				};
+				
+
+				// HTML5 드랍 핸들 함수.
+				this.doHandleDrop = function(e){
+					try{
+						WebSquare.event.stopEvent(e);
+						var fileArr = e.dataTransfer.files;
+						if(ibxFileLimit.getValue() == ""){
+							ibxFileLimit.setValue("10");
+						}
+						
+						var fileLimit = ibxFileLimit.getValue();
+						
+					    if(fileLimit > 0 && fileArr.length > fileLimit) {
+							com.showMessage("CFW0010", "첨부파일은 동시에 "+fileLimit+"건까지 첨부 가능합니다.");  //$1
+//                            alert("첨부파일은 "+fileLimit+"건만 첨부가능합니다.");
+                            return;
+                        }
+
+	    				for(var idx = 0 ; idx < fileArr.length ; idx++){
+							if( $.inArray(fileArr[idx].name, udc_mpd_Attach.fileNameArr) == -1){ 
+								// 웹스퀘어 멀티업로드에서 사용.
+								udc_mpd_Attach.fileArray.push( fileArr[idx] );
+								udc_mpd_Attach.fileNameArr.push( fileArr[idx].name );
+								udc_mpd_Attach._inx++;
+							} else {
+								com.showMessage("CFW0010", "파일이 이미 있습니다. ( "+fileArr[idx].name+" )");  //$1
+//								alert("파일이 이미 있습니다. 12( "+fileArr[idx].name+" )");
+								return;
+							}
+						}
+						
+						if ( !udc_obj.chkfileExtension( fileArr ) ) {
+						    return;
+						}
+						
+						if (this.SHOW_LOG) console.log(udc_mpd_Attach.fileArray);
+						udc_obj.fileUploadReady();
+	    			} catch ( e ){
+						if (this.SHOW_LOG) WebSquare.exception.printStackTrace(e, null, this);
+					}
+				};
+				// 파일 확장자 체크
+				this.chkfileExtension = function( fileArr ){
+    				var msgStr   = "";
+    				var cmprStr1 = ibxFileExt.getValue().toLowerCase();
+    				var cmprStr2 = "";
+    				var imgFileSize ="1048576";
+    				var maxFileSize ="51200000";
+    				
+    				if ( cmprStr1 == "*.*" ){
+    				    // 모든파일인 경우 PASS
+    				}else{
+                    
+	    				for(var idx = 0 ; idx < fileArr.length ; idx++){
+                        
+							//확장자 체크
+							var fileExtension  = "";
+							fileExtension  = fileArr[idx].name.split(".");
+							if ( fileExtension.length < 2 ) {
+							    msgStr = "확장자가 없는 경우 업로드 불가합니다.";
+							    udc_mpd_Attach.removeFile(fileArr[idx].name);
+							}else{
+								cmprStr2 = fileExtension[fileExtension.length-1].toLowerCase();
+								if ( cmprStr1.indexOf( cmprStr2 ) < 0 ) {
+								    msgStr = "업로드 불가한 확장자입니다. ( " + fileExtension[fileExtension.length-1] + " )";
+								    udc_mpd_Attach.removeFile(fileArr[idx].name);
+								}
+							}
+							
+							if(ibxFileSize.getValue() == ""){
+								ibxFileSize.setValue(Number(maxFileSize));
+								// ibxFileSize.setValue(51200000);
+							}	
+
+                            if( ibxFileSize.getValue() != ""  ) {
+                            	
+                            	//이미지파일
+                            	if("jpg,jpeg,png,gif".indexOf(cmprStr2) > -1){
+									// ibxFileSize.setValue(1048576);
+									
+									// if( fileArr[idx].size >= Number(ibxFileSize.getValue())) {
+									if( fileArr[idx].size >= Number(imgFileSize)) {
+                                    	//msgStr = "이미지 파일 1개당 용량이 (1 MB)보다 클 경우 업로드가 불가합니다.";
+                                    	//udc_mpd_Attach.removeFile(fileArr[idx].name);
+                                	}	
+                            	}
+                            	// else if( fileArr[idx].size >= Number(ibxFileSize.getValue()) && ibxFileSize.getValue() == "1048576" &&  ibxFileExt.getValue() == "jpg,jpeg,png,gif"  ) {
+                            	else if( fileArr[idx].size >= Number(imgFileSize) && ibxFileSize.getValue() == imgFileSize &&  ibxFileExt.getValue() == "jpg,jpeg,png,gif"  ) {
+                                    //msgStr = "이미지 파일 1개당 용량이 (1 MB)보다 클 경우 업로드가 불가합니다.";
+                                    //udc_mpd_Attach.removeFile(fileArr[idx].name);
+                                    //udc_mpd_Attach.removeAllFiles();
+                                }
+                             //   else if( fileArr[idx].size >= Number(ibxFileSize.getValue()) ) {
+                                else if( fileArr[idx].size >= Number(maxFileSize) ) {
+                                    //msgStr = "파일 1개당 용량이 (50 MB)보다 클 경우 업로드가 불가합니다.";
+                                    //udc_mpd_Attach.removeFile(fileArr[idx].name);
+                                    //udc_mpd_Attach.removeAllFiles();
+                                }
+                                
+                                /* 
+                                 * 파일 가로세로 사이즈로 업로드 제한 처리 부분
+                                try {
+                                    var file = fileArr[idx];
+                                    var _URL = window.URL || window.webkitURL;
+                                    var img = new Image();
+                                    img.src = _URL.createObjectURL(file);
+                                    img.onload = function() {
+                                        alert(img.width+"|"+img.height);
+                                    };
+                                } catch(e) {}
+                                */
+                            }
+                            
+	    				}
+
+	    				if ( msgStr != "" ){
+							com.showMessage("CFW0010", msgStr);  //$1
+	    				    //return false;
+	    				}
+    				}
+    				
+				    return true;
+				};
+				
+				// 파일 선택시 콜백 함수.
+				this.fileUploadReady = function(){
+					var fileArr = udc_mpd_Attach.fileArray;
+					if ( !udc_obj.chkfileExtension( fileArr ) ) {
+						return;
+					}
+					var obj = udc_obj.getMultiupload(); // 내부에서 this를 사용하면 안된다. this -> udc_Multi_udc_mpd_Attach 일 때도 있다.
+					var fileInfoArr = obj.getFileInfos();
+                    var rtnArr = udc_obj.setData(fileInfoArr);
+					udc_obj.setDisplayInGrid(rtnArr);
+				};
+				// 멀티업로드 객체 반환 함수.
+				this.getMultiupload = function(){
+					return udc_mpd_Attach;
+				};
+				// 그리드 객체 반환 함수.
+				this.getGrid = function(){
+					return udc_grd;
+				};
+				// 변환
+				this.setData = function(_fileInfoArr){
+				    var rtnArr = [];
+				    
+				    // 기존 첨부파일 존재하는 경우. Append를 위해
+				    //rtnArr = udc_grd._dataList.getAllJSON();
+				    // _fileInfoArr 업로드전 파일들이 모두 들어있슴.
+				    // 1회 이상 드래그앤드랍 할 경우 중복 방지를 위해 서버 업로드건만 가져온 후 Append.
+				    rtnArr = udc_grd._dataList.getMatchedJSON("scssYn","Y");
+				    for (var i = 0; i < _fileInfoArr.length; i++){
+				        rtnArr.push( {"chk" : "1" , 
+				                      "jobGbCd"    : ibxJobGbCd.getValue() , 
+				                      "filePathNm" : "" , 
+				                      "aflNm"      : _fileInfoArr[i].name , 
+				                      "fileSize"   : _fileInfoArr[i].size,
+				                      "menuId"     : ibxMenuId.getValue()
+				                      } );
+				    }
+                    return rtnArr;
+				}
+				// 그리드에 선택된 파일 정보 표현 함수.
+				this.setDisplayInGrid = function(fileInfoArr){
+				
+					// 바인딩된 DataList 없는 경우 생성.
+					if ( udc_grd.getDataList().toString() == "" ){
+						$w.data.remove( udc_obj.UDC_DLT_MPD_ID );
+						var dcStr = '<w2:dataList id="'+ udc_obj.UDC_DLT_MPD_ID +'" baseNode="list" saveRemovedData="true" repeatNode="map">' + 
+							'<w2:columnInfo>' +
+								'<w2:column id="chk" name="chk" dataType="text">1</w2:column>' + 
+								'<w2:column id="aflNm" name="aflNm" dataType="text">2</w2:column>' + 
+								'<w2:column id="fileSize" name="fileSize" displayFormat="###,###,###" dataType="text">3</w2:column>' +
+								'<w2:column id="fnlModiDtmStr" name="fnlModiDtmStr" dataType="text">4</w2:column>' + 
+								'<w2:column id="fnlModprEmpno" name="fnlModiprEmpno" dataType="text">5</w2:column>' + 
+								'<w2:column id="aflId" name="aflId" dataType="text"></w2:column>' + 
+								'<w2:column id="aflSeq" name="aflSeq" dataType="text"></w2:column>' + 
+								'<w2:column id="aflp" name="aflp" dataType="text"></w2:column>' + 
+								'<w2:column id="jobGbCd" name="jobGbCd" dataType="text"></w2:column>' + 
+								'<w2:column id="filePathNm" name="filePathNm" dataType="text"></w2:column>' + 
+								'<w2:column id="saveFileNm" name="saveFileNm" dataType="text"></w2:column>' + 
+								'<w2:column id="scssYn" name="scssYn" dataType="text"></w2:column>' + 
+								'<w2:column id="mdmVal" name="mdmVal" dataType="text"></w2:column>' + 
+								'<w2:column id="menuId" name="menuId" dataType="text"></w2:column>' + 
+							'</w2:columnInfo>' + 
+							'</w2:dataList>' ;
+						$w.data.create( dcStr );
+						
+						// 그리드와 바인딩될 dataList의 경우, dataList가 내부적으로 변경되어 그대로 사용할 수 없다.  
+						udc_grd.options.dataList = udc_obj.UDC_DLT_MPD_ID; 
+						udc_grd.setDataList();	// hidden API ?? 
+					}
+					
+					var fileCnt = 0;
+					$.each(fileInfoArr,function(index,item){
+						if(item.aflp == undefined){
+							fileCnt++;
+						}
+						if(fileCnt > 10){
+							udc_mpd_Attach.fileArray.pop();
+							udc_mpd_Attach.fileNameArr.pop();
+							udc_mpd_Attach._inx--;
+						}
+					});
+					
+					var fileLimit = ibxFileLimit.getValue();
+					
+                    if(fileCnt > 0 && fileLimit > 0 && fileCnt > fileLimit) {
+						com.showMessage("CFW0010", "해당 파일업로드는 동시에 "+fileLimit+"건까지 가능합니다.");  //$1
+                        return;
+                    }
+                    
+                    udcListCountForCf.setValue(fileInfoArr.length);
+					window[udc_obj.UDC_DLT_MPD_ID].setJSON( fileInfoArr ); // ?? window[] ??
+				};
+				
+				/**
+				 *	initialize
+				 */
+				this.initialize();				
+				
+
+			]]></script>
+
+		</xf:group>
+	</body>
+</html>

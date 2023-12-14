@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsTcmSiteMngctChgMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="exeYy" name="실행_년도" dataType="text"></w2:key>
+						<w2:key id="chgDgr" name="변경_차수" dataType="text"></w2:key>
+						<w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+						<w2:key id="dirmgExctAproCd" name="직영집행승인코드[CM004013]" dataType="text"></w2:key>
+						<w2:key id="dirmgExctAproCdNm" name="직영집행승인코드명" dataType="text"></w2:key>
+						<w2:key id="aprvOpinCn" name="결재_의견_내용" dataType="text"></w2:key>
+						<w2:key id="aflId" name="첨부파일ID" dataType="text"></w2:key>
+						<w2:key id="pbsvTeamAprvNo" name="공무_팀_결재번호" dataType="text"></w2:key>
+						<w2:key id="pbsvTeamAprvOpinCn" name="공무_팀_결재_의견_내용" dataType="text"></w2:key>
+						<w2:key id="pbsvTeamAflId" name="공무_팀_첨부파일ID" dataType="text"></w2:key>
+						<w2:key id="pbsvTeamRtnprEmpno" name="공무_팀_반송자_사번" dataType="text"></w2:key>
+						<w2:key id="ctrdAllBgtAmt" name="통제성_전체_예산_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdLtyrPfmcAmt" name="통제성_작년_실적_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdBfQtrBgtAmt" name="통제성_이전_분기_예산_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdBfQtrPfmcAmt" name="통제성_이전_분기_실적_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdThfqCnsltBfBgtAmt" name="통제성_금회_품의_이전_예산_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdThfqVrtnAmt" name="통제성_금회_증감_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdChgbfAmt" name="통제성_변경전_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdChgafAmt" name="통제성_변경후_금액" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM15151025P.xml
+ * Program Name : 현장관리비예산승인 반송
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+        DataCollection description
+
+        dsTcmSiteMngctChgMap: 현장_관리비_변경 정보
+     ************************************************************************************/
+
+	 /************************************************************************************
+	 	결재상태
+
+		CM00401301	[미요청]		현장_결재상신
+		CM00401302	[요청]			현장_결재승인, 공무팀_기안취소
+		CM00401303	[공무팀결재중]	공무팀_결재상신
+		CM00401304	[완료]			공무팀_결재승인
+		CM00401305	[공무팀_반송]
+		CM00401306	[공무팀_부결]
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+		//파리미터
+        dsTcmSiteMngctChgMap.set( "siteCd" , JSON.parse($p.getPopupParam()).data.paramKeySiteCd );//현장코드
+        dsTcmSiteMngctChgMap.set( "exeYy" , JSON.parse($p.getPopupParam()).data.paramKeyExeYy );//실행년도
+        dsTcmSiteMngctChgMap.set( "chgDgr" , JSON.parse($p.getPopupParam()).data.paramKeyChgDgr );//변경차수
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+        com.popup_close(false);
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//취소
+	scwin.btnCancel_onclick = function() {
+		$p.closePopup($p.getPopupId());
+	};
+
+	//확인
+	scwin.btnConfirm_onclick = function() {
+		if(txaPbsvTeamAprvOpinCn.getValue() == ""){
+			com.showMessage("SAA0043", "의견");//$1은(는) 필수입력사항입니다.
+			txaPbsvTeamAprvOpinCn.focus();
+			return;
+		}
+		if (confirm("반송처리를 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm1515/CM15151025P/updatBackAppv", {
+	            method : "POST",
+	            requestData : dsTcmSiteMngctChgMap.getJSON(),
+	            callback : function(result, e){
+	            	com.popup_close("");
+	            },
+	            errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+	]]></script>
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+
+			<xf:group style="" id="" class="defaultbox">
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary></w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:96px;" tagname="col"></xf:group>
+					<xf:group style="width: auto;" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th req" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="의견" style="" class=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<xf:textarea id="txaPbsvTeamAprvOpinCn" style="height: 200px;" ref="data:dsTcmSiteMngctChgMap.pbsvTeamAprvOpinCn"></xf:textarea>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group class="bottombox" id="grpBottomBox" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancel_onclick">
+					<xf:label><![CDATA[취소]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

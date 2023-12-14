@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataList baseNode="list" id="dsTcfDeptList" repeatNode="map" saveRemovedData="true" style="">
+            	<w2:columnInfo>
+            		<w2:column dataType="text" id="deptCd" name="부서코드"></w2:column>
+            		<w2:column dataType="text" id="deptNm" name="부서명"></w2:column>
+            		<w2:column dataType="text" id="upperDeptCd" name="상위부서코드"></w2:column>
+            		<w2:column id="upperDeptCdNm" name="상위부서코드명" dataType="text"></w2:column>
+            		<w2:column dataType="text" id="dpldrEmpno" name="부서장_사번"></w2:column>
+            		<w2:column id="dpldrNm" name="부서장_명" dataType="text"></w2:column>
+            		<w2:column dataType="text" id="deptLv" name="부서레벨"></w2:column>
+            		<w2:column dataType="text" id="useYn" name="사용여부"></w2:column>
+            		<w2:column id="hdofSiteGbCd" name="본사현장구분코드" dataType="text"></w2:column>
+            		<w2:column id="lv1DeptCd" name="레벨1_부서코드" dataType="text"></w2:column>
+            		<w2:column id="lv1DeptNm" name="레벨1_부서_명" dataType="text"></w2:column>
+            		<w2:column id="lv2DeptCd" name="레벨2_부서코드" dataType="text"></w2:column>
+            		<w2:column id="lv2DeptNm" name="레벨2_부서_명" dataType="text"></w2:column>
+            		<w2:column id="lv3DeptCd" name="레벨3_부서코드" dataType="text"></w2:column>
+            		<w2:column id="lv3DeptNm" name="레벨3_부서_명" dataType="text"></w2:column>
+            		<w2:column id="lv4DeptCd" name="레벨4_부서코드" dataType="text"></w2:column>
+            		<w2:column id="lv4DeptNm" name="레벨4_부서_명" dataType="text"></w2:column>
+            		<w2:column id="lv5DeptCd" name="레벨5_부서코드" dataType="text"></w2:column>
+            		<w2:column id="lv5DeptNm" name="레벨5_부서_명" dataType="text"></w2:column>
+            		<w2:column id="lv6DeptCd" name="레벨6_부서코드" dataType="text"></w2:column>
+            		<w2:column id="lv6DeptNm" name="레벨6_부서_명" dataType="text"></w2:column>
+            		<w2:column id="lv7DeptCd" name="레벨7_부서코드" dataType="text"></w2:column>
+            		<w2:column id="lv7DeptNm" name="레벨7_부서_명" dataType="text"></w2:column>
+            		<w2:column dataType="text" id="fstRegprId" name="최초등록자ID"></w2:column>
+            		<w2:column dataType="text" id="fstRegDtm" name="최초등록일시"></w2:column>
+            		<w2:column dataType="text" id="fnlModprId" name="최종수정자ID"></w2:column>
+            		<w2:column dataType="text" id="fnlModiDtm" name="최종수정일시"></w2:column>
+            	</w2:columnInfo>
+            </w2:dataList>
+            <w2:dataMap baseNode="map" id="dsTcfDeptMap" style="">
+            	<w2:keyInfo>
+            		<w2:key dataType="text" id="deptCd" name="부서코드"></w2:key>
+            		<w2:key dataType="text" id="deptNm" name="부서명"></w2:key>
+            		<w2:key dataType="text" id="useYn" name="사용여부"></w2:key>
+            		<w2:key id="exptMappingDeptYn" name="조회 시 영업 매핑부서 제외 여부" dataType="text"></w2:key>
+            	</w2:keyInfo>
+            </w2:dataMap>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+
+    <script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CF00051001P.xml 
+ * Program Name : 부서 검색(팝업) 
+ * Author : 김환섭 (tpkhs1)
+ * Date : 2019.02.15
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     	  수정자   내 용 
+ * ======================================== 
+ * 2019.02.15   김환섭   최초작성
+ *     
+ **************************************************************************/
+
+/************************************************************************************ 
+ *  [1] onpageload
+************************************************************************************/   
+scwin.onpageload = function() { 
+    //추가 코드값 맵핑 호출 
+    scwin.fnInitial();
+    scwin.paramInfo = JSON.parse($p.getPopupParam()).data;
+    
+    let pDeptCd = scwin.paramInfo.deptCd;
+    let pDeptNm = scwin.paramInfo.deptNm;       
+    
+    dsTcfDeptMap.set("useYn",  scwin.paramInfo.useYn);
+    dsTcfDeptMap.set("exptMappingDeptYn",  scwin.paramInfo.exptMappingDeptYn);
+    
+    if ( pDeptCd != "" || pDeptNm != "" ){
+        dsTcfDeptMap.set("deptCd", pDeptCd);
+        dsTcfDeptMap.set("deptNm", pDeptNm);
+        
+        scwin.fnSelectTcfDeptList();
+    }         
+};
+
+/** 화면초기화 **/ 
+scwin.fnInitial = function() { 
+    grpSearch.init();					//조회그룹 초기화        
+    grdTcfDeptList.initGrid();		//부서목록 초기화
+}; 
+
+/************************************************************************************ 
+ *  [2] 전역변수  
+************************************************************************************/     
+scwin.paramInfo;
+
+/************************************************************************************ 
+ *  [3] Callback 함수  
+ ************************************************************************************/ 
+/** 오류시 처리 **/ 
+scwin.fnErrCallback = function(result, e) {
+   alert("fnErrCallback result:" + result);
+}; 
+
+/************************************************************************************ 
+ *  [4] Event 함수
+ ************************************************************************************/       
+/** 부서 리스트 조회 **/ 
+scwin.btnSearch_onclick = function() {
+	scwin.fnSelectTcfDeptList(); 
+}; 
+
+/************************************************************************************
+ *  [5] 사용자 정의함수 함수 
+ ************************************************************************************/
+ scwin.fnSelectTcfDeptList= function() {
+  	//서비스 호출 
+	ajaxLib.ajax("/cf/CF00051000P/selectTcfDeptList", { 
+        mode		: "asynchronous", 
+        method 		: "Post", 
+        requestData	: dsTcfDeptMap.getJSON(), 
+	 	callback    : function(result, e) { 
+			//서버에서 넘겨주는 값 세팅 
+			dsTcfDeptList.setJSON(result.data.dsTcfDeptList);
+    	},	 
+	    errCallback	: "fnErrCallback" 
+	}); 
+};
+
+// 확인 버튼 클릭
+scwin.btnConfirm_onclick = function() {
+	scwin.fnSelectData();
+};	
+
+scwin.btnCancelOnClick = function() {
+	com.popup_close("");
+};
+
+// 그리드 더블클릭
+scwin.grdTcfDeptList_oncelldblclick = function(row,col) {
+	scwin.fnSelectData();
+};
+
+// 데이터 선택 후 처리
+scwin.fnSelectData = function() {
+	let selInfo = dsTcfDeptList.getRowJSON(grdTcfDeptList.getFocusedRowIndex());
+	let openerScrnId = scwin.paramInfo.targetScrnId != undefined ? scwin.paramInfo.targetScrnId : "";
+	
+	if (openerScrnId != "") {
+		let targetObj = $w.getComponentById(openerScrnId).getWindow().$p;
+ 		
+ 		if(scwin.paramInfo.targetDataListId !== "") {
+ 			targetObj.getComponentById(scwin.paramInfo.targetDataListId).setCellData(scwin.paramInfo.targetDlIdx, scwin.paramInfo.targetDeptCd, selInfo.deptCd);
+ 			targetObj.getComponentById(scwin.paramInfo.targetDataListId).setCellData(scwin.paramInfo.targetDlIdx, scwin.paramInfo.targetDeptNm, selInfo.deptNm);
+ 		} else {
+ 			targetObj.getComponentById(scwin.paramInfo.targetDeptCd).setValue(selInfo.deptCd);
+ 			targetObj.getComponentById(scwin.paramInfo.targetDeptNm).setValue(selInfo.deptNm);
+ 		}	
+	}
+	
+	com.popup_close(JSON.stringify(selInfo));
+};
+
+/**************************************************************************
+ * Event: scwin.ibxKeyDeptCd_onkeyup
+ * 기 능: 부서코드 입력후 Enter시 처리
+ **************************************************************************/
+scwin.ibxKeyDeptCd_onkeyup = function(e) {
+	if (e.keyCode == '13') {
+   		scwin.btnSearch_onclick();
+   	}
+};
+
+/**************************************************************************
+ * Event: scwin.ibxKeyDeptNm_onkeyup
+ * 기 능: 부서명 입력후 Enter시 처리
+ **************************************************************************/
+scwin.ibxKeyDeptNm_onkeyup = function(e) {
+	if (e.keyCode == '13') {
+   		scwin.btnSearch_onclick();
+   	}
+};
+]]></script>
+</head>
+<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="" id="" class="content_body popup">
+        <xf:group class="tbl_search" id="grpSearch" style="">
+            <xf:group class="tb_list" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:96px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:68px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="부서코드" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="ibxKeyDeptCd" style="width: 140px;" class="" ref="data:dsTcfDeptMap.deptCd" mandatory="true" ev:onkeyup="scwin.ibxKeyDeptCd_onkeyup" allowChar="0-9A-Z" maxlength="20"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="부서명" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="ibxKeyDeptNm" style="width: 140px;" ref="data:dsTcfDeptMap.deptNm" ev:onkeyup="scwin.ibxKeyDeptNm_onkeyup" maxByteLength="300"></xf:input>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" id="btnSearch" outerDiv="false" style="" ev:onclick="scwin.btnSearch_onclick">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcfDeptList" fixedColumnWithHidden="true" focusMode="row" id="grdTcfDeptList" readOnly="true" rowNumHeaderValue="No" rowStatusWidth="30"  scrollByColumn="false" style="height: 300px;" useShiftKey="true" ev:oncelldblclick="scwin.grdTcfDeptList_oncelldblclick">
+            <w2:header id="header1" style="">
+                <w2:row id="row2" style="">
+                    <w2:column blockSelect="false" id="column48" inputType="text" value="NO" width="40" style=""></w2:column>
+                    <w2:column blockSelect="false" id="column21" inputType="text" value="부서코드" width="100" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column19" inputType="text" value="부서명" width="200" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column17" inputType="text" value="상위부서명" width="100" style="">
+                    </w2:column>
+                </w2:row>
+            </w2:header>
+            <w2:gBody id="gBody4" style="">
+                <w2:row id="row5" style="">
+                    <w2:column blockSelect="false" expression="rowindex()+1" id="column24" inputType="expression" style="height:24px;" width="40">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="deptCd" inputType="text" style="height:24px;" width="100">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="deptNm" inputType="text" style="height:24px;" textAlign="left" width="200">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="upperDeptCdNm" inputType="text" style="height:24px;" width="100">
+                    </w2:column>
+                </w2:row>
+            </w2:gBody>
+        </w2:gridView>
+        <xf:group class="bottombox" id="" style="">
+            <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" localeRef="" ev:onclick="scwin.btnConfirm_onclick">
+                <xf:label>
+                    <![CDATA[확인]]>
+                </xf:label>
+            </w2:anchor>
+            <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancelOnClick">
+                <xf:label>
+                    <![CDATA[취소]]>
+                </xf:label>
+            </w2:anchor>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

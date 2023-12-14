@@ -1,0 +1,1098 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key id="upperBgtItemiCd" name="상위내역코드" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" ev:onbeforecelldatachange="scwin.dsActbgtWorkList_onbeforecelldatachange"
+			        ev:oncelldatachange="scwin.dsActbgtWorkList_oncelldatachange" ev:ondataload="scwin.dsActbgtConfmList_ondataload"
+			        id="dsActbgtWorkList" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="rowStatus" name="상태값"></w2:column>
+			            <w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiCd" name="예산내역코드"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiNm" name="품명"></w2:column>
+			            <w2:column dataType="text" id="upperBgtItemiCd" name="상위공종코드"></w2:column>
+			            <w2:column dataType="text" id="itemiYn" name="내역_여부"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiStdr" name="규격"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiUnit" name="단위"></w2:column>
+			            <w2:column id="chgbfItexpGb" name="변경전_비목구분" dataType="text"></w2:column>
+			            <w2:column id="chgbfContQty" name="변경전_도급_수량" dataType="number"></w2:column>
+			            <w2:column id="chgbfContUct" name="변경전_도급_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfContAmt" name="변경전_도급_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfContMtrctUct" name="변경전_도급_재료비_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfContMtrctAmt" name="변경전_도급_재료비_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfContLbctUct" name="변경전_도급_노무비_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfContLbctAmt" name="변경전_도급_노무비_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfContExpnsUct" name="변경전_도급_경비_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfContExpnsAmt" name="변경전_도급_경비_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfActbgtQty" name="변경전_실행예산_수량" dataType="number"></w2:column>
+			            <w2:column id="chgbfActbgtUct" name="변경전_실행예산_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfActbgtAmt" name="변경전_실행예산_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfActbgtMtrctUct" name="변경전_실행예산_재료비_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfActbgtMtrctAmt" name="변경전_실행예산_재료비_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfActbgtLbctUct" name="변경전_실행예산_노무비_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfActbgtLbctAmt" name="변경전_실행예산_노무비_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfActbgtExpnsUct" name="변경전_실행예산_경비_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfActbgtExpnsAmt" name="변경전_실행예산_경비_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfPlActbgtQty" name="변경전_손익_실행예산_수량" dataType="number"></w2:column>
+			            <w2:column id="chgbfPlActbgtUct" name="변경전_손익_실행예산_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfPlActbgtAmt" name="변경전_손익_실행예산_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfPlActbgtMtrctUct" name="변경전_손익_실행예산_재료비_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfPlActbgtMtrctAmt" name="변경전_손익_실행예산_재료비_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfPlActbgtLbctUct" name="변경전_손익_실행예산_노무비_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfPlActbgtLbctAmt" name="변경전_손익_실행예산_노무비_금액" dataType="number"></w2:column>
+			            <w2:column id="chgbfPlActbgtExpnsUct" name="변경전_손익_실행예산_경비_단가" dataType="number"></w2:column>
+			            <w2:column id="chgbfPlActbgtExpnsAmt" name="변경전_손익_실행예산_경비_금액" dataType="number"></w2:column>
+			            <w2:column dataType="text" id="itexpGb" name="비목"></w2:column>
+			            <w2:column dataType="number" id="contQty" name="도급_수량"></w2:column>
+			            <w2:column dataType="number" id="contUct" name="도급_단가"></w2:column>
+			            <w2:column dataType="number" id="contAmt" name="도급_금액"></w2:column>
+			            <w2:column dataType="number" id="contMtrctUct" name="도급_재료비_단가"></w2:column>
+			            <w2:column dataType="number" id="contMtrctAmt" name="도급_재료비_금액"></w2:column>
+			            <w2:column dataType="number" id="contLbctUct" name="도급_노무비_단가"></w2:column>
+			            <w2:column dataType="number" id="contLbctAmt" name="도급_노무비_금액"></w2:column>
+			            <w2:column dataType="number" id="contExpnsUct" name="도급_경비_단가"></w2:column>
+			            <w2:column dataType="number" id="contExpnsAmt" name="도급_경비_금액"></w2:column>
+			            <w2:column dataType="number" id="actbgtQty" name="실행예산_수량"></w2:column>
+			            <w2:column dataType="number" id="actbgtUct" name="실행예산_단가"></w2:column>
+			            <w2:column dataType="number" id="actbgtAmt" name="실행예산_금액"></w2:column>
+			            <w2:column dataType="number" id="actbgtMtrctUct" name="실행예산_재료비_단가"></w2:column>
+			            <w2:column dataType="number" id="actbgtMtrctAmt" name="실행예산_재료비_금액"></w2:column>
+			            <w2:column dataType="number" id="actbgtLbctUct" name="실행예산_노무비_단가"></w2:column>
+			            <w2:column dataType="number" id="actbgtLbctAmt" name="실행예산_노무비_금액"></w2:column>
+			            <w2:column dataType="number" id="actbgtExpnsUct" name="실행예산_경비_단가"></w2:column>
+			            <w2:column dataType="number" id="actbgtExpnsAmt" name="실행예산_경비_금액"></w2:column>
+			            <w2:column dataType="number" id="plActbgtQty" name="손익_실행예산_수량"></w2:column>
+			            <w2:column dataType="number" id="plActbgtUct" name="손익_실행예산_단가"></w2:column>
+			            <w2:column dataType="number" id="plActbgtAmt" name="손익_실행예산_금액"></w2:column>
+			            <w2:column dataType="number" id="plActbgtMtrctUct" name="손익_실행예산_재료비_단가"></w2:column>
+			            <w2:column dataType="number" id="plActbgtMtrctAmt" name="손익_실행예산_재료비_금액"></w2:column>
+			            <w2:column dataType="number" id="plActbgtLbctUct" name="손익_실행예산_노무비_단가"></w2:column>
+			            <w2:column dataType="number" id="plActbgtLbctAmt" name="손익_실행예산_노무비_금액"></w2:column>
+			            <w2:column dataType="number" id="plActbgtExpnsUct" name="손익_실행예산_경비_단가"></w2:column>
+			            <w2:column dataType="number" id="plActbgtExpnsAmt" name="손익_실행예산_경비_금액"></w2:column>
+                        <w2:column id="incContQty" name="증감_도급_수량" dataType="number"></w2:column>
+                        <w2:column id="incContUct" name="증감_도급_단가" dataType="number"></w2:column>
+                        <w2:column id="incContAmt" name="증감_도급_금액" dataType="number"></w2:column>
+                        <w2:column id="incActbgtQty" name="증감_실행_수량" dataType="number"></w2:column>
+                        <w2:column id="incActbgtUct" name="증감_실행_단가" dataType="number"></w2:column>
+                        <w2:column id="incActbgtAmt" name="증감_실행_금액" dataType="number"></w2:column>
+                        <w2:column id="incPlActbgtUct" name="증감_손익_실행_단가" dataType="number"></w2:column>
+                        <w2:column id="incPlActbgtAmt" name="증감_손익_실행_금액" dataType="number"></w2:column>
+                        <w2:column id="actbgtRt" name="실행원가율" dataType="number"></w2:column>               
+                        <w2:column id="cntrtPrgsYn" name="계약진행여부" dataType="text"></w2:column>
+                        <w2:column id="cntrtQty" name="계약완료수량" dataType="number"></w2:column>
+                        <w2:column id="pcostQty" name="집행_원가_수량" dataType="number"></w2:column>
+                        <w2:column id="pcostAmt" name="집행_원가_금액" dataType="number"></w2:column>
+			            <w2:column id="stndItemiCd" name="표준내역코드" dataType="text"></w2:column>
+			            <w2:column id="chgStusGbVal" name="변경상태" dataType="text"></w2:column>
+			            <w2:column id="actbgtChgTypeCd" name="실행변경유형코드" dataType="text"></w2:column>
+			            <w2:column id="chgAprvPrgsYn" name="변경결재상신유무" dataType="text"></w2:column>
+			            <w2:column id="chgDgr" name="변경_차수" dataType="text"></w2:column>
+                        <w2:column id="exctAproYn" name="집행_승인_여부" dataType="text"></w2:column>
+			            <w2:column id="sortOdr" name="정렬_순서" dataType="text"></w2:column>
+			            <w2:column id="rmkCn" name="비고_내용" dataType="text"></w2:column>
+			            <w2:column id="workDstbBgtItemiCd" name="작업_배분_예산내역코드" dataType="text"></w2:column>
+			            <w2:column id="dstbBgtItemiCd" name="배분_예산내역코드" dataType="text"></w2:column>
+			            <w2:column dataType="text" id="originalYn" name="원본여부"></w2:column>
+                        <w2:column id="bgtDividePath" name="분개공종경로" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/**************************************************************************
+ * [1] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {
+
+        com.selCdListVrbl("grdActbgtWorkList:actbgtChgTypeCd", {"upperCd": "CM004001","charValN3": "Y"});
+
+        scwin.chkColHidden_onchange();
+        scwin.chkContColHidden_onchange();
+
+        dsSearchMap.setJSON(JSON.parse($p.getPopupParam()).data);        
+        scwin.fnSearch();
+    };
+
+
+/**************************************************************************
+ * [2] 사용자 정의함수
+ **************************************************************************/
+     //변경전 숨김 클릭
+    scwin.chkColHidden_onchange = function() {        
+        let arrColumnList = ["bgtItemiCd", "chgbfContQty", "chgbfContUct", "chgbfContAmt", "chgbfActbgtQty", "chgbfActbgtUct",
+                             "chgbfActbgtAmt", "chgbfPlActbgtUct", "chgbfPlActbgtAmt"];
+                             
+        arrColumnList.forEach(function(item, index, array){
+            grdActbgtWorkList.setColumnVisible(item, false);
+        });
+    };
+    
+    //도급예산 숨김 클릭
+    scwin.chkContColHidden_onchange = function() {
+        let arrColumnList = ["contQty", "contMtrctUct", "contMtrctAmt", "contLbctUct", "contLbctAmt", "contExpnsUct", 
+                            "contExpnsAmt", "contUct", "contAmt"];      
+                              
+        arrColumnList.forEach(function(item, index, array){
+            grdActbgtWorkList.setColumnVisible(item, false);
+        });
+    };    
+      
+    //조회 
+    scwin.fnSearch = function() {
+        ajaxLib.ajax("/cm/cm1505/CM15050010U/selectActbgtWorkItemiList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e){
+                dsActbgtWorkList.setJSON(result.data);
+                com.setUdcValue("dsActbgtWorkListCount", "udcListCount", dsActbgtWorkList.getTotalRow());
+                
+                debugger;
+                
+                //컬럼별 disable
+                for (let i=0; i<dsActbgtWorkList.getTotalRow(); i++){
+
+                    var nChgDgr = dsActbgtWorkList.getCellData(i, "chgDgr");                    //변경차수
+                    var sCntrtPrgsYn = dsActbgtWorkList.getCellData(i, "cntrtPrgsYn");          //계약진행여부
+                    var sChgStusGbVal = dsActbgtWorkList.getCellData(i, "chgStusGbVal");        //변경_상태_구분_값
+                    var sItemiYn = dsActbgtWorkList.getCellData(i, "itemiYn");                  //내역여부
+                    var sActbgtChgTypeCd = dsActbgtWorkList.getCellData(i, "actbgtChgTypeCd");  //구분-예산변경유형
+
+                    if ((nChgDgr == "0") || (nChgDgr == "")) {
+
+                        //예산변경유형별 컬럼 disable
+                        if (["I"].indexOf(sChgStusGbVal) > -1) {
+                            var sVal = "I";
+                        } else {
+                            var sVal = "S";
+                        }
+
+                        //분개한 내역(직영집행, 변경조정)일 경우 어미의 변경 전 수량 컬럼을 가져와서 1식 여부 판단한다.
+                        if (["CM0040016", "CM0040011", "CM0040012"].indexOf(sActbgtChgTypeCd) > -1){
+                            var nMatchIndex = dsActbgtWorkList.getMatchedIndex("bgtItemiCd", dsActbgtWorkList.getCellData(i, "workDstbBgtItemiCd"));
+                            var nChgbfContQty = Math.abs(dsActbgtWorkList.getCellData(nMatchIndex, "chgbfContQty"));
+                            var nChgbfActbgtQty = Math.abs(dsActbgtWorkList.getCellData(nMatchIndex, "chgbfActbgtQty"));
+                        } else {
+                            var nChgbfContQty = 0;
+                            var nChgbfActbgtQty = 0;
+                        }
+                        
+                        scwin.fnGridColumnControl("CM0040014", i, sVal, nChgbfActbgtQty, nChgbfContQty);
+                    } else {    //변경차수 존재.. 결재진행 중인 경우 수정불가.
+                        grdActbgtWorkList.setRowDisabled(i, true);
+                        scwin.fnGridColumnControl("CM0040014", i, "S");
+                    }
+                    
+                    dsActbgtWorkList.modifyAllStatus("R");
+                }
+            }
+        });        
+    };
+    
+    //컬럼별 readOnly 설정
+    scwin.fnGridColumnControl = function(actbgtChgType, rowIndex, type, dstbChgbfActbgtQty, dstbChgbfContQty) {
+
+        let arrColumnList = [];
+        let sRowReadOnlyYn = "";
+        let sBgtItemiUnit = dsActbgtWorkList.getCellData(rowIndex, "bgtItemiUnit");         //단위
+        let sItemiYn = dsActbgtWorkList.getCellData(rowIndex, "itemiYn");                   //내역여부
+        let sActbgtChgTypeCd = dsActbgtWorkList.getCellData(rowIndex, "actbgtChgTypeCd");   //실행예산변경유형코드
+        let sCntrtPrgsYn = dsActbgtWorkList.getCellData(rowIndex, "cntrtPrgsYn");           //계약진행여부
+        let nCntrtQty = dsActbgtWorkList.getCellData(rowIndex, "cntrtQty");                 //계약수량
+        let nMngctBgtAmt = dsActbgtWorkList.getCellData(rowIndex, "mngctBgtAmt");           //현장관리비 예산금액
+        let nPcostAmt = dsActbgtWorkList.getCellData(rowIndex, "pcostAmt");                 //집행원가금액
+        let nChgbfActbgtQty = dsActbgtWorkList.getCellData(rowIndex, "chgbfActbgtQty");     //변경전 실행예산수량
+        let nContQty = dsActbgtWorkList.getCellData(rowIndex, "contQty");                   //도급 수량                
+        let sChgStusGbVal = dsActbgtWorkList.getCellData(rowIndex, "chgStusGbVal");         //변경_상태_구분_값
+        let sItexpGb = dsActbgtWorkList.getCellData(rowIndex, "itexpGb");                   //비목구분
+        let sBgtItexpChgYn = dsActbgtWorkList.getCellData(rowIndex, "bgtItexpChgYn");       //예산_비목_변경_여부
+        let sBgtAmtVrtnYn = dsActbgtWorkList.getCellData(rowIndex, "bgtAmtVrtnYn");         //예산_금액_증감_여부
+        let sExctAproYn = dsActbgtWorkList.getCellData(rowIndex, "exctAproYn");             //집행_승인_여부
+        let sChgAprvPrgsYn = dsActbgtWorkList.getCellData(rowIndex, "chgAprvPrgsYn");       //변경_결재_진행_여부
+        let sStndItemiCd = dsActbgtWorkList.getCellData(rowIndex, "stndItemiCd");           //표준_내역_코드
+                
+        debugger;
+        if (type == "S"){ //조회시
+            /* 모든 수정 불가의 경우 (정렬 제외)
+                 1. 계약진행여부, 집행승인여부, 변경결재진행여부 존재시 수정불가.
+                 2. 공종인 경우
+                 3. 선택된 예산변경유형과 내역의 예산변경유형이 다른 경우
+                 4. 삭제된 경우
+            */
+
+            if ((sCntrtPrgsYn == "Y") || (sExctAproYn == "Y") || (sChgAprvPrgsYn == "Y")){
+                sRowReadOnlyYn = "Y";
+            } else if ((sItemiYn != "Y")  || (("CM0040014" != sActbgtChgTypeCd) && (sActbgtChgTypeCd != "") )
+                || (sChgStusGbVal == "D")) {
+                sRowReadOnlyYn = "Y";
+            }
+
+            //row readonly 일 경우 --> readOnly 로 변경하면 셀이 edit 가능한 것처럼 보여 컬럼으로 막는다.
+            if ((sRowReadOnlyYn == "Y")) {
+                 arrColumnList = ["chk", "bgtItemiNm", "bgtItemiStdr", "bgtItemiUnit", "itexpGb", 
+                                    "contQty", "contUct", "contMtrctUct", "contLbctUct", "contExpnsUct",  
+                                    "actbgtQty", "actbgtUct", "actbgtMtrctUct", "actbgtLbctUct", "actbgtExpnsUct"];
+                 grdActbgtWorkList.setCellDisabled(rowIndex, "popStndJobtypCd", true);  //표준공종팝업 선택불가
+            } else {
+            //그 외는 컬럼별 readonly 일 경우
+                if (["CM0040013", "CM0040017"].indexOf(actbgtChgType) > -1 ){                   //초과, 추가원가
+                    arrColumnList = ["bgtItemiNm", "bgtItemiStdr", "bgtItemiUnit", "itexpGb", 
+                                        "contQty", "contUct", "contMtrctUct", "contLbctUct", "contExpnsUct"];
+                } else if (actbgtChgType == "CM0040014"){   //추가
+                    arrColumnList = ["bgtItemiNm", "bgtItemiStdr", "bgtItemiUnit", "itexpGb"];
+                } else if(["CM0040016", "CM0040011", "CM0040012"].indexOf(actbgtChgType) > -1){ //변경(조정), 변경(비목), 직영집행
+                    
+                    if (sChgStusGbVal != "I") {             //내역분개로 추가된 내역만 수정가능
+                        arrColumnList = ["bgtItemiNm", "bgtItemiStdr", "bgtItemiUnit", 
+                                            "contQty", "contUct", "contMtrctUct", "contLbctUct", "contExpnsUct",
+                                            "actbgtQty", "actbgtUct", "actbgtMtrctUct", "actbgtLbctUct", "actbgtExpnsUct"];
+                    } else {                                //배분내역이 있으면 수정 가능.
+                        if ((Math.abs(nContQty) == 1) && (sBgtItemiUnit == "식")) {      //수량이 1이면 단가만 수정
+                            arrColumnList = ["bgtItemiNm", "contQty"];
+                        } else {                            //나머지는 수량 수정
+                            arrColumnList = ["bgtItemiNm", "contUct", "contMtrctUct", "contLbctUct", "contExpnsUct"];
+                        }
+                    }
+
+                }
+
+
+            }
+
+        } else if (type == "I"){  //내역추가시
+
+            //내역 추가된 경우 재조회시 예산변경유형이 조회조건의 예산변경 유형과 다를 경우 막는다.
+            if (("CM0040014" != sActbgtChgTypeCd) && (sActbgtChgTypeCd != "")) {
+                 arrColumnList = ["chk", "bgtItemiNm", "bgtItemiStdr", "bgtItemiUnit", "itexpGb", 
+                                    "contQty", "contUct", "contMtrctUct", "contLbctUct", "contExpnsUct",
+                                    "actbgtQty", "actbgtUct", "actbgtMtrctUct", "actbgtLbctUct", "actbgtExpnsUct"];
+                 grdActbgtWorkList.setCellDisabled(rowIndex, "popStndJobtypCd", true);
+            } else {               
+
+            }
+        } else {
+            return false;
+        }
+
+        //결재상신한 경우 구분의 글자색을 파란색으로 변경.
+        let sAprvFontColor = (dsActbgtWorkList.getCellData(rowIndex, "chgAprvPrgsYn") == "Y") ? "blue" : "red";
+        grdActbgtWorkList.setCellColor(rowIndex, "actbgtChgTypeCd", sAprvFontColor);
+
+        //array의 컬럼명으로 컬럼 readonly
+        arrColumnList.forEach(function(item, index, array){
+            grdActbgtWorkList.setCellReadOnly(rowIndex, item, true);
+        });
+    };      
+    
+    /*  저장 ajax */
+    scwin.fnSave = function(nLastFocusIndex) {
+        ajaxLib.ajax("/cm/cm1505/CM15050010U/saveTcmActbgtByBgtItemiCd", {
+            method: "POST",
+            requestData: {
+               "tcmActbgtConfmVOs": dsActbgtConfmList.getModifiedJSON(true)
+            },
+            callback: function(result, e) {
+                com.showMessage("CFA0012"); //"저장되었습니다."
+                scwin.fnSearch(nLastFocusIndex);
+            },
+            errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+    }; 
+ 
+/**************************************************************************
+ * [4] Event 정의
+ **************************************************************************/ 
+
+	//닫기 클릭
+	scwin.btnClose_onclick = function() {
+		//$p.closePopup($p.getPopupId());
+        com.popup_close();
+	};
+    
+   //그리드 onviewchange 금액 수정시 체크
+    /*
+       1. 도급단가와 실행예산단가가 0 이하로 입력 못하게 한다.
+       2. 실행예산 변경시 현장관리비 예산금액 이하로 수정 못하도록 체크
+       3. 실행예산 변경시 집행원가이하로 수정 못하도록 체크
+    */
+    scwin.grdActbgtWorkList_onviewchange = function(info) {
+        debugger;
+        var sColumnName = grdActbgtWorkList.getColumnID(info.colIndex);
+        var row = info.rowIndex;
+        var value = info.newValue;
+        
+        //엑셀붙여넣기 같은 경우 , 값이 화면상에서 이상하게 표시됨. 
+        if (["contQty", "contUct", "contMtrctUct", "contLbctUct", "contExpnsUct", 
+             "actbgtQty", "actbgtUct", "actbgtMtrctUct","actbgtLbctUct", "actbgtExpnsUct"].indexOf(sColumnName) >= 0){
+            // 숫자의 경우 "," 제거
+            if (typeof(info.newValue) == "string"){
+                value = info.newValue.replaceAll(",","");
+                info.newValue = value;
+                dsActbgtWorkList.setCellData(row, sColumnName, value);
+            }           
+        }
+        
+        //컬럼 변경시 구분 셋팅        
+        var arrColumnList = ["contQty", "contUct", "contMtrctUct", "contLbctUct", "contExpnsUct",
+                                "actbgtQty", "actbgtUct", "actbgtMtrctUct", "actbgtLbctUct", "actbgtExpnsUct"];
+        if (arrColumnList.indexOf(sColumnName) >= 0){
+            dsActbgtWorkList.setCellData(row, "actbgtChgTypeCd", "CM0040014");
+            if (dsActbgtWorkList.getCellData(row, "chgStusGbVal") == ""){
+                dsActbgtWorkList.setCellData(row, "chgStusGbVal", "U");
+            }
+        }        
+        
+        var nOldValue = info.oldValue == "" ? 0 : info.oldValue;
+        var diffAmt = (parseInt((info.newValue * 1000) - parseFloat(nOldValue * 1000)))/1000;       
+        
+        //수량, 단가 변경시 금액 컬럼 합산.       
+        let nTmpAmt = 0;  
+        if (sColumnName.indexOf("cont", 0) == 0) {  //도급으로 시작하는 컬럼명일 경우
+        
+            let nContMtrctUct = Number(dsActbgtWorkList.getCellData(row, "contMtrctUct"));         //도급재료비계산
+            let nContLbctUct = Number(dsActbgtWorkList.getCellData(row, "contLbctUct"));           //도급노무비계산
+            let nContExpnsUct = Number(dsActbgtWorkList.getCellData(row, "contExpnsUct"));         //도급경비단가     
+            let nContQty = dsActbgtWorkList.getCellData(row, "contQty");    
+        
+            if (sColumnName == "contQty") {
+                nTmpAmt = ((value * 1000) * nContMtrctUct) / 1000;  //도급재료비계산
+                dsActbgtWorkList.setCellData(row, "contMtrctAmt", parseInt(nTmpAmt.toFixed(2)) );
+                
+                nTmpAmt = ((value * 1000) * nContLbctUct) / 1000;   //도급노무비계산
+                dsActbgtWorkList.setCellData(row, "contLbctAmt", parseInt(nTmpAmt.toFixed(2)) );
+                
+                nTmpAmt = ((value * 1000) * nContExpnsUct) / 1000;  //도급경비계산     
+                dsActbgtWorkList.setCellData(row, "contExpnsAmt", parseInt(nTmpAmt.toFixed(2)) );                   
+            } else if (sColumnName == "contMtrctUct") {             //도급재료비단가
+                nTmpAmt = (value * (nContQty * 1000)) / 1000;
+                dsActbgtWorkList.setCellData( row , "contMtrctAmt", parseInt(nTmpAmt.toFixed(2)) );
+            } else if (sColumnName == "contLbctUct") {              //도급노무비단가
+                nTmpAmt = (value * (nContQty * 1000)) / 1000;
+                dsActbgtWorkList.setCellData( row , "contLbctAmt", parseInt(nTmpAmt.toFixed(2)) );
+            } else if (sColumnName == "contExpnsUct") {             //도급경비단가
+                nTmpAmt = (value * (nContQty * 1000)) / 1000;
+                dsActbgtWorkList.setCellData( row , "contExpnsAmt", parseInt(nTmpAmt.toFixed(2)) );
+            }   
+            
+            //도급 합단가, 합금액 계산               
+            dsActbgtWorkList.setCellData(row, "contUct", nContMtrctUct + nContLbctUct + nContExpnsUct);    //도급단가계산
+            
+            let nContMtrctAmt = Number(dsActbgtWorkList.getCellData(row, "contMtrctAmt"));       //도급재료비금액
+            let nContLbctAmt = Number(dsActbgtWorkList.getCellData(row, "contLbctAmt"));         //도급노무비금액
+            let nContExpnsAmt = Number(dsActbgtWorkList.getCellData(row, "contExpnsAmt"));       //도급경비금액             
+            dsActbgtWorkList.setCellData(row, "contAmt", nContMtrctAmt + nContLbctAmt + nContExpnsAmt);               
+            
+            //도급 증감분
+            dsActbgtWorkList.setCellData(row, "incContQty", dsActbgtWorkList.getCellData(row, "contQty") - dsActbgtWorkList.getCellData(row, "chgbfContQty"));
+            dsActbgtWorkList.setCellData(row, "incContUct", dsActbgtWorkList.getCellData(row, "contUct") - dsActbgtWorkList.getCellData(row, "chgbfContUct"));
+            dsActbgtWorkList.setCellData(row, "incContAmt", dsActbgtWorkList.getCellData(row, "contAmt") - dsActbgtWorkList.getCellData(row, "chgbfContAmt"));
+            
+        } else if (sColumnName.indexOf("act", 0) == 0) {  //실행예산수량, 실행예산단가 변경시
+        
+            let nActbgtMtrctUct = Number(dsActbgtWorkList.getCellData(row, "actbgtMtrctUct"));                  //실행재료비단가
+            let nActbgtLbctUct = Number(dsActbgtWorkList.getCellData(row, "actbgtLbctUct"));                    //실행노무비단가
+            let nActbgtExpnsUct = Number(dsActbgtWorkList.getCellData(row, "actbgtExpnsUct"));                  //실행경비단가    
+            let nActbgtQty = Number(dsActbgtWorkList.getCellData(row, "actbgtQty"));                            //실행수량     
+            let nPlActbgtQty = Number(dsActbgtWorkList.getCellData(row, "plActbgtQty"));            
+            let nActbgtUct = Number(dsActbgtWorkList.getCellData(row, "actbgtUct"));
+            let nPlActbgtUct = Number(dsActbgtWorkList.getCellData(row, "plActbgtUct"));
+            let nChgbfActbgtQty = Number(dsActbgtWorkList.getCellData(row, "chgbfActbgtQty"));
+            let nChgbfActbgtUct = Number(dsActbgtWorkList.getCellData(row, "chgbfActbgtUct"));
+            let nChgbfActbgtMtrctUct = Number(dsActbgtWorkList.getCellData(row, "chgbfActbgtMtrctUct"));        //변경전_실행재료비단가
+            let nChgbfActbgtLbctUct = Number(dsActbgtWorkList.getCellData(row, "chgbfActbgtLbctUct"));          //변경전_실행노무비단가
+            let nChgbfActbgtExpnsUct = Number(dsActbgtWorkList.getCellData(row, "chgbfActbgtExpnsUct"));        //변경전_실행경비단가            
+            let nChgbfPlActbgtQty = Number(dsActbgtWorkList.getCellData(row, "chgbfPlActbgtQty"));              //변경전_손익실행수량
+            let nChgbfPlActbgtUct = Number(dsActbgtWorkList.getCellData(row, "chgbfPlActbgtUct"));              //변경전_손익실행단가
+            
+            let nPlActbgtMtrctUct = Number(dsActbgtWorkList.getCellData(row, "plActbgtMtrctUct"));              //손익실행재료비단가
+            let nPlActbgtLbctUct = Number(dsActbgtWorkList.getCellData(row, "plActbgtLbctUct"));                //손익실행노무비단가
+            let nPlActbgtExpnsUct = Number(dsActbgtWorkList.getCellData(row, "plActbgtExpnsUct"));              //손익실행경비단가
+            let nChgbfPlActbgtMtrctUct = Number(dsActbgtWorkList.getCellData(row, "chgbfPlActbgtMtrctUct"));    //변경전_손익실행재료비단가
+            let nChgbfPlActbgtLbctUct = Number(dsActbgtWorkList.getCellData(row, "chgbfPlActbgtLbctUct"));      //변경전_손익실행노무비단가
+            let nChgbfPlActbgtExpnsUct = Number(dsActbgtWorkList.getCellData(row, "chgbfPlActbgtExpnsUct"));    //변경전_손익실행경비단가
+            
+            let nPlActbgtMtrctAmt = Number(dsActbgtWorkList.getCellData(row, "plActbgtMtrctAmt"));              //손익실행재료비금액
+            let nPlActbgtLbctAmt = Number(dsActbgtWorkList.getCellData(row, "plActbgtLbctAmt"));                //손익실행노무비금액
+            let nPlActbgtExpnsAmt = Number(dsActbgtWorkList.getCellData(row, "plActbgtExpnsAmt"));              //손익실행경비금액
+            let nChgbfPlActbgtMtrctAmt = Number(dsActbgtWorkList.getCellData(row, "chgbfPlActbgtMtrctAmt"));    //변경전_손익실행재료비금액
+            let nChgbfPlActbgtLbctAmt = Number(dsActbgtWorkList.getCellData(row, "chgbfPlActbgtLbctAmt"));      //변경전_손익실행노무비금액
+            let nChgbfPlActbgtExpnsAmt = Number(dsActbgtWorkList.getCellData(row, "chgbfPlActbgtExpnsAmt"));    //변경전_손익실행경비금액                                                                     
+                                    
+            if (sColumnName == "actbgtQty") {                         
+                nTmpAmt = ((value * 1000) * nActbgtMtrctUct) / 1000;    //실행재료비계산
+                dsActbgtWorkList.setCellData(row, "actbgtMtrctAmt", parseInt(nTmpAmt.toFixed(2)));
+                
+                nPlActbgtQty = nChgbfActbgtQty + nActbgtQty - nChgbfActbgtQty;    
+                
+                nPlActbgtMtrctAmt = parseInt((((nPlActbgtMtrctUct * 1000) * nPlActbgtQty) / 1000).toFixed(2)); 
+                dsActbgtWorkList.setCellData(row, "plActbgtMtrctAmt", nPlActbgtMtrctAmt);        
+                
+                nTmpAmt = ((value * 1000) * nActbgtLbctUct) / 1000;     //실행노무비계산
+                dsActbgtWorkList.setCellData(row, "actbgtLbctAmt", parseInt(nTmpAmt.toFixed(2)));
+                
+                nPlActbgtLbctAmt = parseInt((((nPlActbgtLbctUct * 1000) * nPlActbgtQty) / 1000).toFixed(2));                 
+                dsActbgtWorkList.setCellData(row, "plActbgtLbctAmt", nPlActbgtLbctAmt);                
+                
+                nTmpAmt = ((value * 1000) * nActbgtExpnsUct) / 1000;    //실행경비계산
+                dsActbgtWorkList.setCellData(row, "actbgtExpnsAmt", parseInt(nTmpAmt.toFixed(2)));
+                
+                nPlActbgtExpnsAmt = parseInt((((nPlActbgtExpnsUct * 1000) * nPlActbgtQty) / 1000).toFixed(2)); 
+                dsActbgtWorkList.setCellData(row, "plActbgtExpnsAmt", nPlActbgtExpnsAmt);                
+                
+                dsActbgtWorkList.setCellData(row, "plActbgtQty", nPlActbgtQty);                         //손익실행예산 수량                                      
+            } else if (sColumnName == "actbgtMtrctUct") {               //실행재료비단가
+                nTmpAmt = (value * (nActbgtQty * 1000)) / 1000;
+                dsActbgtWorkList.setCellData(row, "actbgtMtrctAmt", parseInt(nTmpAmt.toFixed(2)));                                
+                
+                nPlActbgtMtrctUct = (nChgbfPlActbgtMtrctUct + nActbgtMtrctUct - nChgbfActbgtMtrctUct);
+                dsActbgtWorkList.setCellData(row, "plActbgtMtrctUct", nPlActbgtMtrctUct);
+                
+                nPlActbgtMtrctAmt = parseInt((((nPlActbgtMtrctUct * 1000) * nActbgtQty) / 1000).toFixed(2));                 
+                dsActbgtWorkList.setCellData(row, "plActbgtMtrctAmt", nPlActbgtMtrctAmt);                
+            } else if (sColumnName == "actbgtLbctUct") {                //실행노무비단가
+                nTmpAmt = (value * (nActbgtQty * 1000)) / 1000;
+                dsActbgtWorkList.setCellData(row, "actbgtLbctAmt", parseInt(nTmpAmt.toFixed(2)));
+                
+                nPlActbgtLbctUct = (nChgbfPlActbgtLbctUct + nActbgtLbctUct - nChgbfActbgtLbctUct);      //손익실행재료비단가 계산 
+                dsActbgtWorkList.setCellData(row, "plActbgtLbctUct", nPlActbgtLbctUct);          
+                
+                nPlActbgtLbctAmt = parseInt((((nPlActbgtLbctUct * 1000) * nActbgtQty) / 1000).toFixed(2)); 
+                dsActbgtWorkList.setCellData(row, "plActbgtLbctAmt", nPlActbgtLbctAmt);                      
+            } else if (sColumnName == "actbgtExpnsUct") {               //실행경비단가
+                nTmpAmt = (value * (nActbgtQty * 1000)) / 1000;
+                dsActbgtWorkList.setCellData(row, "actbgtExpnsAmt", parseInt(nTmpAmt.toFixed(2)));
+                
+                nPlActbgtExpnsUct = (nChgbfPlActbgtExpnsUct + nActbgtExpnsUct - nChgbfActbgtExpnsUct);
+                dsActbgtWorkList.setCellData(row, "plActbgtExpnsUct", nPlActbgtExpnsUct);
+                
+                plActbgtExpnsAmt = parseInt((((nPlActbgtExpnsUct * 1000) * nActbgtQty) / 1000).toFixed(2)); 
+                dsActbgtWorkList.setCellData(row, "plActbgtExpnsAmt", plActbgtExpnsAmt);                                   
+            }   
+            
+            //실행 합단가, 합금액 계산               
+            dsActbgtWorkList.setCellData(row, "actbgtUct", nActbgtMtrctUct + nActbgtLbctUct + nActbgtExpnsUct);             //실행단가계산
+            
+            nActbgtMtrctAmt = Number(dsActbgtWorkList.getCellData(row, "actbgtMtrctAmt"));       //실행재료비금액
+            nActbgtLbctAmt = Number(dsActbgtWorkList.getCellData(row, "actbgtLbctAmt"));         //실행노무비금액
+            nActbgtExpnsAmt = Number(dsActbgtWorkList.getCellData(row, "actbgtExpnsAmt"));       //실행경비금액                 
+            dsActbgtWorkList.setCellData(row, "actbgtAmt", nActbgtMtrctAmt + nActbgtLbctAmt + nActbgtExpnsAmt);             
+            
+            dsActbgtWorkList.setCellData(row, "plActbgtUct", nPlActbgtMtrctUct + nPlActbgtLbctUct + nPlActbgtExpnsUct);     //실행단가계산
+
+            nPlActbgtMtrctAmt = Number(dsActbgtWorkList.getCellData(row, "plActbgtMtrctAmt"));        //손익실행재료비금액
+            nPlActbgtLbctAmt = Number(dsActbgtWorkList.getCellData(row, "plActbgtLbctAmt"));          //손익실행노무비금액
+            nPlActbgtExpnsAmt = Number(dsActbgtWorkList.getCellData(row, "plActbgtExpnsAmt"));        //손익실행경비금액                          
+            dsActbgtWorkList.setCellData(row, "plActbgtAmt", nPlActbgtMtrctAmt + nPlActbgtLbctAmt + nPlActbgtExpnsAmt);
+            
+            //증감분 실행예산, 손익실행예산
+            dsActbgtWorkList.setCellData(row, "incActbgtQty", dsActbgtWorkList.getCellData(row, "actbgtQty") - dsActbgtWorkList.getCellData(row, "chgbfActbgtQty"));
+            dsActbgtWorkList.setCellData(row, "incActbgtUct", dsActbgtWorkList.getCellData(row, "actbgtUct") - dsActbgtWorkList.getCellData(row, "chgbfActbgtUct"));
+            dsActbgtWorkList.setCellData(row, "incActbgtAmt", dsActbgtWorkList.getCellData(row, "actbgtAmt") - dsActbgtWorkList.getCellData(row, "chgbfActbgtAmt"));
+            dsActbgtWorkList.setCellData(row, "incPlActbgtQty", dsActbgtWorkList.getCellData(row, "actbgtQty") - dsActbgtWorkList.getCellData(row, "chgbfPlActbgtQty"));
+            dsActbgtWorkList.setCellData(row, "incPlActbgtUct", dsActbgtWorkList.getCellData(row, "plActbgtUct") - dsActbgtWorkList.getCellData(row, "chgbfPlActbgtUct"));
+            dsActbgtWorkList.setCellData(row, "incPlActbgtAmt", dsActbgtWorkList.getCellData(row, "plActbgtAmt") - dsActbgtWorkList.getCellData(row, "chgbfPlActbgtAmt"));
+        } else {
+            return false;
+        }
+
+        let nContAmt = dsActbgtWorkList.getCellData(row, "contAmt");
+        let nActbgtAmt = dsActbgtWorkList.getCellData(row, "actbgtAmt");
+        let nActbgtRt = 0;
+
+        //실행원가율
+        if ((nActbgtAmt == "0") || (nActbgtAmt == "")) {
+            nActbgtRt = 0.00;
+        } else if ((nContAmt == "0") || (nContAmt == "")) {
+            nActbgtRt = 100.00;
+        } else {
+            nActbgtRt = parseInt((nActbgtAmt / nContAmt) * 100);
+        }
+        
+        dsActbgtWorkList.setCellData(row, "actbgtRt", nActbgtRt);        
+    };
+	
+    //저장버튼 클릭 이벤트 
+	scwin.btnSave_onclick = function() {
+        if (confirm("저장 하시겠습니까?")) {
+            ajaxLib.ajax("/cm/cm1505/CM15050010U/saveTcmActbgtWork", {
+                method: "POST",
+                requestData: {
+                   "tcmActbgtWorkVOs" : dsActbgtWorkList.getModifiedJSON(true)
+                },
+                callback: function(result, e) {
+                    if (result.data == true){
+                        com.showMessage("CFA0012"); //"저장되었습니다."
+                    }
+                },
+                errCallback: function(result, e) {
+                }
+            });	
+        }      
+	};
+	]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+	    <xf:group style="" id="" class="content_body popup">
+	        <xf:group class="defaultbox" id="" style="">
+	            <w2:udc_list_count style="position: absolute;" id="dsActbgtWorkListCount"></w2:udc_list_count>
+	        </xf:group>
+	        <w2:gridView autoFit="lastColumn" checkReadOnlyOnPaste="true" class="autoHeight s_narrow" contextMenu="true"
+	            copyOption="display" dataList="data:dsActbgtWorkList" enterKeyMove="down" ev:onafteredit=""
+	            ev:oncellclick="scwin.grdActbgtWorkList_oncellclick" ev:oncustompaste="" ev:onviewchange="scwin.grdActbgtWorkList_onviewchange"
+	            fixedColumn="7" fixedColumnWithHidden="" fixedRow="" focusMode="row" id="grdActbgtWorkList" ignoreNonEditableCell="true"
+	            keyMoveEditMode="true" preventAddRowOnPaste="true" readOnly="false" readOnlyTabIgnore="true" rowNumHeaderValue="No"
+	            rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" selectByLabel="true"
+	            style="height: 300px;" tooltipDisplay="true" useShiftKey="true" visibleRowNum="">
+	            <w2:header id="header1" style="">
+	                <w2:row id="row6" style="">
+	                    <w2:column blockSelect="false" displayMode="label" hidden="false" id="column246" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="No." width="45">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" hidden="false" id="column248" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="구분" width="90">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="" displayMode="label" id="column425" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="원본여부" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" class="" displayMode="label" hidden="false" id="column250" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="품명" width="140">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" hidden="false" id="column252" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="규격" width="80">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" class="" displayMode="label" hidden="false" id="column254" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="단위" width="60">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="3" displayMode="label" hidden="false" id="column94" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="변경전_도급예산" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="3" displayMode="label" hidden="false" id="column91" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="변경전_실행예산" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" hidden="false" id="column212" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="변경전_손익실행예산" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="9" displayMode="label" id="column88" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="도급예산" width="185">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="9" displayMode="label" id="column85" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="실행예산" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column223" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="손익실행예산" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="3" displayMode="label" hidden="false" id="column271" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="증감" width="124">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" hidden="false" id="column258" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="실행&lt;br/&gt;원가율&lt;br/&gt;(%)" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column160" inputType="text" removeBorderStyle="false"
+	                        rowSpan="3" style="height:102px;" value="계약진행&lt;br/&gt;여부" width="80">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column278" inputType="text" removeBorderStyle="false"
+	                        rowSpan="3" style="height:102px;" value="계약수량" width="75">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column152" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="집행원가" width="84">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" hidden="false" id="column260" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="현장관리비&lt;br/&gt;예산금액" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" hidden="false" id="column262" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="직영집행&lt;br/&gt;승인여부" width="80">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" hidden="true" id="column265" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="표준코드" width="180">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" class="req" displayMode="label" hidden="false" id="column269" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:102px;" value="정렬&lt;br/&gt;순서" width="50">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="" displayMode="label" id="column430" inputType="text"
+	                        removeBorderStyle="false" rowSpan="3" style="height:90px;" value="분개공종경로" width="300">
+	                    </w2:column>
+	                </w2:row>
+	                <w2:row id="row7" style="">
+	                    <w2:column blockSelect="false" colSpan="" displayMode="label" hidden="false" id="column119" inputType="text"
+	                        removeBorderStyle="false" rowSpan="2" style="height:34px;" value="수량" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" hidden="false" id="column118" inputType="text"
+	                        removeBorderStyle="false" rowSpan="" style="height:34px;" value="합계" width="230">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="" displayMode="label" hidden="false" id="column116" inputType="text"
+	                        removeBorderStyle="false" rowSpan="2" style="height:34px;" value="수량" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" hidden="false" id="column115" inputType="text"
+	                        removeBorderStyle="false" rowSpan="" style="height:34px;" value="합계" width="230">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" hidden="false" id="column213" inputType="text"
+	                        removeBorderStyle="false" rowSpan="" style="height:34px;" value="합계" width="230">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column113" inputType="text" removeBorderStyle="false"
+	                        rowSpan="2" style="height:34px;" value="수량" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column361" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="재료비" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column386" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="노무비" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column376" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="경비" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column112" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="합계" width="230">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column110" inputType="text" removeBorderStyle="false"
+	                        rowSpan="2" style="height:34px;" value="수량" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column421" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="재료비" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column411" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="노무비" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column401" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="경비" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column109" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="합계" width="230">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" colSpan="2" displayMode="label" id="column224" inputType="text"
+	                        removeBorderStyle="false" style="height:34px;" value="합계" width="230">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" hidden="false" id="column275" inputType="text"
+	                        removeBorderStyle="false" rowSpan="2" style="height:34px;" value="도급예산금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" hidden="false" id="column276" inputType="text"
+	                        removeBorderStyle="false" rowSpan="2" style="height:34px;" value="실행예산금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" hidden="false" id="column277" inputType="text"
+	                        removeBorderStyle="false" rowSpan="2" style="height:34px;" value="손익실행예산금액" width="124">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column153" inputType="text" removeBorderStyle="false"
+	                        rowSpan="2" style="height:34px;" value="수량" width="110">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column149" inputType="text" removeBorderStyle="false"
+	                        rowSpan="2" style="height:34px;" value="금액" width="115">
+	                    </w2:column>
+	                </w2:row>
+	                <w2:row id="row10" style="">
+	                    <w2:column blockSelect="false" displayMode="label" id="column350" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column349" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column347" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column346" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column345" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column344" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column342" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column341" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column362" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column392" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column387" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column382" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column377" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column372" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column339" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column338" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column422" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column417" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column412" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column407" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column402" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column397" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column337" inputType="text" removeBorderStyle="false"
+	                        style="" value="단가" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column336" inputType="text" removeBorderStyle="false"
+	                        style="" value="금액" width="115">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:header>
+	            <w2:gBody id="gBody4" style="">
+	                <w2:row id="row5" style="">
+	                    <w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="column22" inputType="expression"
+	                        removeBorderStyle="false" width="45">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="actbgtChgTypeCd" inputType="select" readOnly="true"
+	                        removeBorderStyle="false" width="90">
+	                        <w2:choices></w2:choices>
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="originalYn" inputType="text" readOnly="true"
+	                        removeBorderStyle="false" style="" value="" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="bgtItemiNm" inputType="text" maxByteLength="300"
+	                        removeBorderStyle="false" textAlign="left" width="140" readOnly="true">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="bgtItemiStdr" inputType="text" maxByteLength="200"
+	                        removeBorderStyle="false" textAlign="left" width="80" readOnly="true">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="bgtItemiUnit" inputType="text" maxByteLength="50"
+	                        removeBorderStyle="false" width="80" readOnly="true">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0.000" displayFormat="#,##0.000" displayMode="label" id="chgbfContQty"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="chgbfContUct"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="chgbfContAmt"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0.000" displayFormat="#,##0.000" displayMode="label"
+	                        id="chgbfActbgtQty" inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="chgbfActbgtUct"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="chgbfActbgtAmt"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="chgbfPlActbgtUct"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="chgbfPlActbgtAmt"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9.,-\s" applyFormat="all" blockSelect="false" defaultValue="0.000" displayFormat="#,##0.000"
+	                        displayMode="label" id="contQty" inputType="text" maxByteLength="18" removeBorderStyle="false" textAlign="right"
+	                        width="100">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9,-\s" blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label"
+	                        id="contMtrctUct" inputType="text" maxLength="15" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="contMtrctAmt"
+	                        inputType="text" maxLength="15" readOnly="true" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9,-\s" blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label"
+	                        id="contLbctUct" ignoreChar="》" inputType="text" maxLength="15" removeBorderStyle="false" textAlign="right"
+	                        width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="contLbctAmt"
+	                        inputType="text" maxLength="15" readOnly="true" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9,-\s" blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label"
+	                        id="contExpnsUct" inputType="text" maxLength="15" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="contExpnsAmt"
+	                        inputType="text" maxLength="15" readOnly="true" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9,\s" blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label"
+	                        id="contUct" inputType="text" maxByteLength="15" maxLength="15" readOnly="true" removeBorderStyle="false"
+	                        textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="contAmt"
+	                        inputType="text" maxByteLength="9" maxLength="15" readOnly="true" removeBorderStyle="false" textAlign="right"
+	                        width="115">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9.,-\s" applyFormat="all" blockSelect="false" defaultValue="0.000" displayFormat="#,##0.000"
+	                        displayMode="label" id="actbgtQty" inputType="text" maxByteLength="" maxLength="18" removeBorderStyle="false"
+	                        textAlign="right" width="100">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9.,-\s" applyFormat="all" blockSelect="false" defaultValue="0" displayFormat="#,##0"
+	                        displayMode="label" id="actbgtMtrctUct" inputType="text" maxByteLength="" maxLength="18" removeBorderStyle="false"
+	                        textAlign="right" value="" width="100">
+	                    </w2:column>
+	                    <w2:column applyFormat="" blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label"
+	                        id="actbgtMtrctAmt" inputType="text" maxLength="15" readOnly="true" removeBorderStyle="false" textAlign="right"
+	                        width="70">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9,-\s" blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label"
+	                        id="actbgtLbctUct" inputType="text" maxLength="15" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="actbgtLbctAmt"
+	                        inputType="text" maxLength="15" readOnly="true" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9,-\s" blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label"
+	                        id="actbgtExpnsUct" inputType="text" maxLength="15" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="actbgtExpnsAmt"
+	                        inputType="text" maxLength="15" readOnly="true" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9,\s" blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label"
+	                        id="actbgtUct" inputType="text" maxByteLength="15" maxLength="15" readOnly="true" removeBorderStyle="false"
+	                        textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="actbgtAmt"
+	                        inputType="text" maxByteLength="9" maxLength="15" readOnly="true" removeBorderStyle="false" textAlign="right"
+	                        width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="plActbgtUct"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="plActbgtAmt"
+	                        inputType="text" maxLength="15" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="incContAmt"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="incActbgtAmt"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="incPlActbgtAmt"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="124">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0.00%" displayMode="label" id="actbgtRt" inputType="text"
+	                        readOnly="true" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="cntrtPrgsYn" inputType="text" readOnly="true"
+	                        removeBorderStyle="false" textAlign="center" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="cntrtQty"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="75">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0.000" displayFormat="#,##0.000" displayMode="label" id="pcostQty"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="84">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="pcostAmt"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" defaultValue="0" displayFormat="#,##0" displayMode="label" id="mngctBgtAmt"
+	                        inputType="text" readOnly="true" removeBorderStyle="false" textAlign="right" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="exctAproYn" inputType="text" readOnly="true"
+	                        removeBorderStyle="false" width="80">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="stndItemiNm" inputType="text" readOnly="true"
+	                        removeBorderStyle="false" textAlign="left" width="175">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" class="bl0" displayMode="label" id="popStndJobtypCd"
+	                        imageSrc="/resources/images/content/ico_grid_find.png" inputType="image" readOnly="false" removeBorderStyle="false"
+	                        viewType="icon" width="30">
+	                    </w2:column>
+	                    <w2:column allowChar="0-9" blockSelect="false" defaultValue="0" displayMode="label" id="sortOdr" inputType="text"
+	                        maxByteLength="6" removeBorderStyle="false" width="50">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="bgtDividePath" inputType="text" readOnly="true"
+	                        removeBorderStyle="false" style="" value="" width="300">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:gBody>
+	            <w2:footer id="footer1" style="">
+	                <w2:row id="row8" style="">
+	                    <w2:column blockSelect="false" displayMode="label" id="column204" inputType="text" removeBorderStyle="false"
+	                        width="45">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column203" inputType="text" removeBorderStyle="false"
+	                        value="합계" width="90">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column429" inputType="text" removeBorderStyle="false"
+	                        style="" value="" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column202" inputType="text" removeBorderStyle="false"
+	                        width="140">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column201" inputType="text" removeBorderStyle="false"
+	                        width="80">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column200" inputType="text" removeBorderStyle="false"
+	                        width="80">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column198" inputType="expression" removeBorderStyle="false"
+	                        width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column197" inputType="text" removeBorderStyle="false"
+	                        width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('chgbfContAmt')"
+	                        id="column196" inputType="expression" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column195" inputType="text" removeBorderStyle="false"
+	                        width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column194" inputType="text" removeBorderStyle="false"
+	                        width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('chgbfActbgtAmt')"
+	                        id="column193" inputType="expression" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column215" inputType="text" removeBorderStyle="false"
+	                        width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('chgbfPlActbgtAmt')"
+	                        id="column220" inputType="expression" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column192" inputType="text" removeBorderStyle="false"
+	                        width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column191" inputType="text" removeBorderStyle="false"
+	                        width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('contMtrctAmt')"
+	                        id="column190" inputType="expression" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column364" inputType="text" removeBorderStyle="false"
+	                        width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('contLbctAmt')"
+	                        id="column394" inputType="expression" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column389" inputType="text" removeBorderStyle="false"
+	                        width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('contExpnsAmt')"
+	                        id="column384" inputType="expression" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column379" inputType="text" removeBorderStyle="false"
+	                        width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('contAmt')" id="column374"
+	                        inputType="expression" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column189" inputType="text" removeBorderStyle="false"
+	                        width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column188" inputType="text" removeBorderStyle="false"
+	                        width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('actbgtMtrctAmt')"
+	                        id="column187" inputType="expression" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column424" inputType="text" removeBorderStyle="false"
+	                        width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('actbgtLbctAmt')"
+	                        id="column419" inputType="expression" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column414" inputType="text" removeBorderStyle="false"
+	                        width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('actbgtExpnsAmt')"
+	                        id="column409" inputType="expression" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column404" inputType="text" removeBorderStyle="false"
+	                        width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('actbgtAmt')"
+	                        id="column399" inputType="expression" removeBorderStyle="false" textAlign="right" width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column226" inputType="text" removeBorderStyle="false"
+	                        width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('plActbgtAmt')"
+	                        id="column231" inputType="expression" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('incContAmt')"
+	                        id="column184" inputType="expression" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('incActbgtAmt')"
+	                        id="column181" inputType="expression" removeBorderStyle="false" textAlign="right" width="115">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('incPlActbgtAmt')"
+	                        id="column241" inputType="expression" removeBorderStyle="false" textAlign="right" width="124">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column180" inputType="text" removeBorderStyle="false"
+	                        width="70">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column179" inputType="text" removeBorderStyle="false"
+	                        width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column281" inputType="text" removeBorderStyle="false"
+	                        width="75">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column177" inputType="text" removeBorderStyle="false"
+	                        width="84">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('pcostAmt')" id="column176"
+	                        inputType="expression" removeBorderStyle="false" textAlign="right" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" expression="sum('mngctBgtAmt')"
+	                        id="column175" inputType="expression" removeBorderStyle="false" textAlign="right" width="100">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column210" inputType="text" removeBorderStyle="false"
+	                        width="80">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column172" inputType="text" removeBorderStyle="false"
+	                        width="104">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column171" inputType="text" removeBorderStyle="false"
+	                        width="30">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column170" inputType="text" removeBorderStyle="false"
+	                        width="50">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayMode="label" id="column434" inputType="text" removeBorderStyle="false"
+	                        style="" value="" width="70">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:footer>
+	        </w2:gridView>
+	        <xf:group class="bottombox" id="" style="">
+	            <w2:anchor ev:onclick="scwin.btnSave_onclick" outerDiv="false" clickEventElement="" style="left:0px;top:0px;" id="btnSave"
+	                class="btn_gcm">
+	                <xf:label><![CDATA[저장]]></xf:label>
+	            </w2:anchor>
+	            <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnClose" outerDiv="false" style=""
+	                ev:onclick="scwin.btnClose_onclick">
+	                <xf:label><![CDATA[닫기]]></xf:label>
+	            </w2:anchor>
+	        </xf:group>
+	    </xf:group>
+	</body>
+</html>

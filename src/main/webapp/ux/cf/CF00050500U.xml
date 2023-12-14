@@ -1,0 +1,897 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSrch">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="deptCd" name="부서코드" />
+						<w2:key dataType="text" id="useYn" name="사용여부" />
+						<w2:key dataType="text" id="userNm" name="사용자명" />
+						<w2:key dataType="text" id="crryTelNo" name="휴대전화번호" />
+						<w2:key id="userTypeGb" name="사용자유형구분" dataType="text"></w2:key>
+						<w2:key id="pageRowStart" name="페이지 시작행번호" dataType="number"></w2:key>
+						<w2:key id="pageRowCount" name="페이지 요청건수" dataType="number"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" id="dsUserList" repeatNode="map" saveRemovedData="true" style="">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="userEmpno" name="사용자사번" />
+						<w2:column dataType="text" id="userId" name="사용자ID" />
+						<w2:column dataType="text" id="userNm" name="사용자명" />
+						<w2:column dataType="text" id="deptCd" name="부서코드" />
+						<w2:column dataType="text" id="deptNm" name="부서명" />
+						<w2:column dataType="text" id="jbclCd" name="직급코드" />
+						<w2:column dataType="text" id="jbclNm" name="직급명" />
+						<w2:column dataType="text" id="jbposGbCd" name="직위구분코드" />
+						<w2:column dataType="text" id="jbposGbNm" name="직위구분명" />
+						<w2:column dataType="text" id="dsgnCd" name="호칭코드" />
+						<w2:column dataType="text" id="dsgnNm" name="호칭명" />
+						<w2:column dataType="text" id="empGbCd" name="사원구분코드" />
+						<w2:column dataType="text" id="incoTelNo" name="사내전화번호" />
+						<w2:column dataType="text" id="secCrryTelNo" name="SEC_휴대전환번호" />
+						<w2:column dataType="text" id="email" name="이메일" />
+						<w2:column dataType="text" id="useYn" name="사용여부" />
+						<w2:column dataType="text" id="useValdStrtDt" name="사용유효시작일자" />
+						<w2:column dataType="text" id="useValdEndDt" name="사용유효종료일자" />
+						<w2:column dataType="text" id="bdyDt" name="생년월일_일자" />
+						<w2:column dataType="text" id="solaLunaGb" name="양력음력구분" />
+						<w2:column dataType="text" id="wdanDt" name="결혼기념일_일자" />
+						<w2:column dataType="text" id="photoPathNm" name="사진_경로_명" />
+						<w2:column dataType="text" id="userTypeGb" name="사용자_유형_구분" />
+						<w2:column dataType="text" id="rmkCn" name="비고_내용" />
+						<w2:column dataType="text" id="pwErrTms" name="비밀번호 오류 횟수" />
+						<w2:column dataType="text" id="fstRegprId" name="등록자_사용자_ID" />
+						<w2:column dataType="date" id="fstRegDtm" name="등록_일시" />
+						<w2:column dataType="text" id="fnlModprId" name="수정자_사용자_ID" />
+						<w2:column dataType="date" id="fnlModiDtm" name="수정_일시" />
+						<w2:column dataType="text" id="empGbNm" name="사원구분명" />
+						<w2:column dataType="text" id="fstRegprEmpnoNm" name="최초_등록자_명" />
+						<w2:column dataType="text" id="fnlModprEmpnoNm" name="최종_수정자_명" />
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsUserInfo">
+				    <w2:keyInfo>
+				        <w2:key dataType="text" id="userId" name="사용자ID" />
+				        <w2:key dataType="text" id="userNm" name="사용자명" />
+				        <w2:key dataType="text" id="userEmpno" name="사용자사번" />
+				        <w2:key dataType="text" id="deptCd" name="부서코드" />
+				        <w2:key dataType="text" id="deptNm" name="부서명" />
+				        <w2:key dataType="text" id="jbposGbNm" name="직위구분명" />
+				        <w2:key dataType="text" id="empGbCd" name="사원구분코드" />
+				        <w2:key dataType="text" id="secCrryTelNo" name="SEC_휴대전환번호" />
+				        <w2:key dataType="text" id="email" name="이메일" />
+				        <w2:key dataType="text" id="useYn" name="사용여부" />
+				        <w2:key dataType="text" id="useValdStrtDt" name="사용유효시작일자" />
+				        <w2:key dataType="text" id="useValdEndDt" name="사용유효종료일자" />
+				        <w2:key dataType="text" id="rmkCn" name="비고_내용" />
+				        <w2:key dataType="text" id="fstRegprId" name="등록자_사용자_ID" />
+				        <w2:key dataType="text" id="fnlModprId" name="수정자_사용자_ID" />
+				        <w2:key id="userTypeGb" name="사용자유형구분" dataType="text"></w2:key>
+				        <w2:key id="pwEnc" name="비밀번호_암호화" dataType="text"></w2:key>
+				        <w2:key id="jbclCd" name="직급코드" dataType="text"></w2:key>
+				        <w2:key id="jbclNm" name="직급명" dataType="text"></w2:key>
+				    </w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" id="dsUseYn" repeatNode="map" saveRemovedData="true">
+					<w2:data use="true">
+						<w2:row>
+							<cd>
+								<![CDATA[Y]]>
+							</cd>
+							<cdNm>
+								<![CDATA[Y]]>
+							</cdNm>
+						</w2:row>
+						<w2:row>
+							<cd>
+								<![CDATA[N]]>
+							</cd>
+							<cdNm>
+								<![CDATA[N]]>
+							</cdNm>
+						</w2:row>
+					</w2:data>
+					<w2:columnInfo>
+						<w2:column dataType="text" id="cd" name="코드" />
+						<w2:column dataType="text" id="cdNm" name="코드명" />
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" id="dsEmpGbCd" repeatNode="map" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column dataType="text" id="cd" name="코드" />
+						<w2:column dataType="text" id="cdNm" name="코드명" />
+					</w2:columnInfo>
+					<w2:data use="true">
+						<w2:row>
+							<cd>
+								<![CDATA[10]]>
+							</cd>
+							<cdNm>
+								<![CDATA[현장직]]>
+							</cdNm>
+						</w2:row>
+						<w2:row>
+							<cd>
+								<![CDATA[20]]>
+							</cd>
+							<cdNm>
+								<![CDATA[사무직]]>
+							</cdNm>
+						</w2:row>
+					</w2:data>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection />
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00050500U.xml 
+     * Program Name : 미계정 사용자 관리 
+     * Author : 김환섭 (tpkhs1)
+     * Date : 2019.02.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.02.15   김환섭   최초작성
+     *     
+     **************************************************************************/
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    var svcId = "";
+	var initPw = "sdcit911!";
+    var pageRowStart = 0; 	//페이지 시작행번호
+    var pageRowCount = 50; 	//페이지 요청건수
+
+    /************************************************************************************ 
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function () {
+
+        scwin.initScreen();
+
+        com.getUdcComp("udcDeptInfo2", "deptNm").removeClass("req");		//소속부서UDC_Input RemoveClass처리
+        com.selCdList("sbxEmpGbCd", "CF013", "Y", "N", "", "", "", "", "", "", "", "", "", "");
+
+        // 소노관리자인 경우에만 활성화
+        if (sessionStorage.getItem("sonoAdminYn") == "Y") {
+            binPwInit.setDisabled( false );
+        } else {
+            binPwInit.setDisabled( true );
+        }    
+
+
+    };
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function () {
+        grdUserList.initGrid(); 					//사용자목록 초기화
+        com.setUdcValue("uListCount", "udcListCount", 0);
+    	pageRowStart = 0;							//페이지 시작행번호
+
+        grpUserInfo.init();							//사용자정보 초기화
+   		ibxKeyCrryTelNo.addClass( "hide" );			//휴대폰 hide
+   		sbxKeyUserTypeGb.addClass( "hide" );		//사용자유형 hide(조회값)
+   		grpUserTypeGb.addClass( "hide" )			//사용자유형 hide(INPUT값)
+        com.setUdcValue("udcPrdInfo", "frDate", com.transDateType("now"));
+        com.setUdcValue("udcPrdInfo", "toDate", "99991231");
+        rdoUseYn.setSelectedIndex( 0 );				//사용여부Set
+
+		//if (gcm.MENU_ID == "MNU_CF_102010") {
+            labTitle.setLabel("사용자유형");
+			sbxKeyUserTypeGb.removeClass( "hide" );	//사용자유형 show(조회값)
+	   		grpUserTypeGb.removeClass( "hide" )		//사용자유형 show(INPUT값)
+		//} else {
+        //    labTitle.setLabel("휴대폰");
+		//	ibxKeyCrryTelNo.removeClass( "hide" );	//휴대폰 show
+		//	sbxKeyUserTypeGb.setValue( "5" );		//사용자유형(조회값)을 강제 5:AS사용자로 셋팅
+		//	sbxUserTypeGb.setValue( "5" );			//사용자유형(INPUT값)을 강제 5:AS사용자로 셋팅
+		//}
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    // 조회 List
+    scwin.fnSearchList = function () {
+        // udc의 코드값 가져오기.
+        dsSrch.set("deptCd", com.getUdcValue("udcDeptInfo2", "deptCd"));
+
+        svcId = "selectTcfUserInfoList";
+
+        ajaxLib.ajax("/cf/CF00050500U/selectTcfUserInfoList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSrch.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    // 삭제
+    scwin.fnDelete = function () {
+        svcId = "deleteTcfUserInfo";
+        if (confirm("삭제 하시겠습니까?")) {
+
+            ajaxLib.ajax("/cf/CF00050500U/deleteTcfUserInfo", {
+                mode: "asynchronous",
+                method: "Delete",
+                requestData: dsUserInfo.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    // 저장
+    scwin.fnUpdate = function () {
+        svcId = "updateTcfUserInfo";
+        if (confirm("저장 하시겠습니까?")) {
+
+            ajaxLib.ajax("/cf/CF00050500U/updateTcfUserInfo", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsUserInfo.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    // 저장시 Validate Check
+    scwin.fnValidate = function () {
+		//data유효성체크(전체)
+		if (!com.validateGroup(grpUserInfo)) {
+			return false;
+		};
+
+		//사용여부 체크
+        if (strLib.isEmpty(rdoUseYn.getValue())) {
+            com.showMessage("CFW0003", "사용여부", "", "", rdoUseYn.id);	// $1 항목을 확인하십시오.
+            return false;
+        }
+        
+        return true;
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+
+        switch (svcId) {
+            case "selectTcfUserInfoList":
+                dsUserList.setJSON(result.data.dsTcfUserInfoList, true);
+                com.setUdcValue("uListCount", "udcListCount", dsUserList.getTotalRow());
+                pageRowStart = pageRowStart + pageRowCount;		//다음 조회갯수 Setting
+                break;
+
+            case "updateTcfUserInfo":
+                dsUserInfo.setEmptyValue();
+				com.showMessage("CSA0004", "사용자", "저장");	//정상적으로 $1이(가) $2되었습니다.
+
+		    	//초기화
+		        scwin.initScreen();
+				dsSrch.set("pageRowStart", pageRowStart);
+				dsSrch.set("pageRowCount", pageRowCount);
+                scwin.fnSearchList();
+                break;
+
+            case "deleteTcfUserInfo":
+                dsUserInfo.setEmptyValue();
+				com.showMessage("CSA0004", "사용자", "삭제");	//정상적으로 $1이(가) $2되었습니다.
+
+		    	//초기화
+		        scwin.initScreen();
+				dsSrch.set("pageRowStart", pageRowStart);
+				dsSrch.set("pageRowCount", pageRowCount);
+                scwin.fnSearchList();
+                break;
+
+            case "pwInit":
+				com.showMessage("SAA0032");						//정상적으로 처리되었습니다.
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function (e) {
+        switch (svcId) {
+            case "selectTcfUserInfoList":
+                break;
+
+            case "updateTcfUserInfo":
+                break;
+
+            case "deleteTcfUserInfo":
+                break;
+        }
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 조회버튼 클릭시 처리
+     **************************************************************************/
+    scwin.btnFind_onclick = function () {
+    	//초기화
+        scwin.initScreen();
+
+		dsSrch.set("pageRowStart", pageRowStart);
+		dsSrch.set("pageRowCount", pageRowCount);
+
+		//조회
+        scwin.fnSearchList();
+    };
+
+    /**************************************************************************
+     * Event: scwin.grdUserList_onscrollend
+     * 기 능: 그리드 scrollend시 처리
+     **************************************************************************/
+	scwin.grdUserList_onscrollend = function() {
+		//총건수가 (페이지 시작행번호 + 페이지 요청건수) 보다 작으면 SKIP
+		if (dsUserList.getTotalRow() < (dsSrch.get("pageRowStart") + dsSrch.get("pageRowCount"))){
+			return;
+		}
+
+		dsSrch.set("pageRowStart", pageRowStart);
+		dsSrch.set("pageRowCount", pageRowCount);
+		
+		//조회
+        scwin.fnSearchList();
+	};
+
+    /**************************************************************************
+     * Event: scwin.btnNew_onclick
+     * 기 능: 신규버튼 클릭시 처리
+     **************************************************************************/
+	scwin.btnNew_onclick = function() {
+        grpUserInfo.init();							//사용자정보 초기화
+   		grpUserTypeGb.addClass( "hide" )			//사용자유형 hide(INPUT값)
+        com.setUdcValue("udcPrdInfo", "frDate", com.transDateType("now"));
+        com.setUdcValue("udcPrdInfo", "toDate", "99991231");
+        rdoUseYn.setSelectedIndex( 0 );				//사용여부Set
+
+		if (gcm.MENU_ID == "MNU_CF_102010") {
+	   		grpUserTypeGb.removeClass( "hide" )		//사용자유형 show(INPUT값)
+		} else {
+			sbxKeyUserTypeGb.setValue( "5" );		//사용자유형(조회값)을 강제 5:AS사용자로 셋팅
+			sbxUserTypeGb.setValue( "5" );			//사용자유형(INPUT값)을 강제 5:AS사용자로 셋팅
+		}
+	};
+
+    /**************************************************************************
+     * Event: scwin.btnSave_onclick
+     * 기 능: 저장버튼 클릭시 처리
+     **************************************************************************/
+    scwin.btnSave_onclick = function () {
+        //udc의 코드값 가져오기.
+        dsUserInfo.set("deptCd", com.getUdcValue("udcDeptInfo", "deptCd"));
+        dsUserInfo.set("deptNm", com.getUdcValue("udcDeptInfo", "deptNm"));
+        dsUserInfo.set("useValdStrtDt", com.getUdcValue("udcPrdInfo", "frDate"));
+        dsUserInfo.set("useValdEndDt", com.getUdcValue("udcPrdInfo", "toDate"));
+        //신규시 초기비밀번호 셋팅
+        dsUserInfo.set("pwEnc", initPw);
+
+        if (scwin.fnValidate()) {
+            scwin.fnUpdate();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnDel_onclick
+     * 기 능: 삭제버튼 클릭시 처리
+     **************************************************************************/
+    scwin.btnDel_onclick = function () {
+        scwin.fnDelete();
+    };
+
+    /**************************************************************************
+     * Event: scwin.grid_onrowindexchange
+     * 기 능: 그리드 row 변경시
+     **************************************************************************/
+    scwin.grid_onrowindexchange = function (row, oldRow) {
+
+        var data = dsUserList.getRowJSON(row);
+        // Binding
+        dsUserInfo.setJSON(data)
+
+        com.setUdcValue("udcDeptInfo", "deptCd", data.deptCd);
+        com.setUdcValue("udcDeptInfo", "deptNm", data.deptNm);
+
+        com.setUdcValue("udcPrdInfo", "frDate", data.useValdStrtDt);
+        com.setUdcValue("udcPrdInfo", "toDate", data.useValdEndDt);
+    };
+	
+    /**************************************************************************
+     * Event: scwin.binPwInit_onclick
+     * 기 능: 비밀번호 초기화 클릭시 처리
+     **************************************************************************/
+    scwin.binPwInit_onclick = function () {
+        var param = "";
+        var userEmpno = dsUserInfo.get("userEmpno");
+
+        // 사용자를 선택유무 체크
+        if (userEmpno.length == 0) {
+			com.showMessage("CFW0004", "사용자");	//$1을(를) 선택하십시오.
+            return;
+        }
+
+        if (confirm("비밀번호 초기화 [" + initPw + "] 하시겠습니까?")) {
+            svcId = "pwInit";
+            param = {
+                "userEmpno": userEmpno,
+                "keyNewPwEnc": initPw,
+                "keyNewPwEncConfirm": initPw,
+                "keyPwType": "1"
+            }
+            ajaxLib.ajax("/cf/CF00050001U/putTcfTmpUserPwMng", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: JSON.stringify(param),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxKeyUserNm_onkeyup
+     * 기 능: 성명 입력후 Enter시 처리
+     **************************************************************************/
+    scwin.ibxKeyUserNm_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            scwin.btnFind_onclick();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxKeyCrryTelNo_onkeyup
+     * 기 능: 휴대폰 입력후 Enter시 처리
+     **************************************************************************/
+    scwin.ibxKeyCrryTelNo_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            scwin.btnFind_onclick();
+        }
+    };
+]]></script>
+		<!-- 테스트를 위한 참조       -->
+		<w2:require src="/ux/common/udc/udcAddress.xml" />
+		<w2:require src="/ux/common/udc/udcBusiness.xml" />
+		<w2:require src="/ux/common/udc/udcCardnumber.xml" />
+		<w2:require src="/ux/common/udc/udcCurrency.xml" />
+		<w2:require src="/ux/common/udc/udcDatecalendarSelect.xml" />
+		<w2:require src="/ux/common/udc/udcDatecalendarTime.xml" />
+		<w2:require src="/ux/common/udc/udcEmail.xml" />
+		<w2:require src="/ux/common/udc/udcICnumber.xml" />
+		<w2:require src="/ux/common/udc/udcNumber.xml" />
+		<w2:require src="/ux/common/udc/udcPhone.xml" />
+		<w2:require src="/ux/common/udc/udcSearchCode.xml" />
+		<w2:require src="/ux/common/udc/udcSearchpopup.xml" />
+		<w2:require src="/ux/common/udc/udcYearcalendar.xml" />
+		<w2:require src="/ux/common/udc/udcYearMonthcalendar.xml" />
+		<!-- 테스트를 위한 참조       -->
+		<w2:require src="/ux/common/udc/udcTradePopup.xml" />
+		<w2:require src="/ux/common/udc/udcDeptPopup.xml" />
+		<w2:require src="/ux/common/udc/udcListCount.xml" />
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml" />
+		<w2:require src="/ux/common/udc/udcPeriodcalendar1.xml" />
+		<w2:require src="/WEB-INF/ux/common/udc/udcDeptPopup.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+	</head>
+
+	<body ev:onpageload="scwin.onpageload">
+    <xf:group class="content_body" id="" style="">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="wfrTitle" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>
+        </xf:group>
+        <xf:group class="tbl_search" id="grpSearch" style="">
+            <xf:group class="tb_list" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:120px;" tagname="col" />
+                    <xf:group style="width:auto;" tagname="col" />
+                    <xf:group style="width:120px;" tagname="col" />
+                    <xf:group style="width:auto;" tagname="col" />
+                    <xf:group style="width:120px;" tagname="col" />
+                    <xf:group style="width:auto;" tagname="col" />
+                    <xf:group style="width:120px;" tagname="col" />
+                    <xf:group style="width:auto;" tagname="col" />
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                	<xf:group class="w2tb_th" style="" tagname="th">
+                		<w2:attributes>
+                			<w2:scope>row</w2:scope>
+                		</w2:attributes>
+                		<w2:span class="" id="" label="소속부서" style="" />
+                	</xf:group>
+                	<xf:group class="w2tb_td" style="" tagname="td">
+                		<w2:udc_deptpopup class="req" disabled="false" id="udcDeptInfo2" style="" />
+                	</xf:group>
+                	<xf:group class="w2tb_th" style="" tagname="th">
+                		<w2:attributes>
+                			<w2:scope>row</w2:scope>
+                		</w2:attributes>
+                		<w2:span class="" id="" label="사용여부" style="" />
+                	</xf:group>
+                	<xf:group class="w2tb_td" style="" tagname="td">
+                		<xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체"
+                			class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label"
+                			id="sbxKeyUseYn" ref="data:dsSrch.useYn" style="width:140px;" submenuSize="auto" textAlign="left">
+                			<xf:choices>
+                				<xf:itemset nodeset="data:dsUseYn">
+                					<xf:label ref="cdNm" />
+                					<xf:value ref="cd" />
+                				</xf:itemset>
+                			</xf:choices>
+                		</xf:select1>
+                	</xf:group>
+                	<xf:group class="w2tb_th" tagname="th">
+                		<w2:attributes>
+                			<w2:scope>row</w2:scope>
+                		</w2:attributes>
+                		<w2:span class="" id="" label="성명" style="" />
+                	</xf:group>
+                	<xf:group class="w2tb_td" tagname="td">
+                		<w2:attributes />
+                		<xf:input id="ibxKeyUserNm" ref="data:dsSrch.userNm" style="width: 140px;" ev:onkeyup="scwin.ibxKeyUserNm_onkeyup" maxByteLength="300"/>
+                	</xf:group>
+                	<xf:group class="w2tb_th" style="" tagname="th">
+                		<w2:attributes>
+                			<w2:scope>row</w2:scope>
+                		</w2:attributes>
+                		<w2:span class="" id="labTitle" label="휴대폰" style="" />
+                	</xf:group>
+                	<xf:group class="w2tb_td" tagname="td">
+                		<w2:attributes />
+                		<xf:input id="ibxKeyCrryTelNo" ref="data:dsSrch.crryTelNo" style="width: 140px;"
+                			ev:onkeyup="scwin.ibxKeyCrryTelNo_onkeyup" allowChar="0-9-" maxlength="20"/>
+                		<xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체" class="" direction="auto"
+                			disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxKeyUserTypeGb"
+                			ref="data:dsSrch.userTypeGb" style="width:140px;" submenuSize="auto" textAlign="left">
+                			<xf:choices>
+                				<xf:item>
+                					<xf:label><![CDATA[소노그룹 사용자]]></xf:label>
+                					<xf:value><![CDATA[1]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[인사 사용자]]></xf:label>
+                					<xf:value><![CDATA[2]]></xf:value>
+                				</xf:item>
+                				<!-- 
+                				<xf:item>
+                					<xf:label><![CDATA[공통텔레피아 사용자]]></xf:label>
+                					<xf:value><![CDATA[3]]></xf:value>
+                				</xf:item>
+                				 -->
+                				<xf:item>
+                					<xf:label><![CDATA[포탈 사용자]]></xf:label>
+                					<xf:value><![CDATA[4]]></xf:value>
+                				</xf:item>
+                				<xf:item>
+                					<xf:label><![CDATA[AS 사용자]]></xf:label>
+                					<xf:value><![CDATA[5]]></xf:value>
+                				</xf:item>
+                			</xf:choices>
+                		</xf:select1>
+                	</xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" ev:onclick="scwin.btnFind_onclick" id="btnFind" outerDiv="false" style="">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <xf:group class="defaultbox" id="" style="">
+            <w2:textbox class="df_tt" id="" label="사용자 목록" style="" tagname="h3" />
+            <w2:udc_list_count id="uListCount" style="" />
+        </xf:group>
+        <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsUserList" ev:onrowindexchange="scwin.grid_onrowindexchange" fixedColumnWithHidden="true" focusMode="row" id="grdUserList" readOnly="" rowNumHeaderValue="No" rowStatusWidth="30" scrollByColumn="false" sortable="True" showSortableUseFilterList="true" useFilterList="true" style="height: 484px;" useShiftKey="true" ev:onscrollend="scwin.grdUserList_onscrollend">
+            <w2:header id="header1" style="">
+                <w2:row id="row2" style="">
+                    <w2:column blockSelect="false" id="column23" inputType="text" value="NO" width="50" style=""></w2:column>
+                    <w2:column blockSelect="false" id="column21" inputType="text" sortable="false" value="사용자ID" width="120" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column210" inputType="text" sortable="true" value="사번" width="80" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column19" inputType="text" value="성명" width="70" style=""></w2:column>
+                    <w2:column blockSelect="false" id="column17" inputType="text" value="직급" width="100" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="column15" inputType="text" value="휴대폰" width="120" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column37" inputType="text" removeBorderStyle="false" value="사용여부" width="70" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column35" inputType="text" removeBorderStyle="false" value="직원구분" width="70" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column31" inputType="text" removeBorderStyle="false" value="소속부서" width="150" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column38" inputType="text" removeBorderStyle="false" value="이메일" width="170" style="">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="100" inputType="text" id="column211" value="유효시작일자" blockSelect="false" displayMode="label" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column33" inputType="text" removeBorderStyle="false" value="유효종료일자" width="100" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column29" inputType="text" removeBorderStyle="false" value="비고" width="200" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column27" inputType="text" removeBorderStyle="false" value="등록자" width="70" style="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="column25" inputType="text" removeBorderStyle="false" value="등록일자" width="120" style="">
+                    </w2:column>
+                </w2:row>
+            </w2:header>
+            <w2:gBody id="gBody4" style="">
+                <w2:row id="row5" style="">
+                    <w2:column blockSelect="false" expression="rowindex()+1" id="column24" inputType="expression" style="height:24px;" width="40">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="userId" inputType="text" style="height:24px;" width="120" readOnly="true">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="userEmpno" inputType="text" style="height:24px;" width="120" readOnly="true">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="userNm" inputType="text" style="height:24px;" width="70" readOnly="true">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="jbclNm" inputType="text" style="height:24px;" width="100" readOnly="true">
+                    </w2:column>
+                    <w2:column blockSelect="false" id="secCrryTelNo" inputType="text" style="height:24px;" width="120" readOnly="true" displayFormat="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="useYn" inputType="text"
+                    	removeBorderStyle="false" style="height:24px;" width="70" readOnly="true" allOption=""
+                    	chooseOption="" ref="">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="empGbNm" inputType="text" removeBorderStyle="false" style="height:24px;" width="70" readOnly="true">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="deptNm" inputType="text" removeBorderStyle="false" style="height:24px;" width="150" readOnly="true">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="email" inputType="text" removeBorderStyle="false" width="170" readOnly="true">
+                    </w2:column>
+                    <w2:column removeBorderStyle="false" width="110" inputType="calendar" style="height:24px;" id="useValdStrtDt" blockSelect="false" displayMode="label" readOnly="true">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="useValdEndDt" inputType="calendar" removeBorderStyle="false" style="height:24px;" width="110" readOnly="true">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="rmkCn" inputType="text" removeBorderStyle="false" style="height:24px;" width="200" readOnly="true">
+                    </w2:column>
+                    <w2:column blockSelect="false" displayMode="label" id="fstRegprEmpnoNm" inputType="text" removeBorderStyle="false" style="height:24px;" width="70" readOnly="true">
+                    </w2:column>
+                    <w2:column applyFormat="display" blockSelect="false" dataType="date" displayFormat="YYYY-MM-DD" displayMode="label" id="fstRegDtm" inputType="calendar" removeBorderStyle="false" style="height:24px;" width="110" readOnly="true">
+                    </w2:column>
+                </w2:row>
+            </w2:gBody>
+        </w2:gridView>
+        <xf:group class="defaultbox" id="" style="">
+            <w2:textbox class="df_tt" id="" label="사용자 정보" style="" tagname="h3" />
+            <xf:group class="fr" id="" style="">
+                <xf:group class="ml5 fr" id="" style="">
+                	<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnNew_onclick"
+                		id="btnNew" outerDiv="false" style="">
+                		<xf:label><![CDATA[신규]]></xf:label>
+                	</w2:anchor>
+                	<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnSave_onclick"
+                		id="btnSave" outerDiv="false" style="">
+                		<xf:label>
+                			<![CDATA[저장]]>
+                		</xf:label>
+                	</w2:anchor>
+                	<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnDel_onclick"
+                		id="btnDel" outerDiv="false" style="">
+                		<xf:label>
+                			<![CDATA[삭제]]>
+                		</xf:label>
+                	</w2:anchor>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+        <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpUserInfo" style="width:Infinity%;" tagname="table">
+            <w2:attributes>
+                <w2:summary>사용자 정보 입력 테이블 입니다.</w2:summary>
+            </w2:attributes>
+            <xf:group tagname="colgroup">
+                <xf:group style="width:100.00px;" tagname="col" />
+                <xf:group style="" tagname="col" />
+                <xf:group style="width:100.00px;" tagname="col" />
+                <xf:group style="" tagname="col" />
+                <xf:group style="width:120.00px;" tagname="col" />
+                <xf:group style="" tagname="col" />
+                <xf:group style="width:100px;" tagname="col" />
+                <xf:group style="" tagname="col" />
+            </xf:group>
+            <xf:group style="" tagname="tr">
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="사용자ID" style="" />
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="ibxUserId" ref="data:dsUserInfo.userId" style="width: 100%;" class="req" maxlength="20" allowChar="0-9a-z" mandatory="true" maxByteLength=""/>
+                </xf:group>
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="성명" style="" />
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="ibxUserNm" initValue="" ref="data:dsUserInfo.userNm" style="width: 100%;" class="req" minByteLength="" mandatory="true" maxlength="" maxByteLength="300"/>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="직급" style="" />
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                	<xf:input id="ibxJbposGbNm" initValue="" ref="data:dsUserInfo.jbclNm" style="width: 100%;" minByteLength="" maxByteLength="300"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="휴대전화" style="" />
+                </xf:group>
+                <xf:group class="w2tb_td" tagname="td">
+                	<w2:attributes />
+                	<xf:input id="ibxCrryTelNo" ref="data:dsUserInfo.secCrryTelNo" style="width: 100%;" class="" maxlength="20" allowChar="0-9-" mandatory="true"/>
+                </xf:group>
+            </xf:group>
+            <xf:group style="" tagname="tr">
+            	<xf:group class="w2tb_th req" style="" tagname="th">
+            		<w2:attributes>
+            			<w2:scope>row</w2:scope>
+            		</w2:attributes>
+            		<w2:span id="" label="사용여부" style="" />
+            	</xf:group>
+            	<xf:group class="w2tb_td" style="" tagname="td">
+            		<xf:select1 appearance="full" cols="" id="rdoUseYn" ref="data:dsUserInfo.useYn"
+            			renderType="radiogroup" rows="" selectedIndex="" style="" class="req">
+            			<xf:choices>
+            				<xf:itemset nodeset="data:dsUseYn">
+            					<xf:label ref="cdNm" />
+            					<xf:value ref="cd" />
+            				</xf:itemset>
+            			</xf:choices>
+            		</xf:select1>
+            	</xf:group>
+            	<xf:group class="w2tb_th" style="" tagname="th">
+            		<w2:attributes>
+            			<w2:scope>row</w2:scope>
+            		</w2:attributes>
+            		<w2:span id="" label="직원구분" style="" />
+            	</xf:group>
+            	<xf:group class="w2tb_td" style="" tagname="td">
+            		<xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="선택" class=""
+            			direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label"
+            			id="sbxEmpGbCd" ref="data:dsUserInfo.empGbCd" style="width:100%;" submenuSize="auto" textAlign="left">
+            			<xf:choices />
+            		</xf:select1>
+            	</xf:group>
+            	<xf:group class="w2tb_th" style="" tagname="th">
+            		<w2:attributes>
+            			<w2:scope>row</w2:scope>
+            		</w2:attributes>
+            		<w2:span id="" label="사용유효일자" style="" />
+            	</xf:group>
+            	<xf:group class="w2tb_td" style="" tagname="td">
+            		<w2:udc_periodcalendar id="udcPrdInfo" style=""></w2:udc_periodcalendar>
+            	</xf:group>
+       			<xf:group class="w2tb_td pd0 bl0" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>2</w2:colspan>
+                    </w2:attributes>
+	            	<xf:group adaptive="" adaptiveThreshold="" class="w2tb intbl" id="grpUserTypeGb" style="" tagname="table">
+	            		<w2:attributes>
+	            			<w2:summary></w2:summary>
+	            		</w2:attributes>
+	            		<xf:group tagname="colgroup">
+	            			<xf:group style="width:100px;" tagname="col"></xf:group>
+	            			<xf:group style="" tagname="col"></xf:group>
+	            		</xf:group>
+	            		<xf:group style="" tagname="tr">
+	            			<xf:group class="w2tb_th req" tagname="th"><w2:attributes>
+	            					<w2:scope>row</w2:scope>
+	            				</w2:attributes><w2:span id="" label="사용자유형" style=""></w2:span></xf:group>
+	            			<xf:group class="w2tb_td" tagname="td">
+	            				<w2:attributes></w2:attributes>
+	            				<xf:select1 allOption="" appearance="minimal" chooseOption="" chooseOptionLabel="전체" class="req"
+	            					direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxUserTypeGb"
+	            					ref="data:dsUserInfo.userTypeGb" style="width:140px;" submenuSize="auto" textAlign="left" mandatory="true">
+	            					<xf:choices>
+	            						<xf:item>
+	            							<xf:label><![CDATA[소노그룹 사용자]]></xf:label>
+	            							<xf:value><![CDATA[1]]></xf:value>
+	            						</xf:item>
+	            						<xf:item>
+	            							<xf:label><![CDATA[인사 사용자]]></xf:label>
+	            							<xf:value><![CDATA[2]]></xf:value>
+	            						</xf:item>
+	            						<!-- 
+	            							<xf:item>
+	            							<xf:label><![CDATA[공통텔레피아 사용자]]></xf:label>
+	            							<xf:value><![CDATA[3]]></xf:value>
+	            							</xf:item>
+	            						-->
+	            						<xf:item>
+	            							<xf:label><![CDATA[포탈 사용자]]></xf:label>
+	            							<xf:value><![CDATA[4]]></xf:value>
+	            						</xf:item>
+	            						<xf:item>
+	            							<xf:label><![CDATA[AS 사용자]]></xf:label>
+	            							<xf:value><![CDATA[5]]></xf:value>
+	            						</xf:item>
+	            					</xf:choices>
+	            				</xf:select1>
+	            			</xf:group>
+	            		</xf:group>
+	            	</xf:group>
+       			</xf:group>
+            </xf:group>
+            <xf:group class="" style="" tagname="tr">
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="비밀번호" style="" />
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.binPwInit_onclick" id="binPwInit" outerDiv="false" style="">
+                        <xf:label>
+                            <![CDATA[비밀번호 초기화]]>
+                        </xf:label>
+                    </w2:anchor>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="이메일" style="" />
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="ibxEmail" ref="data:dsUserList.email" style="width: 100%;" maxlength="100"/>
+                </xf:group>
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="소속부서" style="" />
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>1</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <w2:udc_deptpopup id="udcDeptInfo" class=""></w2:udc_deptpopup>
+                </xf:group>
+                <xf:group tagname="th" class="w2tb_th">
+                    <w2:attributes></w2:attributes>
+                    <w2:span id="" label="비고" style=""></w2:span>
+                </xf:group>
+                <xf:group tagname="td" class="w2tb_td">
+                    <w2:attributes></w2:attributes>
+                    <xf:textarea ref="data:dsUserInfo.rmkCn" id="txaRmkCn" minByteLength="" maxByteLength="4000">
+                    </xf:textarea>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

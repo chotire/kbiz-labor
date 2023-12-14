@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" id="dsAprvList" repeatNode="map" saveRemovedData="true" style="">
+					<w2:columnInfo>
+						<w2:column id="rowNum" name="페이지 글번호" dataType="text"></w2:column>
+						<w2:column dataType="text" id="aprvNo" name="결재번호"></w2:column>
+						<w2:column dataType="text" id="aprvTtl" name="제목"></w2:column>
+						<w2:column dataType="text" id="aprvStusNm" name="결재상태"></w2:column>
+						<w2:column dataType="text" id="jobGbNm" name="업무구분"></w2:column>
+						<w2:column dataType="text" id="fstRegDtm" name="신청일"></w2:column>
+						<w2:column dataType="text" id="regprEmpNm" name="신청자"></w2:column>
+						<w2:column dataType="text" id="rvwrEmpNm" name="검토자"></w2:column>
+						<w2:column dataType="text" id="fnlAprprEmpNm" name="최종결재자"></w2:column>
+						<w2:column dataType="text" id="menuNm" name="메뉴명"></w2:column>
+
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSrch" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="frDate" name="시작신청일자"></w2:key>
+						<w2:key dataType="text" id="toDate" name="종료신청일자"></w2:key>
+						<w2:key dataType="text" id="aprvTtl" name="제목명"></w2:key>
+						<w2:key dataType="text" id="aprvStusCd" name="결재상태"></w2:key>
+						<w2:key dataType="text" id="aprvNo" name="결재번호"></w2:key>
+						<w2:key dataType="text" id="fstRegprEmpno" name="기안자"></w2:key>
+						<w2:key dataType="text" id="pageRowStart" name="페이지 시작행번호"></w2:key>
+						<w2:key dataType="text" id="pageRowCount" name="페이지 요청건수"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script type="text/javascript" src="/resources/js/html2canvas/html2canvas.js"></script>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CF00350501U.xml 
+ * Program Name : 결재현황 
+ * Author : jysong (tpsongjy)
+ * Date : 2019.06.03
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ * 2019.06.03   jysong   최초작성
+ *     
+ **************************************************************************/ 
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+	var svcId = "";        
+	var ingStatus = "";
+	
+	
+    /************************************************************************************ 
+     *  [2] onpageload
+     ************************************************************************************/   
+    scwin.onpageload = function() { 
+    	//페이지리스트 초기화
+     	com.pageListObj.init();
+		
+		//화면초기화 호출
+        scwin.initScreen();
+        
+        console.log("<!-- 메뉴ID --> " + gcm.MENU_ID);
+    };
+
+	// 화면 초기화(필수)
+	scwin.initScreen = function() {
+		//결재상태 코드값 맵핑
+		com.selCdList( "sbxAprvStusCd", "CF004", "Y", "Y","", "", "", "", "","", "", "", "", "" );  // 업무구분코드[CF004] : 결재상태코드
+	    
+	    var nowDate  = $w.getCurrentServerDate( "yyyyMMdd" );
+	    
+	    //신청일자 default set
+	    //com.setUdcValue("udcCalendarSrch", "frDate", $w.dateAdd( nowDate , "-7" ));
+	    com.setUdcValue("udcCalendarSrch", "frDate", "2016-01-01");
+	    com.setUdcValue("udcCalendarSrch", "toDate", nowDate);
+	    
+	    scwin.btnSearch_onclick();
+	
+	}; 
+	
+	
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+	/**************************************************************************
+	 * 함 수 명: scwin.fnSearchList
+	 * 기 능: 결재현황 정보를 리스트 조회
+	 **************************************************************************/
+    scwin.fnSearchList = function() {
+   
+        // udc의 코드값 가져오기.
+        dsSrch.set("frDate", com.getUdcValue("udcCalendarSrch","frDate"));
+        dsSrch.set("toDate", com.getUdcValue("udcCalendarSrch","toDate"));
+        dsSrch.set("fstRegprEmpno", com.getUdcValue("udcUserSrch","userId"));
+
+        svcId = "selectTcfAprvPageList";
+
+        ajaxLib.ajax("/cf/CF00350501U/selectTcfAprvPageList", {
+        	mode : "asynchronous"
+        	, method : "POST"
+            , requestData : dsSrch.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        }); 
+    };
+	
+	/**************************************************************************
+	 * 함 수 명: scwin.pageMove
+	 * 기 능: 조회 시작값, 가져올 행수 지정후 리스트 조회
+	 **************************************************************************/
+	scwin.pageMove = function(current){
+		var end = sbx_SelectCount.getValue();		
+		if( end == null || end == "") end = 10;
+		var start = Math.abs( (current-1) ) * end;
+		
+		dsSrch.set( "pageRowStart" , start );
+		dsSrch.set( "pageRowCount" , end );
+		
+		//조회
+		scwin.fnSearchList();	
+		
+	};
+	
+	
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+	/** 오류시 처리 **/
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+    }
+	
+	 /** 정상시 후처리 **/
+	scwin.fnCallback = function(result, e) {
+	
+	   	switch(svcId) {
+	   		case "selectTcfAprvPageList" :	   			
+	   			
+	   			//전체 조회건수
+	   			var pageTotalCount = result.data.pageTotalCount;
+	   			
+	   			//페이지 네비게이션 값 설정
+	   			var pageRowCount = 10;
+	   			var pageSelectCount = sbx_SelectCount.getValue();
+	   			if(pageSelectCount != null && pageSelectCount > 0){
+	   				pageRowCount = pageSelectCount;
+	   			}
+	   			var pageNaviCount = Math.ceil(pageTotalCount / pageRowCount);
+	   			
+	   			//전체갯수표시
+				com.setUdcValue("dsTotalCount", "udcListCount", pageTotalCount);
+				//페이지 조회결과 표시
+				dsAprvList.setJSON(result.data.dsTcfAprvList);
+				
+				//페이지 네비게이션 표시
+		   		ingStatus = "S";
+		   		var paramObj = { 
+                    		max:pageNaviCount	// 페이지의 총 Count를 입력합니다. [필수] 
+                    		,svcId:svcId 		// 해당서비스 id 고정[필수] 이부분은 그대로 사용합니다. 
+                 			};
+                 			
+  				com.pageListObj.max(paramObj);
+	   			break;
+
+			default :
+				break;
+		}
+	};
+	
+	
+	
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+	/**************************************************************************
+	 * Event: scwin.btnSearch_onclick
+	 * 기 능: 결재현황 정보를 리스트 조회
+	 **************************************************************************/
+	scwin.btnSearch_onclick = function() {	
+       	//grdAprvList.removeAll();
+		//grdAprvList.initGrid();		//목록 초기화
+		scwin.pageMove(1);			//초기페이지이동
+	};
+	
+	
+	/**************************************************************************
+	 * Event: scwin.sbx_SelectCount_onviewchange
+	 * 기 능: 페이지 목록 갯수 선택버튼 이벤트
+	 **************************************************************************/
+	scwin.sbx_SelectCount_onviewchange = function(info) {
+		if(info.oldValue != info.newValue) {
+			grdAprvList.options.visibleRowNum = sbx_SelectCount.getValue();
+		}
+	};
+	
+	//제목명 엔터
+	scwin.ibxAprvTtl_onkeyup = function(e) {
+		if ( e.keyCode == 13 ){
+			btnSearch.trigger("onclick");
+		}
+	};
+	
+	//결재번호 엔터
+	scwin.ibxAprvNo_onkeyup = function(e) {
+		if ( e.keyCode == 13 ){
+			btnSearch.trigger("onclick");
+		}
+	};
+
+   /**************************************************************************
+	 * Event: scwin.btnAprv_onclick
+	 * 기 능: 결재처리후 결재번호 받아서 처리할 자체 업무이벤트 등록
+	 **************************************************************************/
+    scwin.aprvPublicAction = function() {
+		
+		//결재번호
+		var aprvNo = com.getAprvNo();		
+		console.log("결재번호 = " + aprvNo);
+		
+    };
+
+	/**************************************************************************
+	 * Event: scwin.btnAprv_onclick
+	 * 기 능: 결재상신 호출 이벤트
+	 **************************************************************************/
+	scwin.btnAprv_onclick = function(e) {
+	
+		/* 1. 기본 파라미터 설정 */
+        var paramObj = new Object();
+
+        paramObj.jobGbCd = "CF";                                         // 업무구분코드
+        paramObj.importUrl = "/ux/cf/CF00350501E.xml";                   // 출력할 결재본문페이지
+        paramObj.aprvTtl = "CF_결재테스트_" + com.transDateType("now");  // 결재제목
+        paramObj.rvwrEmpno = "504476";                                   // 검토자_사번
+        paramObj.fnlAprprEmpno = "504476";                               // 최종승인자_사번
+        paramObj.aprvPrcgNm = "";                                        // 후처리결재처리명
+        paramObj.aprvPrcgEventNm = "/cf/CFAprv/notifyAprvTest";          // 후처리결재처리 이벤트명(후처리 실행을 위한 URL을 입력한다)
+        paramObj.aprvDocModiPsblYn = "Y";                                // 결재문서 수정불가기능 Y/N  //////////////////
+        paramObj.aprlnModiPsblYn = "N";                                  // 결재선 수정불가기능 Y/N    //////////////////
+        paramObj.aprvAtchModiPsblYn = "Y";                               // 결재첨부 수정불가기능 Y/N  //////////////////
+        paramObj.aprvAflId = "erptf_69913236141509102";                  // 본문링크용 첨부파일 ID (콤머로 구분해서 보내준다)
+        paramObj.popupWidth = "1200";                                    // 팝업창 가로크기
+        paramObj.popupHeight = "800";                                    // 팝업창 세로크기
+        paramObj.relatedDocumentIds = "";                                // 텔레피아 관련문서 ID (콤머로 구분해서 보내준다) : 필수값 아님
+        
+        // 텔레피아 본문에 붙는 링크페이지(필수값 아님 : 사용 업무팀만 적용)
+        paramObj.anchorUrl = "/ux/cf/CF00350502E.xml&test1=111&test2=222";
+        paramObj.anchorUrlMsg = "첨부된링크주소입니다"; // 링크에 붙는 메시지
+
+        // 첨부파일영역보기 : 필수값 아님
+        paramObj.aprvAtchAreaYn = "Y";
+
+        // 웹스퀘어의 XML이 아닌 HTML로 작성한 페이지를 첨부하고 싶을 때에는 아래와 같이 importHtmlYn 을 추가한다
+        //paramObj.importHtmlYn = "Y";                            // 출력할 결재본문페이지 HTML방식사용여부
+        //paramObj.importUrl = "/cf/CFUpload/notifyAprvHtmlView"; // 출력할 결재본문 HTML페이지 URL (notifyAprvHtmlView 은 샘플입니다)
+        
+        // 첨부용 첨부파일ID(필수값 아님 : 텔레피아 에디터에 직접첨부됨)
+        //paramObj.aprvAddAflId = "erptf_69913236141509102"; // 첨부용 첨부파일 ID (콤머로 구분해서 보내준다)
+
+        com.aprvSend(paramObj); //일반결재 호출
+	};
+	/**************************************************************************
+     * Event: scwin.btnAprvEditor_onclick
+     * 기 능: 결재의견달기 호출 이벤트
+     **************************************************************************/
+    scwin.btnAprvEditor_onclick = function(e) {
+    
+        /* 1. 기본 파라미터 설정 */
+        var paramObj = new Object();
+
+        paramObj.jobGbCd = "CF";                                         // 업무구분코드
+        paramObj.importUrl = "/ux/cf/CF00350501E.xml";                   // 출력할 결재본문페이지
+        paramObj.aprvTtl = "CF_결재테스트_" + com.transDateType("now");  // 결재제목
+        paramObj.rvwrEmpno = "504476";                                   // 검토자_사번
+        paramObj.fnlAprprEmpno = "504476";                               // 최종승인자_사번
+        paramObj.aprvPrcgNm = "";                                        // 후처리결재처리명
+        paramObj.aprvPrcgEventNm = "/cf/CFAprv/notifyAprvTest";          // 후처리결재처리 이벤트명(후처리 실행을 위한 URL을 입력한다)
+        paramObj.aprvDocModiPsblYn = "Y";                                // 결재문서 수정불가기능 Y/N
+        paramObj.aprlnModiPsblYn = "N";                                  // 결재선 수정불가기능 Y/N
+        paramObj.aprvAtchModiPsblYn = "Y";                               // 결재첨부 수정불가기능 Y/N
+        paramObj.aprvAflId = "erptf_69913236141509102";                  // 본문링크용 첨부파일 ID (콤머로 구분해서 보내준다)
+        paramObj.popupWidth = "1200";                                    // 미리보기 가로크기
+        paramObj.popupHeight = "800";                                    // 미리보기 세로크기
+        paramObj.relatedDocumentIds = "";                                // 텔레피아 관련문서 ID (콤머로 구분해서 보내준다) : 필수값 아님
+
+        // 텔레피아 본문에 붙는 링크페이지(필수값 아님 : 사용 업무팀만 적용)
+        paramObj.anchorUrl = "/ux/cf/CF00350502E.xml&test1=111&test2=222";
+        paramObj.anchorUrlMsg = "첨부된링크주소입니다"; // 링크에 붙는 메시지
+
+        // 첨부파일영역보기 : 필수값 아님
+        paramObj.aprvAtchAreaYn = "Y";
+
+        com.aprvSendEditor(paramObj); //의견달기호출
+    };
+    
+     /**************************************************************************
+     * Event: scwin.btnAprvNo_onclick
+     * 기 능: 결재등록번호확인
+     **************************************************************************/
+    scwin.btnAprvNo_onclick = function() {
+        
+        var aprvNo = com.getAprvNo();
+        alert(aprvNo);
+    };
+    
+    //미리보기
+	scwin.btnAprvPreview_onclick = function() {
+		
+		var area    = $("#"+grdAprvList.id);		
+		var areaId  = grdAprvList.id;
+		var eWidth  = area.get(0).scrollWidth;
+		var eHeight = area.get(0).scrollHeight;
+		 
+		 html2canvas(document.getElementById(areaId),	{
+        	width: eWidth, 
+        	height: eHeight
+        	}).then (function(canvas) {
+                    	
+                var imgData = canvas.toDataURL();
+                var popOps = {
+                    id : "popup0",
+                    url : "/ux/template/pagePrint/html2canvas.xml",
+                    type : "browser",
+                    popup_name : "이미지미리보기",                    
+                    width  : eWidth,
+                    height : eHeight,
+                    data : {
+                        img : imgData
+                    }                    
+                };
+                com.popup_open(popOps);
+        });           
+               
+    };
+
+    // 첨부링크 샘플
+    scwin.btnAprvAnchor_onclick = function() {
+        var urls = '/common/notifyAprvHtml?movePage=/ux/cf/CF00350502E.xml&test1=111&test2=222';
+        window.open(urls, "_blank");
+    };
+
+     /**************************************************************************
+     * Event: scwin.fnPopAprvCloseAction
+     * 기 능: 결재와 결재의견달기 페이지 팝업에서 닫기 버튼 혹은 X버튼을 클릭시 
+     * 본 함수와 같은이름의 스크립트를 업무페이지에 생성시 스크립트 내용이 실행된다.
+     * 참고로 본 함수가 없어도 오류는 없다.
+     **************************************************************************/
+    scwin.fnPopAprvCloseAction = function() {
+        console.log("scwin.fnPopAprvCloseAction TEST!!!");
+    };
+]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcUserPopup.xml"></w2:require>
+
+		<w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcUserPopup.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<!-- 결재이벤트 페이지 임포트 -->
+		<xf:group>
+        	<w2:wframe style="display:none" id="importAprvMain" src="/ux/cf/CF00350500U.xml"></w2:wframe>
+		</xf:group>
+		<!-- #결재이벤트 페이지 임포트 -->
+		<xf:group style="" id="" class="elec_body">
+			<xf:group class="tbl_search" id="" style="">
+
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:82px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:69px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:82px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="신청일자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:udc_periodcalendar style="" id="udcCalendarSrch" class="req"></w2:udc_periodcalendar>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="제목명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxAprvTtl" style="width: 220px;" ref="data:dsSrch.aprvTtl" ev:onkeypress=""
+								ev:onkeyup="scwin.ibxAprvTtl_onkeyup"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="결재상태" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체" class=""
+								direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxAprvStusCd"
+								mandatory="true" ref="data:dsSrch.aprvStusCd" style="width:140px;" submenuSize="auto" textAlign="left">
+								<w2:attributes>
+									<w2:msg>조회조건 테이블 입니다.</w2:msg>
+								</w2:attributes>
+								<xf:choices></xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="결재번호" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxAprvNo" style="width: 122px" ref="data:dsSrch.aprvNo" ev:onkeypress=""
+								ev:onkeyup="scwin.ibxAprvNo_onkeyup"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기안자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:attributes>
+								<w2:colspan>3</w2:colspan>
+								<w2:rowspan>1</w2:rowspan>
+							</w2:attributes>
+							<w2:udc_userpopup id="udcUserSrch"></w2:udc_userpopup>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnSearch" outerDiv="false" style="" ev:onclick="scwin.btnSearch_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+
+				</xf:group>
+
+			</xf:group>
+
+			<xf:group style="" id="group1" class="defaultbox" ev:onclick="scwin.group1_onclick">
+				<w2:textbox label="결재테스트E" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+				<!-- 결재버튼 -->
+				<xf:group class="right_wrap" id="" style="" tagname="">
+					<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnAprv1" outerDiv="false" style="" ev:onclick="scwin.btnAprv_onclick">
+						<xf:label><![CDATA[결재]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnAprv2" outerDiv="false" style="" ev:onclick="scwin.btnAprvEditor_onclick">
+						<xf:label><![CDATA[결재의견달기]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnAprv3" outerDiv="false" style="" ev:onclick="scwin.btnAprvNo_onclick">
+						<xf:label><![CDATA[결재번호확인]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnAprv4" outerDiv="false" style="" ev:onclick="scwin.btnAprvPreview_onclick">
+						<xf:label><![CDATA[미리보기]]></xf:label>
+					</w2:anchor>
+                    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnAprv5" outerDiv="false" style="" ev:onclick="scwin.btnAprvAnchor_onclick">
+                        <xf:label><![CDATA[첨부링크샘플]]></xf:label>
+                    </w2:anchor>
+				</xf:group>
+				<!-- #결재버튼 -->
+			</xf:group>
+			<w2:gridView autoFit="allColumn" dataList="data:dsAprvList" fixedColumnWithHidden="true" id="grdAprvList"
+				scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" rowNumVisible=""
+				rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue="" focusMode="row"
+				class="autoHeight" readOnly="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column23" inputType="text" value="NO" width="40"></w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" value="결재번호" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" value="제목" width="250">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" value="결재상태" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" value="업무구분" width="80">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" id="column37" value="신청일"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" id="column35" value="신청자"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" id="column41" value="검토자"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" id="column39" value="최종결재자"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" id="column43" value="메뉴명"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" id="rowNum" inputType="text" style="height:24px;" width="40">
+						</w2:column>
+						<w2:column blockSelect="false" id="aprvNo" inputType="text" style="height:24px;" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="aprvTtl" inputType="text" style="height:24px;" width="250"
+							textAlign="left">
+						</w2:column>
+						<w2:column blockSelect="false" id="aprvStusNm" inputType="text" style="height:24px;" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" id="jobGbNm" inputType="text" style="height:24px;" width="80">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;" id="fstRegDtm"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="regprEmpNm"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="rvwrEmpNm"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="fnlAprprEmpNm"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:24px;" id="menuNm"
+							blockSelect="false" displayMode="label" textAlign="left">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+			<xf:group style="" id="" class="pagination">
+				<w2:pageList displayButtonType="display" displayFormat="#" pageSize="10" pagingType="0" style=""
+					id="pctPageNavi" displaySelectedIndex="true" ev:onviewchange="scwin.pctPageNavi_onviewchange"
+					ev:oninputblur="scwin.pctPageNavi_oninputblur" userData1="selectTcfAprvPageList" userData2="scwin.pageMove">
+				</w2:pageList>
+				<xf:select1 allOption="" appearance="minimal" chooseOption="" class="page_slt" direction="auto"
+					selectedData="true" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbx_SelectCount"
+					optionOrder="false" ref="" style="width:90px;" submenuSize="auto"
+					ev:onviewchange="scwin.sbx_SelectCount_onviewchange">
+					<xf:choices>
+						<xf:item>
+							<xf:label><![CDATA[10건씩 조회]]></xf:label>
+							<xf:value><![CDATA[10]]></xf:value>
+						</xf:item>
+						<xf:item>
+							<xf:label><![CDATA[20건씩 조회]]></xf:label>
+							<xf:value><![CDATA[20]]></xf:value>
+						</xf:item>
+						<xf:item>
+							<xf:label><![CDATA[30건씩 조회]]></xf:label>
+							<xf:value><![CDATA[30]]></xf:value>
+						</xf:item>
+						<xf:item>
+							<xf:label><![CDATA[40건씩 조회]]></xf:label>
+							<xf:value><![CDATA[40]]></xf:value>
+						</xf:item>
+						<xf:item>
+							<xf:label><![CDATA[50건씩 조회]]></xf:label>
+							<xf:value><![CDATA[50]]></xf:value>
+						</xf:item>
+					</xf:choices>
+				</xf:select1>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

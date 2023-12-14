@@ -1,0 +1,47 @@
+plugins {
+    id 'sdcit.prunus'
+    id 'java'
+    id 'java-library'
+    id 'war'
+}
+
+group = 'kbiz'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url 'http://nexus.sdcit.co.kr/nexus/content/groups/public/'
+        allowInsecureProtocol true
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'sdcit.prunus:prunus-security'
+    implementation 'sdcit.prunus:prunus-websquare-adaptor'
+    implementation 'sdcit.prunus:prunus-persistence-mybatis'
+    implementation "sdcit.prunus.biz:prunus-biz-common-code:${prunusVersion}"
+    implementation "sdcit.prunus.biz:prunus-biz-acl-menu:${prunusVersion}"
+    implementation "sdcit.prunus.biz:prunus-biz-acl-resource:${prunusVersion}"
+    implementation 'websquare:websquare5:5.0_2.3747B.20190731.184739_1.5'
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+    implementation 'org.webjars:store.js:2.0.12'
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
+    implementation 'com.h2database:h2'
+
+    // for JSP
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper'
+    providedRuntime 'javax.servlet:jstl'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

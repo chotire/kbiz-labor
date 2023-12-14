@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataMap baseNode="map" id="dsSearchMap">
+			        <w2:keyInfo>
+			            <w2:key id="secResno" name="주민등록번호암호화" dataType="text"></w2:key>
+			            <w2:key id="popType" name="현장코드 검색하기위해사용" dataType="text"></w2:key>
+			            <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+			            <w2:key id="blackListYn" name="블랙리스트여부" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" ev:oncelldatachange="" id="dsList" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="siteCd" name="헌장(부서)코드"></w2:column>
+			            <w2:column dataType="text" id="wkrNo" name="근로자번호"></w2:column>
+			            <w2:column dataType="text" id="wkrNm" name="근로자명"></w2:column>
+			            <w2:column dataType="text" id="zipCd" name="은행코드"></w2:column>
+			            <w2:column dataType="text" id="baseAddr" name="기본주소"></w2:column>
+			            <w2:column dataType="text" id="dtlAddr" name="상세주소"></w2:column>
+			            <w2:column dataType="text" id="ockndCd" name="직종코드"></w2:column>
+			            <w2:column dataType="text" id="resnoErrYn" name="주민등록번호오류여부"></w2:column>
+			            <w2:column dataType="text" id="ockndUct" name="직종단가"></w2:column>
+			            <w2:column dataType="text" id="hdofAproYn" name="본사승인여부"></w2:column>
+			            <w2:column dataType="text" id="telNo" name="전화번호"></w2:column>
+			            <w2:column dataType="text" id="entDt" name="입사일자"></w2:column>
+			            <w2:column dataType="text" id="rtirDt" name="퇴사일자"></w2:column>
+			            <w2:column dataType="text" id="rgacSbmtYn" name="등본제출여부"></w2:column>
+			            <w2:column dataType="text" id="labrGbVal" name="노무구분값"></w2:column>
+			            <w2:column dataType="text" id="eplmtInsurAcqDt" name="고용보험취득일자"></w2:column>
+			            <w2:column dataType="number" id="horwgAmt" name="시급금액"></w2:column>
+			            <w2:column dataType="text" id="blackListYn" name="블랙리스트여부"></w2:column>
+			            <w2:column dataType="text" id="cntrtDt" name="계약일자"></w2:column>
+			            <w2:column dataType="text" id="fnlUctAplyDt" name="최종단가적용일자"></w2:column>
+			            <w2:column dataType="text" id="uctGbVal" name="단가구분값"></w2:column>
+			            <w2:column dataType="number" id="mmwgAmt" name="월급금액"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiCd" name="예산내역코드"></w2:column>
+			            <w2:column dataType="text" id="bankCd" name="은행코드"></w2:column>
+			            <w2:column dataType="text" id="bnactNo" name="계좌번호"></w2:column>
+			            <w2:column dataType="text" id="achdrNm" name="예금주명"></w2:column>
+			            <w2:column dataType="text" id="eplmtInsurEntrYn" name="고용보험가입여부"></w2:column>
+			            <w2:column dataType="text" id="natnpPnsnEntrYn" name="국민연금가입여부"></w2:column>
+			            <w2:column dataType="text" id="hlthInsurEntrYn" name="건강보험가입여부"></w2:column>
+			            <w2:column dataType="text" id="secResno" name="주민등록번호암호화"></w2:column>
+			            <w2:column dataType="text" id="dsprYn" name="장애인여부"></w2:column>
+			            <w2:column dataType="text" id="dsprAflId" name="장애인첨부파일ID"></w2:column>
+			            <w2:column dataType="text" id="aflId" name="첨부파일ID"></w2:column>
+			            <w2:column dataType="text" id="fstRegprEmpno" name="최초등록자사번"></w2:column>
+			            <w2:column dataType="text" id="fstRegDtm" name="최초등록일시"></w2:column>
+			            <w2:column dataType="text" id="fnlModprEmpno" name="최종등록자사번"></w2:column>
+			            <w2:column dataType="text" id="fnlModiDtm" name="최종수정일시"></w2:column>
+			            <w2:column dataType="text" id="ockndNm" name="직종명"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiCd" name="투입공종코드"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiNmNavi" name="투입공종명"></w2:column>
+			            <w2:column dataType="text" id="siteNm" name="현장명"></w2:column>
+			            <w2:column id="dsprAflNm" name="장애인첨부파일명" dataType="text"></w2:column>
+			            <w2:column id="aflNm" name="첨부파일명" dataType="text"></w2:column>
+			            <w2:column id="mskSecResno" name="주민번호암호화후" dataType="text"></w2:column>
+			            <w2:column id="col45" name="name45" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM60200020P.xml
+ * Program Name : 중복등록 노무자 찾기 팝업
+ * Author : jhlee
+ * Date : 2022.06.10
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+        DataCollection description
+
+        dsList: 노무자기본사항 목록
+        dsSearchMap: 검색조건 parameter
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        grdSrcList.initGrid();   	//GRID 초기화
+        //UI팀용 함수 호출
+        com.commonUI();
+        dsSearchMap.set("secResno", JSON.parse($p.getPopupParam()).data.secResno);
+        dsSearchMap.set("siteCd", JSON.parse($p.getPopupParam()).data.siteCd);
+        //조회
+		scwin.fnSearch();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+    //return data
+    scwin.fnReturnValue = function() {
+        let row = grdSrcList.getFocusedRowIndex();
+        
+		if(row < 0){
+			com.showMessage("PRE0115", "");		//선택된 데이터가 없습니다.
+			return;
+		}
+        
+        //개인번호는 "" 처리
+        dsList.setCellData( row , "wkrNo" , "" );
+        
+		com.popup_close(dsList.getRowArray(row));
+    }
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	// 노무자 목록 조회
+	scwin.fnSearch = function() {
+        dsSearchMap.set("popType", "Y");          //현장코드로 조건 검색 시 사용
+        dsSearchMap.set("blackListYn", "N");      //블랙리스트여부
+        ajaxLib.ajax("/cm/cm6020/CM60200000U/selectTcmWtrList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){     
+                dsList.setJSON(result.data.dsList);        
+                //com.setUdcValue("dsListCount", "udcListCount", dsList.getRowCount()); 
+            },            
+            errCallback: function(result, e) {
+                console.log(result);
+            }
+        });
+	};
+	
+    //확인
+	scwin.btnConfirm_onclick = function() {
+		scwin.fnReturnValue();
+	};
+
+    //취소
+	scwin.btnCancel_onclick = function() {
+		com.popup_close("");
+	};
+
+    //GRID 더블 클릭
+	scwin.grdSrcList_oncelldblclick = function(row,col) {
+		scwin.fnReturnValue();
+	};
+	
+]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+		<!-- 	<xf:group class="defaultbox" id="" style="">
+				<w2:udc_list_count id="dsListCount"></w2:udc_list_count>
+			</xf:group> -->
+			<w2:gridView readOnly="true" rowNumVisible="" rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No"
+			    scrollByColumn="false" rowStatusHeaderValue="" focusMode="row" rowStatusVisible="" fixedColumnWithHidden="true"
+			    dataList="data:dsList" style="height:450px;" autoFit="" id="grdSrcList" visibleRowNum="" class="autoHeight"
+			    ev:oncelldblclick="scwin.grdSrcList_oncelldblclick" preventPaste="true">
+			    <w2:caption style="" id="caption2" value="this is a grid caption."></w2:caption>
+			    <w2:header style="" id="header3">
+			        <w2:row style="" id="row9">
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column53" value="No"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="220" inputType="text" style="" id="column51" value="현장명"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="140" inputType="text" style="" id="column49" value="주민번호"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column49" value="성명"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="160" inputType="text" style="" id="column54" value="직종명"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column56" value="입사일자"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column58" value="계약일자"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column60" value="퇴사일자"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="0" inputType="text" style="" id="column61" value="" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			        </w2:row>
+			    </w2:header>
+			    <w2:gBody style="" id="gBody6">
+			        <w2:row style="" id="row10">
+			            <w2:column removeBorderStyle="false" width="70" inputType="expression" style="" id="no" value="" blockSelect="false"
+			                displayMode="label" expression="rowindex()+1">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="220" inputType="text" style="" id="siteNm" value="" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="140" inputType="text" style="" id="mskSecResno" value=""
+			                blockSelect="false" displayMode="label" textAlign="center" displayFormat="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="wkrNm" value="" blockSelect="false"
+			                displayMode="label" textAlign="center" allowChar="" applyFormat="" dataType="text" displayFormat="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="160" inputType="text" style="" id="ockndNm" value="" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="entDt" value="" blockSelect="false"
+			                displayMode="label" textAlign="center" displayType="t" dataType="text" displayFormat="####-##-##">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="cntrtDt" value="" blockSelect="false"
+			                displayMode="label" textAlign="center" dataType="text" displayFormat="####-##-##">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="rtirDt" value="" blockSelect="false"
+			                displayMode="label" dataType="text" displayFormat="####-##-##">
+			            </w2:column>
+
+			            <w2:column removeBorderStyle="false" width="0" inputType="text" style="" id="secResno" value="" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			        </w2:row>
+			    </w2:gBody>
+			</w2:gridView>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancel_onclick">
+					<xf:label><![CDATA[취소]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+
+
+	</body>
+</html>

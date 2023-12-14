@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" id="dsTcmEqpmCdList" repeatNode="map" saveRemovedData="true" style="">
+			    	<w2:columnInfo>
+			    		<w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+			    		<w2:column dataType="text" id="eqpmCd" name="장비코드"></w2:column>
+			    		<w2:column dataType="text" id="tradeCd" name="거래처코드"></w2:column>
+			    		<w2:column id="hireTradeNm" name="회사_명" dataType="text"></w2:column><w2:column dataType="text" id="eqpmNm" name="장비_명"></w2:column>
+			    		<w2:column dataType="text" id="stdrNm" name="규격_명"></w2:column>
+			    		<w2:column dataType="text" id="orcoHireGbVal" name="당사_임차_구분_값"></w2:column>
+			    		<w2:column dataType="text" id="uctAplyMtdVal" name="단가_적용_방법_값"></w2:column>
+			    		<w2:column dataType="number" id="aplyUct" name="적용_단가"></w2:column>
+			    	</w2:columnInfo>
+			    	<w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM700000015U.xml
+ * Program Name : 거래처별 장비
+ * Author : dslee 
+ * Date : 2022.06.10
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ * 2022.06.10   dslee    최초작성
+ **************************************************************************/
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/ 
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {
+        cmCom.setSite(wfmKeySiteInfo.getWindow());  //세션의 현장코드를 셋팅     
+        com.commonUI();
+    };
+/**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+/**************************************************************************
+ * [4] Callback
+ **************************************************************************/
+/************************************************************************************
+ * [5] Event 함수
+ ************************************************************************************/
+    //현장코드 변경 이벤트
+    scwin.WFrameSiteInfo_change_callback = function(){
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드
+        scwin.btnFind_onclick();
+    };
+    
+	//조회 클릭
+	scwin.btnFind_onclick = function() {
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드
+
+        if (dsSearchMap.get("siteCd") == ""){
+            com.showMessage("SAA0031", "현장"); //을(를) 선택하십시오.
+            return false;
+        }
+        
+        ajaxLib.ajax("/cm/cm7000/CM70000015U/selectTcmEqpmCdByTrade", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e) {
+                        dsTcmEqpmCdList.setJSON(result.data);
+                        com.setUdcValue("dsTotalCount","udcListCount",dsTcmEqpmCdList.getTotalRow());
+            },
+            errCallback: function(result, e) {}
+        });
+        
+	};
+
+    //엑셀다운
+	scwin.btnExcelDwn_onclick = function() {
+        grdTcmEqpmCdList.advancedExcelDownload({
+            fileName: "거래처별장비목록.xlsx",
+            useDataFormat : true,
+            useSubTotal : true,             // Sub-Total 표시 
+            headerFontColor : "#FFFFFF",    // Header Font Color
+            headerColor : "#D9D9D9",        // Header Back Color
+            subTotalColor : "#FCE4D6",      // SubTotal Back Color
+            footerColor : "#BDD7EE"         // Footer Color
+        });
+	};]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+		    <xf:group class="navigator_wrap" id="" style="">
+		        <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+		    </xf:group>
+		    <xf:group class="tbl_search" id="" style="">
+		        <xf:group class="tb_list" id="" style="" tagname="table">
+		            <w2:attributes>
+		                <w2:summary>조회조건 테이블 입니다.</w2:summary>
+		            </w2:attributes>
+		            <xf:group tagname="colgroup">
+		                <xf:group style="width:96px;" tagname="col"></xf:group>
+		                <xf:group style="width:auto;" tagname="col"></xf:group>
+		                <xf:group tagname="col" style="width:67.00px;"></xf:group>
+		                <xf:group tagname="col" style="width:auto;"></xf:group>
+		                <xf:group style="width:67.00px;" tagname="col"></xf:group>
+		                <xf:group style="width:auto;" tagname="col"></xf:group>
+		            </xf:group>
+		            <xf:group style="" tagname="tr">
+		                <xf:group class="w2tb_th req" style="" tagname="th"><w2:attributes>
+		                        <w2:scope>row</w2:scope>
+		                    </w2:attributes><w2:span class="" id="" label="현장명" style=""></w2:span></xf:group>
+		                <xf:group class="w2tb_td" style="" tagname="td">
+		                    <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+		                </xf:group>
+		            </xf:group>
+		        </xf:group>
+		        <xf:group class="btn_tbl_search" style="" tagname="">
+		            <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+		                <xf:label><![CDATA[조회]]></xf:label>
+		            </w2:anchor>
+		        </xf:group>
+		    </xf:group>
+		    <xf:group class="defaultbox" id="" style="">
+		        <w2:textbox class="df_tt" id="" label="거래처별 장비 목록" style="" tagname="h3"></w2:textbox>
+                <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+		        <xf:group class="right_wrap" id="" style="">
+		            <xf:group id="" style="">
+		                <w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+		                    outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+		                    <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+		                </w2:anchor>
+		            </xf:group>
+		        </xf:group>
+		    </xf:group>
+		    <w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsTcmEqpmCdList" fixedColumnWithHidden="true"
+		        focusMode="row" id="grdTcmEqpmCdList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+		        rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" checkReadOnlyOnPaste="true"
+		        enterKeyMove="down" keyMoveEditMode="true" preventAddRowOnPaste="true" ev:oncellclick="scwin.grdTcmEqpmCdList_oncellclick">
+		        <w2:header id="header1" style="">
+		            <w2:row id="row2" style="">
+		                <w2:column blockSelect="false" id="column23" inputType="text" rowSpan="2" value="No." width="50"
+		                    style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column106" value="업체코드" blockSelect="false"
+		                    displayMode="label" rowSpan="2" class="" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" style="height:68px;" id="column111" value="거래처명"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="180" inputType="text" id="column107" value="장비명" blockSelect="false"
+		                    displayMode="label" rowSpan="2" class="" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" id="column66" value="규격" blockSelect="false"
+		                    displayMode="label" rowSpan="2" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:68px;" id="column114" value="자사/임차"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:68px;" id="column117" value="단가적용방법"
+		                    blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+		                </w2:column>
+		                <w2:column blockSelect="false" displayMode="label" id="column41" inputType="text" removeBorderStyle="false"
+		                    rowSpan="2" value="적용 단가" width="150" class="" style="height:34px;">
+		                </w2:column>
+		            </w2:row>
+		            <w2:row id="row6" style=""></w2:row>
+		        </w2:header>
+		        <w2:gBody id="gBody4" style="">
+		            <w2:row id="row5" style="">
+		                <w2:column blockSelect="false" expression="rowindex()+1" id="column24" inputType="expression" width="40">
+		                </w2:column>
+		                <w2:column blockSelect="false" id="tradeCd" inputType="text" removeBorderStyle="false" style="" textAlign="center"
+		                    value="" width="100" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="hireTradeNm" value="" textAlign="left"
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="180" inputType="text" id="eqpmNm" blockSelect="false" textAlign="left"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" id="stdrNm" blockSelect="false" textAlign="left"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="orcoHireGbVal" value=""
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="uctAplyMtdVal" value=""
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column blockSelect="false" displayFormat="#,###,###,###,###" id="aplyUct" inputType="text" removeBorderStyle="false"
+		                    textAlign="right" width="150" displayMode="label">
+		                </w2:column>
+		            </w2:row>
+		        </w2:gBody>
+		    </w2:gridView>
+		</xf:group>
+	</body>
+</html>

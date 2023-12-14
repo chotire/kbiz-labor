@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key id="bgtItemiNm" name="내역명" dataType="text"></w2:key>
+			            <w2:key id="gubun" name="구분" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" ev:oncelldatachange="scwin.dsActbgtConfmList_oncelldatachange"
+			        ev:ondataload="scwin.dsActbgtConfmList_ondataload" id="dsTcmActbgtWorkList" repeatNode="map"
+			        saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+			            <w2:column dataType="text" id="upperBgtItemiCd" name="상위예산내역코드"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiLv" name="예산내역레벨"></w2:column>
+			            <w2:column dataType="text" id="itemiYn" name="내역여부"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiCd" name="예산내역코드"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiNm" name="예산내역명"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiStdr" name="예산내역규격"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiUnit" name="예산내역단위"></w2:column>
+			            <w2:column dataType="text" id="itexpGb" name="비목구분"></w2:column>
+			            <w2:column dataType="number" id="actbgtAmt" name="실행예산_금액"></w2:column>
+			            <w2:column id="sortOdr" name="정렬순서" dataType="number"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/**************************************************************************
+ * [1] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {
+        com.selCdListVrbl("grdTcmActbgtWorkList:itexpGb", {
+            "upperCd": "CM004100",
+            "setCd": "charValN1"
+        });
+
+        dsSearchMap.set("siteCd", JSON.parse($p.getPopupParam()).data.siteCd);
+        dsSearchMap.set("gubun", JSON.parse($p.getPopupParam()).data.gubun);
+
+        //com.commonUI();
+        ibxBgtItemiNm.focus();
+    };
+
+	//닫기 클릭
+	scwin.btnClose_onclick = function() {
+		$p.closePopup($p.getPopupId());
+	};
+
+    //조회 클릭
+	scwin.btnFind_onclick = function() {
+        if (dsSearchMap.get("bgtItemiNm") == ""){
+            com.showMessage("CMW0025","내역명","","",ibxBgtItemiNm.id); //내역명은(는) 필수입력사항입니다.
+            return false;
+        }
+
+        if (dsSearchMap.get("gubun") == 2){
+            var sUrl = "/cm/cm1505/CM15050500/selectTcmActbgtItemList";         //실행예산 내역조회 찾기 조회
+        } else {
+            var sUrl = "/cm/cm1510/CM15100000/selectTcmActbgtWorkChgTypeList";  //실행예산작업 내역조회 찾기 조회
+        }
+
+        ajaxLib.ajax(sUrl, {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e){
+                dsTcmActbgtWorkList.setJSON(result.data);
+                com.setUdcValue("dsTcmActbgtWorkListCount", "udcListCount", dsTcmActbgtWorkList.getMatchedIndex("itemiYn", "Y").length);
+
+                for(i=0; i<dsTcmActbgtWorkList.getTotalRow(); i++){
+                    if (dsTcmActbgtWorkList.getCellData(i, "itemiYn") != "Y") { //공종일 경우
+                        grdTcmActbgtWorkList.setRowColor(i, "blue");
+                        dsTcmActbgtWorkList.setRowJSON(i, {
+                                "actbgtAmt": null
+                            },
+                            true
+                        );
+                    }
+                }
+            }
+        });
+	};
+
+    //내역명 키다운 이벤트
+	scwin.ibxBgtItemiNm_onkeydown = function(e) {
+        if (e.keyCode == 13){
+            scwin.btnFind_onclick();
+        }
+	};
+
+    //그리드 더블클르기 이벤트
+	scwin.grdTcmActbgtWorkList_oncelldblclick = function(row,col) {
+        var _jsn = dsTcmActbgtWorkList.getRowJSON(grdTcmActbgtWorkList.getAllFocusedRowIndex());
+        com.popup_close(_jsn);
+	};
+	]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:120.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="내역명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+						    <xf:input ev:onkeydown="scwin.ibxBgtItemiNm_onkeydown" id="ibxBgtItemiNm"
+						        ref="data:dsSearchMap.bgtItemiNm" style="" maxlength="20">
+						    </xf:input>
+						</xf:group>
+					</xf:group>
+				</xf:group><xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:udc_list_count style="position: absolute;" id="dsTcmActbgtWorkListCount"></w2:udc_list_count>
+			</xf:group>
+			<w2:gridView readOnly="true" rowNumVisible="" rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No"
+			    scrollByColumn="false" rowStatusHeaderValue="" focusMode="row" rowStatusVisible="" fixedColumnWithHidden="true"
+			    dataList="dsTcmActbgtWorkList" style="height:450px;" autoFit="allColumn" id="grdTcmActbgtWorkList"
+			    visibleRowNum="" class="autoHeight" ev:oncelldblclick="scwin.grdTcmActbgtWorkList_oncelldblclick"
+			    ev:oncellclick="scwin.grdStndJobtypCdList_oncellclick">
+			    <w2:header style="" id="header1">
+			        <w2:row style="" id="row2">
+			            <w2:column width="50" inputType="text" style="height:34px;" id="column23" value="NO"
+			                blockSelect="false" colSpan="" rowSpan="">
+			            </w2:column>
+			            <w2:column width="240" inputType="text" style="height:34px;" id="column19" value="품명"
+			                blockSelect="false" colSpan="" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="220" inputType="text" style="height:34px;"
+			                id="column54" value="규격" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+			            </w2:column>
+			            <w2:column width="60" inputType="text" style="height:34px;" id="column17" value="단위"
+			                blockSelect="false" colSpan="" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="height:34px;"
+			                id="column37" value="비목" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:34px;"
+			                id="column35" value="실행예산" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="60" inputType="text" style="height:34px;"
+			                id="column33" value="정렬순서" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+			            </w2:column>
+			        </w2:row>
+			    </w2:header>
+			    <w2:gBody style="" id="gBody4">
+			        <w2:row style="" id="row5">
+			            <w2:column expression="rowindex()+1" textAlign="" width="71" inputType="expression" style=""
+			                id="" value="" blockSelect="false">
+			            </w2:column>
+			            <w2:column textAlign="left" width="200" inputType="drilldown" style="" id="bgtItemiNm" class=""
+			                value="" blockSelect="false" readOnly="true" depthColumn="bgtItemiLv" depthType="div" showDepth="10">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="bgtItemiStdr" value=""
+			                blockSelect="false" displayMode="label" textAlign="left">
+			            </w2:column>
+			            <w2:column textAlign="" width="100" inputType="text" style="" id="bgtItemiUnit" value=""
+			                blockSelect="false" readOnly="true">
+			            </w2:column>
+			            <w2:column textAlign="" removeBorderStyle="false" width="100" inputType="select" style=""
+			                id="itexpGb" value="" blockSelect="false" displayMode="label" readOnly="true">
+			                <w2:choices></w2:choices>
+			            </w2:column>
+			            <w2:column textAlign="right" removeBorderStyle="false" width="120" inputType="text" style=""
+			                id="actbgtAmt" value="" blockSelect="false" displayMode="label" readOnly="true" displayFormat="#,###">
+			            </w2:column>
+			            <w2:column textAlign="" removeBorderStyle="false" width="100" inputType="text" style=""
+			                id="sortOdr" value="" blockSelect="false" displayMode="label" readOnly="true">
+			            </w2:column>
+			        </w2:row>
+			    </w2:gBody>
+			</w2:gridView>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnClose" outerDiv="false" style="" ev:onclick="scwin.btnClose_onclick">
+					<xf:label><![CDATA[닫기]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+
+
+	</body>
+</html>

@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" id="keyChkClsVal" name="정검분류"></w2:key>
+                        <w2:key dataType="text" id="keyUseYn" name="사용여부"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+                <w2:dataList baseNode="list" repeatNode="map" id="dsTcmChkList" saveRemovedData="true">
+                    <w2:columnInfo>
+                        <w2:column id="chkSeq" name="점검_순번" dataType="text"></w2:column>
+                        <w2:column id="chkClsVal" name="점검_분류_값(1:개설, 2:준공)" dataType="text"></w2:column>
+                        <w2:column id="chkGbNm" name="점검_구분_명" dataType="text"></w2:column>
+                        <w2:column id="chkLclsNm" name="점검_대분류_명" dataType="text"></w2:column>
+                        <w2:column id="chkSclsNm" name="점검_소분류_명" dataType="text"></w2:column>
+                        <w2:column id="chkItmlNm" name="점검_항목_명" dataType="text"></w2:column>
+                        <w2:column id="sortOdr" name="정렬_순서" dataType="number"></w2:column>
+                        <w2:column id="useYn" name="사용_여부" dataType="text"></w2:column>
+                    </w2:columnInfo>
+                </w2:dataList>
+            </w2:dataCollection>
+        </xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false" />
+        <script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM70600000U.xml
+ * Program Name : 공사관리 > 체크리스트 > 체크리스트(표준)
+ * Author : 이미연(mylee)
+ * Date : 2022.11.21
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+/************************************************************************************
+ *  [1] 전역변수
+ ************************************************************************************/
+/************************************************************************************
+ *  [2] onpageload(초기화포함)
+ ************************************************************************************/
+scwin.onpageload = function() {
+    
+    //기본값 설정    
+    sbxKeyChkClsVal.setValue("1");
+
+	//화면로딩 시 자동 조회
+	scwin.fnSelectChkList();
+    
+    com.commonUI();
+};
+
+scwin.onpageunload = function() {
+};
+
+/************************************************************************************
+ *  [3] 사용자 정의함수 함수
+ ************************************************************************************/
+/**************************************************************************
+ * 함 수 명: scwin.fnSelectChkList
+ * 기 능: 공사개요, 공동도급 LIST SELECT
+ **************************************************************************/
+scwin.fnSelectChkList = function() {
+    ajaxLib.ajax("/cm/cm7060/CM70600000U/selectTcmChkList", {
+        mode : "asynchronous",
+        method : "POST",
+        requestData : dsSearchMap.getJSON(),
+        callback : function(result, e) {
+			dsTcmChkList.setJSON(result.data.dsTcmChkList);
+		}
+    });
+};
+
+/************************************************************************************
+ *  [4] Callback 함수
+ ************************************************************************************/
+
+/************************************************************************************
+ *  [5] Event 함수
+ ************************************************************************************/
+// 조회 버튼 클릭 시
+scwin.btnFind_onclick = function() {
+    scwin.fnSelectChkList();
+}
+
+// 저장 버튼 클릭 이벤트
+scwin.btnSave_onclick = function() {
+    let modData = dsTcmChkList.getModifiedJSON({saveRemovedData:true});
+    
+    if (modData.length == 0) {
+        com.showMessage("CSA0003");//저장(변경)할 내용이 없습니다.
+        return;
+    }
+    
+    for (let i = 0; i < modData.length; i++) {
+        let rowData = modData[i];
+        
+        if (rowData.chkGbNm == "") {
+            com.showMessage("CFA0017", "구분");  //$1을(를) 입력하십시오.
+            return false;     
+        }
+    }
+        
+    if (confirm("저장 하시겠습니까?")) {
+        ajaxLib.ajax("/cm/cm7060/CM70600000U/saveTcmChkList", {
+            method : "POST",
+            requestData : { tcmChkList : modData },
+            callback : function(result, e) {
+                scwin.fnSelectChkList();
+            },
+            errCallback : function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+    }
+};
+
+//행추가 버튼 클릭 이벤트
+scwin.btnAddRow_onclick = function() {
+    let rowIndex = grdTcmChkList.getFocusedRowIndex() === -1 ? 0 : grdTcmChkList.getFocusedRowIndex();
+    let rowData = grdTcmChkList.getFocusedRowIndex() === -1 ? {} : dsTcmChkList.getRowJSON(rowIndex);
+    
+    rowData.chkSeq = null;
+    rowData.chkClsVal = sbxKeyChkClsVal.getValue();
+    rowData.useYn  = "Y";
+    
+    dsTcmChkList.insertJSON(rowIndex, [rowData]);
+    
+    grdTcmChkList.setFocusedCell(rowIndex, "chkGbNm", true);    
+};
+
+//행삭제 버튼 클릭 이벤트
+scwin.btnDelRow_onclick = function() {
+    let curRow = grdTcmChkList.getFocusedRowIndex();  //현재행
+    
+    if (curRow === -1) {
+        com.showMessage("CFW0004", "삭제할 행");  //$1을(를) 선택하십시오.
+        return false;
+    }
+
+    dsTcmChkList.removeRow(curRow);    
+};
+
+//엑셀다운 버튼 클릭 이벤트
+scwin.btnExcelDwn_onclick = function() {
+    if (dsTcmChkList.getTotalRow() == 0) {
+        com.showMessage("CMW0020", "다운로드할");// $1 자료가 존재하지 않습니다.
+        return;
+    }
+
+    grdTcmChkList.advancedExcelDownload({
+        fileName:"체크리스트(표준).xlsx",
+        useSubTotal : true,             // Sub-Total 표시 
+        headerFontColor : "#FFFFFF",    // Header Font Color
+        headerColor : "#D9D9D9",        // Header Back Color
+        subTotalColor : "#FCE4D6",      // SubTotal Back Color
+        footerColor : "#BDD7EE",        // Footer Color
+        colMerge : true
+    });
+};]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <xf:group style="" id="" class="content_body">
+            <xf:group class="navigator_wrap" id="" style="">
+                <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            </xf:group>
+            <xf:group class="tbl_search" id="" style="">
+                <xf:group class="tb_list" id="" style="" tagname="table">
+                    <w2:attributes>
+                        <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                    </w2:attributes>
+                    <xf:group tagname="colgroup">
+                        <xf:group style="width:67px;" tagname="col"></xf:group>
+                        <xf:group style="width:500px;" tagname="col"></xf:group>
+                        <xf:group style="width:97px;" tagname="col"></xf:group>
+                        <xf:group style="width:auto;" tagname="col"></xf:group>
+                    </xf:group>
+                    <xf:group style="" tagname="tr">
+                        <xf:group class="w2tb_th req" style="" tagname="th">
+                            <w2:span class="" id="" label="분류" style=""></w2:span>
+                        </xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            <xf:select1 allOption="" appearance="minimal" chooseOption="" chooseOptionLabel="전체" direction="auto"
+                                disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxKeyChkClsVal"
+                                ref="data:dsSearchMap.keyChkClsVal" style="width:107px;" submenuSize="auto">
+                                <xf:choices>
+                                    <xf:item>
+                                        <xf:label><![CDATA[개설]]></xf:label>
+                                        <xf:value><![CDATA[1]]></xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[준공]]></xf:label>
+                                        <xf:value><![CDATA[2]]></xf:value>
+                                    </xf:item>
+                                </xf:choices>
+                            </xf:select1>
+                        </xf:group>
+                        <xf:group class="w2tb_th" style="" tagname="th">
+                            <w2:span class="" id="" label="사용여부" style=""></w2:span>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체" direction="auto"
+                                disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxKeyUseYn" ref="data:dsSearchMap.keyUseYn" style="width:107px;"
+                                submenuSize="auto">
+                                <xf:choices>
+                                    <xf:item>
+                                        <xf:label><![CDATA[사용]]></xf:label>
+                                        <xf:value><![CDATA[Y]]></xf:value>
+                                    </xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[미사용]]></xf:label>
+                                        <xf:value><![CDATA[N]]></xf:value>
+                                    </xf:item>
+                                </xf:choices>
+                            </xf:select1>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="btn_tbl_search" style="" tagname="">
+                    <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+                        <xf:label><![CDATA[조회]]></xf:label>
+                    </w2:anchor>
+                </xf:group>
+            </xf:group>
+            <xf:group class="defaultbox" id="" style="">
+                <xf:group style="" id="" class="left_wrap">
+                    <w2:udc_list_count id="grdCount"></w2:udc_list_count>
+                </xf:group>
+                <xf:group style="" id="" class="right_wrap">
+                    <w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style=""
+                        ev:onclick="scwin.btnSave_onclick">
+                        <xf:label><![CDATA[저장]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="btn_gcm row_add" clickEventElement="" ev:onclick="scwin.btnAddRow_onclick" id="btnAddRow"
+                        outerDiv="false" style="" toolTip="행추가">
+                        <xf:label><![CDATA[행추가]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="btn_gcm row_del" clickEventElement="" ev:onclick="scwin.btnDelRow_onclick" id="btnDelRow"
+                        outerDiv="false" style="" toolTip="행삭제">
+                        <xf:label><![CDATA[행삭제]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor class="btn_gcm excel_down" clickEventElement="" ev:onclick="scwin.btnExcelDwn_onclick" id="btnExcelDwn" localeRef="" outerDiv="false" style="text-align:right;" toolTip="엑셀다운로드">
+                        <xf:label></xf:label>
+                    </w2:anchor>
+                </xf:group>
+            </xf:group>
+            <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmChkList" fixedColumnWithHidden="" focusMode="row"
+                id="grdTcmChkList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30"
+                scrollByColumn="false" style="" useShiftKey="true">
+                <w2:header id="header1" style="">
+                    <w2:row id="row2" style="">
+                        <w2:column hidden="false" removeBorderStyle="false" width="40" inputType="text" style="" id="column3"
+                            value="No" blockSelect="false" displayMode="label">
+                        </w2:column>
+                        <w2:column hidden="false" removeBorderStyle="false" width="150" inputType="text" style="" id="column4"
+                            value="구분" blockSelect="false" displayMode="label" class="req">
+                        </w2:column>
+                        <w2:column hidden="false" removeBorderStyle="false" width="200" inputType="text" style="" id="column1"
+                            value="대분류" blockSelect="false" displayMode="label">
+                        </w2:column>
+                        <w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column23" value="소분류" blockSelect="false"
+                            displayMode="label">
+                        </w2:column>
+                        <w2:column removeBorderStyle="false" width="300" inputType="text" style="" id="column21" value="항목" blockSelect="false"
+                            displayMode="label">
+                        </w2:column>
+                        <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column19" value="정렬순서" blockSelect="false"
+                            displayMode="label">
+                        </w2:column>
+                        <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column17" value="사용여부" blockSelect="false"
+                            displayMode="label">
+                        </w2:column>
+                    </w2:row>
+                </w2:header>
+                <w2:gBody id="gBody4" style="">
+                    <w2:row id="row5" style="">
+                        <w2:column blockSelect="false" expression="rowindex()+1" id="no" inputType="expression" width="40"></w2:column>
+                        <w2:column blockSelect="false" displayMode="label" id="chkGbNm" inputType="text" removeBorderStyle="false" textAlign="left" value="" width="150" maxByteLength="500" dataType="text">
+                        </w2:column>
+                        <w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="chkLclsNm" value="" blockSelect="false" textAlign="left"
+                            displayMode="label" maxByteLength="500" dataType="text">
+                        </w2:column>
+                        <w2:column removeBorderStyle="false" width="200" inputType="textarea" style="" id="chkSclsNm" value=""
+                            blockSelect="false" textAlign="left" displayMode="label" maxByteLength="500" dataType="text">
+                        </w2:column>
+                        <w2:column removeBorderStyle="false" width="300" inputType="textarea" style="" id="chkItmlNm" value=""
+                            blockSelect="false" textAlign="left" displayMode="label" maxByteLength="500" dataType="text">
+                        </w2:column>
+                        <w2:column blockSelect="false" dataType="number" displayFormat="#,##0" displayMode="label"
+                            id="sortOdr" inputType="text" removeBorderStyle="false" style="" textAlign="right" value="" width="80" maxLength="10">
+                        </w2:column>
+						<w2:column blockSelect="false" id="useYn" inputType="checkbox" width="80" valueType="other" trueValue="Y" falseValue="N">
+						</w2:column>
+                    </w2:row>
+                </w2:gBody>
+            </w2:gridView>
+        </xf:group>
+    </body>
+</html>

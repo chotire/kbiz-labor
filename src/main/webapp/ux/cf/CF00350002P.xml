@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataMap baseNode="map" id="dsSrch">
+                <w2:keyInfo>
+                    <w2:key id="aflId" name="첨부파일ID" dataType="text"></w2:key>
+                    <w2:key id="jobGbCd" name="업무구분" dataType="text"></w2:key>
+                    <w2:key id="menuId" name="메뉴ID" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+            <w2:dataList baseNode="list" repeatNode="map" style="" id="dsAflList" saveRemovedData="true">
+                <w2:columnInfo>
+                    <w2:column id="chk" name="선택" dataType="text"></w2:column>
+                    <w2:column id="aflId" name="첨부파일ID" dataType="text"></w2:column>
+                    <w2:column id="aflSeq" name="첨부파일_순번" dataType="text"></w2:column>
+                    <w2:column id="jobGbCd" name="업무구분코드[CF035]" dataType="text"></w2:column>
+                    <w2:column id="filePathNm" name="파일_경로_명" dataType="text"></w2:column>
+                    <w2:column id="aflNm" name="첨부파일_명" dataType="text"></w2:column>
+                    <w2:column id="saveFileNm" name="저장_파일_명" dataType="text"></w2:column>
+                    <w2:column id="fileSize" name="파일_크기" dataType="text"></w2:column>
+                    <w2:column id="scssYn" name="성공_여부" dataType="text"></w2:column>
+                    <w2:column id="rndmVal" name="임의_값" dataType="text"></w2:column>
+                    <w2:column id="menuId" name="메뉴ID" dataType="text"></w2:column>
+                    <w2:column id="fstRegprEmpno" name="최초_등록자_사번" dataType="text"></w2:column>
+                    <w2:column id="fstRegDtm" name="최초_등록_일시" dataType="text"></w2:column>
+                    <w2:column id="fnlModprEmpno" name="최종_수정자_사번" dataType="text"></w2:column>
+                    <w2:column id="fnlModiDtm" name="최종_수정_일시" dataType="text"></w2:column>
+                </w2:columnInfo>
+            </w2:dataList>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[		
+    /***************************************************************************
+     * Program ID : CF00350002P.xml 
+     * Program Name : 첨부파일(팝업) 
+     * Author : 김환섭 (tpkhs1)
+     * Date : 2019.02.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.02.15   김환섭   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    var svcId = "";
+    var ingStatus = "";
+    var jobGbCd = "";
+    var menuId = "";
+    var aflId = "";
+    var fileExt = "";
+    var usage = "";
+    var filePathCustom = "";
+
+    /************************************************************************************ 
+     *  [2] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function () {
+
+        jobGbCd = JSON.parse($p.getPopupParam()).data.jobGbCd;
+        menuId = JSON.parse($p.getPopupParam()).data.menuId;
+        aflId = JSON.parse($p.getPopupParam()).data.aflId;
+        fileExt = JSON.parse($p.getPopupParam()).data.fileExt;
+        usage = JSON.parse($p.getPopupParam()).data.usage;
+        filePathCustom = JSON.parse($p.getPopupParam()).data.filePathCustom;
+        fileSize  = JSON.parse($p.getPopupParam()).data.fileSize;
+
+        com.getUdcComp("udcSingleUpld", "udc_grd").removeClass("autoHeight");
+
+        if (jobGbCd != "") {
+            com.setUdcValue("udcSingleUpld", "ibxJobGbCd", jobGbCd);
+        }
+        if (menuId != "") {
+            com.setUdcValue("udcSingleUpld", "ibxMenuId", menuId);
+        }
+        if (aflId != "") {
+            com.setUdcValue("udcSingleUpld", "ibxAflId", aflId);
+        }
+        if (fileExt != "") {
+            com.setUdcValue("udcSingleUpld", "ibxFileExt", fileExt);
+        }
+        if (filePathCustom != "") {
+            com.setUdcValue("udcSingleUpld", "ibxFilePathCustom", filePathCustom);
+        }
+        
+        if ( fileSize != "" ) {
+             com.setUdcValue("udcSingleUpld", "ibxFileSize", fileSize);
+        }
+
+        if (usage == "INS") {
+            // CUD 버튼 허용.
+        } else {
+            // CUD 버튼 불가.
+            com.getUdcComp("udcSingleUpld", "btnAdd").addClass("hide");
+            com.getUdcComp("udcSingleUpld", "btnDel").addClass("hide");
+            com.getUdcComp("udcSingleUpld", "btnUpload").addClass("hide");
+        }
+
+         // X버튼의 원 이벤트 삭제하고 닫기 버튼의 이벤트 대신 입력
+         var frameIds = $p.getPopupId()+"_close";
+         $("#"+frameIds).off("click").on("click", function() {
+             scwin.btnClose_onclick();
+         });
+    };
+
+    scwin.btnClose_onclick = function () {
+        var dJSON = com.getUdcComp("udcSingleUpld", "udc_grd")._dataList.getAllJSON();
+        var sAflNm = "";
+
+        if (dJSON.length == 0) {
+            sAflNm = "";
+        } else if (dJSON.length == 1) {
+            sAflNm = dJSON[0].aflNm;
+        } else {
+            if (dJSON[0].aflNm.length > 20) {
+                sAflNm = dJSON[0].aflNm.substr(1, 20) + '...  외 ' + parseInt(dJSON.length - 1) + '건'
+            } else {
+                sAflNm = dJSON[0].aflNm + '...  외 ' + parseInt(dJSON.length - 1) + '건'
+            }
+        }
+
+        var oJSON = {
+            "jobGbCd": com.getUdcValue("udcSingleUpld", "ibxJobGbCd"),
+            "menuId": com.getUdcValue("udcSingleUpld", "ibxMenuId"),
+            "aflId": com.getUdcValue("udcSingleUpld", "ibxAflId"),
+            "fileExt": com.getUdcValue("udcSingleUpld", "ibxFileExt"),
+            "imgUrl" : com.getUdcValue("udcSingleUpld", "ibxFileHref"),
+            "aflNm": sAflNm
+        };
+
+        com.popup_close(oJSON);
+    };
+
+	]]>
+    </script>
+    <w2:require src="/ux/common/udc/udcSingleMultiupload.xml"></w2:require>
+</head>
+<body ev:onpageload="scwin.onpageload">
+    <xf:group class="content_body popup" id="" style="">
+        <xf:group class="" id="" style="">
+            <w2:udc_SingleMultiupload dragDropUseYn="true" uploadBtnUseYn="true" maxSize="1" style="" id="udcSingleUpld" maxCount="1" buttonPosition="TopLeft" accept="*/*">
+            </w2:udc_SingleMultiupload>
+        </xf:group>
+        <xf:group class="bottombox" id="" style="">
+            <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnClose" outerDiv="false" style="" ev:onclick="scwin.btnClose_onclick">
+                <xf:label>
+                    <![CDATA[닫기]]>
+                </xf:label>
+            </w2:anchor>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+					<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfUseSealSituList" saveRemovedData="true">
+							<w2:columnInfo>
+									<w2:column id="sealNo" name="인감번호" dataType="text"></w2:column>
+									<w2:column id="useSealTkotStusNm" name="사용인감반출상태명[CF03004]" dataType="text"></w2:column>
+									<w2:column id="useSealTkotStusCd" name="사용인감반출상태코드[CF03004]" dataType="text"></w2:column>
+									<w2:column id="useYn" name="사용여부" dataType="text"></w2:column>
+									<w2:column id="situSave" name="저장버튼" dataType="text"></w2:column>
+							</w2:columnInfo>
+							<w2:data use="false">
+									<w2:row></w2:row>
+									<w2:row></w2:row>
+									<w2:row></w2:row>
+									<w2:row></w2:row>
+									<w2:row></w2:row>
+									<w2:row></w2:row>
+									<w2:row></w2:row>
+									<w2:row></w2:row>
+									<w2:row></w2:row>
+									<w2:row></w2:row>
+							</w2:data>
+					</w2:dataList>
+					<w2:dataMap baseNode="map" id="dsTcfUseSealSituMap" style="">
+							<w2:keyInfo>
+									<w2:key dataType="text" id="useSealTkotStusCd" name="사용인감반출상태코드[CF03004]"></w2:key>
+									<w2:key dataType="text" id="useYn" name="사용유무"></w2:key>
+									<w2:key dataType="text" id="sealNo" name="인감번호"></w2:key>
+							</w2:keyInfo>
+					</w2:dataMap>
+					<w2:dataMap baseNode="map" id="dsSrchParam" style="">
+							<w2:keyInfo>
+									<w2:key dataType="text" id="useSealTkotPrgsStusCd" name="상태"></w2:key>
+									<w2:key dataType="text" id="tkotFromDt" name="반출 검색 시작일"></w2:key>
+									<w2:key dataType="text" id="tkotToDt" name="반출 검색 종료일"></w2:key>
+									<w2:key dataType="text" id="rtunFromDt" name="반납예정 검색 시작일"></w2:key>
+									<w2:key dataType="text" id="rtunToDt" name="반납예정 검색 종료일"></w2:key>
+									<w2:key dataType="text" id="tkotOffrTtl" name="건명"></w2:key>
+									<w2:key dataType="text" id="sealNo" name="인감번호"></w2:key>
+									<w2:key dataType="text" id="tkotTeamDeptNm" name="부서명"></w2:key>
+									<w2:key dataType="text" id="tkotTeamDeptCd" name="부서코드"></w2:key>
+									<w2:key dataType="number" id="pageRowStart" name="페이지 시작행번호"></w2:key>
+									<w2:key dataType="number" id="pageRowCount" name="페이지 요청건수"></w2:key>
+									<w2:key dataType="text" id="adminYn" name="관리자유무"></w2:key>
+									<w2:key dataType="text" id="aprvNo" name="결재번호"></w2:key>
+									<w2:key dataType="text" id="tkotOffrNo" name="반출신청번호"></w2:key>
+									<w2:key id="otherPageYn" name="다른페이지에서 이동유무" dataType="text"></w2:key>
+							</w2:keyInfo>
+					</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF05001000U.xml 
+     * Program Name : 사용인감관리
+     * Author : 강상국 (tpksg)
+     * Date : 2019.09.09
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.09.09   강상국   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+     scwin.param = com.getAllParam();
+     
+    /************************************************************************************
+     *  [2] 초기화 
+     ************************************************************************************/
+	scwin.onpageload = function() {
+        var opt = [
+                    {"CF03004": ["grdTcfUseSealSituList:useSealTkotStusCd"]}
+                  ];
+        // 1. callback 처리가 필요없는 경우
+        com.setCdComp(opt, scwin.cmmCb); 
+        dsSrchParam.setJSON(scwin.param);     	
+        scwin.btnFind_onclick();
+	};     
+	
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/		
+	
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+	
+	
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/		
+	/**************************************************************************
+	* Event: scwin.btnFind_onclick
+	* 기 능: 조회 버튼 클릭시
+	**************************************************************************/					
+	scwin.btnFind_onclick = function() {
+        ajaxLib.ajax("/cf/CF05001000U/selectTcfUseSealSituAllList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSrchParam.getJSON(),
+            callback: function(result,e) {
+            	dsTcfUseSealSituList.setJSON( result.data.tcfTcfUseSealSituList);
+            },
+            errCallback: function(result,e) {
+            }
+        });		
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnList_onclick
+	* 기 능: 목록 버튼 클릭시
+	**************************************************************************/		
+	scwin.btnList_onclick = function() {
+		dsSrchParam.set("otherPageYn", "Y");
+		var param = dsSrchParam.getJSON();
+		com.detailOpen("인감반출/반납대장목록", "CF05000500U", "/ux/cf/cf0500/CF05000500U.xml", "1", param);		
+	};
+	
+	/**************************************************************************
+	* Event: scwin.grdTcfUseSealSituList_oncellclick
+	* 기 능: 그리드 목록에서 저장 버튼 클릭시
+	**************************************************************************/			
+	scwin.grdTcfUseSealSituList_oncellclick = function(row,col) {
+		if (grdTcfUseSealSituList.getColumnIndex( "situSave" ) == col) {
+			var sealNo = dsTcfUseSealSituList.getCellData(row, "sealNo");
+			var useYn = grdTcfUseSealSituList.getCellDisplayData(row, "useYn");
+      		var useSealTkotStusCd = grdTcfUseSealSituList.getCellDisplayData(row, "useSealTkotStusCd");
+			if (useYn == "선택") {
+				com.showMessage('CFW0010','사용여부를 선택하세요.');
+				return;				
+			}
+			if (useSealTkotStusCd == "선택") {
+				com.showMessage('CFW0010','반출여부를 선택하세요.');
+				return;				
+			}			
+			if (!confirm("[" + sealNo + "]번 인감상태를 사용여부 [" + useYn + "]으로  반출여부 [" + useSealTkotStusCd + "]으로 변경하시겠습니까?")) return;
+			
+			dsTcfUseSealSituMap.set( "sealNo" , sealNo);
+			dsTcfUseSealSituMap.set( "useSealTkotStusCd" , dsTcfUseSealSituList.getCellData(row, "useSealTkotStusCd"));
+			dsTcfUseSealSituMap.set( "useYn" , dsTcfUseSealSituList.getCellData(row, "useYn") );
+			
+			ajaxLib.ajax("/cf/CF05001000U/updateTcfUseSealSitu", {
+	        	  mode        : "asynchronous"
+	        	, method      : "POST"
+	            , requestData : dsTcfUseSealSituMap.getJSON()
+	            , callback    : function(result,e){
+	            	com.showMessage("SCN0002", "저장");			//$1 되었습니다.
+		   			scwin.btnFind_onclick();
+	            }
+	            , errCallback : function(result,e) {
+	            }
+        	});	
+		}
+	};
+
+	]]></script>
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body" id="" style="">
+			<xf:group class="navigator_wrap" id="" style="">
+					<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+					<xf:group class="btn_wrap" id="" style="" tagname="">
+							<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" ev:onclick="scwin.btnList_onclick" id="btnList" outerDiv="false" style="">
+									<xf:label><![CDATA[목록]]></xf:label>
+							</w2:anchor>
+					</xf:group>
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="인감사용현황" style="" tagname="h3"></w2:textbox>
+			</xf:group>
+			<w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsTcfUseSealSituList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdTcfUseSealSituList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+				rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true"
+				visibleRowNum="" ev:oncellclick="scwin.grdTcfUseSealSituList_oncellclick">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column23" inputType="text" rowSpan="" style="height:34px;"
+							value="인감번호" width="100" colSpan="">
+						</w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" rowSpan="" style="height:34px;"
+							value="상태" width="100" colSpan="">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" rowSpan="" style="height:34px;"
+							value="반출여부" width="200" colSpan="">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" rowSpan="" style="height:34px;"
+							value="사용여부" width="200" colSpan="">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" rowSpan="" style="height:34px;" value="" width="200" colSpan="">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" expression="" id="sealNo" inputType="text" style="height:24px;" width="100"></w2:column>
+						<w2:column blockSelect="false" id="useSealTkotStusNm" inputType="text" style="height:24px;" value="사용가능"
+							width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="useSealTkotStusCd" inputType="select" style="height:24px;" value="" width="200" readOnly="false" viewType="icon" radioLabel="" radioLabelPosition="" displayMode="label" filterDisplayMode="" editType="select" allOption="" chooseOption="true" ref="" chooseOptionLabel="선택">
+								<w2:choices></w2:choices>
+						</w2:column>
+						<w2:column blockSelect="false" id="useYn" inputType="select" style="height:24px;" value="" width="200" readOnly="false" viewType="icon" allOption="" chooseOption="true" chooseOptionLabel="선택" ref="" editType="select" displayMode="label">
+								<w2:choices>
+										<w2:item>
+												<w2:label><![CDATA[사용]]></w2:label>
+												<w2:value><![CDATA[Y]]></w2:value>
+										</w2:item>
+										<w2:item>
+												<w2:label><![CDATA[분실]]></w2:label>
+												<w2:value><![CDATA[N]]></w2:value>
+										</w2:item>
+								</w2:choices>
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="situSave" inputType="button"
+							removeBorderStyle="false" style="height:24px;" value="저장" width="200" readOnly="false" viewType="icon">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

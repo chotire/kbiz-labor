@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsAprvMap" style="">
+					<w2:keyInfo>
+                        <w2:key dataType="text" id="aprvNo" name="결재번호"></w2:key>
+                        <w2:key dataType="text" id="gwDocNo" name="텔레피아 문서번호"></w2:key>
+                        <w2:key dataType="text" id="userId" name="사용자계정"></w2:key>
+                        <w2:key dataType="text" id="pwEnc" name="패스워드"></w2:key>
+                        <w2:key dataType="text" id="keyType" name="패스워드 키타입"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<!--  화면 캡춰 라이브러리 -->
+		<script type="text/javascript" src="/resources/js/html2canvas/html2canvas.js"></script>
+		
+		<!--  #화면 캡춰 라이브러리 -->
+		<script type="javascript" lazy="false"><![CDATA[
+	/***************************************************************************
+	 * Program ID : AprvPopupView.xml
+	 * Program Name : 결재상태조회 
+	 * Author : 송준영(tpsongjy)
+	 * Date : 2019.05.27
+	 * 
+	 * History 
+	 * ======================================== 
+	 * 변경일자     수정자   내 용 
+	 * ======================================== 
+	 * 2019.05.27 송준영   최초작성
+	 *     
+	 **************************************************************************/
+
+	/************************************************************************************
+	 *  [1] 전역변수 
+	 ************************************************************************************/
+	scwin.svcId = "";
+
+	/************************************************************************************
+	 *  [2] 초기화 
+	 ************************************************************************************/
+	scwin.onpageload = function() {
+		scwin.initScreen();
+	};
+
+	// 화면 초기화(필수)
+	scwin.initScreen = function() {
+        scwin.selectTcfArpvUserForInit();
+	};
+
+    /************************************************************************************
+     *  [3] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallback = function(result, e) {
+        console.log(e);
+        switch (scwin.svcId) {
+            case "selectTcfArpvUserForInit" :
+                console.log('사용자정보조회 오류!');
+                break;
+            case "makeXml" :
+                console.log('xml파싱오류!');
+                break;
+        }
+    };
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function(result, e) {
+        switch (scwin.svcId) {
+            case "selectTcfArpvUserForInit" :
+                //서버에서 넘겨주는 값 세팅
+                dsAprvMap.setJSON(result.data.tcfAprvVO);
+                dsAprvMap.set("aprvNo", "");
+                dsAprvMap.set("gwDocNo", "0");
+                break;
+            case "makeXml" :
+                //xml결과값 텔레피아 전송                
+                scwin.fnTransAprv(result);
+                break;
+            default :
+                break;
+        }
+    };
+
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+    /** 사용자정보조회 **/
+    scwin.selectTcfArpvUserForInit = function() {
+        //callback 처리용 서비스ID 부여
+        scwin.svcId = "selectTcfArpvUserForInit";
+
+        //서비스 호출
+        ajaxLib.ajax("/cf/CFAprv/selectTcfArpvUserForInit", {
+            mode : "asynchronous",
+            method : "Post",
+            requestData : {},
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"
+        });
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnMakeXml
+     * 기 능: 결재문서조회
+     **************************************************************************/
+    scwin.btnAprvView_onclick = function() {
+    
+        if (!com.validateGroup([menuInfoView])) {
+            return false;
+        }
+    
+        scwin.svcId = "makeXml";
+        ajaxLib.ajax("/cf/CFAprv/selectTcfAprv", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData :  dsAprvMap.getJSON(),
+            callback    : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnTransAprv
+     * 기 능: 결재문서조회
+     **************************************************************************/
+    scwin.fnTransAprv = function(result, e) {
+    
+        //텔레피아로 form전송
+        var data = result.data.aprvData;
+        var xml  = data.aprvXml;
+        var url  = data.telepiaUrl;
+        var $form = $("<form></form>");
+
+        var newwin = window.open('about:blank','transForm','top=0,left=0,width=1014,height=694,status=yes,toolbar=no,location=no,directories=no,menubar=no,scrollbars=yes,resizable=no');
+        newwin.focus(); //새창을 띄울때 항상 위
+        $form.attr("target", "transForm");
+        $form.attr("action", url);
+        $form.attr("method", "post")
+        $form.attr("accept-language", "ko")
+        $form.appendTo('body');
+
+        var $input = $("<input></input>");
+        $input.attr({
+            type : "hidden",
+            name : "Message",
+            id : "Message",
+            value : xml
+        });
+
+        $input.appendTo($form);
+        $form.submit();
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.btnAprvViewSample_onclick
+     * 기 능: 결재문서 조회 : 업무팀 사용버튼 이벤트
+     **************************************************************************/
+    scwin.btnAprvViewSample_onclick = function() {
+        com.aprvViewPopup(dsAprvMap.get("aprvNo"));
+    };
+]]></script>
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+	    <xf:group style="" id="menuInfoView" class="content_body">
+	        <xf:group class="navigator_wrap" id="" style="">
+	            <xf:group class="navigator" id="" style="">
+	                <w2:textbox class="tit" id="screenTitle" label="결재상태조회" style="" tagname="h2" userData1=""></w2:textbox>
+	            </xf:group>
+	        </xf:group>
+	        <xf:group class="w2tb" id="grpAprvInfo" style="" tagname="table">
+	            <w2:attributes>
+	                <w2:summary>전자증빙 결재문서조회</w2:summary>
+	            </w2:attributes>
+	            <xf:group tagname="colgroup">
+	                <xf:group style="width:170px;" tagname="col"></xf:group>
+	                <xf:group style="width:auto;" tagname="col"></xf:group>
+	            </xf:group>
+
+	            <xf:group class="" style="" tagname="tr">
+	                <xf:group class="w2tb_th" style="" tagname="th">
+	                    <w2:attributes>
+	                        <w2:scope>row</w2:scope>
+	                    </w2:attributes>
+	                    <w2:span id="" label="결재번호" style=""></w2:span>
+	                </xf:group>
+	                <xf:group class="w2tb_td" style="" tagname="td">
+	                    <xf:input id="aprvNo" style="width:100%;margin-left:0px;" ref="data:dsAprvMap.aprvNo" readOnly="false" class="req" mandatory="true">
+	                    </xf:input>
+	                </xf:group>
+	            </xf:group>
+
+	        </xf:group>
+
+	        <xf:group style="left:0px;top:0px;" id="" class="bottombox">
+	            <w2:anchor ev:onclick="scwin.btnAprvView_onclick" outerDiv="false" clickEventElement="outerDiv" style="" id="btnApprRequest" class="btn_gcm">
+	                <xf:label><![CDATA[조회]]></xf:label>
+	            </w2:anchor>
+                <w2:anchor ev:onclick="scwin.btnAprvViewSample_onclick" outerDiv="false" clickEventElement="outerDiv" style="" id="" class="btn_gcm">
+                    <xf:label><![CDATA[업무팀개별버튼참조용]]></xf:label>
+                </w2:anchor>
+                
+	        </xf:group>
+	    </xf:group>
+	</body>
+</html>

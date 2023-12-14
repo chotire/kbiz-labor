@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+					<w2:dataMap baseNode="map" id="dsTcfOfdcCnsltMap">
+							<w2:keyInfo>
+									<w2:key id="ofdcCnsltNo" name="공문_품의_순번" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltDt" name="공문_품의_일자" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltDocNo" name="공문_품의_문서_번호" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltDocPrcnt" name="공문_품의_문서_매수" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltGbCd" name="공문_품의_구분CD" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltChrgrEmpno" name="공문_품의_담당자_사번" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltChrgrNm" name="공문_품의_담당자_명" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltDeptCd" name="공문_품의_부서코드" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltDeptNm" name="공문_품의_부서명" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltRmk" name="공문_품의_비고" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltTtl" name="공문_품의_제목" dataType="text"></w2:key>
+									<w2:key id="ofdcCnsltAflId" name="공문_품의_첨부파일ID" dataType="text"></w2:key>
+									<w2:key id="status" name="상태코드" dataType="text"></w2:key>
+							</w2:keyInfo>
+					</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID   : CF05150041U
+ * Program Name : 공문 품의 상세
+ * Author       : 류상휴 (ryush)
+ * Date         : 2019.11.27
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ * 2019-11-27   류상휴   최초작성 
+ **************************************************************************/ 
+ 
+	/************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+	scwin.svcId = "";        
+	scwin.InqrRegGubun = "";
+	scwin.param = com.getAllParam();
+	
+    /************************************************************************************ 
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/   
+    scwin.onpageload = function() { 
+      	var opt = [
+     	 	 {"CF08506":["ibxKeyOfdcCnsltGbCd"]}    	//  공문 픔의 종류
+   		   ];
+	    com.setCdComp(opt,"","CD_ODR");
+    	scwin.initScreen();
+    };
+
+    scwin.onpageunload = function() {
+		
+	};
+
+	// 화면 초기화(필수)
+	scwin.initScreen = function() {
+		
+		var deptCd    =  sessionStorage.getItem("deptCd") || "";
+	    var deptNm    =  sessionStorage.getItem("deptNm") || "";
+	
+		//신규등록
+	 	if(scwin.param.ofdcCnsltNo == undefined)
+	 	{
+	 		var nowDate = new Date();
+	 		var curentDate = $w.getFormattedDate( nowDate , "yyyyMMdd" );
+	 		icalOfdcCnsltDt.setValue( curentDate );
+	 		scwin.InqrRegGubun = "REG";
+	 		
+	 		tbxOfdcCnsltDocNo.setValue( "저장이후 문서번호 자동생성" );
+	 		
+	 		dsTcfOfdcCnsltMap.set( "ofdcCnsltDeptCd"   , deptCd );    //공문_품의_부서코드
+	    	dsTcfOfdcCnsltMap.set( "ofdcCnsltDeptNm"   , deptNm );    //공문_품의_부서명
+	 		
+	 		//버튼권한 
+	 		scwin.setAuth();
+	 	}
+	 	else 
+	 	{// 조회후 업데이트 가능
+	 		scwin.InqrRegGubun = "INQR";
+	 		
+	 		dsTcfOfdcCnsltMap.set( "ofdcCnsltNo" , scwin.param.ofdcCnsltNo);
+	 		
+	 		scwin.fnSearch();
+	 	}
+	 	
+	 	//첨부파일 초기화
+	 	scwin.fnFileSet();
+	
+	}; 
+
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+	/**************************************************************************
+	* 함 수 명: scwin.setAuth
+	* 기 능: 버튼 control
+	**************************************************************************/ 
+	scwin.setAuth = function(){
+	
+		var deptCd     = sessionStorage.getItem("deptCd") || '';
+	
+		btnSave.setStyle( "display" , "none" );
+		btnDel.setStyle( "display" , "none" );
+		
+		if(scwin.InqrRegGubun == "REG"){
+			btnSave.setStyle( "display" , "" );
+		} else if(scwin.InqrRegGubun == "INQR"){
+		
+			var ofdcCnsltDeptCd =  dsTcfOfdcCnsltMap.get( "ofdcCnsltDeptCd" );
+		
+			if(deptCd == ofdcCnsltDeptCd)
+			{//등록된 공문의 부서코드가 본인팀일시 저장버튼 , 삭제버튼 show
+				btnSave.setStyle( "display" , "" );
+				btnDel.setStyle( "display"  , "" );
+			}
+			else
+			{//등록된 공문의 부서코드가 본인팀이 아닐시 readOnly 
+				
+				$("#"+grpOfdcCnsltInputArea.id).find("input").each(function(){
+				
+					var inputId = $(this).attr("id");
+					var comp    = $w.getComponentById(inputId);
+					var orgId   = comp.org_id; 
+				
+					if(orgId == undefined){
+					 	return true;
+					}
+				
+					//id 가 ibx로시작하는 것만 setReadOnly true
+					if(orgId != undefined && !orgId.startsWith('ibx')){
+					 	return true;
+					}
+				
+					comp.setReadOnly(true); 
+				});
+				
+				//품의일자
+				icalOfdcCnsltDt.setReadOnly(true);
+				//등록본인	
+				btnFindEmploee.setStyle( "display" , "none" );
+				spanOnlyUser.setStyle( "display" , "none" );
+				chkOnlyUser.setStyle( "display" , "none" );
+				
+				com.getUdcComp("uFileListCnsltAflId", "btnAddFile").addClass("hide");  //첨부파일
+			}
+		}
+	
+	}; 
+	 
+	/**************************************************************************
+	* 함 수 명: scwin.fnFileSet
+	* 기 능: 파일첨부
+	**************************************************************************/ 
+	scwin.fnFileSet = function(){
+		var fileExt = "gif,jpg,tif,tiff,doc,xls,ppt,pdf,txt,xlsx,png,pptx,docx,hwp,zip";
+    	
+    	//증빙서류
+    	com.setUdcValue("uFileListCnsltAflId", "jobGbCd", "CF");
+        com.setUdcValue("uFileListCnsltAflId", "menuId", "CF05150041U");
+        com.setUdcValue("uFileListCnsltAflId", "aflId", "");
+        com.setUdcValue("uFileListCnsltAflId", "fileExt", fileExt);
+        com.setUdcValue("uFileListCnsltAflId", "usage", "INS");
+        com.setUdcValue("uFileListCnsltAflId", "fileSize", "");
+        com.getUdcComp("uFileListCnsltAflId", "gen_aflList").addClass("col2");
+	};
+	
+	/**************************************************************************
+	* 함 수 명: scwin.fnSearch
+	* 기 능: 상세조회
+	**************************************************************************/
+    scwin.fnSearch = function() {
+         ajaxLib.ajax("/cf/CF05150041U/selectTcfOfdcCnslt", {
+        	  mode        : "asynchronous"
+        	, method      : "POST"
+            , requestData : dsTcfOfdcCnsltMap.getJSON()
+            , callback    : function(result,e){
+            	var  tcfOfdcCnsltData = result.data.tcfOfdcCnsltData;
+            	
+            	dsTcfOfdcCnsltMap.setJSON(tcfOfdcCnsltData);
+            	
+            	 com.setUdcValue("uFileListCnsltAflId", "aflId", dsTcfOfdcCnsltMap.get("ofdcCnsltAflId"));
+            
+            	//버튼권한 
+	 			scwin.setAuth();
+            }
+            , errCallback : "fnErrCallBack"
+        });
+    };	
+	
+    /**************************************************************************
+	* 함 수 명: scwin.fnValidate
+	* 기 능: 유효성체크
+	**************************************************************************/
+	scwin.fnValidate = function() {
+		
+		dsTcfOfdcCnsltMap.set("ofdcCnsltAflId"    , com.getUdcComp("uFileListCnsltAflId"    , "aflId").getValue()); //날인서류
+	
+		if (!com.validateGroup([grpOfdcCnsltInputArea])) {
+            return false;
+        }
+	    
+	    return true;
+	};
+	
+	/**************************************************************************
+	* 함 수 명: scwin.fnSave
+	* 기 능: 저장
+	**************************************************************************/
+	scwin.fnSave = function() {
+	
+		//유효성체크
+    	if(!scwin.fnValidate()) return;
+    	
+    	var confirmStr = "";
+    	if(scwin.InqrRegGubun == "REG"){
+        	dsTcfOfdcCnsltMap.set( "status" , "C" );
+        	confirmStr = "품의서를 저장하시겠습니까?";
+        } else if(scwin.InqrRegGubun == "INQR"){
+        	dsTcfOfdcCnsltMap.set( "status" , "U" );
+        	confirmStr = "품의서를 수정하시겠습니까?";
+        }
+        
+        if(!confirm(confirmStr)) return;
+        
+         ajaxLib.ajax("/cf/CF05150041U/saveTcfOfdcCnslt", {
+        	  mode        : "asynchronous"
+        	, method      : "POST"
+            , requestData : dsTcfOfdcCnsltMap.getJSON()
+            , callback    : function(result,e){
+            
+            	com.showMessage("SCN0002", "저장");			//$1 되었습니다.
+            	
+            	var ofdcCnsltNo = result.data;
+            	dsTcfOfdcCnsltMap.set( "ofdcCnsltNo" , ofdcCnsltNo );
+            	
+            	scwin.InqrRegGubun = "INQR";
+            	
+            	//상세조회 
+            	scwin.fnSearch();
+            	
+            }
+            , errCallback : "fnErrCallBack"
+        });
+    	
+	};
+	
+	/**************************************************************************
+	* 함 수 명: scwin.fnDelete
+	* 기 능: 삭제
+	**************************************************************************/
+	scwin.fnDelete = function() {
+	
+		var confirmStr = "품의서를 삭제하시겠습니까?";
+    	
+        if(!confirm(confirmStr)) return;
+        
+         ajaxLib.ajax("/cf/CF05150041U/deleteTcfOfdcCnslt", {
+        	  mode        : "asynchronous"
+        	, method      : "POST"
+            , requestData : dsTcfOfdcCnsltMap.getJSON()
+            , callback    : function(result,e){
+            
+            	com.showMessage("SCN0002", "삭제");			//$1 되었습니다.
+            	
+            	scwin.btnList_onclick();
+
+            }
+            , errCallback : "fnErrCallBack"
+        });
+    	
+	};
+		
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+	
+	/* 결과 후처리*/
+	scwin.fnCallback = function(result, e) {
+        console.log(e);
+        
+	   	switch(scwin.svcId) {
+	   		case "" :
+	   			console.log('search Error!!!!!!!!!!!');
+	   		break;
+	   }        
+	};
+	
+	/* 에러 후처리 */
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+        
+	   	switch(scwin.svcId) {
+	   		case "" :
+	   			console.log('search Error!!!!!!!!!!!');
+	   		break;
+	   }        
+    };
+	
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+     /**************************************************************************
+	 * Event: scwin.btnList_onclick
+	 * 기 능: 공문품의 목록 이동
+	 **************************************************************************/
+	scwin.btnList_onclick = function() {
+		com.detailOpen(scwin.param.callTitle, scwin.param.callId, scwin.param.callPageUrl, "1", scwin.param);
+	};
+	
+	/**************************************************************************
+	 * Event: scwin.btnSave_onclick
+	 * 기 능: 공문품의 저장
+	 **************************************************************************/
+	scwin.btnSave_onclick = function() {
+		scwin.fnSave();	
+	};
+	
+	/**************************************************************************
+	 * Event: scwin.btnDel_onclick
+	 * 기 능: 공문품의 삭제
+	 **************************************************************************/
+	scwin.btnDel_onclick = function() {
+		scwin.fnDelete(); 
+	};
+	
+	/**************************************************************************
+	 * Event: scwin.chkOnlyUser_onlabelclick
+	 * 기 능: 등록본인 체크시 session 정보 set
+	**************************************************************************/
+	scwin.chkOnlyUser_onlabelclick = function(index,checked,value) {
+	    var userEmpno =  sessionStorage.getItem("userEmpno") || "";
+	    var userNm    =  sessionStorage.getItem("userNm") || "";
+	    
+	    if(checked == true)
+	    {
+	    	dsTcfOfdcCnsltMap.set( "ofdcCnsltChrgrEmpno"    , userEmpno ); //공문_품의_담당자_사번
+	    	dsTcfOfdcCnsltMap.set( "ofdcCnsltChrgrNm"       , userNm );    //공문_품의_담당자_명
+	    } 
+	    else
+	    {
+	    	dsTcfOfdcCnsltMap.set( "ofdcCnsltChrgrEmpno"    , "" );    //공문_품의_담당자_사번
+	    	dsTcfOfdcCnsltMap.set( "ofdcCnsltChrgrNm"       , "" );    //공문_품의_담당자_명
+	    }
+	};
+	
+	/**************************************************************************
+	 * Event: scwin.btnFindEmploee_onclick
+	 * 기 능: 담당자 찾기 팝업
+	**************************************************************************/
+	scwin.btnFindEmploee_onclick = function() {
+		var deptCd    =  sessionStorage.getItem("deptCd") || "";
+	    var deptNm    =  sessionStorage.getItem("deptNm") || "";
+		
+		var popOps = {
+				popup_name :"사용자선택"
+		       ,url        :"/ux/cf/CF00050502P.xml"
+		       ,data       :  { deptCd : deptCd 
+		                       ,deptNm : deptNm
+		                      }
+		       ,widType	: "XL"
+			   ,height		: "670"
+		       ,callbackFn : "scwin.fnPopupCallback"
+		    };
+		com.popup_open(popOps);
+	};
+	
+	/**************************************************************************
+	* 함 수 명: scwin.fnPopupCallback
+	* 기 능: 담당자 조회팝업 callBack method
+	**************************************************************************/
+	scwin.fnPopupCallback = function(result) {
+	  if(result != ""){
+		  dsTcfOfdcCnsltMap.set( "ofdcCnsltChrgrEmpno"  , result.userEmpno ); //공문_품의_담당자_사번
+		  dsTcfOfdcCnsltMap.set( "ofdcCnsltChrgrNm"     , result.userNm );    //공문_품의_담당자_명
+	  }
+	};
+	]]></script>
+	</head>
+	
+	
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+				<xf:group class="navigator_wrap" id="" style="">
+						<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+						<xf:group class="btn_wrap" id="" style="" tagname="">
+								<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnDel" outerDiv="false" style="" ev:onclick="scwin.btnDel_onclick">
+										<xf:label><![CDATA[삭제]]></xf:label>
+								</w2:anchor>
+								<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+										<xf:label><![CDATA[저장]]></xf:label>
+								</w2:anchor>
+								<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnList" outerDiv="false" style="" ev:onclick="scwin.btnList_onclick">
+										<xf:label><![CDATA[목록]]></xf:label>
+								</w2:anchor>
+						</xf:group>
+				</xf:group>
+				<xf:group style="" id="" class="defaultbox">
+						<w2:textbox label="품의공문" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				</xf:group>
+				<xf:group class="w2tb" id="grpOfdcCnsltInputArea" style="" tagname="table" adaptive="" adaptiveThreshold="">
+						<w2:attributes>
+								<w2:summary></w2:summary>
+						</w2:attributes>
+						<xf:group tagname="colgroup">
+								<xf:group style="width:100.00px;" tagname="col"></xf:group>
+								<xf:group style="" tagname="col"></xf:group>
+								<xf:group style="width:100.00px;" tagname="col"></xf:group>
+								<xf:group style="" tagname="col"></xf:group>
+						</xf:group>
+						<xf:group style="" tagname="tr">
+								<xf:group class="w2tb_th req" style="" tagname="th">
+										<w2:attributes>
+												<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="품의일자" style=""></w2:span>
+								</xf:group>
+								<xf:group class="w2tb_td" style="" tagname="td">
+									<w2:attributes></w2:attributes>
+									<w2:inputCalendar calendarValueType="yearMonthDate" focusOnDateSelect="false" footerDiv="false" id="icalOfdcCnsltDt" renderDiv="true" renderType="component" rightAlign="false" style="" weekStartsOn="0" class="req" mandatory="true" ref="data:dsTcfOfdcCnsltMap.ofdcCnsltDt"></w2:inputCalendar>
+								</xf:group>
+								<xf:group class="w2tb_th" style="" tagname="th">
+										<w2:attributes>
+												<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="문서번호" style=""></w2:span>
+								</xf:group>
+								<xf:group class="w2tb_td" style="" tagname="td">
+										<w2:attributes></w2:attributes>
+										<w2:textbox label="" style="width: 200px;" id="tbxOfdcCnsltDocNo" ref="data:dsTcfOfdcCnsltMap.ofdcCnsltDocNo"></w2:textbox>
+								</xf:group>
+						</xf:group>
+						<xf:group class="" style="" tagname="tr">
+								<xf:group class="w2tb_th req" style="" tagname="th">
+										<w2:attributes>
+												<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="담당자" style=""></w2:span>
+								</xf:group>
+								<xf:group class="w2tb_td" style="" tagname="td">
+										<w2:attributes>
+												<w2:colspan>1</w2:colspan>
+												<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										<xf:input id="ibxOfdcRvcChrgrNm" initValue="" style="width:110px;" readOnly="true" class="req" mandatory="true" ref="data:dsTcfOfdcCnsltMap.ofdcCnsltChrgrNm"></xf:input>
+										<w2:anchor class="btn_gcm_ic src" id="btnFindEmploee" outerDiv="false" style="" ev:onclick="scwin.btnFindEmploee_onclick">
+												<xf:label><![CDATA[조회]]></xf:label>
+										</w2:anchor>
+										<w2:span id="spanOnlyUser" label=" 등록본인 " style=""></w2:span>
+										<xf:select appearance="full" class="" cols="3" id="chkOnlyUser" renderType="checkboxgroup" rows="" selectedindex="-1" style="" ref="" ev:onchange="" ev:onlabelclick="scwin.chkOnlyUser_onlabelclick">
+												<xf:choices>
+														<xf:item>
+																<xf:label></xf:label>
+																<xf:value><![CDATA[]]></xf:value>
+														</xf:item>
+												</xf:choices>
+										</xf:select>
+								</xf:group>
+								<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes></w2:attributes>
+										<w2:span id="" label="매수" style=""></w2:span>
+								</xf:group>
+								<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:input id="ibxOfdcCnsltDocPrcnt" initValue="" style="width: 100px;" allowChar="0-9" class="req" mandatory="true" ref="data:dsTcfOfdcCnsltMap.ofdcCnsltDocPrcnt" displayFormat="#,###" maxByteLength="3"></xf:input>
+								</xf:group>
+						</xf:group>
+						<xf:group tagname="tr">
+								<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+												<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="구분" style=""></w2:span>
+								</xf:group>
+								<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:select1 allOption="" appearance="minimal" chooseOption="true" class="req" direction="auto"
+											disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="ibxKeyOfdcCnsltGbCd" mandatory="true" ref="data:dsTcfOfdcCnsltMap.ofdcCnsltGbCd"
+											style="width:140px;" submenuSize="auto" textAlign="left" chooseOptionLabel="전체">
+											<xf:choices></xf:choices>
+										</xf:select1>
+								</xf:group>
+								<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+												<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="비고" style=""></w2:span>
+								</xf:group>
+								<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:input allowChar="" id="ibxOfdcCnsltRmk" initValue="" style="width: 90%;" class="" mandatory="" ref="data:dsTcfOfdcCnsltMap.ofdcCnsltRmk" maxByteLength="300"></xf:input>
+								</xf:group>
+						</xf:group>
+						<xf:group tagname="tr">
+								<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+												<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="제목" style=""></w2:span>
+								</xf:group>
+								<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+												<w2:colspan>3</w2:colspan>
+												<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										<xf:input id="ibxOfdcCnsltTtl" initValue="" style="width:100%;" class="req" mandatory="true" ref="data:dsTcfOfdcCnsltMap.ofdcCnsltTtl" maxByteLength="300"></xf:input>
+								</xf:group>
+						</xf:group>
+						<xf:group tagname="tr">
+								<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+												<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="첨부" style=""></w2:span>
+								</xf:group>
+								<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+												<w2:colspan>3</w2:colspan>
+												<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										<w2:udc_file_list style="" id="uFileListCnsltAflId"></w2:udc_file_list>
+								</xf:group>
+						</xf:group>
+				</xf:group>
+		</xf:group>
+	</body>
+</html>

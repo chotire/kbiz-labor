@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+            <w2:dataCollection baseNode="map">
+                <w2:dataList baseNode="list" id="dsSampleList" repeatNode="map" saveRemovedData="true" style="">
+                    <w2:columnInfo>
+                        <w2:column dataType="text" id="CD" name="코드"></w2:column>
+                        <w2:column dataType="text" id="CD_NM" name="코드명"></w2:column>
+                    </w2:columnInfo>
+                </w2:dataList>
+                <w2:dataMap baseNode="map" id="dsSrch" style="">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" id="cd" name="코드"></w2:key>
+                        <w2:key dataType="text" id="cdNm" name="코드명"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+
+    <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID   : CF00350502E.xml
+     * Program Name : 결재페이지Anchor용 테스트 페이지
+     * Author       : 송준영 (tpsongjy)
+     * Date         : 2019.05.23
+     *
+     * History
+     * ========================================
+     * 변경일자     수정자   내 용
+     * ========================================
+     *
+     **************************************************************************/
+    /************************************************************************************
+     *  [1] 전역변수 : 앞서 넘어온 값 ( reqJsonParam )
+     ************************************************************************************/
+    scwin.btnTestAlert_onclick = function() {
+        var jsonArray = JSON.parse(reqJsonParam);
+        $.each(jsonArray, function(idx, item){
+            alert(JSON.stringify(item));
+        });
+    };
+
+    /************************************************************************************
+     *  [2] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        scwin.initScreen();
+        $("body").css("overflow","scroll");
+    };
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function() {
+        scwin.fnSearchList();
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnSearchList
+     * 기 능: 코드정보 리스트 조회
+     **************************************************************************/
+    scwin.fnSearchList = function() {
+        ajaxLib.ajax("/cf/CFAprv/notifyAprvAnchorTest", {
+            mode : "asynchronous"
+            , method : "POST"
+            , requestData : {}
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+    }
+
+     /** 정상시 후처리 **/
+    scwin.fnCallback = function(result, e) {
+        dsSampleList.setJSON(result.dsSampleList);
+    };
+
+    // 미리보기, 확인 버튼 클릭했을 경우 업무페이지에서 별도로 함수를 실행
+    scwin.fnStartImportMainScript = function() {
+        console.log("TEST");
+    };
+]]></script>
+</head>
+
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+
+        <xf:group style="" id="" class="">
+            <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnTestAlert" class="btn_gcm" ev:onclick="scwin.btnTestAlert_onclick">
+                <xf:label>
+                    <![CDATA[파라미터확인]]>
+                </xf:label>
+            </w2:anchor>
+        </xf:group>
+
+        <xf:group style="" id="" class="content_body">
+            <xf:group style="" id="" class="defaultbox">
+                <w2:textbox label="결재본문" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+            </xf:group>
+
+            <w2:gridView autoFit="allColumn" dataList="data:dsSampleList" fixedColumnWithHidden="true" id="grdAprvList"
+                scrollByColumn="false" style="" useShiftKey="true" visibleRowNum="all" rowNumVisible=""
+                rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue="" focusMode="row"
+                class="autoHeight" readOnly="true">
+                <w2:header id="header1" style="">
+                    <w2:row id="row2" style="">
+                        <w2:column blockSelect="false" id="column23" inputType="text" value="코드" width="40"></w2:column>
+                        <w2:column blockSelect="false" id="column21" inputType="text" value="코드명" width="100">
+                        </w2:column>
+                    </w2:row>
+                </w2:header>
+                <w2:gBody id="gBody4" style="">
+                    <w2:row id="row5" style="">
+                        <w2:column blockSelect="false" id="CD" inputType="text" style="height:24px;" width="40">
+                        </w2:column>
+                        <w2:column blockSelect="false" id="CD_NM" inputType="text" style="height:24px;" width="100">
+                        </w2:column>
+                    </w2:row>
+                </w2:gBody>
+            </w2:gridView>
+        </xf:group>
+    </body>
+
+</html>

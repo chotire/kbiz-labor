@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+                    <w2:keyInfo>
+                        <w2:key dataType="text" id="yyyyMm" name="작업년월"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+                <w2:dataList baseNode="list" repeatNode="map" id="dsTcmMagrSituList" saveRemovedData="true"
+                    ev:onrowpositionchange="" ev:oncelldatachange="scwin.dsTcmBzpjPlanList_oncelldatachange">
+                    <w2:columnInfo>
+                        <w2:column id="gbNm" name="경영_구분_명" dataType="text"></w2:column>
+                        <w2:column id="prevYearAmt" name="전년_실적" dataType="text"></w2:column>
+                        <w2:column id="yearAmt" name="금년_목표" dataType="text"></w2:column>
+                        <w2:column id="monGoalAmt" name="당월_목표" dataType="text"></w2:column>
+                        <w2:column id="monPfmcAmt" name="당월_실적" dataType="text"></w2:column>
+                        <w2:column id="monRate" name="당월_달성율" dataType="text"></w2:column>
+                        <w2:column id="monDiffAmt" name="당월_차액" dataType="text"></w2:column>
+                        <w2:column id="yearGoalAmt" name="누계_목표" dataType="text"></w2:column>
+                        <w2:column id="yearPfmcAmt" name="누계_실적" dataType="text"></w2:column>
+                        <w2:column id="yearRate" name="누계_달성율" dataType="text"></w2:column>
+                        <w2:column id="yearDiffAmt" name="누계_차액" dataType="text"></w2:column>
+                        <w2:column id="gubun" name="name12" dataType="text"></w2:column>
+                    </w2:columnInfo>
+                </w2:dataList>
+            </w2:dataCollection>
+        </xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false" />
+        <script type="javascript" lazy="false"><![CDATA[
+	/***************************************************************************
+	 * Program ID : CM70400000U.xml
+	 * Program Name : 경영정보 > 총괄현황 > 경영현황 조회
+	 * Author : 표성빈(sbPyo)
+	 * Date : 2022.11.28
+	 *
+	 * History
+	 * ========================================
+	 * 변경일자     수정자   내 용
+	 * ========================================
+	 *
+	 **************************************************************************/
+
+	/************************************************************************************
+		DataCollection description
+        
+	    dsSearchMap : 조회조건
+        dsTcmMagrSituList : 경영현황
+	 ************************************************************************************/
+	/************************************************************************************
+	 *  [1] 전역변수
+	 ************************************************************************************/
+	/************************************************************************************
+	 *  [2] onpageload(초기화포함)
+	 ************************************************************************************/
+	scwin.onpageload = function() {
+    
+    	dsSearchMap.set("yyyyMm", $p.getCurrentServerDate("yyyyMM")); // 작업년월
+
+		//화면로딩 시 자동 조회
+        scwin.selectTcmMagrSituInfo();
+        com.commonUI();
+        
+	};
+
+	scwin.onpageunload = function() {
+	};
+
+	/************************************************************************************
+	 *  [3] 사용자 정의함수 함수
+	 ************************************************************************************/
+   	/**************************************************************************
+	 * 함 수 명: scwin.selectTcmMagrSituInfo
+	 * 기 능: 경영현황 LIST SELECT
+	 **************************************************************************/
+     scwin.selectTcmMagrSituInfo = function() {
+     
+        if (calYearMonth.getValue() == "" || (calYearMonth.getValue()).length != 6) {
+            com.showMessage("CFA0019", "기준연월");// $1을(를) 확인하십시오.
+            return;
+        }
+
+        ajaxLib.ajax("/cm/cm7070/CM70700000U/selectTcmMagrSituInfo", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e) {
+				dsTcmMagrSituList.setJSON(result.data.dsTcmMagrSituInfo);
+                
+                // 그리드 헤더 년월 설정
+                grdTcmMagrSitu.setHeaderValue( "colYear1" , (dsSearchMap.get("yyyyMm").substr(0,4)-1) + "년 실적" );
+                grdTcmMagrSitu.setHeaderValue( "colYear2" , dsSearchMap.get("yyyyMm").substr(0,4) + "년 목표" );
+                grdTcmMagrSitu.setHeaderValue( "colYyyyMm" , dsSearchMap.get("yyyyMm").substr(0,4) + "년 " 
+                                                             +  dsSearchMap.get("yyyyMm").substr(4,2) + "월" );
+                                                                                        
+                // 차트 생성                                                             
+                scwin.f1_draw();
+                scwin.f2_draw();
+                scwin.f3_draw();
+                scwin.f4_draw();
+			},
+            errCallback : function(result, e) {}
+        });
+
+    };
+
+	/************************************************************************************
+	 *  [4] Callback 함수
+	 ************************************************************************************/
+
+	/************************************************************************************
+	 *  [5] Event 함수
+	 ************************************************************************************/
+    
+    // 조회 버튼 클릭 시
+    scwin.btnFind_onclick = function() {
+        scwin.selectTcmMagrSituInfo();
+    }
+    
+    // 작업연월 변경 시
+    scwin.calYearMonth_onchange = function() {
+        scwin.selectTcmMagrSituInfo();
+	};
+	
+	/**************************************************************************
+	 * 함 수 명: scwin.fnSetChart
+	 * 기 능: 수주.매출달성 그래프
+	 **************************************************************************/	
+	scwin.f1_draw = function() {
+        console.log(dsTcmMagrSituList.getCellData( 0 , "prevYearAmt" ));
+		let chartOption = {
+            caption: "수주",
+            yaxisname: "",
+            subcaption: "(단위:억원, VAT별도)",
+            plottooltext:
+              "<b>$dataValue</b> $seriesName in $label",
+            showValues: "1",
+            showsum: "0",
+            baseFont: "맑은고딕",
+            baseFontSize: "11",    
+            theme: "fusion",
+            showHoverEffect: "1",
+            forceDecimals : "1"
+		};
+
+		let jsonData2 = {
+			"categories" : [{
+				"category" : [{
+					"label" : parseInt(calYearMonth.getValue().substr(2,2))-1 +"실적"
+				}, {
+					"label" : calYearMonth.getValue().substr(2,2) + "목표"
+				}, {
+                    "label" : "목표"
+                }, {
+                    "label" : "실적"
+                }, {
+					"label" : calYearMonth.getValue().substr(2,2) + "목표"
+				}, {
+					"label" : calYearMonth.getValue().substr(2,2) + "실적"
+				}]
+			}],
+			"dataset" : [{
+				"data" : [{
+					"value" : (dsTcmMagrSituList.getCellData( 0 , "prevYearAmt" )).replace(',', '')
+				}, {
+					"value" : (dsTcmMagrSituList.getCellData( 0 , "yearAmt" )).replace(',', '')
+				}, {
+					"value" : ""
+				}, {
+					"value" : ""
+				}, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }],
+				"seriesname" : "연간"
+			},
+			{
+				"data" : [{
+					"value" : ""
+				}, {
+					"value" : ""
+				}, {
+					"value" : (dsTcmMagrSituList.getCellData( 0 , "monGoalAmt" )).replace(',', '')
+				}, {
+					"value" : (dsTcmMagrSituList.getCellData( 0 , "monPfmcAmt" )).replace(',', '')
+				}, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }],
+				"seriesname" : calYearMonth.getValue().substr(4,2)+ "월",
+			},
+            {
+				"data" : [{
+					"value" : ""
+				}, {
+					"value" : ""
+				}, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+					"value" : (dsTcmMagrSituList.getCellData( 0 , "yearGoalAmt" )).replace(',', '')
+				}, {
+					"value" : (dsTcmMagrSituList.getCellData( 0 , "yearPfmcAmt" )).replace(',', '')
+				}],
+				"seriesname" : "누계"
+
+			}]
+		};
+		
+		f1.setJSONData(jsonData2);
+		f1.setChartAttribute(chartOption);
+		f1.draw();
+	};
+    
+	scwin.f2_draw = function() {
+    
+		let chartOption = {
+            caption: "수주잔고",
+            yaxisname: "",
+            subcaption: "(단위:억원, VAT별도)",
+            plottooltext:
+              "<b>$dataValue</b> $seriesName in $label",
+            showValues: "1",
+            showsum: "0",
+            baseFont: "맑은고딕",
+            baseFontSize: "11",    
+            theme: "fusion",
+            showHoverEffect: "1",
+            forceDecimals : "1"
+		};
+
+        let jsonData2 = {
+            "categories" : [{
+                "category" : [{
+                    "label" : parseInt(calYearMonth.getValue().substr(2,2))-1 +"실적"
+                }, {
+                    "label" : calYearMonth.getValue().substr(2,2) + "목표"
+                }, {
+                    "label" : "목표"
+                }, {
+                    "label" : "실적"
+                }, {
+                    "label" : calYearMonth.getValue().substr(2,2) + "목표"
+                }, {
+                    "label" : calYearMonth.getValue().substr(2,2) + "실적"
+                }]
+            }],
+            "dataset" : [{
+                "data" : [{
+                    "value" : (dsTcmMagrSituList.getCellData( 1 , "prevYearAmt" )).replace(',', '')
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 1 , "yearAmt" )).replace(',', '')
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }],
+                "seriesname" : "연간"
+            },
+            {
+                "data" : [{
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 1 , "monGoalAmt" )).replace(',', '')
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 1 , "monPfmcAmt" )).replace(',', '')
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }],
+                "seriesname" : calYearMonth.getValue().substr(4,2)+ "월",
+            },
+            {
+                "data" : [{
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 1 , "yearGoalAmt" )).replace(',', '')
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 1 , "yearPfmcAmt" )).replace(',', '')
+                }],
+                "seriesname" : "누계"
+
+            }]
+        };
+        
+		f2.setJSONData(jsonData2);
+		f2.setChartAttribute(chartOption);
+		f2.draw();
+	};
+    
+	scwin.f3_draw = function() {
+    
+		let chartOption = {
+            caption: "매출",
+            yaxisname: "",
+            subcaption: "(단위:억원, VAT별도)",
+            plottooltext:
+              "<b>$dataValue</b> $seriesName in $label",
+            showValues: "1",
+            showsum: "0",
+            baseFont: "맑은고딕",
+            baseFontSize: "11",    
+            theme: "fusion",
+            showHoverEffect: "1",
+            forceDecimals : "1"
+		};
+
+        let jsonData2 = {
+            "categories" : [{
+                "category" : [{
+                    "label" : parseInt(calYearMonth.getValue().substr(2,2))-1 +"실적"
+                }, {
+                    "label" : calYearMonth.getValue().substr(2,2) + "목표"
+                }, {
+                    "label" : "목표"
+                }, {
+                    "label" : "실적"
+                }, {
+                    "label" : calYearMonth.getValue().substr(2,2) + "목표"
+                }, {
+                    "label" : calYearMonth.getValue().substr(2,2) + "실적"
+                }]
+            }],
+            "dataset" : [{
+                "data" : [{
+                    "value" : (dsTcmMagrSituList.getCellData( 2 , "prevYearAmt" )).replace(',', '')
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 2 , "yearAmt" )).replace(',', '')
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }],
+                "seriesname" : "연간"
+            },
+            {
+                "data" : [{
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 2 , "monGoalAmt" )).replace(',', '')
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 2 , "monPfmcAmt" )).replace(',', '')
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }],
+                "seriesname" : calYearMonth.getValue().substr(4,2)+ "월",
+            },
+            {
+                "data" : [{
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 2 , "yearGoalAmt" )).replace(',', '')
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 2 , "yearPfmcAmt" )).replace(',', '')
+                }],
+                "seriesname" : "누계"
+
+            }]
+        };
+		
+		f3.setJSONData(jsonData2);
+		f3.setChartAttribute(chartOption);
+		f3.draw();
+	};
+    
+	scwin.f4_draw = function() {
+    
+		let chartOption = {
+            caption: "영업이익",
+            yaxisname: "",
+            subcaption: "(단위:억원, VAT별도)",
+            plottooltext:
+              "<b>$dataValue</b> $seriesName in $label",
+            showValues: "1",
+            showsum: "0",
+            baseFont: "맑은고딕",
+            baseFontSize: "11",    
+            theme: "fusion",
+            showHoverEffect: "1",
+            forceDecimals : "1"
+		};
+
+        let jsonData2 = {
+            "categories" : [{
+                "category" : [{
+                    "label" : parseInt(calYearMonth.getValue().substr(2,2))-1 +"실적"
+                }, {
+                    "label" : calYearMonth.getValue().substr(2,2) + "목표"
+                }, {
+                    "label" : "목표"
+                }, {
+                    "label" : "실적"
+                }, {
+                    "label" : calYearMonth.getValue().substr(2,2) + "목표"
+                }, {
+                    "label" : calYearMonth.getValue().substr(2,2) + "실적"
+                }]
+            }],
+            "dataset" : [{
+                "data" : [{
+                    "value" : (dsTcmMagrSituList.getCellData( 6 , "prevYearAmt" )).replace(',', '')
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 6 , "yearAmt" )).replace(',', '')
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }],
+                "seriesname" : "연간"
+            },
+            {
+                "data" : [{
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 6 , "monGoalAmt" )).replace(',', '')
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 6 , "monPfmcAmt" )).replace(',', '')
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }],
+                "seriesname" : calYearMonth.getValue().substr(4,2)+ "월",
+            },
+            {
+                "data" : [{
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : ""
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 6 , "yearGoalAmt" )).replace(',', '')
+                }, {
+                    "value" : (dsTcmMagrSituList.getCellData( 6 , "yearPfmcAmt" )).replace(',', '')
+                }],
+                "seriesname" : "누계"
+
+            }]
+        };
+		
+		f4.setJSONData(jsonData2);
+		f4.setChartAttribute(chartOption);
+		f4.draw();
+	};]]></script>
+        <w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <xf:group style="" id="" class="content_body">
+            <xf:group class="navigator_wrap" id="" style="">
+                <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            </xf:group>
+            <xf:group class="tbl_search" id="" style="">
+                <xf:group class="tb_list" id="" style="" tagname="table">
+                    <w2:attributes>
+                        <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                    </w2:attributes>
+                    <xf:group tagname="colgroup">
+                        <xf:group style="width:97px;" tagname="col"></xf:group>
+                        <xf:group style="width:auto;" tagname="col"></xf:group>
+                    </xf:group>
+                    <xf:group style="" tagname="tr">
+                        <xf:group class="w2tb_th req" style="" tagname="th">
+                            <w2:span class="" id="" label="기준연월" style=""></w2:span>
+                        </xf:group>
+                        <xf:group tagname="td" class="w2tb_td">
+                            <w2:inputCalendar footerDiv="false" id="calYearMonth" style="width:120px" renderDiv="true"
+                                focusOnDateSelect="false" calendarValueType="yearMonth" rightAlign="false" renderType="component"
+                                class="req" mandatory="" placeholder="____-__" ev:onchange="scwin.calYearMonth_onchange" defaultDate=""
+                                ref="data:dsSearchMap.yyyyMm">
+                            </w2:inputCalendar>
+                        </xf:group>
+
+                    </xf:group>
+                </xf:group>
+                <xf:group class="btn_tbl_search" style="" tagname="">
+                    <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+                        <xf:label><![CDATA[조회]]></xf:label>
+                    </w2:anchor>
+                </xf:group>
+            </xf:group>
+            <xf:group class="defaultbox" id="" style="">
+                <xf:group style="" id="" class="left_wrap">
+                    <w2:textbox class="df_tt" id="" label="경영 Summary" style="" tagname="h3"></w2:textbox>
+                </xf:group>
+                <xf:group style="" id="" class="right_wrap">
+                    <xf:group class="descbox" id="" style="">
+                        <w2:textbox class="" id="" label="[단위 : 억원, VAT별도]" tagname=""></w2:textbox>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <w2:fusionchart accessibility="false" drawType="javascript" runflashAt="IE6,IE7,IE8" seriesType="advanced"
+                chartType="stackedcolumn3d" style="width:380px; height:283px; float:left; margin-right:0.8em; margin-bottom:1em;" id="f1"
+                ref="" labelNode="" version="3.19">
+            </w2:fusionchart>
+            <w2:fusionchart accessibility="false" drawType="javascript" runflashAt="IE6,IE7,IE8" seriesType="advanced"
+                chartType="stackedcolumn3d" style="width:380px; height:283px; float:left; margin-right:0.8em; margin-bottom:1em;" id="f2"
+                ref="" labelNode="" version="3.19">
+            </w2:fusionchart>
+            <w2:fusionchart accessibility="false" drawType="javascript" runflashAt="IE6,IE7,IE8" seriesType="advanced"
+                chartType="stackedcolumn3d" style="width:380px; height:283px; float:left; margin-right:0.8em; margin-bottom:1em;" id="f3"
+                ref="" labelNode="" version="3.19">
+            </w2:fusionchart>
+            <w2:fusionchart accessibility="false" drawType="javascript" runflashAt="IE6,IE7,IE8" seriesType="advanced"
+                chartType="stackedcolumn3d" style="width:380px; height:283px; float:left; margin-bottom:1em;" id="f4" ref=""
+                labelNode="" version="3.19">
+            </w2:fusionchart>
+            <xf:group style="clear:both;" id="" class="">
+                <xf:group class="defaultbox" id="" style="">
+                    <xf:group style="" id="" class="left_wrap">
+                        <w2:textbox class="df_tt" id="" label="손익계산서" style="" tagname="h3"></w2:textbox>
+                    </xf:group>
+                    <xf:group style="" id="" class="right_wrap">
+                        <xf:group class="descbox" id="" style="margin-top:5px;">
+                            <w2:textbox class="" id="" label="[단위 : 억원, VAT별도]" tagname=""></w2:textbox>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+                <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmMagrSituList" fixedColumnWithHidden=""
+                    focusMode="row" id="grdTcmMagrSitu" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+                    rowStatusWidth="30" scrollByColumn="false" style="" useShiftKey="true" visibleRowNum="" autoFitMinWidth=""
+                    checkReadOnlyOnCut="" checkReadOnlyOnPaste="" ev:onviewchange="" tooltipDisplay="true">
+                    <w2:header id="header1" style="">
+                        <w2:row id="row2" style="">
+                            <w2:column blockSelect="false" displayMode="label" id="colGubun" inputType="text"
+                                removeBorderStyle="false" style="" value="구분" width="70" colSpan="" rowSpan="2">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colFocusYear" inputType="text"
+                                removeBorderStyle="false" style="" value="연간" width="200" colSpan="2" rowSpan="">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colYyyyMm" inputType="text"
+                                removeBorderStyle="false" style="" value="0000년 00월" width="400" colSpan="4" rowSpan="">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colRemnAmt" inputType="text"
+                                removeBorderStyle="false" style="" value="누계" width="400" colSpan="4" rowSpan="">
+                            </w2:column>
+                        </w2:row>
+                        <w2:row id="row2" style="">
+                            <w2:column blockSelect="false" displayMode="label" id="colYear1" inputType="text"
+                                removeBorderStyle="false" style="" value="0000년 실적" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colYear2" inputType="text"
+                                removeBorderStyle="false" style="" value="0000년 목표" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colMon3" inputType="text"
+                                removeBorderStyle="false" style="" value="목표" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colMon4" inputType="text"
+                                removeBorderStyle="false" style="" value="실적" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colMon5" inputType="text"
+                                removeBorderStyle="false" style="" value="달성율(%)" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colMon6" inputType="text"
+                                removeBorderStyle="false" style="" value="차액" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colMon7" inputType="text"
+                                removeBorderStyle="false" style="" value="목표" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colMon8" inputType="text"
+                                removeBorderStyle="false" style="" value="실적" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colMon9" inputType="text"
+                                removeBorderStyle="false" style="" value="달성율(%)" width="100">
+                            </w2:column>
+                            <w2:column blockSelect="false" displayMode="label" id="colMon10" inputType="text"
+                                removeBorderStyle="false" style="" value="차액" width="100">
+                            </w2:column>
+                        </w2:row>
+                    </w2:header>
+                    <w2:gBody id="gBody4" style="">
+                        <w2:row id="row5" style="">
+                            <w2:column removeBorderStyle="false" width="150" inputType="select" readOnly="true" id="gubun"
+                                blockSelect="false" textAlign="center">
+                                <w2:choices>
+                                    <w2:item>
+                                        <w2:label><![CDATA[수주]]></w2:label>
+                                        <w2:value><![CDATA[A]]></w2:value>
+                                    </w2:item>
+                                    <w2:item>
+                                        <w2:label><![CDATA[수주잔고]]></w2:label>
+                                        <w2:value><![CDATA[B]]></w2:value>
+                                    </w2:item>
+                                    <w2:item>
+                                        <w2:label><![CDATA[매출]]></w2:label>
+                                        <w2:value><![CDATA[C]]></w2:value>
+                                    </w2:item>
+                                    <w2:item>
+                                        <w2:label><![CDATA[원가]]></w2:label>
+                                        <w2:value><![CDATA[D]]></w2:value>
+                                    </w2:item>
+                                    <w2:item>
+                                        <w2:label><![CDATA[매출총이익]]></w2:label>
+                                        <w2:value><![CDATA[E]]></w2:value>
+                                    </w2:item>
+                                    <w2:item>
+                                        <w2:label><![CDATA[판매관리비]]></w2:label>
+                                        <w2:value><![CDATA[F]]></w2:value>
+                                    </w2:item>
+                                    <w2:item>
+                                        <w2:label><![CDATA[영업이익]]></w2:label>
+                                        <w2:value><![CDATA[G]]></w2:value>
+                                    </w2:item>
+                                </w2:choices>
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                displayMode="label" id="prevYearAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right"
+                                value="" width="100">
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                displayMode="label" id="yearAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right"
+                                value="" width="100">
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                displayMode="label" id="monGoalAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right"
+                                value="" width="100">
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                displayMode="label" id="monPfmcAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right"
+                                value="" width="100">
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                id="monRate" inputType="text" removeBorderStyle="false" style="" textAlign="right" value="" width="100">
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                displayMode="label" id="monDiffAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right"
+                                value="" width="100">
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                displayMode="label" id="yearGoalAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right"
+                                value="" width="100">
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                displayMode="label" id="yearPfmcAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right"
+                                value="" width="100">
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                id="yearRate" inputType="text" removeBorderStyle="false" style="" textAlign="right" value="" width="100">
+                            </w2:column>
+                            <w2:column readOnly="true" blockSelect="false" dataType="" displayFormat=""
+                                displayMode="label" id="yearDiffAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right"
+                                value="" width="100">
+                            </w2:column>
+                        </w2:row>
+                    </w2:gBody>
+                </w2:gridView>
+            </xf:group>
+        </xf:group>
+    </body>
+</html>

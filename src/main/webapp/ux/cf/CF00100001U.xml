@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcfMenuUseHistTreeList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="menuId" name="메뉴ID" dataType="text"></w2:column>
+						<w2:column id="menuNm" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="level" name="메뉴레벨" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchParam">
+					<w2:keyInfo>
+						<w2:key id="keyStartUseDt" name="사용일자 FROM" dataType="text"></w2:key>
+						<w2:key id="keyEndUseDt" name="검색_END_사용일자" dataType="text"></w2:key>
+						<w2:key id="keyMenuId" name="메뉴ID" dataType="text"></w2:key>
+						<w2:key id="keyMenuNm" name="메뉴명" dataType="text"></w2:key>
+						<w2:key id="keyUpperCd" name="메뉴상위코드" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcfMenuUseHistList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="menuId" name="메뉴ID" dataType="text"></w2:column>
+						<w2:column id="menuNm" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="useCnt" name="사용건수" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcfMenuUseHistDtlList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="menuId" name="메뉴ID" dataType="text"></w2:column>
+						<w2:column id="menuNm" name="메뉴명" dataType="text"></w2:column>
+						<w2:column id="fnlModiDtm" name="최종수정일시" dataType="text"></w2:column>
+						<w2:column id="fnlModprEmpno" name="최종수정사번" dataType="text"></w2:column>
+						<w2:column id="userId" name="사용자ID" dataType="text"></w2:column>
+						<w2:column id="userNm" name="사용자명" dataType="text"></w2:column>
+						<w2:column id="empGbCdNm" name="사원구분명" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsGridSelectParamMap">
+					<w2:keyInfo>
+						<w2:key id="menuId" name="메뉴ID" dataType="text"></w2:key>
+						<w2:key id="startUseDt" name="사용일자 FROM" dataType="text"></w2:key>
+						<w2:key id="endUseDt" name="사용일자 TO" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script type="javascript" lazy="false"><![CDATA[
+     /***************************************************************************
+     * Program ID : CF00100001U.xml 
+     * Program Name : 메뉴사용내역 
+     * Author : 남상열 (tpnsr)
+     * Date : 2019.02.14
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     *     
+     **************************************************************************/
+    /************************************************************************************
+     *  [1] 초기화 
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        //화면초기화
+        scwin.initScreen();
+
+        // 트리 조회
+        scwin.fnTreeList();
+    };
+
+    scwin.onpageunload = function () {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.initScreen = function () {
+        //검색영역 초기화
+        menuUseHistSearch.init();
+
+        var nowDate = $w.getCurrentServerDate("yyyyMMdd");
+
+        //사용기간 default set
+        com.setUdcValue("searchUsePrdFromToDt", "frDate", $w.dateAdd(nowDate, "-7"));
+        com.setUdcValue("searchUsePrdFromToDt", "toDate", nowDate);
+
+        grdTcfMenuUseHistList.initGrid();
+        grdTcfMenuUseHistDtlList.initGrid();
+
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수 
+     ************************************************************************************/
+    scwin.svcId = "";
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnTreeList
+     * 기 능: 메뉴트리정보 조회
+     **************************************************************************/
+    scwin.fnTreeList = function () {
+        scwin.svcId = "selectTcfMenuMngTreeList";
+
+        ajaxLib.ajax("/cf/CF00100000U/selectTcfMenuMngTreeList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: "",
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnSearch
+     * 기 능: 메뉴사용이력 조회
+     **************************************************************************/
+    scwin.fnSearch = function () {
+        scwin.svcId = "selectTcfMenuUseHistSearchList";
+
+        ajaxLib.ajax("/cf/CF00100001U/selectTcfMenuUseHistSearchList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSearchParam.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnDetailSearch
+     * 기 능: 상세내역조회 조회
+     **************************************************************************/
+    scwin.fnDetailSearch = function () {
+        scwin.svcId = "selectTcfMenuUseHistDtlList";
+
+        ajaxLib.ajax("/cf/CF00100001U/selectTcfMenuUseHistDtlList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsGridSelectParamMap.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function (result, e) {
+        switch (scwin.svcId) {
+            case "selectTcfMenuMngTreeList":
+                //트리 dataCollection 에 set	   		
+                dsTcfMenuUseHistTreeList.setJSON(result.data.menuTreeList);
+                break;
+            case "selectTcfMenuUseHistSearchList":
+                //메뉴사용내역 dataCollection 에 set
+                dsTcfMenuUseHistList.setJSON(result.data.menuUseHistList);
+
+                //메뉴사용내역 건수 set
+                com.setUdcValue("dsMenuUseHistListCount", "udcListCount", dsTcfMenuUseHistList.getRowCount());
+                break;
+            case "selectTcfMenuUseHistDtlList":
+                //메뉴사용내역 상세 dataCollection 에 set
+                dsTcfMenuUseHistDtlList.setJSON(result.data.menuUseHistDtlList);
+
+                //메뉴사용 상세내역 건수 set
+                com.setUdcValue("dsMenuUseHistDtlListCount", "udcListCount", dsTcfMenuUseHistDtlList.getRowCount());
+                break;
+        }
+    };
+
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function (e) {
+
+        switch (scwin.svcId) {
+            case "selectTcfMenuMngTreeList":
+                break;
+            case "selectTcfMenuUseHistSearchList":
+                break;
+            case "selectTcfMenuUseHistDtlList":
+                break;
+        }
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 메뉴사용이력 조회 
+     **************************************************************************/
+    scwin.btnFind_onclick = function () {
+
+        var fromDt = com.getUdcValue("searchUsePrdFromToDt", "frDate");
+        var toDt = com.getUdcValue("searchUsePrdFromToDt", "toDate");
+
+        //사용기간 from , to  DataCollection 에 set
+        dsSearchParam.set("keyStartUseDt", fromDt);
+        dsSearchParam.set("keyEndUseDt", toDt);
+        dsSearchParam.set("keyUpperCd", "");
+
+        grdTcfMenuUseHistList.initGrid();
+        grdTcfMenuUseHistDtlList.initGrid();
+
+        scwin.fnSearch();
+    };
+
+    /**************************************************************************
+     * Event: scwin.trvTcfMenuMngList_onlabelclick
+     * 기 능: 메뉴트리 선택시 
+     **************************************************************************/
+    scwin.trvTcfMenuMngList_onlabelclick = function (value, nodeElement, index) {
+    	//그리드초기화
+        grdTcfMenuUseHistList.initGrid();		//메뉴사용 내역 초기화
+		com.setUdcValue("dsMenuUseHistListCount", "udcListCount", 0);
+        grdTcfMenuUseHistDtlList.initGrid();	//메뉴사용 상세내역 초기화
+		com.setUdcValue("dsMenuUseHistDtlListCount", "udcListCount", 0);
+
+//        var rowData = dsTcfMenuUseHistTreeList.getRowData(index - 1);
+        var fromDt = com.getUdcValue("searchUsePrdFromToDt", "frDate");
+        var toDt = com.getUdcValue("searchUsePrdFromToDt", "toDate");
+
+        //사용기간 from , to  DataCollection 에 set
+        dsSearchParam.set("keyStartUseDt", fromDt);
+        dsSearchParam.set("keyEndUseDt", toDt);
+        dsSearchParam.set("keyUpperCd", value);
+
+        scwin.fnSearch();
+    };
+
+    /**************************************************************************
+     * Event: scwin.grdTcfMenuUseHistList_oncellclick
+     * 기 능: 메뉴사용내역 그리드 선택시 
+     **************************************************************************/
+    scwin.grdTcfMenuUseHistList_oncellclick = function (row, col) {
+    	//그리드초기화
+        grdTcfMenuUseHistDtlList.initGrid();	//메뉴사용 상세내역 초기화
+		com.setUdcValue("dsMenuUseHistDtlListCount", "udcListCount", 0);
+
+        var menuId = dsTcfMenuUseHistList.getCellData(row, "menuId");
+        var fromDt = com.getUdcValue("searchUsePrdFromToDt", "frDate");
+        var toDt = com.getUdcValue("searchUsePrdFromToDt", "toDate");
+
+        dsGridSelectParamMap.set("menuId", menuId);
+        dsGridSelectParamMap.set("startUseDt", fromDt);
+        dsGridSelectParamMap.set("endUseDt", toDt);
+
+        scwin.fnDetailSearch();
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxKeyMenuId_onkeyup
+     * 기 능: 메뉴ID onKeyUp 
+     **************************************************************************/
+    scwin.ibxKeyMenuId_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnFind.trigger("onClick");
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxMenuNm_onkeyup
+     * 기 능: 메뉴명 onKeyUp 
+     **************************************************************************/
+    scwin.ibxMenuNm_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnFind.trigger("onClick");
+        }
+    };
+
+	]]></script>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="wfrTitle" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>
+        </xf:group>
+        <xf:group class="tbl_search" id="" style="">
+            <xf:group class="tb_list" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:120.00px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:120.00px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:120.00px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr" id="menuUseHistSearch">
+                    <xf:group class="w2tb_th req" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="사용기간" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:udc_periodcalendar id="searchUsePrdFromToDt"></w2:udc_periodcalendar>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="메뉴ID" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input class="" id="ibxKeyMenuId" mandatory="" ref="data:dsSearchParam.keyMenuId" style="width: 140px;" ev:onkeyup="scwin.ibxKeyMenuId_onkeyup" allowChar="0-9A-Z_" maxlength="13">
+                        </xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="메뉴명" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:input id="ibxMenuNm" style="width: 140px;" ref="data:dsSearchParam.keyMenuNm" ev:onkeyup="scwin.ibxMenuNm_onkeyup" maxByteLength="50"></xf:input>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <xf:group style="" id="" class="lybox_wrap fix_300_4_6">
+            <xf:group style="" id="" class="lybox">
+                <xf:group style="" id="" class="lycolumn ">
+                    <xf:group style="" id="" class="lyinner">
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" label="메뉴 트리" id="" class="df_tt"></w2:textbox>
+                        </xf:group>
+                        <w2:treeview tooltipGroupClass="false" dataType="listed" lineShow="" style="height:300px" id="trvTcfMenuUseHistList" useDrag="" class="autoHeight" ev:onlabelclick="scwin.trvTcfMenuMngList_onlabelclick" showTreeDepth="1">
+                            <w2:itemset nodeset="data:dsTcfMenuUseHistTreeList">
+                                <w2:label ref="menuNm"></w2:label>
+                                <w2:value ref="menuId"></w2:value>
+                                <w2:depth ref="level"></w2:depth>
+                                <w2:folder ref=""></w2:folder>
+                                <w2:checkbox ref=""></w2:checkbox>
+                                <w2:checkboxDisabled ref=""></w2:checkboxDisabled>
+                                <w2:image ref=""></w2:image>
+                                <w2:iconImage ref=""></w2:iconImage>
+                                <w2:selectedImage ref=""></w2:selectedImage>
+                                <w2:expandedImage ref=""></w2:expandedImage>
+                                <w2:leafImage ref=""></w2:leafImage>
+                            </w2:itemset>
+                        </w2:treeview>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" id="" class="lycolumn">
+                    <xf:group style="" id="" class="lyinner">
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" id="" label="메뉴사용 내역" class="df_tt"></w2:textbox>
+                            <w2:udc_list_count id="dsMenuUseHistListCount"></w2:udc_list_count>
+                        </xf:group>
+                        <w2:gridView rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No" scrollByColumn="false" focusMode="row" fixedColumnWithHidden="true" dataList="data:dsTcfMenuUseHistList" style="height: 300px;" autoFit="allColumn" id="grdTcfMenuUseHistList" class="autoHeight" ev:oncellclick="scwin.grdTcfMenuUseHistList_oncellclick" readOnly="true" tooltipDisplay="true">
+                            <w2:header style="" id="header1">
+                                <w2:row style="" id="row2">
+                                    <w2:column width="110" inputType="text" style="height:24px;" id="column21" value="메뉴ID" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="180" inputType="text" style="height:24px;" id="column19" value="메뉴명" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="70" inputType="text" style="height:24px;" id="column17" value="사용건수" blockSelect="false">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:header>
+                            <w2:gBody style="" id="gBody4">
+                                <w2:row style="" id="row5">
+                                    <w2:column textAlign="" width="110" inputType="text" style="height:24px;" id="menuId" value="" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column textAlign="left" width="180" inputType="text" style="height:24px;" id="menuNm" class="" value="" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column textAlign="" width="70" inputType="text" style="height:24px;" id="useCnt" value="" blockSelect="false">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:gBody>
+                        </w2:gridView>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="lycolumn" id="" style="">
+                    <xf:group style="" id="" class="lyinner">
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" id="" label="메뉴사용 상세내역" class="df_tt"></w2:textbox>
+                            <w2:udc_list_count id="dsMenuUseHistDtlListCount"></w2:udc_list_count>
+                        </xf:group>
+                        <w2:gridView rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No" scrollByColumn="false" focusMode="row" fixedColumnWithHidden="true" dataList="data:dsTcfMenuUseHistDtlList" style="height: 300px;" autoFit="allColumn" id="grdTcfMenuUseHistDtlList" class="autoHeight" readOnly="true" tooltipDisplay="true">
+                            <w2:header style="" id="header1">
+                                <w2:row style="" id="row2">
+                                    <w2:column width="110" inputType="text" style="height:24px;" id="column21" value="메뉴ID" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="180" inputType="text" style="height:24px;" id="column19" value="메뉴명" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="120" inputType="text" style="height:24px;" id="column17" value="접속일시" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="70" inputType="text" style="height:24px;" id="column37" value="사용자ID" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="column35" value="사용자명" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="column33" value="직원구분" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:header>
+                            <w2:gBody style="" id="gBody4">
+                                <w2:row style="" id="row5">
+                                    <w2:column textAlign="" width="110" inputType="text" style="height:24px;" id="menuId" value="" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column textAlign="left" width="180" inputType="text" style="height:24px;" id="menuNm" class="" value="" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column textAlign="" width="120" inputType="text" style="height:24px;" id="fnlModiDtm" value="" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column textAlign="" removeBorderStyle="false" width="70" inputType="text" style="height:24px;" id="userId" value="" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column textAlign="" removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="userNm" value="" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column textAlign="" removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="empGbCdNm" value="" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:gBody>
+                        </w2:gridView>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+
+</html>

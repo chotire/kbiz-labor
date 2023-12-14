@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml' xmlns:ev='http://www.w3.org/2001/xml-events' xmlns:w2='http://www.inswave.com/websquare' xmlns:xf='http://www.w3.org/2002/xforms'>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <!-- CSRF 설정
+        <meta id="_csrf" name="_csrf" content=""/>
+        <meta id="_csrf_header" name="_csrf_header" content=""/>
+         -->
+        <title> </title>
+        <script type="text/javascript" src="javascript.wq?q=/bootloader"></script>
+        <script type="text/javascript" language="javascript">
+            window.onload = init;
+            var parentobj = opener || parent; 
+            var KOFFICE_MAIN_URL   = parentobj.KOFFICE_MAIN_URL;   // KOFFICE 메인 URL
+            var UBI_REPORT_URL     = parentobj.UBI_REPORT_URL;     // UBI리포트 메인
+            var UBI_HTML_URL       = parentobj.UBI_HTML_URL;       // UBI리포트 HTML페이지
+            var UBI_EXPORT_URL     = parentobj.UBI_EXPORT_URL;     // UBI리포트 EXPORT페이지
+            var UBI_DATASOURCE_URL = parentobj.UBI_DATASOURCE_URL; // UBI리포트 데이터관련 페이지
+            var TELEPIA_MAIN_URL   = parentobj.TELEPIA_MAIN_URL;   // 텔레피아 기본 URL
+            var POPUP_UNIQUE_MENU_NM = parentobj.gcm.MENU_TITLE;
+            var NAVI_YN = "";
+
+            try {
+                if (typeof(gcm) !== 'undefined') gcm = parentobj.gcm;
+            } catch(e) {}
+
+            function init(){
+                /* CSRF 설정
+                $("meta[name='_csrf']").attr("content", parentobj._csrf.content);
+                $("meta[name='_csrf_header']").attr("content", parentobj._csrf_header.content);
+                */
+            	var popupInfo;
+                var winPopParam = JSON.parse(sessionStorage.winpopParam);
+        	    var parentId    = winPopParam.dataObj.data.pframeId;
+        	
+	        	if(parentId != undefined && parentId != "")	{
+	        		var parentObj = parentobj.frames[parentId].getWindow().scwin;
+	         
+	        		if (typeof(parentObj["naviYn"]) == "string") {
+	        			NAVI_YN = parentObj["naviYn"];
+	        		}
+	        		
+	        		if("Y" == NAVI_YN) {
+	        			var parentParam = parentobj.com.getAllParam();
+	                    com.setParam(parentParam);
+	                    parentObj["naviYn"] = "N";
+	        		}
+	        	}
+                
+                if (parentobj.WebSquare && parentobj.WebSquare._popupInfo) {
+                    popupInfo = parentobj.JSON.parse( parentobj.WebSquare._popupInfo );
+                }
+                
+                if(popupInfo) {
+                    WebSquare.net._setParameter(popupInfo);
+                }
+                
+                parentobj.WebSquare._popupInfo = "";
+                WebSquare.startPopupApplication();
+            }
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

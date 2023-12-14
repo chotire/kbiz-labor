@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfBatListMngList" saveRemovedData="true">
+                <w2:columnInfo>
+                    <w2:column id="batPgmId" name="배치프로그램ID" dataType="text"></w2:column>
+                    <w2:column id="batPgmNm" name="배치프로그램명" dataType="text"></w2:column>
+                    <w2:column id="batPgmPathNm" name="배치프로그램경로명" dataType="text"></w2:column>
+                    <w2:column id="batPgmDesc" name="배치프로그램_설명" dataType="text"></w2:column>
+                    <w2:column id="workCyclGbCd" name="작업주기" dataType="text"></w2:column>
+                    <w2:column id="workCyclGbCdNm" name="작업주기명" dataType="text"></w2:column>
+                    <w2:column id="workTm" name="작업시간" dataType="text"></w2:column>
+                    <w2:column id="jobGbCd" name="업무구분" dataType="text"></w2:column>
+                    <w2:column id="jobGbCdNm" name="업무구분명" dataType="text"></w2:column>
+                    <w2:column id="useYn" name="사용여부" dataType="text"></w2:column>
+                    <w2:column id="fstRegprId" name="등록자ID" dataType="text"></w2:column>
+                    <w2:column id="fstRegDtm" name="등록일시" dataType="text"></w2:column>
+                    <w2:column id="fnlModprId" name="수정자ID" dataType="text"></w2:column>
+                    <w2:column id="fnlModiDtm" name="수정일시" dataType="text"></w2:column>
+                </w2:columnInfo>
+            </w2:dataList>
+            <w2:dataMap baseNode="map" id="dsSrch">
+                <w2:keyInfo>
+                    <w2:key id="jobGbCd" name="업무구분" dataType="text"></w2:key>
+                    <w2:key id="jobGbCdNm" name="업무구분명" dataType="text"></w2:key>
+                    <w2:key id="workCyclGbCd" name="작업주기" dataType="text"></w2:key>
+                    <w2:key id="useYn" name="사용여부" dataType="text"></w2:key>
+                    <w2:key id="batPgmId" name="배치프로그램ID" dataType="text"></w2:key>
+                    <w2:key id="batPgmNm" name="배치프로그램명" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+            <w2:dataMap baseNode="map" id="dsTcfBatListMngMap">
+                <w2:keyInfo>
+                    <w2:key id="jobGbCd" name="업무구분" dataType="text"></w2:key>
+                    <w2:key id="jobGbCdNm" name="업무구분명" dataType="text"></w2:key>
+                    <w2:key id="workCyclGbCd" name="작업주기" dataType="text"></w2:key>
+                    <w2:key id="workTm" name="작업시간" dataType="text"></w2:key>
+                    <w2:key id="useYn" name="사용여부" dataType="text"></w2:key>
+                    <w2:key id="batPgmId" name="배치프로그램ID" dataType="text"></w2:key>
+                    <w2:key id="batPgmNm" name="배치프로그램명" dataType="text"></w2:key>
+                    <w2:key id="batPgmPathNm" name="작업클래스경로" dataType="text"></w2:key>
+                    <w2:key id="batPgmDesc" name="비고" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+            <w2:dataList baseNode="list" id="dsUseYn" repeatNode="map" saveRemovedData="true" style="">
+                <w2:columnInfo>
+                    <w2:column dataType="text" id="cd" name="코드"></w2:column>
+                    <w2:column dataType="text" id="cdNm" name="코드명"></w2:column>
+                </w2:columnInfo>
+                <w2:data use="true">
+                    <w2:row>
+                        <cd>
+                            <![CDATA[Y]]>
+                        </cd>
+                        <cdNm>
+                            <![CDATA[여]]>
+                        </cdNm>
+                    </w2:row>
+                    <w2:row>
+                        <cd>
+                            <![CDATA[N]]>
+                        </cd>
+                        <cdNm>
+                            <![CDATA[부]]>
+                        </cdNm>
+                    </w2:row>
+                </w2:data>
+            </w2:dataList>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00200000U.xml 
+     * Program Name : 배치 목록 관리 
+     * Author : 김환섭 (tpkhs1)
+     * Date : 2019.02.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.02.15   김환섭   최초작성
+     *     
+     **************************************************************************/
+    /************************************************************************************ 
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function () {
+        batSearch.init(); //조회그룹 초기화
+        grdTcfBatListMngList.initGrid(); //배치목록 초기화
+        batInfoView.init(); //배치정보 초기화
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수 
+     ************************************************************************************/
+    var svcId = "";
+
+    /************************************************************************************
+     *  [3] Event 함수 
+     ************************************************************************************/
+
+    scwin.btnSrchOnClick = function () {
+        scwin.fnSearchList();
+        batInfoView.init();
+    };
+
+    scwin.btnNewOnClick = function () {
+        batInfoView.init();
+    };
+    scwin.btnUpdOnClick = function () {
+        scwin.fnUpdate();
+    };
+
+    scwin.btnDelOnClick = function () {
+        scwin.fnDelete();
+    };
+
+    // 그리드 row 변경시
+    scwin.grdTcfBatListMngList_oncellclick = function (row, oldRow) {
+        var data = dsTcfBatListMngList.getRowJSON(row);
+
+        // Binding
+        dsTcfBatListMngMap.setJSON(data);
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+
+        switch (svcId) {
+            case "selectTcfBatListMngList":
+                dsTcfBatListMngList.setJSON(result.data.dsTcfBatListMngList);
+                com.setUdcValue("dsBatListCount", "udcListCount",
+                    dsTcfBatListMngList.getRowCount());
+
+                break;
+
+            case "updateTcfBatListMng":
+                dsTcfBatListMngMap.setEmptyValue();
+                alert('저장되었습니다.');
+
+                scwin.fnSearchList();
+                break;
+
+            case "deleteTcfBatListMng":
+                dsTcfBatListMngMap.setEmptyValue();
+                alert('삭제되었습니다.');
+
+                scwin.fnSearchList();
+                break;
+        }
+
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function (e) {
+        alert("오류!");
+
+        switch (svcId) {
+            case "updateTcfBatListMng":
+                console.log('저장오류: ' + e);
+
+                break;
+
+            case "deleteTcfBatListMng":
+                console.log('삭제오류: ' + e);
+
+                break;
+        }
+    }
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+    // 조회 List
+    scwin.fnSearchList = function () {
+
+        svcId = "selectTcfBatListMngList";
+
+        ajaxLib.ajax("/cf/CF00200000U/selectTcfBatListMngList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSrch.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+
+    };
+    // 저장
+    scwin.fnUpdate = function () {
+
+        svcId = "updateTcfBatListMng";
+        if (confirm("저장 하시겠습니까?")) {
+
+            ajaxLib.ajax("/cf/CF00200000U/updateTcfBatListMng", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsTcfBatListMngMap.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    // 삭제
+    scwin.fnDelete = function () {
+
+        svcId = "deleteTcfBatListMng";
+        if (confirm("삭제 하시겠습니까?")) {
+
+            ajaxLib.ajax("/cf/CF00200000U/deleteTcfBatListMng", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsTcfBatListMngMap.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    }
+
+    //배치프로그램 ID enter onKeyUp
+    scwin.keyBatPgmId_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnSrch.trigger("onClick");
+        }
+    };
+
+    //배치프로그램명 enter onKeyUp
+    scwin.keyBatPgmNm_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnSrch.trigger("onClick");
+        }
+    };
+	]]></script>
+	    <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+</head>
+<body ev:onpageload="scwin.onpageload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="wfrTitle" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>
+        </xf:group>
+        <xf:group class="tbl_search" id="batSearch" style="">
+            <xf:group class="tb_list" id="" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:120px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:120px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:120px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th req" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="업무구분" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:select1 allOption="" appearance="minimal" chooseOption="" class="req" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="" ref="data:dsSrch.jobGbCd" style="width:140px;" submenuSize="auto" textAlign="left">
+                            <xf:choices>
+                                <xf:item>
+                                    <xf:label><![CDATA[전체]]></xf:label>
+                                    <xf:value></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[공통]]></xf:label>
+                                    <xf:value><![CDATA[CF]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[공사]]></xf:label>
+                                    <xf:value><![CDATA[CM]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[AS]]></xf:label>
+                                    <xf:value><![CDATA[CS]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[견적]]></xf:label>
+                                    <xf:value><![CDATA[EM]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[포탈]]></xf:label>
+                                    <xf:value><![CDATA[PO]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[자재]]></xf:label>
+                                    <xf:value><![CDATA[PR]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[영업]]></xf:label>
+                                    <xf:value><![CDATA[SA]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[외주]]></xf:label>
+                                    <xf:value><![CDATA[SC]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[분양]]></xf:label>
+                                    <xf:value><![CDATA[SM]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[재무]]></xf:label>
+                                    <xf:value><![CDATA[FI]]></xf:value>
+                                </xf:item>
+                            </xf:choices>
+                        </xf:select1>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="배치프로그램ID" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input class="req" id="keyBatPgmId" mandatory="true" style="width: 140px;" ref="data:dsSrch.batPgmId" ev:onkeyup="scwin.keyBatPgmId_onkeyup"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="배치프로그램명" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="keyBatPgmNm" style="width: 140px;" ref="data:dsSrch.batPgmNm" ev:onkeyup="scwin.keyBatPgmNm_onkeyup"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="작업주기" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:select1 allOption="" appearance="minimal" chooseOption="" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="" ref="data:dsSrch.workCyclGbCd" style="width:140px;" submenuSize="auto" textAlign="left">
+                            <xf:choices>
+                                <xf:item>
+                                    <xf:label><![CDATA[선택]]></xf:label>
+                                    <xf:value><![CDATA[]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[일]]></xf:label>
+                                    <xf:value><![CDATA[01]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[주]]></xf:label>
+                                    <xf:value><![CDATA[02]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[월]]></xf:label>
+                                    <xf:value><![CDATA[03]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[분기]]></xf:label>
+                                    <xf:value><![CDATA[04]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[반기]]></xf:label>
+                                    <xf:value><![CDATA[05]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[년]]></xf:label>
+                                    <xf:value><![CDATA[06]]></xf:value>
+                                </xf:item>
+                            </xf:choices>
+                        </xf:select1>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" id="btnSrch" outerDiv="false" style="" ev:onclick="scwin.btnSrchOnClick">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <xf:group style="" id="" class="defaultbox">
+            <w2:textbox label="배치프로그램 목록" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+            <w2:udc_list_count id="dsBatListCount" style=""></w2:udc_list_count>
+        </xf:group>
+        <w2:gridView autoFit="allColumn" dataList="data:dsTcfBatListMngList" fixedColumnWithHidden="true" id="grdTcfBatListMngList" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" rowNumVisible="" rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue="" focusMode="row" class="autoHeight" ev:onrowindexchange="scwin.grdTcfBatListMngList_oncellclick" readOnly="true">
+            <w2:header id="header1" style="">
+                <w2:row id="row2" style="">
+                    <w2:column blockSelect="false" id="column01" inputType="text" style="height:24px;" value="NO" width="40"></w2:column>
+                    <w2:column blockSelect="false" id="column02" inputType="text" style="height:24px;" value="업무구분" width="60"></w2:column>
+                    <w2:column blockSelect="false" id="column03" inputType="text" style="height:24px;" value="배치프로그램ID" width="100"></w2:column>
+                    <w2:column blockSelect="false" id="column04" inputType="text" style="height:24px;" value="배치프로그램명" width="150"></w2:column>
+                    <w2:column blockSelect="false" id="column05" inputType="text" style="height:24px;" value="작업주기" width="100"></w2:column>
+                    <w2:column blockSelect="false" id="column06" inputType="text" style="height:24px;" value="작업시간" width="120"></w2:column>
+                    <w2:column removeBorderStyle="false" width="300" inputType="text" style="height:24px;" id="column07" value="작업클래스 경로" blockSelect="false" displayMode="label"></w2:column>
+                    <w2:column removeBorderStyle="false" width="300" inputType="text" style="height:24px;" id="column8" value="비고" blockSelect="false" displayMode="label"></w2:column>
+                </w2:row>
+            </w2:header>
+            <w2:gBody id="gBody4" style="">
+                <w2:row id="row5" style="">
+                    <w2:column blockSelect="false" id="column20" inputType="expression" style="height:24px;" width="40" expression="rowindex()+1"></w2:column>
+                    <w2:column blockSelect="false" id="jobGbCdNm" inputType="text" style="height:24px;" value="" width="60"></w2:column>
+                    <w2:column blockSelect="false" id="batPgmId" inputType="text" style="height:24px;" value="" width="100"></w2:column>
+                    <w2:column blockSelect="false" id="batPgmNm" inputType="text" style="height:24px;" value="" width="150"></w2:column>
+                    <w2:column blockSelect="false" id="workCyclGbCdNm" inputType="text" style="height:24px;" value="" width="100"></w2:column>
+                    <w2:column blockSelect="false" id="workTm" inputType="text" style="height:24px;" value="" width="120"></w2:column>
+                    <w2:column removeBorderStyle="false" width="300" inputType="text" style="height:24px;" id="batPgmPathNm" value="" blockSelect="false" displayMode="label"></w2:column>
+                    <w2:column removeBorderStyle="false" width="300" inputType="text" style="height:24px;" id="batPgmDesc" value="" blockSelect="false" displayMode="label"></w2:column>
+                </w2:row>
+            </w2:gBody>
+        </w2:gridView>
+        <xf:group class="defaultbox" id="" style="">
+            <w2:textbox class="df_tt" id="" label="배치프로그램 정보" style="" tagname="h3"></w2:textbox>
+            <xf:group class="fr" id="" style="">
+                <xf:group class="right_wrap" id="" style="">
+                    <xf:group style="" id="">
+                        <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="" class="btn_gcm" ev:onclick="scwin.btnNewOnClick">
+                            <xf:label>
+                                <![CDATA[신규]]>
+                            </xf:label>
+                        </w2:anchor>
+                        <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="" class="btn_gcm" ev:onclick="scwin.btnUpdOnClick">
+                            <xf:label>
+                                <![CDATA[저장]]>
+                            </xf:label>
+                        </w2:anchor>
+                        <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="" class="btn_gcm" ev:onclick="scwin.btnDelOnClick">
+                            <xf:label>
+                                <![CDATA[삭제]]>
+                            </xf:label>
+                        </w2:anchor>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+        <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="batInfoView" style="width:Infinity%;" tagname="table">
+            <w2:attributes>
+                <w2:summary>배치프로그램 정보 입력 테이블 입니다.</w2:summary>
+            </w2:attributes>
+            <xf:group tagname="colgroup">
+                <xf:group style="width:130.00px;" tagname="col"></xf:group>
+                <xf:group style="" tagname="col"></xf:group>
+                <xf:group style="width:130.00px;" tagname="col"></xf:group>
+                <xf:group style="" tagname="col"></xf:group>
+                <xf:group style="width:100.00px;" tagname="col"></xf:group>
+                <xf:group style="" tagname="col"></xf:group>
+                <xf:group tagname="col" style="width:100px;"></xf:group>
+                <xf:group tagname="col" style=""></xf:group>
+            </xf:group>
+            <xf:group style="" tagname="tr">
+                <xf:group class="w2tb_th req" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="업무구분" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:select1 allOption="" appearance="minimal" chooseOption="" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="" ref="data:dsTcfBatListMngMap.jobGbCd" style="width:100px;" submenuSize="auto" textAlign="left">
+                        <xf:choices>
+                            <xf:item>
+                                <xf:label><![CDATA[전체]]></xf:label>
+                                <xf:value></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[공통]]></xf:label>
+                                <xf:value><![CDATA[CF]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[공사]]></xf:label>
+                                <xf:value><![CDATA[CM]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[AS]]></xf:label>
+                                <xf:value><![CDATA[CS]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[견적]]></xf:label>
+                                <xf:value><![CDATA[EM]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[포탈]]></xf:label>
+                                <xf:value><![CDATA[PO]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[자재]]></xf:label>
+                                <xf:value><![CDATA[PR]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[영업]]></xf:label>
+                                <xf:value><![CDATA[SA]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[외주]]></xf:label>
+                                <xf:value><![CDATA[SC]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[분양]]></xf:label>
+                                <xf:value><![CDATA[SM]]></xf:value>
+                            </xf:item>
+                            <xf:item>
+                                <xf:label><![CDATA[재무]]></xf:label>
+                                <xf:value><![CDATA[FI]]></xf:value>
+                            </xf:item>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="배치프로그램ID" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="" style="width: 100px;" ref="data:dsTcfBatListMngMap.batPgmId"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="배치프로그램명" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:input id="" style="width: 150px;" ref="data:dsTcfBatListMngMap.batPgmNm"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="작업주기" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <xf:select1 allOption="" appearance="minimal" chooseOption="" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="" ref="data:dsTcfBatListMngMap.workCyclGbCd" style="width:100px;" submenuSize="auto" textAlign="left">
+                        <xf:choices>
+                            <xf:item>
+                                    <xf:label><![CDATA[선택]]></xf:label>
+                                    <xf:value><![CDATA[]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[일]]></xf:label>
+                                    <xf:value><![CDATA[01]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[주]]></xf:label>
+                                    <xf:value><![CDATA[02]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[월]]></xf:label>
+                                    <xf:value><![CDATA[03]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[분기]]></xf:label>
+                                    <xf:value><![CDATA[04]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[반기]]></xf:label>
+                                    <xf:value><![CDATA[05]]></xf:value>
+                                </xf:item>
+                                <xf:item>
+                                    <xf:label><![CDATA[년]]></xf:label>
+                                    <xf:value><![CDATA[06]]></xf:value>
+                                </xf:item>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="작업시간" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes></w2:attributes>
+                    <xf:input id="" style="width:50px" ref="data:dsTcfBatListMngMap.workTm"></xf:input>
+                </xf:group>
+            </xf:group>
+            <xf:group class="" style="" tagname="tr">
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="사용여부" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>1</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="선택" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="" ref="data:dsTcfBatListMngMap.useYn" style="width:140px;" submenuSize="auto" textAlign="left">
+                        <xf:choices>
+                            <xf:itemset nodeset="data:dsUseYn">
+                                <xf:label ref="cdNm"></xf:label>
+                                <xf:value ref="cd"></xf:value>
+                            </xf:itemset>
+                        </xf:choices>
+                    </xf:select1>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="작업클래스 경로" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:input id="" style="width:100%" ref="data:dsTcfBatListMngMap.batPgmPathNm"></xf:input>
+                </xf:group>
+                <xf:group class="w2tb_th" style="" tagname="th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span id="" label="비고" style=""></w2:span>
+                </xf:group>
+                <xf:group class="w2tb_td" style="" tagname="td">
+                    <w2:attributes>
+                        <w2:colspan>3</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes>
+                    <xf:input id="" style="width:100%" ref="data:dsTcfBatListMngMap.batPgmDesc"></xf:input>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

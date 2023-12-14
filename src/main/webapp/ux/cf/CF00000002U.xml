@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+        	<w2:dataMap baseNode="map" id="dsSearchParam">
+        		<w2:keyInfo>
+        			<w2:key id="keyJobGbCd" name="업무구분" dataType="text"></w2:key>
+        			<w2:key id="keyCommCd" name="공통코드" dataType="text"></w2:key>
+        			<w2:key id="keyCommCdNm" name="공통코드명" dataType="text"></w2:key>
+        			<w2:key id="keyUpperCd" name="상위코드" dataType="text"></w2:key>
+        			<w2:key id="keyTreeYn" name="트리클릭시검색유무" dataType="text"></w2:key>
+        		</w2:keyInfo>
+        	</w2:dataMap>
+        	<w2:dataList baseNode="list" repeatNode="map" id="jobGbCdList" saveRemovedData="true">
+        		<w2:columnInfo>
+        			<w2:column id="cd" name="업무코드" dataType="text"></w2:column>
+        			<w2:column id="cdNm" name="업무코드명" dataType="text"></w2:column>
+        		</w2:columnInfo>
+        	</w2:dataList>
+        	<w2:dataList baseNode="list" repeatNode="map" id="dsTcfCodeTreeList" saveRemovedData="true">
+        		<w2:columnInfo>
+        			<w2:column id="cd" name="트리코드" dataType="text"></w2:column>
+        			<w2:column id="cdNm" name="트리코드명" dataType="text"></w2:column>
+        			<w2:column id="cdLv" name="트리레벨" dataType="text"></w2:column>
+        		</w2:columnInfo>
+        	</w2:dataList>
+        	<w2:dataList baseNode="list" repeatNode="map" id="dsTcfCodeList" saveRemovedData="true"
+        		removeDummyRowStatus="true" removedDataMatch="true" undoRecursiveRow="true">
+        		<w2:columnInfo>
+        			<w2:column id="chk" name="체크박스" dataType="text"></w2:column>
+        			<w2:column id="cd" name="코드" dataType="text"></w2:column>
+        			<w2:column id="cdNm" name="코드명" dataType="text"></w2:column>
+        			<w2:column id="engNm" name="영문명" dataType="text"></w2:column>
+        			<w2:column id="abbNm" name="약어명" dataType="text"></w2:column>
+        			<w2:column id="upperCd" name="상위코드" dataType="text"></w2:column>
+        			<w2:column id="useYn" name="사용여부" dataType="text"></w2:column>
+        			<w2:column id="cdLv" name="코드레벨" dataType="text"></w2:column>
+        			<w2:column id="cdOdr" name="코드순서" dataType="text"></w2:column>
+        			<w2:column id="charValN1" name="문자값1" dataType="text"></w2:column>
+        			<w2:column id="charValN2" name="문자값2" dataType="text"></w2:column>
+        			<w2:column id="charValN3" name="문자값3" dataType="text"></w2:column>
+        			<w2:column id="charValN4" name="문자값4" dataType="text"></w2:column>
+        			<w2:column id="charValN5" name="문자값5" dataType="text"></w2:column>
+        			<w2:column id="nmbrValN1" name="숫자값1" dataType="number"></w2:column>
+        			<w2:column id="nmbrValN2" name="숫자값2" dataType="number"></w2:column>
+        			<w2:column id="nmbrValN3" name="숫자값3" dataType="number"></w2:column>
+        			<w2:column id="nmbrValN4" name="숫자값4" dataType="number"></w2:column>
+        			<w2:column id="nmbrValN5" name="숫자값5" dataType="number"></w2:column>
+        			<w2:column id="epntYn" name="말단여부" dataType="text"></w2:column>
+        			<w2:column id="commCd" name="공통코드" dataType="text"></w2:column>
+        			<w2:column id="commDtlCd" name="공통상세코드" dataType="text"></w2:column>
+        			<w2:column id="allCd" name="전체공통코드" dataType="text"></w2:column>
+        		</w2:columnInfo>
+        	</w2:dataList>
+        	<w2:dataList baseNode="list" repeatNode="map" id="dsUseYnList" saveRemovedData="true">
+        		<w2:columnInfo>
+        			<w2:column id="cd" name="사용유무코드" dataType="text"></w2:column>
+        			<w2:column id="nm" name="사용유무명" dataType="text"></w2:column>
+        		</w2:columnInfo>
+        		<w2:data use="true">
+        			<w2:row>
+        				<cd>
+        					<![CDATA[Y]]>
+        				</cd>
+        				<nm>
+        					<![CDATA[예]]>
+        				</nm>
+        			</w2:row>
+        			<w2:row>
+        				<cd>
+        					<![CDATA[N]]>
+        				</cd>
+        				<nm>
+        					<![CDATA[아니오]]>
+        				</nm>
+        			</w2:row>
+        		</w2:data>
+        	</w2:dataList>
+        	<w2:dataList baseNode="list" id="dsTcfCodeDtlPoolList" repeatNode="map" saveRemovedData="true" style="">
+        		<w2:columnInfo>
+        			<w2:column dataType="text" id="checkBox" name="선택"></w2:column>
+        			<w2:column dataType="text" id="commDtlCd" name="공통상세코드"></w2:column>
+        			<w2:column dataType="text" id="commDtlCdNm" name="공통상세코드명"></w2:column>
+        			<w2:column dataType="text" id="commCd" name="공통코드"></w2:column>
+        		</w2:columnInfo>
+        	</w2:dataList>
+        	<w2:dataList baseNode="list" id="dsCopyTcfCodeList" removeDummyRowStatus="true" removedDataMatch="true"
+        		repeatNode="map" saveRemovedData="true" undoRecursiveRow="true" style="">
+        		<w2:columnInfo>
+        			<w2:column dataType="text" id="chk" name="체크박스"></w2:column>
+        			<w2:column dataType="text" id="cd" name="코드"></w2:column>
+        			<w2:column dataType="text" id="cdNm" name="코드명"></w2:column>
+        			<w2:column dataType="text" id="engNm" name="영문명"></w2:column>
+        			<w2:column dataType="text" id="abbNm" name="약어명"></w2:column>
+        			<w2:column dataType="text" id="upperCd" name="상위코드"></w2:column>
+        			<w2:column dataType="text" id="useYn" name="사용여부"></w2:column>
+        			<w2:column dataType="text" id="cdLv" name="코드레벨"></w2:column>
+        			<w2:column dataType="text" id="cdOdr" name="코드순서"></w2:column>
+        			<w2:column dataType="text" id="charValN1" name="문자값1"></w2:column>
+        			<w2:column dataType="text" id="charValN2" name="문자값2"></w2:column>
+        			<w2:column dataType="text" id="charValN3" name="문자값3"></w2:column>
+        			<w2:column dataType="text" id="charValN4" name="문자값4"></w2:column>
+        			<w2:column dataType="text" id="charValN5" name="문자값5"></w2:column>
+        			<w2:column dataType="text" id="nmbrValN1" name="숫자값1"></w2:column>
+        			<w2:column dataType="text" id="nmbrValN2" name="숫자값2"></w2:column>
+        			<w2:column dataType="text" id="nmbrValN3" name="숫자값3"></w2:column>
+        			<w2:column dataType="text" id="nmbrValN4" name="숫자값4"></w2:column>
+        			<w2:column dataType="text" id="nmbrValN5" name="숫자값5"></w2:column>
+        			<w2:column dataType="text" id="epntYn" name="말단여부"></w2:column>
+        			<w2:column dataType="text" id="commCd" name="공통코드"></w2:column>
+        			<w2:column dataType="text" id="commDtlCd" name="공통상세코드"></w2:column>
+        		</w2:columnInfo>
+        	</w2:dataList>
+        	<w2:dataMap baseNode="list" id="dsTcfCodeCnt" removeDummyRowStatus="true" removedDataMatch="true"
+        		repeatNode="map" saveRemovedData="true" undoRecursiveRow="true" style="">
+        		<w2:keyInfo>
+        			<w2:key dataType="text" id="upperCd" name="상위코드"></w2:key>
+        		</w2:keyInfo>
+        	</w2:dataMap>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+	 * Program ID : CF00000002U.xml 
+	 * Program Name : 공통코드 관리 
+	 * Author : 강상국 (tpksg)
+	 * Date : 2019.02.15
+	 * 
+	 * History 
+	 * ======================================== 
+	 * 변경일자     	  수정자   내 용 
+	 * ======================================== 
+	 * 2019.02.15   강상국   최초작성
+	 *     
+	 **************************************************************************/
+	/************************************************************************************
+	 *  [1] 전역변수 
+	 ************************************************************************************/
+	scwin.svcId = "";
+	scwin.cdLv = 1;
+	scwin.upperCd = "";
+
+	/************************************************************************************
+	 *  [2] 초기화 
+	 ************************************************************************************/
+	scwin.onpageload = function () {
+	    com.selDtlCdList("sbxKeyJobGbCd", "CF035", "Y", "Y", "", "", "", "", "", "", "", "", "", "");
+	    // 트리 조회
+	    scwin.fnTreeList();
+	};
+
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+
+	/**************************************************************************
+	 * Event: scwin.fnRefresh
+	 * 기 능: 탭을 선택하면 호출되는 함수(최초 OPEN시에는 호출 안됨)
+	 **************************************************************************/
+//	scwin.fnRefresh = function () {
+//	    //dataCollection 초기화
+//	    dsSearchParam.setEmptyValue();
+//	    dsTcfCodeList.removeAll();
+//	    com.setAuthInfo('CF00000002U');
+//	};
+
+	/**************************************************************************
+	 * Event: scwin.fnTreeList
+	 * 기 능: 공통 트리 조회
+	 **************************************************************************/
+	scwin.fnTreeList = function () {
+	    scwin.svcId = "selectTcfCodeTreeList";
+	    ajaxLib.ajax("/cf/CF00000002U/selectTcfCodeTreeList", {
+	        mode: "synchronous",
+	        method: "POST",
+	        requestData: "",
+	        callback: "fnCallback",
+	        errCallback: "fnErrCallBack"
+	    });
+	};
+
+	/**************************************************************************
+	 * Event: scwin.fnSearch
+	 * 기 능: 공통코드 조회
+	 **************************************************************************/
+	scwin.fnSearch = function () {
+	    scwin.svcId = "selectTcfCodeList";
+	    ajaxLib.ajax("/cf/CF00000002U/selectTcfCodeListAuthBtn", {
+	        mode: "asynchronous",
+	        method: "POST",
+	        requestData: dsSearchParam.getJSON(),
+	        callback: "fnCallback",
+	        errCallback: "fnErrCallBack"
+	    });
+	};
+
+	/**************************************************************************
+	 * Event: scwin.fnTreeSearch
+	 * 기 능: 공통트리 클릭시 공통코드 검색
+	 **************************************************************************/
+	scwin.fnTreeSearch = function (keyUpperCd) {
+	    dsSearchParam.set("keyUpperCd", keyUpperCd);
+	    dsSearchParam.set("keyTreeYn", "Y");
+	    
+	    scwin.svcId = "selectTcfCodeTreeSearchList";
+	    ajaxLib.ajax("/cf/CF00000002U/selectTcfCodeList", {
+	        mode: "asynchronous",
+	        method: "POST",
+	        requestData: dsSearchParam.getJSON(),
+	        callback: "fnCallback",
+	        errCallback: "fnErrCallBack"
+	    });
+	};
+
+	/**************************************************************************
+	 * Event: scwin.fnComCdPool
+	 * 기 능: 공통코드Pool검색 링크 (팝업)으로 이동 시켜야 함
+	 **************************************************************************/
+	scwin.fnComCdPool = function () {
+	    if (scwin.upperCd == '') {
+	        com.showMessage("EMW0004", "공통코드 트리를 선택 한 후 공통코드Pool");	// $1을(를) 조회 하십시오.
+	        return;
+	    }
+	    if (scwin.cdLv == 1) {
+	        com.showMessage("CFA0014", "레벨 1은 공통코드 POOL 검색");	// $1을(를) 조회할 수 없습니다.
+	        return;
+	    }
+	    var popOps = {
+	        popup_name: "공통코드POOL검색",
+	        url: "/ux/cf/CF00000003P.xml",
+	        data: {},
+	        width: "1047",
+	        height: "520",
+	        callbackFn: "scwin.popCallback"
+	    };
+	    com.popup_open(popOps);
+	};
+
+	/**************************************************************************
+	 * Event: scwin.fnSave
+	 * 기 능: 공통코드 저장
+	 **************************************************************************/
+	scwin.fnSave = function () {
+	    scwin.svcId = "saveTcfCode";
+	    if (confirm("저장 하시겠습니까?")) {
+	        ajaxLib.ajax("/cf/CF00000002U/saveTcfCode", {
+	            mode: "asynchronous",
+                method: "POST",
+		        requestData: {
+	                param: dsSearchParam.getJSON(),
+	                codeList: dsTcfCodeList.getModifiedJSON()
+	            },
+	            callback: "fnCallback",
+	            errCallback: "fnErrCallBack"
+	        });
+	    }
+	};
+
+	/**************************************************************************
+	 * Event: scwin.fnAdd
+	 * 기 능: 공통코드 추가
+	 **************************************************************************/
+	scwin.fnAdd = function () {
+	    var rowIndex = 0;
+	    if (grdTcfCodeList.getFocusedRowIndex() == -1) {
+	        rowIndex = dsTcfCodeList.insertRow();
+	    } else {
+	        rowIndex = grdTcfCodeList.getFocusedRowIndex() + 1;
+	        dsTcfCodeList.insertRow(rowIndex);
+	    }
+	    if (scwin.cdLv == 1) {
+	        dsTcfCodeList.setCellData(rowIndex, "upperCd", "*");
+	    } else {
+	        dsTcfCodeList.setCellData(rowIndex, "upperCd", scwin.upperCd);
+	    }
+	    grdTcfCodeList.setReadOnly("cell", rowIndex, "cd", false);
+	    dsTcfCodeList.setCellData(rowIndex, "cdLv", scwin.cdLv);
+	    dsTcfCodeList.setCellData(rowIndex, "useYn", "Y");
+		dsTcfCodeList.setCellData(rowIndex, "epntYn", "Y");	    
+	};
+
+	/**************************************************************************
+	 * Event: scwin.fnDel
+	 * 기 능: 공통코드 삭제
+	 **************************************************************************/
+	scwin.fnDel = function () {
+
+	    if (grdTcfCodeList.getFocusedRowIndex() == -1) {
+	        com.showMessage("CFW0004", "삭제할 행");	// $1을(를) 선택하십시오.
+	        return;
+	    }
+
+	    //행추가 건이면 바로 삭제한다
+        var rowIndex = grdTcfCodeList.getFocusedRowIndex();
+		if ( strLib.isEmpty(dsTcfCodeList.getCellData(rowIndex, "allCd")) ) {
+	        dsTcfCodeList.removeRow(rowIndex);
+	        return;
+		} 
+        
+	    //하위코드값이 있는지 체크후 처리한다
+	    scwin.svcId = "selectTcfCodeChildCnt";
+        dsTcfCodeCnt.set("upperCd", dsTcfCodeList.getCellData(rowIndex, "allCd"));
+
+	    ajaxLib.ajax("/cf/CF00000002U/selectTcfCodeChildCnt", {
+	        mode: "asynchronous",
+	        method: "POST",
+            requestData	: dsTcfCodeCnt.getJSON(),
+	        callback: "fnCallback",
+	        errCallback: "fnErrCallBack"
+	    });
+	}
+
+	/**************************************************************************
+	 * Event: scwin.fnValid
+	 * 기 능: Valid 검사
+	 **************************************************************************/
+	scwin.fnValid = function () {
+	    var cnt = 0;
+	    var _idxArr = dsTcfCodeList.getModifiedIndex();
+
+	    //1. 변경된 데이터 validation [status : C,U 만해당]
+	    for (var i = 0; i < _idxArr.length; i++) {
+	        var _row = _idxArr[i];
+	        var obj = dsTcfCodeList.getRowJSON(_row);
+	        if (obj.rowStatus == "C" || obj.rowStatus == "U") {
+	            if (strLib.isEmpty(obj.cd, false)) {
+	                com.showMessage("CFW0007", (_row + 1) + "번째행 [코드] ", "", "", grdTcfCodeList.id, _row, 0);		// $1을(를) 입력하십시오.
+	                return false;
+	            }
+	            if (strLib.isEmpty(obj.cdNm, false)) {
+	                com.showMessage("CFW0007", (_row + 1) + "번째행 [코드명] ", "", "", grdTcfCodeList.id, _row, 1);	// $1을(를) 입력하십시오.
+	                return false;
+	            }
+	            if (strLib.isEmpty(obj.useYn, false)) {
+	                com.showMessage("CFW0007", (_row + 1) + "번째행 [사용여부] ", "", "", grdTcfCodeList.id, _row, 8);	// $1을(를) 입력하십시오.
+	                return false;
+	            }
+	            if (strLib.isEmpty(obj.epntYn, false)) {
+	                com.showMessage("CFW0007", (_row + 1) + "번째행 [말단여부] ", "", "", grdTcfCodeList.id, _row, 9);	// $1을(를) 입력하십시오.
+	                return false;
+	            }
+	            if (strLib.isEmpty(obj.cdOdr, false)) {
+	            	dsTcfCodeList.setCellData( _row, "cdOdr", "0");
+	            }
+
+			    //중복코드값 체크
+				var matchedEa = grdTcfCodeList.getMatchedColumnData("cd" , obj.cd).length;
+				if (matchedEa > 1){
+	                com.showMessage("CMW0001", "[코드] ", "", "", grdTcfCodeList.id, _row, 0);		// 중복 된 $1가(이) 존재합니다..
+	                return false;
+				}
+	        }
+	    }
+
+	    //2. 변경된 데이터 건수 체크				
+	    var jsn = dsTcfCodeList.getModifiedJSON();
+	    cnt = jsn.length;
+	    if (cnt == 0) {
+	        com.showMessage("CMW0024");	//	저장(변경)할 내용이 없습니다.
+	        return false;
+	    }
+	    
+	    return true;
+	};
+
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+	// 결과 후처리
+	scwin.fnCallback = function (result, e) {
+
+	    switch (scwin.svcId) {
+	        case "selectTcfCodeTreeList":
+	            dsTcfCodeTreeList.setJSON(result.data.codeTreeList);
+	            trvTcfCodeList.selectNode(scwin.upperCd);
+	            trvTcfCodeList.expandNode(scwin.upperCd);
+	            break;
+	        case "selectTcfCodeList":
+	            scwin.cdLv = 1;
+	            scwin.upperCd = "";
+	            dsTcfCodeList.setJSON(result.data.codeList);
+	            dsCopyTcfCodeList.setJSON(result.data.codeList);
+	            break;
+	        case "selectTcfCodeTreeSearchList":
+	            dsSearchParam.set("keyUpperCd", "");
+	            dsSearchParam.set("keyTreeYn", "");
+	            dsTcfCodeList.setJSON(result.data.codeList);
+	            dsCopyTcfCodeList.setJSON(result.data.codeList);
+	            break;
+	        case "selectTcfCodeChildCnt":
+	            if (result.data.childCnt > 0) {
+	                if (confirm("하위레벨이 존재합니다. 하위레벨도 같이 삭제가 됩니다. \n화면에서만 삭제되고, 저장버튼 클릭시 실제로 삭제가 됩니다. \n삭제 하시겠습니까?")) {
+				        rowIndex = grdTcfCodeList.getFocusedRowIndex();
+				        dsTcfCodeList.removeRow(rowIndex);
+	                }
+	            } else {
+	                if (confirm("화면에서만 삭제되고, 저장버튼 클릭시 실제로 삭제가 됩니다. \n삭제 하시겠습니까?")) {
+				        rowIndex = grdTcfCodeList.getFocusedRowIndex();
+				        dsTcfCodeList.removeRow(rowIndex);
+	                }
+	            }
+	            break;
+	        case "saveTcfCode":
+	            com.showMessage("CFA0012"); // 저장되었습니다.
+	            scwin.fnTreeList();
+	            if (scwin.upperCd == "") {
+	                scwin.fnSearch();
+	            } else {
+	                scwin.fnTreeSearch(scwin.upperCd);
+	            }
+	            break;
+	    }
+
+	};
+
+	// 에러 후처리
+	scwin.fnErrCallBack = function (e) {
+	    switch (scwin.svcId) {
+	        case "selectTcfCodeTreeList":
+	            break;
+	        case "selectTcfCodeList":
+	            break;
+	        case "saveTcfCode":
+	            break;
+	    }
+	}
+
+	// 팝업 결과 후처리
+	scwin.popCallback = function (arg) {
+	    dsTcfCodeDtlPoolList.setJSON(arg);
+	    var totCnt = dsTcfCodeDtlPoolList.getTotalRow();
+
+	    if (totCnt > 0) {
+	        for (var i = 0; i < totCnt; i++) {
+			    //기선택건이 없으면 행추가 한다
+				var matchedIdx = grdTcfCodeList.getMatchedIndex("cd", dsTcfCodeDtlPoolList.getCellData(i, "commDtlCd"));
+				if( matchedIdx == "" ){
+		            var rowIndex = dsTcfCodeList.insertRow();
+		            dsTcfCodeList.setCellData(rowIndex, "cd", dsTcfCodeDtlPoolList.getCellData(i, "commDtlCd"));
+		            dsTcfCodeList.setCellData(rowIndex, "cdNm", dsTcfCodeDtlPoolList.getCellData(i, "commDtlCdNm"));
+		            dsTcfCodeList.setCellData(rowIndex, "upperCd", scwin.upperCd);
+		            dsTcfCodeList.setCellData(rowIndex, "useYn", "Y");
+		            dsTcfCodeList.setCellData(rowIndex, "cdLv", scwin.cdLv);
+		            dsTcfCodeList.setCellData(rowIndex, "commCd", dsTcfCodeDtlPoolList.getCellData(i, "commCd"));
+		            dsTcfCodeList.setCellData(rowIndex, "commDtlCd", dsTcfCodeDtlPoolList.getCellData(i, "commDtlCd"));
+				}
+	        }
+	    }
+	};
+
+	/************************************************************************************
+	 *  [5] Event 함수 
+	 ************************************************************************************/
+	/**************************************************************************
+	 * Event: scwin.btnFind_onclick
+	 * 기 능: 조회 버튼
+	 **************************************************************************/
+	scwin.btnFind_onclick = function () {
+	    scwin.fnSearch();
+	};
+
+	/**************************************************************************
+	 * Event: scwin.trvTcfCodeList_onlabelclick
+	 * 기 능: 공통 트리 클릭
+	 **************************************************************************/
+	scwin.trvTcfCodeList_onlabelclick = function (value, nodeElement, index) {
+	    scwin.cdLv = parseInt(dsTcfCodeTreeList.getCellData(index - 1, "cdLv")) + 1;
+	    scwin.upperCd = value;
+	    //트리클릭시 공통코드 조회
+	    scwin.fnTreeSearch(scwin.upperCd);
+	};
+
+	/**************************************************************************
+	 * Event: scwin.grdTcfCodeList_onviewchange
+	 * 기 능: 공통 상세코드 그리드 셀 변경
+	 **************************************************************************/
+	scwin.grdTcfCodeList_onviewchange = function (info) {
+	    if (info.colIndex == 0) {
+	        if (info.oldValue != info.newValue && info.newValue != '') {
+	            dsTcfCodeList.setCellData(info.rowIndex, "commDtlCd", info.newValue);
+	            dsTcfCodeList.setCellData(info.rowIndex, "commCd", "");
+	        }
+	    }
+	};
+
+	/**************************************************************************
+	 * Event: scwin.btnFindPool_onclick
+	 * 기 능: 공통코드Pool 검색 버튼
+	 **************************************************************************/
+	scwin.btnFindPool_onclick = function () {
+	    scwin.fnComCdPool();
+	};
+
+	/**************************************************************************
+	 * Event: scwin.btnSave_onclick
+	 * 기 능: 저장 버튼
+	 **************************************************************************/
+	scwin.btnSave_onclick = function () {
+	    if (!scwin.fnValid()) {
+	        return;
+	    }
+	    scwin.fnSave();
+	};
+
+	/**************************************************************************
+	 * Event: scwin.btnAddRow_onclick
+	 * 기 능: 추가 버튼
+	 **************************************************************************/
+	scwin.btnAddRow_onclick = function () {
+	    scwin.fnAdd();
+	};
+
+	/**************************************************************************
+	 * Event: scwin.btnDelRow_onclick
+	 * 기 능: 삭제 버튼
+	 **************************************************************************/
+	scwin.btnDelRow_onclick = function () {
+	    scwin.fnDel();
+	};
+
+	/**************************************************************************
+	 * Event: scwin.ibxCommCd_onkeyup
+	 * 기 능: 공통코드 입력후 Enter시 처리
+	 **************************************************************************/
+	scwin.ibxCommCd_onkeyup = function (e) {
+	    if (e.keyCode == '13') {
+	        scwin.fnSearch();
+	    }
+	};
+
+	/**************************************************************************
+	 * Event: scwin.ibxCommCdNm_onkeyup
+	 * 기 능: 공통코드명 입력후 Enter시 처리
+	 **************************************************************************/
+	scwin.ibxCommCdNm_onkeyup = function (e) {
+	    if (e.keyCode == '13') {
+	        scwin.fnSearch();
+	    }
+	};
+]]>
+    </script>
+</head>
+
+<body ev:onpageload="scwin.onpageload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="wfrTitle" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>
+        </xf:group>
+        <xf:group class="tbl_search" id="" style="">
+            <xf:group class="tb_list" id="grpSearchArea" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:120px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:120px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:120px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="업무구분" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxKeyJobGbCd" ref="data:dsSearchParam.keyJobGbCd" style="width:140px;" submenuSize="auto" textAlign="left">
+                            <xf:choices></xf:choices>
+                        </xf:select1>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="공통코드" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="ibxCommCd" ref="data:dsSearchParam.keyCommCd" style="width: 140px;" ev:onkeyup="scwin.ibxCommCd_onkeyup" allowChar="0-9 a-z A-Z" maxlength="20" displayFormatter="" customModelFormatter="com.transUpper"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="공통코드명" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <xf:input id="ibxCommCdNm" ref="data:dsSearchParam.keyCommCdNm" style="width: 140px;" ev:onkeyup="scwin.ibxCommCdNm_onkeyup" maxByteLength="500"></xf:input>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+        </xf:group>
+        <xf:group style="" id="" class="lybox_wrap fix_300">
+            <xf:group style="" id="" class="lybox">
+                <xf:group style="" id="" class="lycolumn ">
+                    <xf:group style="" id="" class="lyinner">
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" label="공통코드 트리" id="" class="df_tt"></w2:textbox>
+                        </xf:group>
+                        <w2:treeview tooltipGroupClass="false" dataType="listed" lineShow="" style="height:300px" id="trvTcfCodeList" useDrag="" class="autoHeight" ev:onlabelclick="scwin.trvTcfCodeList_onlabelclick" showTreeDepth="1">
+                            <w2:itemset nodeset="data:dsTcfCodeTreeList">
+                                <w2:label ref="cdNm"></w2:label>
+                                <w2:value ref="cd"></w2:value>
+                                <w2:depth ref="cdLv"></w2:depth>
+                                <w2:folder ref=""></w2:folder>
+                                <w2:checkbox ref=""></w2:checkbox>
+                                <w2:checkboxDisabled ref=""></w2:checkboxDisabled>
+                                <w2:image ref=""></w2:image>
+                                <w2:iconImage ref=""></w2:iconImage>
+                                <w2:selectedImage ref=""></w2:selectedImage>
+                                <w2:expandedImage ref=""></w2:expandedImage>
+                                <w2:leafImage ref=""></w2:leafImage>
+                            </w2:itemset>
+                        </w2:treeview>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" id="" class="lycolumn">
+                    <xf:group style="" id="" class="lyinner">
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" id="" label="공통상세코드 목록" class="df_tt"></w2:textbox>
+                            <xf:group style="" id="" class="right_wrap">
+                                <xf:group style="" id="">
+                                    <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnFindPool" class="btn_gcm" ev:onclick="scwin.btnFindPool_onclick">
+                                        <xf:label>
+                                            <![CDATA[공통코드Pool 검색]]>
+                                        </xf:label>
+                                    </w2:anchor>
+                                    <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnSave" class="btn_gcm" ev:onclick="scwin.btnSave_onclick">
+                                        <xf:label>
+                                            <![CDATA[저장]]>
+                                        </xf:label>
+                                    </w2:anchor>
+                                    <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnAddRow" class="btn_gcm row_add" ev:onclick="scwin.btnAddRow_onclick">
+                                        <xf:label>
+                                            <![CDATA[행추가]]>
+                                        </xf:label>
+                                    </w2:anchor>
+                                    <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnDelRow" class="btn_gcm row_del" ev:onclick="scwin.btnDelRow_onclick">
+                                        <xf:label>
+                                            <![CDATA[행삭제]]>
+                                        </xf:label>
+                                    </w2:anchor>
+                                </xf:group>
+                            </xf:group>
+                        </xf:group>
+                        <w2:gridView rowNumVisible="" rowStatusWidth="0" useShiftKey="true" rowNumHeaderValue="No" scrollByColumn="false" rowStatusHeaderValue="" focusMode="row" rowStatusVisible="true" fixedColumnWithHidden="" dataList="data:dsTcfCodeList" style="height: 300px;" autoFit="" id="grdTcfCodeList" visibleRowNum="" class="autoHeight" ev:onafteredit="" ev:oncellindexchange="" ev:onviewchange="scwin.grdTcfCodeList_onviewchange" fixedColumn="2" editModeEvent="onclick">
+                            <w2:header style="" id="header1">
+                                <w2:row style="" id="row2">
+                                    <w2:column width="150" inputType="text" id="column23" value="코드" blockSelect="false" style="">
+                                    </w2:column>
+                                    <w2:column width="250" inputType="text" id="column21" value="코드명" blockSelect="false" style="">
+                                    </w2:column>
+                                    <w2:column width="150" inputType="text" id="column19" value="영문명" blockSelect="false" style="">
+                                    </w2:column>
+                                    <w2:column width="150" inputType="text" id="column17" value="약어명" blockSelect="false" style="">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="60" inputType="text" id="column32" value="레벨" blockSelect="false" displayMode="label" style="">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column62" value="원코드" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" id="column31" value="상위코드" blockSelect="false" displayMode="label" style="">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="60" inputType="text" style="" id="column61" value="순서" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="70" inputType="text" id="column29" value="사용여부" blockSelect="false" displayMode="label" style="">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="70" inputType="text" id="column57" value="말단여부" blockSelect="false" displayMode="label" style="">
+                                    </w2:column>                                    
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column35" value="문자값1" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column33" value="문자값2" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column41" value="문자값3" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column39" value="문자값4" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column37" value="문자값5" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column53" value="숫자값1" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column51" value="숫자값2" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column49" value="숫자값3" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column47" value="숫자값4" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column45" value="숫자값5" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column54" value="공통코드" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="column56" value="공통상세코드" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:header>
+                            <w2:gBody style="" id="gBody4">
+                                <w2:row style="" id="row5">
+                                    <w2:column width="150" inputType="text" id="cd" blockSelect="false" readOnly="" style="" textAlign="center" value="" maxLength="20" allowChar="0-9 a-z A-Z">
+                                    </w2:column>
+                                    <w2:column textAlign="left" width="250" inputType="text" id="cdNm" blockSelect="false" style="" value="" maxByteLength="500">
+                                    </w2:column>
+                                    <w2:column width="150" inputType="text" id="engNm" blockSelect="false" style="" textAlign="left" value="" maxByteLength="300">
+                                    </w2:column>
+                                    <w2:column width="150" inputType="text" id="abbNm" blockSelect="false" style="" textAlign="left" maxByteLength="300">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="60" inputType="text" id="cdLv" blockSelect="false" displayMode="label" readOnly="true" style="" maxLength="5">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="allCd" value="" blockSelect="false" displayMode="label" readOnly="true" maxLength="">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" id="upperCd" blockSelect="false" displayMode="label" readOnly="true" style="">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="60" inputType="text" style="" id="cdOdr" value="" blockSelect="false" displayMode="label" maxLength="6">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="70" inputType="select" id="useYn" blockSelect="false" displayMode="label" chooseOption="true" chooseOptionLabel="선택" style="">
+                                        <w2:choices>
+                                            <w2:itemset nodeset="data:dsUseYnList">
+                                                <w2:label ref="nm"></w2:label>
+                                                <w2:value ref="cd"></w2:value>
+                                            </w2:itemset>
+                                        </w2:choices>
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="70" inputType="select" id="epntYn" blockSelect="false" displayMode="label" chooseOption="true" chooseOptionLabel="선택" style="">
+                                        <w2:choices>
+                                            <w2:itemset nodeset="data:dsUseYnList">
+                                                <w2:label ref="nm"></w2:label>
+                                                <w2:value ref="cd"></w2:value>
+                                            </w2:itemset>
+                                        </w2:choices>
+                                    </w2:column>                                    
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="charValN1" value="" blockSelect="false" displayMode="label" textAlign="left" maxByteLength="2000">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="charValN2" value="" blockSelect="false" displayMode="label" textAlign="left" maxByteLength="2000">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="charValN3" value="" blockSelect="false" displayMode="label" textAlign="left">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="charValN4" value="" blockSelect="false" displayMode="label" textAlign="left">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="charValN5" value="" blockSelect="false" displayMode="label" textAlign="left">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="nmbrValN1" value="" blockSelect="false" displayMode="label" textAlign="right" dataType="number" maxLength="20">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="nmbrValN2" value="" blockSelect="false" displayMode="label" textAlign="right" dataType="number" maxLength="20">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="nmbrValN3" value="" blockSelect="false" displayMode="label" textAlign="right" dataType="number" maxLength="20">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="nmbrValN4" value="" blockSelect="false" displayMode="label" textAlign="right" dataType="number" maxLength="20">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="nmbrValN5" value="" blockSelect="false" displayMode="label" textAlign="right" dataType="number" maxLength="20">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="commCd" value="" blockSelect="false" displayMode="label" readOnly="true" hidden="true">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="commDtlCd" value="" blockSelect="false" displayMode="label" readOnly="true" hidden="true">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:gBody>
+                        </w2:gridView>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+
+</html>

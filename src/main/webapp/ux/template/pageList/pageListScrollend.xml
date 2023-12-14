@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTradeList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="rowNum" name="페이지 글번호" dataType="text"></w2:column>
+						<w2:column id="tradeCd" name="거래처코드" dataType="text"></w2:column>
+						<w2:column id="tradeNm" name="거래처_명" dataType="text"></w2:column>
+						<w2:column id="tradeAbbNm" name="거래처_약어_명" dataType="text"></w2:column>
+						<w2:column id="enprGbCd" name="기업구분코드[CO009]" dataType="text"></w2:column>
+						<w2:column id="bzprRegNo" name="사업자등록번호" dataType="text"></w2:column>
+						<w2:column id="corpRegNo" name="법인등록번호" dataType="text"></w2:column>
+						<w2:column id="reprNm" name="대표자_명" dataType="text"></w2:column>
+						<w2:column id="foundDt" name="설립_일자" dataType="text"></w2:column>
+						<w2:column id="enprScalCd" name="기업규모코드[CO01102]" dataType="text"></w2:column>
+						<w2:column id="enprFormNm" name="기업_형태_명" dataType="text"></w2:column>
+						<w2:column id="zipCd" name="우편번호" dataType="text"></w2:column>
+						<w2:column id="baseAddr" name="기본_주소" dataType="text"></w2:column>
+						<w2:column id="dtlAddrEnc" name="상세_주소_암호화" dataType="text"></w2:column>
+						<w2:column id="bzcdNm" name="업태_명" dataType="text"></w2:column>
+						<w2:column id="bztpNm" name="종목_명" dataType="text"></w2:column>
+						<w2:column id="telNoEnc" name="전화번호_암호화" dataType="text"></w2:column>
+						<w2:column id="faxNo" name="팩스번호" dataType="text"></w2:column>
+						<w2:column id="hmpgUrl" name="홈페이지_URL" dataType="text"></w2:column>
+						<w2:column id="vendrTypeNm" name="업체_유형_명" dataType="text"></w2:column>
+						<w2:column id="mbzplYn" name="주사업장_여부" dataType="text"></w2:column>
+						<w2:column id="clseDt" name="폐업_일자" dataType="text"></w2:column>
+						<w2:column id="taxnTypeCd" name="과세유형코드" dataType="text"></w2:column>
+						<w2:column id="taxnTypeChgDt" name="과세_유형_변경_일자" dataType="text"></w2:column>
+						<w2:column id="chgbfTaxnTypeCd" name="변경전_과세유형코드" dataType="text"></w2:column>
+						<w2:column id="salesTradeYn" name="매출_거래처_여부" dataType="text"></w2:column>
+						<w2:column id="purTradeYn" name="매입_거래처_여부" dataType="text"></w2:column>
+						<w2:column id="fstRegprId" name="최초_등록자ID" dataType="text"></w2:column>
+						<w2:column id="fstRegDtm" name="최초_등록_일시" dataType="text"></w2:column>
+						<w2:column id="fnlModprId" name="최종_수정자ID" dataType="text"></w2:column>
+						<w2:column id="fnlModiDtm" name="최종_수정_일시" dataType="text"></w2:column>
+
+					</w2:columnInfo>
+					<w2:data use="true"></w2:data>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSrch">
+					<w2:keyInfo>
+						<w2:key id="tradeCd" name="거래처코드" dataType="text"></w2:key>
+						<w2:key id="tradeNm" name="거래처_명" dataType="text"></w2:key>
+						<w2:key id="bzprRegNo" name="사업자등록번호" dataType="text"></w2:key>
+						<w2:key id="corpRegNo" name="법인등록번호" dataType="text"></w2:key>
+						<w2:key id="pageRowStart" name="페이지 시작행번호" dataType="number"></w2:key>
+						<w2:key id="pageRowCount" name="페이지 요청건수" dataType="number"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+			
+     /************************************************************************************ 
+      *  [1] onpageload
+      ************************************************************************************/   
+     scwin.onpageload = function() { 
+    
+     };
+
+    /************************************************************************************
+     *  [1] 초기화 
+     ************************************************************************************/  
+	// 화면 초기화(필수)
+	scwin.initScreen = function() {
+	
+	}; 
+
+    /************************************************************************************
+     *  [2] 전역변수 
+     ************************************************************************************/
+	var svcId = "";        
+	var pageRowStart = 0;
+	var pageRowCount = 50;
+	     
+    /************************************************************************************
+     *  [3] Event 함수 
+     ************************************************************************************/
+	// 조회버튼 클릭시 처리
+	scwin.btnSearchOnClick = function() {
+        grdTradeList.initGrid();	//그리드목록 초기화
+		pageRowStart = 0;			//처음부터 조회 한다
+
+		//조회
+		scwin.grdTradeList_onscrollend();	
+	};
+
+	// scrollend시 처리
+	scwin.grdTradeList_onscrollend = function() {
+		dsSrch.set( "pageRowStart" , pageRowStart );
+		dsSrch.set( "pageRowCount" , pageRowCount );
+
+		//조회
+		scwin.fnSearchList();	
+	};
+		
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+	// 결과 후처리
+	scwin.fnCallback = function(result, e) {
+	   	   	
+	   	switch(svcId) {
+	   		case "selectTcfTradeInfoList" :
+	   			//그리드목록채우기
+				dsTradeList.setJSON(result.data.dsTcfTradeInfoList, true);
+	   			//다음 조회갯수 Setting
+	   			pageRowStart = pageRowStart + pageRowCount;
+	   }
+	   
+	};
+	
+	// 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+    }
+	
+	/**************************************************************************
+	 *  [5] 사용자정의 함수
+	 **************************************************************************/
+	// 조회 List
+    scwin.fnSearchList = function() {
+		
+        svcId = "selectTcfTradeInfoList";
+
+        ajaxLib.ajax("/cf/CF00300002U/selectTcfTradeInfoPageList", {
+        	mode : "asynchronous"
+        	, method : "POST"
+            , requestData : dsSrch.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        }); 
+
+    };	
+]]></script>
+	
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<xf:group class="navigator" id="" style="">
+					<w2:textbox class="tit" id="screenTitle" label="화면 타이틀" style="" tagname="h2" userData1=""></w2:textbox>
+				</xf:group>
+				<xf:group class="btn_wrap" id="" style="" tagname="">
+					<w2:anchor class="btn_cmm" clickEventElement="outerDiv" id="" outerDiv="false" style="">
+						<xf:label><![CDATA[업무버튼1]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_cmm" clickEventElement="outerDiv" id="" outerDiv="false" style="">
+						<xf:label><![CDATA[업무버튼2]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_cmm" clickEventElement="outerDiv" id="" outerDiv="false" style="">
+						<xf:label><![CDATA[업무버튼3]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnCmmInit" outerDiv="false"
+						style="">
+						<xf:label><![CDATA[초기화]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnCmmNew" outerDiv="false"
+						style="">
+						<xf:label><![CDATA[신규]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnCmmMod" outerDiv="false"
+						style="">
+						<xf:label><![CDATA[수정]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnCmmSave" outerDiv="false"
+						style="">
+						<xf:label><![CDATA[저장]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnCmmDel" outerDiv="false"
+						style="">
+						<xf:label><![CDATA[삭제]]></xf:label>
+					</w2:anchor>
+					<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnCmmList" outerDiv="false"
+						style="">
+						<xf:label><![CDATA[목록]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:120px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:120px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:120px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:120px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="거래처코드" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input class="req" id="" mandatory="true" style="width: 140px;"
+								ref="data:dsSrch.tradeCd">
+							</xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="거래처명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="" style="width: 140px;" ref="data:dsSrch.tradeNm"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="사업자등록번호" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:input id="" style="width: 140px;" ref="data:dsSrch.bzprRegNo"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="법인등록번호" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:input id="" style="width: 140px;" ref="data:dsSrch.corpRegNo"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnSearch" outerDiv="false" style=""
+						ev:onclick="scwin.btnSearchOnClick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+					<!-- <w2:anchor class="btn_cm" id="anchor44" outerDiv="false" style="">
+						<xf:label><![CDATA[상세조회]]></xf:label>
+						</w2:anchor> -->
+				</xf:group>
+
+			</xf:group>
+
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="거래처 목록" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>				
+			</xf:group>
+			<w2:gridView autoFit="allColumn" dataList="data:dsTradeList" fixedColumnWithHidden="true" id="grdTradeList"
+				scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" rowNumVisible=""
+				rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue="" focusMode="row"
+				class="autoHeight" ev:onscrollend="scwin.grdTradeList_onscrollend">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column23" inputType="text" value="NO" width="60"></w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" value="거래처코드" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" value="거래처명" width="150">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" value="사업자등록번호" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" value="법인등록번호" width="100">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" id="column37" value="대표자명"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" id="column35" value="전화번호"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" id="column41" value="팩스번호"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" id="column39" value="주사업장여부"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" id="column47" value="과세유형"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" id="column45" value="업체유형"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" id="column43" value="사업자구분"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" id="rowNum" inputType="text" style="height:24px;" width="60">
+						</w2:column>
+						<w2:column blockSelect="false" id="tradeCd" inputType="text" style="height:24px;" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="tradeNm" inputType="text" style="height:24px;" width="150">
+						</w2:column>
+						<w2:column blockSelect="false" id="bzprRegNo" inputType="text" style="height:24px;"
+							width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="corpRegNo" inputType="text" style="height:24px;"
+							width="100">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;"
+							id="reprNm" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;"
+							id="telNoEnc" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" id="faxNo" blockSelect="false"
+							displayMode="label" style="height:24px;">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" id="mbzpYn"
+							blockSelect="false" displayMode="label" style="height:24px;">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" id="taxnTypeCd"
+							blockSelect="false" displayMode="label" style="height:24px;">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" id="vendrTypeNm"
+							blockSelect="false" displayMode="label" style="height:24px;">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" id="enprGbCd"
+							blockSelect="false" displayMode="label" style="height:24px;">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>		
+		
+	</body>
+</html>

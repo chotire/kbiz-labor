@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>UDC</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+        </xf:model>
+        <script type="javascript"><![CDATA[
+
+		
+		]]></script>
+    </head>
+    <body>
+    	<!--/** WEBSQUARE UDC */
+    		{
+    		"componentName": "udc_datecalendar_time",
+    		"pluginName": "udc_datecalendar_time",
+    		"company": "",
+    		"developer": "",
+    		"category": "Basic",
+    		"notSupportBrowser": "",
+    		"version": "",
+    		"htmlRender": "",
+    		"icon": "",
+    		"disableIcon": "",
+    		"description": "",
+    		"width": "",
+    		"height": "",
+    		"properties": [
+    		{
+    		"name": "id",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "Y",
+    		"hidden": "N",
+    		"description": "udc 아이디"
+    		},
+    		{
+    		"name": "date",
+    		"default": "",
+    		"type": "number",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 초기 값"
+    		},
+    		{
+    		"name": "ref",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 Ref"
+    		},
+    		{
+    		"name": "class",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "udc 클래스"
+    		},
+    		{
+    		"name": "disabled",
+    		"default": "",
+    		"type": "combobox",
+    		"option": "[true,false]",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "desc"
+    		}
+    		],
+    		"events": [],
+    		"apis": [
+    		{
+    		"name": "getDate",
+    		"description": "desc",
+    		"params": [],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		},
+    		{
+    		"name": "setDate",
+    		"description": "desc",
+    		"params": [{
+    		"type": "Number",
+    		"name": "strDate",
+    		"description": "desc"
+    		}],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		}
+    		]
+    		}
+    		}
+    	-->
+    	<xf:group class="udc_wrap udc_datecalendar_time" id="grpCalDate" style="" pluginName="udc_datecalendar_time">
+    		<w2:inputCalendar calendarValueType="yearMonthDate" focusOnDateSelect="false" footerDiv="false" id="calDate"
+    			renderDiv="true" renderType="component" rightAlign="false" style="width:120px" class="" mandatory=""  placeholder="____-__-__">
+    			<script ev:event="onchange" type="text/javascript"><![CDATA[
+   				    if ( !com.isDate(calDate.getValue()) ){
+						com.showMessage("CFA0019", "일자", "", "", calDate.id);	//$1을(를) 확인하십시오.
+   				    }    			
+    			 ]]></script>
+    		</w2:inputCalendar>
+    		<xf:input allowChar="0-9-" displayFormat="##:##" id="calTime" initValue="" maxlength="4" minlength=""
+    			style="width: 65px;" class="" mandatory="" editType="select">
+    			<script ev:event="onviewchange(info)" type="text/javascript"><![CDATA[
+    			    var strCalTime = com.udc4Time(calTime.getValue());
+    			    if ( strCalTime == "9999" ) {
+						com.showMessage("CFA0019", "시각", "", "", calTime.id);	//$1을(를) 확인하십시오.
+    			    }else{
+    			        calTime.setValue(strCalTime);
+    			    }
+    			 ]]></script>
+    		</xf:input>
+    	</xf:group>
+
+
+
+    </body>
+</html>

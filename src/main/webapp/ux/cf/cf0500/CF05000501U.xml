@@ -1,0 +1,996 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+    xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+                    <w2:dataMap baseNode="map" id="dsTcfUseSealTkotMap">
+                    	<w2:keyInfo>
+                    		<w2:key id="tkotConfDtm" name="반출_확인_일시" dataType="text"></w2:key>
+                    		<w2:key id="tkotConprNm" name="반출_확인자_명" dataType="text"></w2:key>
+                    		<w2:key id="tkotConprJbclNm" name="반출_확인자_직급_명" dataType="text"></w2:key>
+                    		<w2:key id="rtunConfDtm" name="반납_확인_일시" dataType="text"></w2:key>
+                    		<w2:key id="rtunConprNm" name="반납_확인자_명" dataType="text"></w2:key>
+                    		<w2:key id="rtunConprJbclNm" name="반납_확인자_직급_명" dataType="text"></w2:key>
+                    		<w2:key id="jdafTeamTkotConfOpinCn" name="법무_팀_반출_확인_의견_내용" dataType="text"></w2:key>
+                    		<w2:key id="tkotOffrTtl" name="반출_신청_제목" dataType="text"></w2:key>
+                    		<w2:key id="usepCn" name="사용처_내용" dataType="text"></w2:key>
+                    		<w2:key id="sealNo" name="인감번호" dataType="text"></w2:key>
+                    		<w2:key id="tkotDt" name="반출_일자" dataType="text"></w2:key>
+                    		<w2:key id="rtunDt" name="반납_일자" dataType="text"></w2:key>
+                    		<w2:key id="tkoprNm" name="반출자_명" dataType="text"></w2:key>
+                    		<w2:key id="tkoprEmpno" name="반출자_사번" dataType="text"></w2:key>
+                    		<w2:key id="tkotTeamDeptNm" name="반출팀_부서_명" dataType="text"></w2:key>
+                    		<w2:key id="tkotTeamDeptCd" name="반출팀_부서_코드" dataType="text"></w2:key>
+                    		<w2:key id="tkotOffrCn" name="반출_신청_내용" dataType="text"></w2:key>
+                    		<w2:key id="evdcDocNo" name="증빙서류 파일 ID" dataType="text"></w2:key>
+                    		<w2:key id="aflId" name="날인원본 파일 ID" dataType="text"></w2:key>
+                    		<w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+                    		<w2:key id="adminYn" name="관리자여부" dataType="text"></w2:key>
+                    		<w2:key id="tkotOffrNo" name="반출신청번호" dataType="text"></w2:key>
+                    		<w2:key id="cuVal" name="등록수정구분" dataType="text"></w2:key>
+                    		<w2:key id="useSealTkotPrgsStusCd" name="사용인감반출진행상태코드[CF03005]" dataType="text"></w2:key>
+                    		<w2:key id="aflIdYn" name="날인원본 업로드 유무" dataType="text"></w2:key>
+                    		<w2:key id="tkotConprEmpno" name="반출_확인자_사번" dataType="text"></w2:key>
+                    		<w2:key id="tkotConprNm" name="반출_확인자_명" dataType="text"></w2:key>
+                    		<w2:key id="tkotConprJbclNm" name="반출_확인자_직급_명" dataType="text"></w2:key>
+                    		<w2:key id="jdafTeamTkotConfOpinCn" name="법무_팀_반출_확인_의견_내용" dataType="text"></w2:key>
+                    		<w2:key id="gwDocNo" name="텔레피아문서번호" dataType="text"></w2:key>
+                    		<w2:key id="useSealTkotStusNm" name="날인인감 반출 가능 여부" dataType="text"></w2:key>
+                    	</w2:keyInfo>
+                    </w2:dataMap>
+                    <w2:dataMap baseNode="map" id="dsSrchParam" style="">
+                            <w2:keyInfo>
+                                    <w2:key dataType="text" id="useSealTkotPrgsStusCd" name="상태"></w2:key>
+                                    <w2:key dataType="text" id="tkotFromDt" name="반출 검색 시작일"></w2:key>
+                                    <w2:key dataType="text" id="tkotToDt" name="반출 검색 종료일"></w2:key>
+                                    <w2:key dataType="text" id="rtunFromDt" name="반납예정 검색 시작일"></w2:key>
+                                    <w2:key dataType="text" id="rtunToDt" name="반납예정 검색 종료일"></w2:key>
+                                    <w2:key dataType="text" id="tkotOffrTtl" name="건명"></w2:key>
+                                    <w2:key dataType="text" id="sealNo" name="인감번호"></w2:key>
+                                    <w2:key dataType="text" id="tkotTeamDeptNm" name="부서명"></w2:key>
+                                    <w2:key dataType="text" id="tkotTeamDeptCd" name="부서코드"></w2:key>
+                                    <w2:key dataType="number" id="pageRowStart" name="페이지 시작행번호"></w2:key>
+                                    <w2:key dataType="number" id="pageRowCount" name="페이지 요청건수"></w2:key>
+                                    <w2:key dataType="text" id="adminYn" name="관리자유무"></w2:key>
+                                    <w2:key dataType="text" id="aprvNo" name="결재번호"></w2:key>
+                                    <w2:key dataType="text" id="tkotOffrNo" name="반출신청번호"></w2:key>
+                                    <w2:key id="otherPageYn" name="다른페이지에서 이동유무" dataType="text"></w2:key>
+                            </w2:keyInfo>
+                    </w2:dataMap>
+            </w2:dataCollection>
+            <w2:workflowCollection></w2:workflowCollection>
+        </xf:model>
+        <w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+        <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF05000501U.xml
+     * Program Name : 인감반출/반납대장 등록,수정 상세정보
+     * Author : 강상국 (tpksg)
+     * Date : 2019.08.28
+     *
+     * History
+     * ========================================
+     * 변경일자     	  수정자   내 용
+     * ========================================
+     * 2019.08.28   강상국   최초작성
+     *
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    scwin.param = com.getAllParam();
+    scwin.svcId = "";
+    scwin.sJobGbCd = "";
+    scwin.sMenuId  = "";
+    scwin.evdcDocNo= "";
+    scwin.sAflId   = "";
+    scwin.sFileExt = "gif,jpg,tif,tiff,doc,xls,ppt,pdf,txt,xlsx,png,pptx,docx,hwp";
+    scwin.adminYn = "N";
+     scwin.adminDeptCd = com.fnGetUseSealAdminDeptCd();
+     scwin.adminEmpNo = com.fnGetUseSealAdminEmpno();
+     scwin.outConfirmCd = com.fnGetSealOutConfirmCd();
+     scwin.inConfirmCd = com.fnGetSealInConfirmCd();
+     scwin.jdafTeamCd = com.fnGetJdafTeamCd();
+     scwin.aprvCpltCd = com.fnGetSealAprvCpltCd();
+     scwin.userDeptCd = sessionStorage.getItem("deptCd");
+     scwin.userEmpNo = sessionStorage.getItem("userEmpno");
+     scwin.flagFile = false;
+    scwin.aprvYn = "N";
+    scwin.tkotIngCnt = 0;
+    /************************************************************************************
+     *  [2] 초기화
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        var adminCheck = false;
+        if ($w.isPopup()) {
+            var winPopParam = JSON.parse(sessionStorage.winpopParam);
+            var parentId    = winPopParam.dataObj.data.pframeId;
+            if (parentId != undefined && parentId != "") {
+                var parentObj = opener.frames[parentId].getWindow().com;
+
+                if (typeof(parentObj["fnUseSealAdminCheck"]) == "function") {
+                  adminCheck = parentObj["fnUseSealAdminCheck"]();
+                }
+            }
+        } else {
+            adminCheck = com.fnUseSealAdminCheck();
+        }
+
+        if (adminCheck) scwin.adminYn = "Y";
+        scwin.initAprvNoSet();
+    };
+
+    /**************************************************************************
+    * Event: scwin.initAprvNoSet
+    * 기 능: 결재번호 값 있는지 검사
+    **************************************************************************/
+    scwin.initAprvNoSet = function() {
+        console.log(scwin.param);
+        console.log(com.getAllParam());
+        dsSrchParam.setJSON(scwin.param);
+        dsTcfUseSealTkotMap.set( "tkotOffrNo" , scwin.param.tkotOffrNo );
+
+        if (strLib.isEmpty(dsTcfUseSealTkotMap.get("tkotOffrNo"), true)) {
+            dsTcfUseSealTkotMap.set( "cuVal" , "C" );
+            com.getUdcComp("udcAflIdList", "btnAddFile").removeClass("show");
+            com.getUdcComp("udcAflIdList", "btnAddFile").addClass("hide");
+            scwin.fnEvdcDocNoSet();
+            scwin.fnAflIdSet();
+        } else {
+            dsTcfUseSealTkotMap.set( "cuVal" , "U" );
+            scwin.fnUseSealTkotView();
+        }
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+    * Event: scwin.initEvdcDocNoSet
+    * 기 능: 증빙서류 파일 업로드 셋팅
+    **************************************************************************/
+    scwin.fnEvdcDocNoSet = function() {
+        scwin.sJobGbCd = "CF";
+        scwin.sMenuId  = "CF05000501U";
+        
+        com.setUdcValue( "udcEvdcDocNoList", "jobGbCd", scwin.sJobGbCd);
+        com.setUdcValue( "udcEvdcDocNoList", "menuId", 	scwin.sMenuId);
+        com.setUdcValue( "udcEvdcDocNoList", "aflId", 	scwin.evdcDocNo);
+        com.setUdcValue( "udcEvdcDocNoList", "fileExt", scwin.sFileExt);
+        com.setUdcValue( "udcEvdcDocNoList", "usage", 	"INS");       // 버튼숨기기처리 : 필수값
+        com.setUdcValue( "udcEvdcDocNoList", "fileSize", "");       // 용량표시안함(표시함:INS) : 필수값
+        com.setUdcValue( "udcEvdcDocNoList", "fileCert", "");       // 암호화처리
+        com.setUdcValue( "udcEvdcDocNoList", "filePathCustom", ""); // 파일패스입력
+    };
+
+    /**************************************************************************
+    * Event: scwin.initEvdcDocNoSet
+    * 기 능: 날인원본 파일 업로드 셋팅
+    **************************************************************************/
+    scwin.fnAflIdSet = function() {
+        scwin.sJobGbCd = "CF";
+        scwin.sMenuId  = "CF05000501U";
+
+        com.setUdcValue( "udcAflIdList", "jobGbCd", scwin.sJobGbCd);
+        com.setUdcValue( "udcAflIdList", "menuId", 	scwin.sMenuId);
+        com.setUdcValue( "udcAflIdList", "aflId", 	scwin.sAflId);
+        com.setUdcValue( "udcAflIdList", "fileExt", scwin.sFileExt);
+        com.setUdcValue( "udcAflIdList", "usage", 	"INS");     // 버튼숨기기처리 : 필수값
+        com.setUdcValue( "udcAflIdList", "fileSize", "");       // 용량표시안함(표시함:INS) : 필수값
+        com.setUdcValue( "udcAflIdList", "fileCert", "");       // 암호화처리
+        com.setUdcValue( "udcAflIdList", "filePathCustom", ""); // 파일패스입력
+    };
+
+    /**************************************************************************
+     * Event: scwin.fnView
+     * 기 능: 인감반출/반납대장 상세조회
+     **************************************************************************/
+    scwin.fnUseSealTkotView = function () {
+        scwin.svcId = "selectTcfUseSealTkotView";
+        ajaxLib.ajax("/cf/CF05000501U/selectTcfUseSealTkotView", {
+            mode: "synchronous",
+            method: "POST",
+            requestData: dsTcfUseSealTkotMap.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+    * Event: scwin.fnValid
+    * 기 능: 저장시 Valid 검사
+    **************************************************************************/
+    scwin.fnValid = function() {
+        if (!com.validateGroup([grpTcfUserSealTkot])) {
+            return false;
+        }
+
+        if ( ibcTkotDt.getValue() > ibcRtunDt.getValue()) {
+            com.showMessage('CFW0010','반납예정일이 반출일보다 늦도록 입력해 주세요.');
+             ibcRtunDt.setValue("");
+            ibcRtunDt.focus();
+             return false;
+        }
+
+         if ( ibcTkotDt.getValue() != ""  &&  ibcRtunDt.getValue() != "" ) {
+            var betweenDay = dateLib.diffDate(ibcTkotDt.getValue(), ibcRtunDt.getValue());
+
+            if (betweenDay > 5) {
+                com.showMessage('CFW0010','5일 이상 반출은 불가능합니다. 다시 입력해 주세요.');
+                 ibcRtunDt.setValue("");
+                ibcRtunDt.focus();
+                return false;
+            }
+         }
+
+        var evdcDocNo = com.getUdcComp("udcEvdcDocNoList", "aflId").getValue();
+        var aflId = com.getUdcComp("udcAflIdList", "aflId").getValue();
+
+        dsTcfUseSealTkotMap.set( "evdcDocNo", 	evdcDocNo);
+        dsTcfUseSealTkotMap.set( "aflId", 		aflId);
+
+        if (strLib.isEmpty(dsTcfUseSealTkotMap.get( "evdcDocNo"), true)) {
+            com.showMessage('CFW0010','증빙서류를 등록해 주세요.');
+            return false;
+        }
+        //console.log('scwin.flagFile :: ' + scwin.flagFile);
+        if (scwin.flagFile) {
+            dsTcfUseSealTkotMap.set( "aflIdYn", "Y");
+            if (strLib.isEmpty(dsTcfUseSealTkotMap.get( "aflId"), true)) {
+                com.showMessage('CFW0010','날인원본을 등록해 주세요.');
+                return false;
+            }
+        }
+        return true;
+    };
+
+    /**************************************************************************
+    * Event: scwin.fnDisplayChk
+    * 기 능: 화면 항목 활성 비활성화 구분
+    **************************************************************************/
+    scwin.fnDisplayChk = function(readOnlyType) {
+        if (readOnlyType == "Y") {	//읽기만 하자.
+            ibxTkotOffrTtl.addClass( "hide" );
+            spnTkotOffrTtl.removeClass( "hide" );
+            ibxUsepCn.addClass( "hide" );
+            spnUsepCn.removeClass( "hide" );
+            ibxSealNo.addClass( "hide" );
+            btnUseSealSrch.addClass( "hide" );
+            spnSealNo.removeClass( "hide" );
+            ibcTkotDt.addClass( "hide" );
+            spnTkotDt.removeClass( "hide" );
+            ibcRtunDt.addClass( "hide" );
+            spnRtunDt.removeClass( "hide" );
+            ibxTkoprNm.addClass( "hide" );
+            selMyChkYn.addClass( "hide" );
+            btnUserSrch.addClass( "hide" );
+            spnTkoprNm.removeClass( "hide" );
+            ibxTkotTeamDeptNm.addClass( "hide" );
+            spnTkotTeamDeptNm.removeClass( "hide" );
+            txttKotOffrCn.addClass( "hide" );
+            spntKotOffrCn.removeClass( "hide" );
+        } else {
+            ibxTkotOffrTtl.removeClass( "hide" );
+            spnTkotOffrTtl.addClass( "hide" );
+            ibxUsepCn.removeClass( "hide" );
+            spnUsepCn.addClass( "hide" );
+            ibxSealNo.removeClass( "hide" );
+            btnUseSealSrch.removeClass( "hide" );
+            spnSealNo.addClass( "hide" );
+            ibcTkotDt.removeClass( "hide" );
+            spnTkotDt.addClass( "hide" );
+            ibcRtunDt.removeClass( "hide" );
+            spnRtunDt.addClass( "hide" );
+            ibxTkoprNm.removeClass( "hide" );
+            selMyChkYn.removeClass( "hide" );
+            btnUserSrch.removeClass( "hide" );
+            spnTkoprNm.addClass( "hide" );
+            ibxTkotTeamDeptNm.removeClass( "hide" );
+            spnTkotTeamDeptNm.addClass( "hide" );
+            txttKotOffrCn.removeClass( "hide" );
+            spntKotOffrCn.addClass( "hide" );
+        }
+    }
+
+    /**************************************************************************
+    * 함 수 명: scwin.fnTextAreaFormatter
+    * 기 능: text area ==> enter ==> br
+    **************************************************************************/
+    scwin.fnTextAreaFormatter = function(value){
+        var rtVal = "";
+
+        rtVal = value.replace(/(?:\r\n|\r|\n)/g, '<br />');
+
+        return rtVal;
+
+    }
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    /**************************************************************************
+    * 함 수 명: scwin.fnPopupCallback
+    * 기 능: 결과 후처리
+    **************************************************************************/
+    scwin.fnCallback = function (result, e) {
+        switch (scwin.svcId) {
+            case "selectTcfUseSealTkotView":
+                var _obj = result.data.tcfUseSearlTkoInfo;
+                dsTcfUseSealTkotMap.setJSON(_obj);
+                dsTcfUseSealTkotMap.set("cuVal", "U" );
+                var readOnlyType = "Y";
+
+                if (_obj != null) {
+                    scwin.evdcDocNo= _obj.evdcDocNo;
+                    scwin.sAflId   = _obj.aflId;
+                    var useSealTkotPrgsStusCd = _obj.useSealTkotPrgsStusCd;
+                    var tkotTeamDeptCd = _obj.tkotTeamDeptCd;
+                    scwin.tkotIngCnt = _obj.tkotIngCnt;
+
+                    com.getUdcComp("udcEvdcDocNoList", "btnAddFile").removeClass("show");
+                    com.getUdcComp("udcEvdcDocNoList", "btnAddFile").addClass("hide");
+                    com.getUdcComp("udcAflIdList", "btnAddFile").removeClass("show");
+                    com.getUdcComp("udcAflIdList", "btnAddFile").addClass("hide");
+
+                    //scwin.userDeptCd = 'K400020';
+                    if ((scwin.aprvYn == "N") && (scwin.userDeptCd == scwin.jdafTeamCd) && (scwin.adminYn == "Y") && (_obj.aprvNo > 0 && scwin.aprvCpltCd == useSealTkotPrgsStusCd)) {	//반출확인,반려
+                        btnTkotConf.removeClass( "hide" );
+                        btnJdafTeamRejt.removeClass( "hide" );
+                     } else {
+                         btnTkotConf.addClass( "hide" );
+                        btnJdafTeamRejt.addClass( "hide" );
+                     }
+
+                    if ((scwin.aprvYn == "N") && (scwin.userDeptCd == scwin.jdafTeamCd) && (scwin.adminYn == "Y") && (_obj.aprvNo > 0 && scwin.outConfirmCd == useSealTkotPrgsStusCd)) {	//반납확인
+                        btnRtunConf.removeClass( "hide" );
+                    } else {
+                        btnRtunConf.addClass( "hide" );
+                    }
+
+                    if ((scwin.aprvYn == "N") && (_obj.aprvNo == 0) && (tkotTeamDeptCd == scwin.userDeptCd)) {	//저장
+                        btnSave.removeClass( "hide" );
+                        com.getUdcComp("udcEvdcDocNoList", "btnAddFile").removeClass("hide");
+                        com.getUdcComp("udcEvdcDocNoList", "btnAddFile").addClass("show");
+                        readOnlyType = "N";
+                    } else {
+                        btnSave.addClass( "hide" );
+                        readOnlyType = "Y";
+                    }
+
+                    if ((scwin.aprvYn == "N") && (_obj.tkotOffrNo > 0 && _obj.aprvNo == 0 ) && (tkotTeamDeptCd == scwin.userDeptCd)) {	//삭제
+                        btnDel.removeClass( "hide" );
+                    } else {
+                        btnDel.addClass( "hide" );
+                    }
+
+                    if ((scwin.aprvYn == "N") && (_obj.tkotOffrNo > 0 && _obj.aprvNo == 0) && (scwin.userDeptCd == tkotTeamDeptCd)) {	// 결재
+                        btnAprv.removeClass( "hide" );
+                    } else {
+                        btnAprv.addClass( "hide" );
+                    }
+
+                    if (useSealTkotPrgsStusCd != "CF0300502" && _obj.aprvNo > 0 ) {
+                        if ((tkotTeamDeptCd == scwin.userDeptCd || scwin.adminYn == "Y") && _obj.gwDocNo != "0") {  //기안문서 보기 관리자거나 해당팀인 경우 결재 문서 조회가능
+                            btnApprForm.removeClass( "hide" );
+                        } else {
+                            btnApprForm.addClass( "hide" );
+                        }
+                    } else {
+                        btnApprForm.addClass( "hide" );
+                    }
+
+                     if ((scwin.outConfirmCd == useSealTkotPrgsStusCd || scwin.inConfirmCd == useSealTkotPrgsStusCd) && tkotTeamDeptCd == scwin.userDeptCd) {
+                        if (scwin.sAflId == null || scwin.sAflId == "") {
+                            com.getUdcComp("udcAflIdList", "btnAddFile").removeClass("hide");
+                            com.getUdcComp("udcAflIdList", "btnAddFile").addClass("show");
+                            btnSave.removeClass( "hide" );
+                            readOnlyType = "N";
+                            scwin.flagFile = true;
+                        } else {
+                            com.getUdcComp("udcAflIdList", "btnAddFile").removeClass("show");
+                            com.getUdcComp("udcAflIdList", "btnAddFile").addClass("hide");
+                            readOnlyType = "Y";
+                            scwin.flagFile = true;
+                        }
+                    } else if ((scwin.outConfirmCd == useSealTkotPrgsStusCd || scwin.inConfirmCd == useSealTkotPrgsStusCd) && ! tkotTeamDeptCd == scwin.userDeptCd) { //반납확인후 날인원본 조회 가능
+                        com.getUdcComp("udcAflIdList", "btnAddFile").removeClass("show");
+                        com.getUdcComp("udcAflIdList", "btnAddFile").addClass("hide");
+                           readOnlyType = "Y";
+                           scwin.flagFile = true;
+                    }
+                    scwin.fnDisplayChk(readOnlyType);
+                }
+                scwin.fnEvdcDocNoSet();
+                scwin.fnAflIdSet();
+
+                break;
+        }
+    };
+
+    /**************************************************************************
+    * 함 수 명: scwin.fnPopupCallback
+    * 기 능: 에러 후처리
+    **************************************************************************/
+    scwin.fnErrCallBack = function (e) {
+        switch (scwin.svcId) {
+            case "selectTcfUseSealTkotView":
+                break;
+        }
+    };
+
+    /**************************************************************************
+    * 함 수 명: scwin.fnPopupCallback
+    * 기 능: 사용인감 조회팝업 결과 후처리
+    **************************************************************************/
+    scwin.fnPopupUseSealSrchCallback = function(result) {
+        if (result != "") {
+            dsTcfUseSealTkotMap.set( "sealNo"    , result.sealNo ); 	//인감번호
+        }
+    };
+
+    /**************************************************************************
+    * 함 수 명: scwin.fnPopupUserSrchCallback
+    * 기 능: 신청자 조회팝업 결과 후처리
+    **************************************************************************/
+    scwin.fnPopupUserSrchCallback = function(result) {
+        if (result != "") {
+            dsTcfUseSealTkotMap.set( "tkoprEmpno"    , result.userEmpno ); 	//반출자_사번
+              dsTcfUseSealTkotMap.set( "tkoprNm"       , result.userNm ); 	//반출자_명
+              dsTcfUseSealTkotMap.set( "tkotTeamDeptCd", result.deptCd ); 	//반출팀_부서_코드
+              dsTcfUseSealTkotMap.set( "tkotTeamDeptNm", result.deptNm ); 	//반출팀_부서_명
+        }
+    };
+
+    /**************************************************************************
+    * 함 수 명: scwin.fnTkotConfCallback
+    * 기 능: 반출확인 팝업 결과 후처리
+    **************************************************************************/
+    scwin.fnTkotConfCallback = function(result) {
+        if (result != "" ) {
+            dsTcfUseSealTkotMap.set( "jdafTeamTkotConfOpinCn", result.txaConfrimOpinion);
+            ajaxLib.ajax("/cf/CF05000501U/updateTkotOffrApro", {
+                  mode        : "asynchronous"
+                , method      : "POST"
+                , requestData : dsTcfUseSealTkotMap.getJSON()
+                , callback    : function(result,e) {
+                    com.showMessage("CFW0010", "법무팀 반출 확인되었습니다.");
+                       scwin.fnUseSealTkotView();
+                }
+                , errCallback : function(result,e) {
+                }
+            });
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.aprvPublicAction
+     * 기 능: 결재처리후 결재번호 받아서 처리할 자체 업무이벤트 등록
+     **************************************************************************/
+    scwin.aprvPublicAction = function() {
+        //결재번호
+        var aprvNo = com.getAprvNo();
+
+        dsTcfUseSealTkotMap.set( "aprvNo" , aprvNo );
+
+         ajaxLib.ajax("/cf/CF05000501U/updateTcfUseSealTkotAprvDraf", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData : dsTcfUseSealTkotMap.getJSON()
+            , callback    : function(result,e){
+                console.log('결재처리 후 할 것');
+                scwin.aprvYn == "Y";
+                scwin.fnUseSealTkotView();
+            }
+            , errCallback : function(result,e){
+            }
+        });
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    /**************************************************************************
+    * Event: scwin.btnTkotConf_onclick
+    * 기 능: 반출확인 버튼 클릭시
+    **************************************************************************/
+    scwin.btnTkotConf_onclick = function() {
+    //반출 인감임으로 날인이 불가함. 상태가 반출중인 경우만  반출 불가 shryu1  2020-01-08
+    
+     if (dsTcfUseSealTkotMap.get("useSealTkotStusNm")=="N"){
+         com.showMessage("CFW0010", "반출 인감임으로 날인이 불가합니다.");
+         return;
+     }
+        var popOps = {
+                popup_name :"법무팀 사용인감 반출신청 확인의견"
+               ,url        :"/ux/cf/cf0500/CF05000003P.xml"
+               ,data       :  {  deptNm   : "법무팀 사용인감 반출신청"
+                                ,deptGubn : "JADF_TKOT"
+                              }
+               ,widht       : "350"
+               ,height		: "250"
+               ,callbackFn : "scwin.fnTkotConfCallback"
+            };
+        com.popup_open(popOps);
+    };
+
+    /**************************************************************************
+    * Event: scwin.btnJdafTeamRejt_onclick
+    * 기 능: 법무팀반려 버튼 클릭시
+    **************************************************************************/
+    scwin.btnJdafTeamRejt_onclick = function() {
+         if (dsTcfUseSealTkotMap.get("cuVal") == "C") return;
+           if (scwin.aprvCpltCd != dsTcfUseSealTkotMap.get("useSealTkotPrgsStusCd")) return;
+           if (!confirm("[법무팀] 사용인감 반출신청을 반려하시겠습니까?")) return;
+
+        ajaxLib.ajax("/cf/CF05000501U/updateJdafTeamRejt", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData : dsTcfUseSealTkotMap.getJSON()
+            , callback    : function(result,e) {
+                com.showMessage("CFW0010", "법무팀 반려되었습니다.");
+                   scwin.fnUseSealTkotView();
+            }
+            , errCallback : function(result,e) {
+            }
+        });
+    };
+
+    /**************************************************************************
+    * Event: scwin.btnRtunConf_onclick
+    * 기 능: 반납확인 버튼 클릭시
+    **************************************************************************/
+    scwin.btnRtunConf_onclick = function() {
+         if (dsTcfUseSealTkotMap.get("cuVal") == "C") return;
+        if (scwin.outConfirmCd != dsTcfUseSealTkotMap.get("useSealTkotPrgsStusCd")) return;
+        if (!confirm("[법무팀] 사용인감 반납확인하시겠습니까?"+ scwin.tkotIngCnt)) return;
+
+        ajaxLib.ajax("/cf/CF05000501U/updateRtunConf", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData : dsTcfUseSealTkotMap.getJSON()
+            , callback    : function(result,e) {
+                com.showMessage("SCN0002", "반납");			//$1 되었습니다.
+                   scwin.fnUseSealTkotView();
+            }
+            , errCallback : function(result,e) {
+            }
+        });
+    };
+
+    /**************************************************************************
+    * Event: scwin.btnSave_onclick
+    * 기 능: 저장 버튼 클릭시
+    **************************************************************************/
+    scwin.btnSave_onclick = function() {
+        if (!scwin.fnValid()) return;
+        var ret;
+        var msg;
+        if (dsTcfUseSealTkotMap.get("cuVal") == "C") {
+            ret = "사용인감 반출 신청을 저장하시겠습니까?";
+            msg = "저장";
+        } else if (dsTcfUseSealTkotMap.get("cuVal") == "U") {
+            ret = "사용인감 반출 신청을 수정하시겠습니까?";
+            msg = "수정";
+        }
+
+        if (!confirm(ret)) return;
+
+        ajaxLib.ajax("/cf/CF05000501U/saveTcfUseSealTkot", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData : dsTcfUseSealTkotMap.getJSON()
+            , callback    : function(result,e) {
+                dsTcfUseSealTkotMap.set( "cuVal" ,  	"U" );
+                dsTcfUseSealTkotMap.set( "aflIdYn", 	"");
+                dsTcfUseSealTkotMap.set( "tkotOffrNo", 	result.data);
+                com.showMessage("SCN0002", msg);			//$1 되었습니다.
+                   scwin.fnUseSealTkotView();
+            }
+            , errCallback : function(result,e) {
+            }
+        });
+    };
+
+    /**************************************************************************
+    * Event: scwin.btnDel_onclick
+    * 기 능: 삭제 버튼 클릭시
+    **************************************************************************/
+    scwin.btnDel_onclick = function() {
+        if (strLib.isEmpty(dsTcfUseSealTkotMap.get("tkotOffrNo"), true)) {
+            com.showMessage('CFW0010','삭제 할 데이터가 없습니다.');
+            return;
+        }
+
+        if (!confirm("사용인감 반출신청을 삭제하시겠습니까?")) return;
+
+        ajaxLib.ajax("/cf/CF05000501U/deleteTcfUseSealTkot", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData : dsTcfUseSealTkotMap.getJSON()
+            , callback    : function(result,e){
+                com.showMessage("SCN0002", "삭제");			//$1 되었습니다.
+                   scwin.btnList_onclick();
+            }
+            , errCallback : function(result,e) {
+            }
+        });
+    };
+
+    /**************************************************************************
+	 * Event: scwin.fnSetAproveFileStr
+	 * 기 능: 결재 첨부파일 증빙서류 , 날인서류 
+	**************************************************************************/
+    scwin.fnSetAproveFileStr = function(){
+    	var arr       = new Array();
+    	var sngDocNo  = dsTcfUseSealTkotMap.get("aflId"); 
+        var evdcDocNo = dsTcfUseSealTkotMap.get("evdcDocNo");
+        var aflId     = ""
+        
+        if(sngDocNo != ""){
+        	arr.push(sngDocNo);
+        }
+        
+        if(evdcDocNo != ""){
+        	arr.push(evdcDocNo);
+        }
+        
+        $.each(arr,function(index,item){
+        	if(index > 0){
+        		aflId += ",";
+        	}
+        	
+        	aflId += item;
+        });
+        
+        return aflId;
+    };
+    
+    /**************************************************************************
+    * Event: scwin.btnAprv_onclick
+    * 기 능: 결재 버튼 클릭시
+    **************************************************************************/
+    scwin.btnAprv_onclick = function() {
+        /* 1. 기본 파라미터 설정 */
+        var paramObj = new Object();
+		var aflId    = scwin.fnSetAproveFileStr();
+		
+        paramObj.jobGbCd = "CF";                                         // 업무구분코드
+        paramObj.importUrl = "/ux/cf/cf0500/CF05000501E.xml";            // 출력할 결재본문페이지
+        paramObj.aprvTtl = "[" + dsTcfUseSealTkotMap.get("tkotOffrNo") + "] [" + dsTcfUseSealTkotMap.get( "tkotTeamDeptNm" ) + "] 인감반출 신청 품의 (" + dsTcfUseSealTkotMap.get("tkotOffrTtl") + ")";  // 결재제목
+        paramObj.rvwrEmpno = "";                                   		// 검토자_사번
+        paramObj.fnlAprprEmpno = "";                                    // 최종승인자_사번
+        paramObj.aprvPrcgNm = "";                                       // 후처리결재처리명
+        paramObj.aprvPrcgEventNm = "/cf/CF05000501U/notifyTcfUseSealTkot"; // 후처리결재처리 이벤트명(후처리 실행을 위한 URL을 입력한다)
+        paramObj.aprvDocModiPsblYn = "Y";                               // 결재문서 수정불가기능 Y/N  //////////////////
+        paramObj.aprlnModiPsblYn = "N";                                 // 결재선 수정불가기능 Y/N    //////////////////
+        paramObj.aprvAtchModiPsblYn = "Y";                              // 결재첨부 수정불가기능 Y/N  //////////////////
+        paramObj.aprvAddAflId = aflId;                                   // 첨부용 첨부파일ID(콤머로 구분해서 보내준다)
+        paramObj.popupWidth = "1350";                                   // 팝업창 가로크기
+        paramObj.popupHeight = "800";                                   // 팝업창 세로크기
+        paramObj.relatedDocumentIds = "";                               // 텔레피아 관련문서 ID (콤머로 구분해서 보내준다) : 필수값 아님
+
+        // 첨부파일영역보기 : 필수값 아님
+        paramObj.aprvAtchAreaYn = "P";
+        com.aprvSend(paramObj); //일반결재 호출
+    };
+
+    /**************************************************************************
+    * Event: scwin.btnApprForm_onclick
+    * 기 능: 기안문서보기 버튼 클릭시
+    **************************************************************************/
+    scwin.btnApprForm_onclick = function() {
+        com.aprvDocViewPopup(dsTcfUseSealTkotMap.get("gwDocNo"));
+    };
+
+    /**************************************************************************
+    * Event: scwin.btnList_onclick
+    * 기 능: 목록 버튼 클릭시
+    **************************************************************************/
+    scwin.btnList_onclick = function() {
+        dsSrchParam.set("otherPageYn", "Y");
+        var param = dsSrchParam.getJSON();
+        com.detailOpen("인감반출/반납대장목록", "CF05000500U", "/ux/cf/cf0500/CF05000500U.xml", "1", param);
+    };
+
+    /**************************************************************************
+    * Event: scwin.btnUseSealSrch_onclick
+    * 기 능: 사용인감 조회 버튼 클릭시
+    **************************************************************************/
+    scwin.btnUseSealSrch_onclick = function() {
+        var popOps = {
+                popup_name 		: "사용인감조회"
+                   , url        	: "/ux/cf/cf0500/CF05000002P.xml"
+                   , data       	:  { }
+                   , modal			: false
+                , widType		: "S"
+                   , height		: "535"
+                   , callbackFn 	: "scwin.fnPopupUseSealSrchCallback"
+            };
+        com.popup_open(popOps);
+    };
+
+    /**************************************************************************
+    * Event: scwin.btnUserSrch_onclick
+    * 기 능: 사용자 정보 조회 버튼 클릭시
+    **************************************************************************/
+    scwin.btnUserSrch_onclick = function() {
+        var popOps = {
+                popup_name 	: "사용자선택"
+               ,url        	: "/ux/cf/CF00050502P.xml"
+               ,data       	:  {deptAll:"INS"}
+               ,widType		: "XL"
+               ,height		: "670"
+               ,callbackFn 	: "scwin.fnPopupUserSrchCallback"
+            };
+        com.popup_open(popOps);
+    };
+
+    /**************************************************************************
+    * Event: scwin.selMyChkYn_onlabelclick
+    * 기 능: 본인등록 체크박스 버튼 클릭시
+    **************************************************************************/
+    scwin.selMyChkYn_onlabelclick = function(index,checked,value) {
+        if (checked) {
+            dsTcfUseSealTkotMap.set( "tkoprEmpno"    , sessionStorage.getItem("userEmpno") );//반출자_사번
+              dsTcfUseSealTkotMap.set( "tkoprNm"       , sessionStorage.getItem("userNm") ); 	//반출자_명
+              dsTcfUseSealTkotMap.set( "tkotTeamDeptCd", sessionStorage.getItem("deptCd") ); 	//반출팀_부서_코드
+              dsTcfUseSealTkotMap.set( "tkotTeamDeptNm", sessionStorage.getItem("deptNm") ); 	//반출팀_부서_명
+        } else {
+            dsTcfUseSealTkotMap.set( "tkoprEmpno"    , "" ); 	//반출자_사번
+              dsTcfUseSealTkotMap.set( "tkoprNm"       , "" ); 	//반출자_명
+              dsTcfUseSealTkotMap.set( "tkotTeamDeptCd", "" ); 	//반출팀_부서_코드
+              dsTcfUseSealTkotMap.set( "tkotTeamDeptNm", "" ); 	//반출팀_부서_명
+        }
+    };
+
+    ]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <!-- 결재이벤트 페이지 임포트 -->
+        <xf:group>
+            <w2:wframe style="display:none" id="importAprvMain" src="/ux/cf/CF00350500U.xml"></w2:wframe>
+        </xf:group>
+        <!-- #결재이벤트 페이지 임포트 -->
+            <xf:group style="" id="" class="content_body">
+                    <xf:group class="navigator_wrap" id="" style="">
+                        <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+                        <xf:group class="btn_wrap" id="" style="" tagname="">
+                            <w2:anchor class="btn_cmm hide" clickEventElement="outerDiv" id="btnTkotConf" outerDiv="false" style="" ev:onclick="scwin.btnTkotConf_onclick">
+                                    <xf:label><![CDATA[반출확인]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_cmm hide" clickEventElement="outerDiv" id="btnJdafTeamRejt" outerDiv="false" style="" ev:onclick="scwin.btnJdafTeamRejt_onclick">
+                                    <xf:label><![CDATA[법무팀반려]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_cmm hide" clickEventElement="outerDiv" id="btnRtunConf" outerDiv="false" style="" ev:onclick="scwin.btnRtunConf_onclick">
+                                    <xf:label><![CDATA[반납확인]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+                                    <xf:label><![CDATA[저장]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_cmm gray hide" clickEventElement="outerDiv" id="btnDel" outerDiv="false" style="" ev:onclick="scwin.btnDel_onclick">
+                                    <xf:label><![CDATA[삭제]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_cmm hide" clickEventElement="outerDiv" id="btnAprv" outerDiv="false" style="" ev:onclick="scwin.btnAprv_onclick">
+                                    <xf:label><![CDATA[결재]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_cmm hide" clickEventElement="outerDiv" id="btnApprForm" outerDiv="false" style="" ev:onclick="scwin.btnApprForm_onclick">
+                                    <xf:label><![CDATA[기안문서보기]]></xf:label>
+                            </w2:anchor>
+                            <w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnList" outerDiv="false" style="" ev:onclick="scwin.btnList_onclick">
+                                    <xf:label><![CDATA[목록]]></xf:label>
+                            </w2:anchor>
+                        </xf:group>
+                    </xf:group>
+                    <xf:group class="defaultbox" id="" style="">
+                            <w2:textbox class="df_tt" id="" label="인감반출/반납대장" style="" tagname="h3"></w2:textbox>
+                    </xf:group>
+                    <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+                            <w2:attributes>
+                                    <w2:summary>인감날인대장 정보 입력 테이블 입니다.</w2:summary>
+                            </w2:attributes>
+                            <xf:group tagname="colgroup">
+                                    <xf:group style="width:120.00px;" tagname="col"></xf:group>
+                                    <xf:group style="" tagname="col"></xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="반출확인" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <w2:span class="txt_unit" id="spnTkotConfDtm" label="" style="" ref="data:dsTcfUseSealTkotMap.tkotConfDtm"></w2:span>
+                                            <w2:span class="txt_unit" id="spnTkotConprNm" label="" style="" ref="data:dsTcfUseSealTkotMap.tkotConprNm"></w2:span>
+                                            <w2:span class="txt_unit" id="spnTkotConprJbclNm" label="" style="" ref="data:dsTcfUseSealTkotMap.tkotConprJbclNm"></w2:span>
+                                            <w2:span class="txt_unit" id="spnJdafTeamTkotConfOpinCn" label="" style="" ref="data:dsTcfUseSealTkotMap.jdafTeamTkotConfOpinCn"></w2:span>
+                                    </xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="반납확인" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <w2:span class="txt_unit" id="spnRtunConfDtm" label="" style="" ref="data:dsTcfUseSealTkotMap.rtunConfDtm"></w2:span>
+                                            <w2:span class="txt_unit" id="spnRtunConprNm" label="" style="" ref="data:dsTcfUseSealTkotMap.rtunConprNm"></w2:span>
+                                            <w2:span class="txt_unit" id="spnRtunConprJbclNm" label="" style="" ref="data:dsTcfUseSealTkotMap.rtunConprJbclNm"></w2:span>
+                                    </xf:group>
+                            </xf:group>
+                    </xf:group>
+                    <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpTcfUserSealTkot" style="" tagname="table">
+                            <w2:attributes>
+                                    <w2:summary>인감날인대장 정보 입력 두번째 테이블 입니다.</w2:summary>
+                            </w2:attributes>
+                            <xf:group tagname="colgroup">
+                                    <xf:group style="width:120.00px;" tagname="col"></xf:group>
+                                    <xf:group style="" tagname="col"></xf:group>
+                                    <xf:group style="width:120.00px;" tagname="col"></xf:group>
+                                    <xf:group style="" tagname="col"></xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th req" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="건명" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <w2:attributes>
+                                                    <w2:colspan>3</w2:colspan>
+                                                    <w2:rowspan>1</w2:rowspan>
+                                            </w2:attributes>
+                                            <xf:input id="ibxTkotOffrTtl" style="width: 400px;" ref="data:dsTcfUseSealTkotMap.tkotOffrTtl" class="req" mandatory="true"></xf:input>
+                                            <w2:span id="spnTkotOffrTtl" style="width: 400px;" ref="data:dsTcfUseSealTkotMap.tkotOffrTtl" class="hide" ></w2:span>
+                                    </xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th req" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="사용처" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <xf:input id="ibxUsepCn" style="width: 400px;" ref="data:dsTcfUseSealTkotMap.usepCn" class="req" mandatory="true"></xf:input>
+                                            <w2:span id="spnUsepCn" style="width: 400px;" ref="data:dsTcfUseSealTkotMap.usepCn" class="hide"></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_th req" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="사용인감번호" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <xf:input id="ibxSealNo" style="width:100px;" ref="data:dsTcfUseSealTkotMap.sealNo" class="req" mandatory="true" readOnly="true"></xf:input>
+                                            <w2:anchor ev:onclick="scwin.btnUseSealSrch_onclick" outerDiv="false" clickEventElement="outerDiv" style="" id="btnUseSealSrch" class="btn_gcm">
+                                                    <xf:label><![CDATA[조회]]></xf:label>
+                                            </w2:anchor>
+                                            <w2:span id="spnSealNo" style="width:100px;" ref="data:dsTcfUseSealTkotMap.sealNo" class="hide"></w2:span>
+                                    </xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th req" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="반출일자" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <w2:inputCalendar calendarDisplayFormat="####-##-##" calendarValueType="yearMonthDate" displayFormat="" focusOnDateSelect="false" footerDiv="false" id="ibcTkotDt" ref="data:dsTcfUseSealTkotMap.tkotDt" renderDiv="true" renderType="component" rightAlign="false" style="width:100%" class="req" mandatory="true"></w2:inputCalendar>
+                                            <w2:span id="spnTkotDt" style="width:100px;" ref="data:dsTcfUseSealTkotMap.tkotDt" class="hide" dataType="date" displayFormat="yyyy-MM-dd"></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_th req" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="반납예정일" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <w2:inputCalendar calendarDisplayFormat="####-##-##" calendarValueType="yearMonthDate" displayFormat="" focusOnDateSelect="false" footerDiv="false" id="ibcRtunDt" ref="data:dsTcfUseSealTkotMap.rtunDt" renderDiv="true" renderType="component" rightAlign="false" style="width:100%" class="req" mandatory="true"></w2:inputCalendar>
+                                            <w2:span id="spnRtunDt" style="width:100px;" ref="data:dsTcfUseSealTkotMap.rtunDt" class="hide" dataType="date" displayFormat="yyyy-MM-dd"></w2:span>
+                                    </xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="반출자" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <xf:input id="ibxTkoprNm" style="width: 200px;" ref="data:dsTcfUseSealTkotMap.tkoprNm" class="req" mandatory="true" readOnly="true"></xf:input>
+                                            <xf:select ref="" appearance="full" style="" id="selMyChkYn" renderType="checkboxgroup" rows="" selectedindex="-1" class="" cols="1" ev:onlabelclick="scwin.selMyChkYn_onlabelclick">
+                                                    <xf:choices>
+                                                            <xf:item>
+                                                                    <xf:label>본인등록</xf:label>
+                                                                    <xf:value><![CDATA[1]]></xf:value>
+                                                            </xf:item>
+                                                    </xf:choices>
+                                            </xf:select>
+                                            <w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnUserSrch_onclick" id="btnUserSrch" outerDiv="false" style="margin-left:10px;">
+                                                    <xf:label><![CDATA[조회]]></xf:label>
+                                            </w2:anchor>
+                                            <w2:span id="spnTkoprNm" style="width: 200px;" ref="data:dsTcfUseSealTkotMap.tkoprNm" class="hide"></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_th" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="반출팀" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <xf:input id="ibxTkotTeamDeptNm" style="width:200px;" ref="data:dsTcfUseSealTkotMap.tkotTeamDeptNm" class="req" mandatory="true" readOnly="true"></xf:input>
+                                            <w2:span id="spnTkotTeamDeptNm" style="width:200px;" ref="data:dsTcfUseSealTkotMap.tkotTeamDeptNm" class="hide"></w2:span>
+                                    </xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th req" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="내용" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                            <w2:attributes>
+                                                    <w2:colspan>3</w2:colspan>
+                                                    <w2:rowspan>1</w2:rowspan>
+                                            </w2:attributes>
+                                            <xf:textarea id="txttKotOffrCn" style="height:150px" ref="data:dsTcfUseSealTkotMap.tkotOffrCn" class="req" mandatory="true"></xf:textarea>
+                                            <w2:span id="spntKotOffrCn" style="height:150px" ref="data:dsTcfUseSealTkotMap.tkotOffrCn" class="hide"  displayFormatter="scwin.fnTextAreaFormatter"></w2:span>
+                                    </xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th req" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="증빙서류&lt;br/&gt;Ex) 1.날인서류&lt;br/&gt; &amp;nbsp; &amp;nbsp; 2.원안품의&lt;br/&gt;" style="" class=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td pr" style="" tagname="td">
+                                            <w2:attributes>
+                                                    <w2:colspan>3</w2:colspan>
+                                                    <w2:rowspan>1</w2:rowspan>
+                                            </w2:attributes>
+                                            <xf:group class="btn_wrap" id="" style="">
+                                                <w2:udc_file_list style="" id="udcEvdcDocNoList"></w2:udc_file_list>
+                                            </xf:group>
+                                    </xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr" id="grpAflId">
+                                    <xf:group class="w2tb_th" style="" tagname="th">
+                                            <w2:attributes>
+                                                    <w2:scope>row</w2:scope>
+                                            </w2:attributes>
+                                            <w2:span id="" label="날인원본" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td pr" style="" tagname="td">
+                                            <w2:attributes>
+                                                    <w2:colspan>3</w2:colspan>
+                                                    <w2:rowspan>1</w2:rowspan>
+                                            </w2:attributes>
+                                            <xf:group class="btn_wrap" id="" style="">
+                                                <w2:udc_file_list style="" id="udcAflIdList"></w2:udc_file_list>
+                                            </xf:group>
+                                    </xf:group>
+                            </xf:group>
+                    </xf:group>
+                    <xf:group class="descbox" id="" style="">
+                            <w2:textbox class="txt_dot" id="" label="인감을 관리함에 있어 회사의 인감관리규정 및 제반 업무규정에 위반되지 않도록 승인된 용도 내에서 사용할 것이며 회사에 손해가 발생할 경우에는 모든 민,형사상의 책임이 본인에게 있음을 명시합니다." tagname=""></w2:textbox>
+                    </xf:group>
+            </xf:group>
+    </body>
+</html>

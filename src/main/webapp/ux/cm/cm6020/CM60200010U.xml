@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmTaxrateList" saveRemovedData="true"
+				    ev:onaftercolumnfilterchange="" ev:oncelldatachange="scwin.dsTcmTaxrateList_oncelldatachange"
+				    ev:onbeforecelldatachange="scwin.dsTcmTaxrateList_onbeforecelldatachange">
+				    <w2:columnInfo>
+				        <w2:column id="chkDel" name="삭제" dataType="text"></w2:column>
+				        <w2:column id="stdDt" name="기준일자" dataType="text"></w2:column>
+				        <w2:column id="ddctAmt" name="공제금액" dataType="number"></w2:column>
+				        <w2:column id="ictxRt" name="소득세율" dataType="text"></w2:column>
+				        <w2:column id="ddctRt" name="공제세율" dataType="text"></w2:column>
+				        <w2:column id="rstxRt" name="주민세율" dataType="text"></w2:column>
+				        <w2:column id="incmLwlmAmt" name="소득세하한액" dataType="number"></w2:column>
+				        <w2:column id="eplmtInfeeExmpAge" name="고용보험면제연령" dataType="text"></w2:column>
+				        <w2:column id="eplmtInfeeRt" name="고용보험면제요율" dataType="text"></w2:column>
+				        <w2:column id="natnpPnsnExmpAge" name="국민연금면제연령" dataType="text"></w2:column>
+				        <w2:column id="natnpPnsnRt" name="국민연금요율" dataType="text"></w2:column>
+				        <w2:column id="natnpPnsnGeneWkDys" name="국민연금일반근무일수" dataType="text"></w2:column>
+				        <w2:column id="natnpPnsnSpclWkDys" name="국민연금특수근무일수" dataType="text"></w2:column>
+				        <w2:column id="natnpPnsnUplmWageAmt" name="국민연금상한임금액" dataType="text"></w2:column>
+				        <w2:column id="natnpPnsnEntrStdAmt" name="국민연금가입기준임금액" dataType="text"></w2:column>
+				        <w2:column id="hlthInsurRt" name="건강보험요율" dataType="text"></w2:column>
+				        <w2:column id="hlthInsurGeneWkDys" name="건강보험일반근무일수" dataType="text"></w2:column>
+				        <w2:column id="hlthInsurSpclWkDys" name="건강보험특수근무일수" dataType="text"></w2:column>
+				        <w2:column id="lntmRscrInsurRt" name="건강보험장기요양보험요율" dataType="text"></w2:column>
+				        <w2:column id="fstRegprEmpno" name="최초등록자사번" dataType="text"></w2:column>
+				        <w2:column id="fnlModprEmpno" name="최종등록자사번" dataType="text"></w2:column>
+				    </w2:columnInfo>
+				    <w2:data use="false">
+				        <w2:row></w2:row>
+				        <w2:row></w2:row>
+				        <w2:row></w2:row>
+				        <w2:row></w2:row>
+				        <w2:row></w2:row>
+				        <w2:row></w2:row>
+				        <w2:row></w2:row>
+				        <w2:row></w2:row>
+				        <w2:row></w2:row>
+				        <w2:row></w2:row>
+				    </w2:data>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSrchMap">
+					<w2:keyInfo>
+						<w2:key id="stdDt" name="기준년도" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/><script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM60200010U.xml
+ * Program Name : 세율관리
+ * Author : jhlee
+ * Date : 2022.06.08
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ 
+	/************************************************************************************
+	 *  [1] onpageload
+	 ************************************************************************************/
+	scwin.onpageload = function() {
+		//화면초기화
+		scwin.fnInitial();
+	};
+
+	/** 화면초기화 **/
+	scwin.fnInitial = function() {
+		grdTcmTaxrateList.initGrid(); //목록 초기화
+		//UI팀용 함수 호출
+    	com.commonUI();
+    	//조회
+		scwin.fnSearchList();
+	};
+
+	/************************************************************************************
+	 *  [2] 전역변수
+	 ************************************************************************************/
+	/************************************************************************************
+	 *  [3] Event 함수
+	 ************************************************************************************/
+
+	// 검색 버튼
+	scwin.btnFind_onclick = function() {
+		scwin.fnSearchList();
+	};
+
+	// 그리드 저장
+	scwin.btnSave_onclick = function() {
+		scwin.fnSave();
+	};
+
+	// 그리드 행 추가
+	scwin.btnAddRow_onclick = function() {
+		let rowInsertIndex = dsTcmTaxrateList.insertRow();
+
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "stdDt" 			    , false );		//기준일자
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "ddctAmt" 			    , false );		//공제금액
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "ictxRt" 			    , false );		//소득세율
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "ddctRt" 			    , false );		//공제세율
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "rstxRt" 			    , false );		//주민세율
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "incmLwlmAmt" 		    , false );		//소득세하한액
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "eplmtInfeeExmpAge"     , false );		//고용보험면제연령
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "eplmtInfeeRt" 		    , false );		//고용보험면제요율
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "natnpPnsnExmpAge" 	    , false );		//국민연금면제연령
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "natnpPnsnRt" 		    , false );		//국민연금요율
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "natnpPnsnGeneWkDys" 	, false );		//국민연금일반근무일수
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "natnpPnsnSpclWkDys" 	, false );		//국민연금특수근무일수
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "natnpPnsnUplmWageAmt"  , false );		//국민연금상한임금액
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "natnpPnsnEntrStdAmt"   , false );		//국민연금가입기준임금액
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "hlthInsurRt"			, false );		//건강보험요율
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "hlthInsurGeneWkDys"	, false );		//건강보험일반근무일수
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "hlthInsurSpclWkDys"	, false );		//건강보험특수근무일수
+		grdTcmTaxrateList.setCellReadOnly( rowInsertIndex , "lntmRscrInsurRt"		, false );		//건강보험장기요양보험요율
+        
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "stdDt"                        , $p.getCurrentServerDate( "yyyyMMdd" ));   
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "ddctAmt"                      , 0);           //공제금액
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "ictxRt"                       , 0);           //소득세율
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "ddctRt"                       , 0);           //공제세율
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "rstxRt"                       , 0);           //주민세율
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "incmLwlmAmt"                  , 0);           //소득세하한액
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "eplmtInfeeExmpAge"            , 0);           //고용보험면제연령
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "eplmtInfeeRt"                 , 0);           //고용보험면제요율
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "natnpPnsnExmpAge"             , 0);           //국민연금면제연령
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "natnpPnsnRt"                  , 0);           //국민연금요율
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "natnpPnsnGeneWkDys"           , 0);           //국민연금일반근무일수
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "natnpPnsnSpclWkDys"           , 0);           //국민연금특수근무일수
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "natnpPnsnUplmWageAmt"         , 0);           //국민연금상한임금액
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "natnpPnsnEntrStdAmt"          , 0);           //국민연금가입기준임금액
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "hlthInsurRt"                  , 0);           //건강보험요율
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "hlthInsurGeneWkDys"           , 0);           //건강보험일반근무일수
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "hlthInsurSpclWkDys"           , 0);           //건강보험특수근무일수
+        dsTcmTaxrateList.setCellData(rowInsertIndex, "lntmRscrInsurRt"              , 0);           //건강보험장기요양보험요율
+	};
+
+	//그리드 삭제
+	scwin.btnDelRow_onclick = function() {
+		let idxArr = grdTcmTaxrateList.getCheckedIndex("chkDel");
+
+		if (idxArr.length == 0) {
+			com.showMessage("SMA0031", "삭제"); //$1할 행이 선택되지 않았습니다.
+			return;
+		}
+		
+		dsTcmTaxrateList.removeRows( idxArr );
+	};
+
+    //엑셀다운 버튼
+    scwin.btnExcelDwn_onclick = function() {
+        let result = [];
+        result.push(1);//checkbox 제외
+       
+        let totalCol = grdTcmTaxrateList.getTotalCol();
+       
+        for(let ex = 0; ex < totalCol; ex++) {
+            if (!grdTcmTaxrateList.getColumnVisible(ex)) {
+                result.push(ex);
+            }
+        }
+        
+        let excelOpt = {
+             fileName: "세율관리.xlsx"         //또는 xlsx 확장자 사용
+            ,removeColumns: result.join(",")
+            ,useSubTotal: true                //colMerge된 컬럼을 Merge해서 출력 할 지 여부
+            ,colMergeTextAlign: "center"      //colMerge된 컬럼의 textAlign설정 (bottom, center, top 설정)
+            //,useStyle: "true"
+            ,indent: 1
+            , headerFontColor : "#FFFFFF"    // Header Font Color
+            , headerColor : "#D9D9D9"        // Header Back Color
+            , subTotalColor : "#FCE4D6"      // SubTotal Back Color
+            , footerColor : "#BDD7EE"         // Footer Color
+        };  //excel download 옵션
+        
+        grdTcmTaxrateList.advancedExcelDownload( excelOpt );        
+    };
+
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+
+	/**************************************************************************
+	 *  [5] 사용자정의 함수
+	 **************************************************************************/
+	// 조회 List
+	scwin.fnSearchList = function() {
+		if( keyStdDt.getValue().length > 0 && keyStdDt.getValue().length != 4 ){
+			com.showMessage("CFW0003", "기준연도");
+			keyStdDt.focus();
+			return ;
+		}
+        
+		ajaxLib.ajax("/cm/cm6020/CM60200000U/selectTcmTaxrateList", {
+			method : "POST",
+			requestData : dsSrchMap.getJSON(),
+            callback : function(result, e){      
+                dsTcmTaxrateList.setJSON(result.data.dsTcmTaxrateList);
+            },
+			errCallback: function(result, e) {
+                console.log(result);
+            }
+		});
+
+	};
+
+	// 저장
+	scwin.fnSave = function() {
+       let saveList = dsTcmTaxrateList.getModifiedJSON();
+
+		// 수정여부 체크
+		if (saveList.length == 0) {
+			com.showMessage("SCA0007", "", "", ""); // 저장(변경된)할 목록이 없습니다.
+			return;
+		}
+        
+        // 유효성 체크
+        for (let si = 0; si < dsTcmTaxrateList.getRowCount(); si++)
+        {
+            let stdDt = dsTcmTaxrateList.getCellData( si , "stdDt" );
+            if(com.isEmpty(stdDt))
+            {
+                com.showMessage("CMW0025", (si + 1) + "행의 기준일자"); //$1은(는) 필수입력입니다.
+                return false;
+            }
+            
+            /*저장 시 코드 중복 체크*/
+            for (let sj = si + 1; sj < dsTcmTaxrateList.getRowCount(); sj++) {
+                let compareStdDt = dsTcmTaxrateList.getCellData( sj , "stdDt");
+                if (stdDt == compareStdDt) {
+                    com.showMessage("SAW0001", "기준일자 [" + compareStdDt + "]"); // 중복 된 $1가(이) 존재합니다.
+                    return false;
+                }
+            }
+        }
+        
+        if (confirm("저장 하시겠습니까?")) {
+            ajaxLib.ajax("/cm/cm6020/CM60200000U/insertTcmTaxRate", {
+                method : "POST",
+                requestData : {
+                    tcmTaxRateList : dsTcmTaxrateList.getModifiedJSON()
+                },
+                callback : function(result, e){      
+    			    com.showMessage("CFA0012"); //저장되었습니다.
+    				scwin.fnSearchList();
+                },
+                errCallback: function(result, e) {
+                    com.showMessage("CFE0200","세율등록");  // $1 처리시 오류가 발생하였습니다.
+                }
+            });
+        }
+	};
+    
+	// 요율 자릿수 셋팅 처리
+	scwin.dsTcmTaxrateList_onbeforecelldatachange = function(info) {
+		let rowIdx = info.rowIndex;
+		let colId  = info.colID;
+		let val    = info.newValue;
+		let conVal = 0; 
+		let idxOf  = -1;
+		idxOf = val.indexOf('.');
+		
+		if((val != null && val != 0) && (colId == "eplmtInfeeRt")) //고용보험요율 
+		{
+			if(val.length > 3 && idxOf == -1) 
+			{
+				conVal = val.substring(0,3);
+				dsTcmTaxrateList.setCellData(rowIdx, "eplmtInfeeRt"	,conVal);
+				return false;
+			}
+		}
+		else if((val != null && val != 0) && (colId == "natnpPnsnRt")) //국민연금요율 
+		{
+			if(val.length > 2 && idxOf == -1) 
+			{
+				conVal = val.substring(0,2);
+				dsTcmTaxrateList.setCellData(rowIdx, "natnpPnsnRt"	,conVal);
+				return false;
+			}
+		}
+		else if((val != null && val != 0) && (colId == "hlthInsurRt")) //건강보험요율 
+		{
+			if(val.length > 2 && idxOf == -1) 
+			{
+				conVal = val.substring(0,2);
+				dsTcmTaxrateList.setCellData(rowIdx, "hlthInsurRt"	,conVal);
+				return false;
+			}
+		}					
+		else if((val != null && val != 0) && (colId == "lntmRscrInsurRt")) //장기보험요율 
+		{
+			if(val.length > 2 && idxOf == -1) 
+			{
+				conVal = val.substring(0,2);
+				dsTcmTaxrateList.setCellData(rowIdx, "lntmRscrInsurRt"	,conVal);
+				return false;
+			}
+		}		
+			
+	};
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchCode.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcICnumber.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcYearcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>	<!-- 세율관리 -->
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:96.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기준연도" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:inputCalendar calendarClass="" calendarValueType="year" focusOnDateSelect="false"
+								footerDiv="false" id="keyStdDt" renderDiv="true" renderType="component" rightAlign="false" style="width: 100px;"
+								weekStartsOn="0" ref="data:dsSrchMap.stdDt">
+							</w2:inputCalendar>
+						</xf:group>
+
+
+					</xf:group>
+				</xf:group>
+
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="세율관리" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="" id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_add" clickEventElement="" id="btnAddRow" outerDiv="false" style=""
+							toolTip="행추가" ev:onclick="scwin.btnAddRow_onclick">
+							<xf:label><![CDATA[행추가]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_del" clickEventElement="" id="btnDelRow" outerDiv="false" style=""
+							toolTip="행삭제" ev:onclick="scwin.btnDelRow_onclick">
+							<xf:label><![CDATA[행삭제]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+							outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmTaxrateList" fixedColumnWithHidden="true"
+				focusMode="row" id="grdTcmTaxrateList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="false"
+				rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum=""
+				ev:oncellclick="scwin.grdTcmTaxrateList_oncellclick" editModeEvent="onclick" enterKeyMove="down" keyMoveEditMode="true"
+				tooltipDisplay="true" preventPaste="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column49" inputType="text" removeBorderStyle="false"
+							value="NO" width="40" colSpan="" rowSpan="2" style="height:68px;">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="37" inputType="checkbox" id="column51" blockSelect="false"
+							displayMode="label" colSpan="" rowSpan="2" style="height:69px;">
+						</w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" value="기준일자" width="140" class="req" colSpan=""
+							rowSpan="2" style="height:69px;">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" value="공제금액" width="120" colSpan="" rowSpan="2"
+							style="height:69px;">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" value="소득세율(%)" width="100" colSpan="" rowSpan="2"
+							style="height:69px;">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" value="공제세율(%)" width="100" colSpan="" rowSpan="2"
+							style="height:69px;">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text" removeBorderStyle="false"
+							value="주민세율(%)" width="100" colSpan="" rowSpan="2" style="height:69px;">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column35" inputType="text" removeBorderStyle="false"
+							value="소득세&lt;br/&gt;하한액" width="120" colSpan="" rowSpan="2" style="height:69px;">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="140" inputType="text" style="height:35px;" id="column52" value="고용보험"
+							blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="420" inputType="text" style="height:34px;" id="column66" value="국민연금"
+							blockSelect="false" displayMode="label" colSpan="6" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="280" inputType="text" style="height:34px;" id="column75" value="건강보험"
+							blockSelect="false" displayMode="label" colSpan="4" rowSpan="">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column57" value="면제연령"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column56" value="요율"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column67" value="면제연령"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column91" value="요율"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column88" value="(일반)&lt;br&gt;근무일수"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column85" value="(특수)&lt;br&gt;근무일수"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="column82" value="상한&lt;br&gt;임금액"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="column79" value="가입기준&lt;br&gt;임금액"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column76" value="요율" blockSelect="false"
+							displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column73" value="(일반)&lt;br&gt;근무일수" blockSelect="false"
+							displayMode="label" maxLength="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column70" value="(특수)&lt;br&gt;근무일수" blockSelect="false"
+							displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column94" value="장기요양&lt;br&gt;보험요율" blockSelect="false"
+							displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="column50" inputType="expression"
+							removeBorderStyle="false" style="height:24px;" width="40">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="37" inputType="checkbox" style="height:24px;" id="chkDel"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+
+						<w2:column blockSelect="false" id="stdDt" inputType="calendar" style="height:24px;" textAlign="center" width="140"
+							viewType="icon"  class="req" readOnly="true">
+						</w2:column>
+
+						<w2:column blockSelect="false" class="" id="ddctAmt" inputType="text" style="height:24px;" textAlign="right"
+							width="120" dataType="number" defaultValue="" displayFormat="#,##0" maxLength="19"  displayMode="label" allowChar="0-9-,\s" applyFormat="all">
+						</w2:column>
+						<w2:column blockSelect="false" id="ictxRt" inputType="text" style="height:24px;" textAlign="right" width="100"
+							dataType="number" displayFormat="#,##0"  defaultValue="0" maxLength="6" allowChar="0-9-,\s" displayMode="label" applyFormat="all">
+						</w2:column>
+						<w2:column blockSelect="false" id="ddctRt" inputType="text" style="height:24px;" textAlign="right" width="100"
+							displayFormat="#,##0" dataType="number"  defaultValue="0" maxLength="6" displayMode="label" allowChar="0-9-,\s" applyFormat="all">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="rstxRt" inputType="text" removeBorderStyle="false"
+							style="height:24px;" textAlign="right" width="100" displayFormat="#,##0" dataType="number"  defaultValue="0"
+							maxLength="6" allowChar="0-9-,\s" applyFormat="all">
+						</w2:column>
+						<w2:column blockSelect="false" dataType="number" displayFormat="#,##0" displayMode="label" id="incmLwlmAmt"
+							inputType="text" removeBorderStyle="false" style="height:24px;" textAlign="right" width="120"  defaultValue="0"
+							maxLength="19" allowChar="0-9-,\s" applyFormat="all">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="eplmtInfeeExmpAge" value="" blockSelect="false"
+							displayMode="label" dataType="number" defaultValue="0" displayFormat="#,###" maxLength="6" textAlign="right" allowChar="0-9-,\s" applyFormat="all">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="eplmtInfeeRt" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="6" allowChar="0-9." defaultValue="0.00" dataType="number" displayFormat="#.00" applyFormat="all" fixedRightColumn="" filterDisplayMode="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="natnpPnsnExmpAge" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="2" defaultValue="0" dataType="number" displayFormat="#,##0" allowChar="0-9-,\s" applyFormat="all">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="natnpPnsnRt" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="6" allowChar="0-9." defaultValue="0.000" dataType="number" displayFormat="#.000" applyFormat="all">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="natnpPnsnGeneWkDys" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="2" dataType="number" defaultValue="0" displayFormat="#,###">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="natnpPnsnSpclWkDys" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="2" defaultValue="0" dataType="number" displayFormat="#,###">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="natnpPnsnUplmWageAmt" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="19" dataType="number" defaultValue="0" displayFormat="#,##0" allowChar="0-9-,\s" applyFormat="all">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="90" inputType="text" style="" id="natnpPnsnEntrStdAmt" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="19" dataType="number" defaultValue="0" displayFormat="#,##0" allowChar="0-9-,\s" applyFormat="all">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="hlthInsurRt" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="6" allowChar="0-9." defaultValue="0.000" dataType="number" displayFormat="#.000" applyFormat="all">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="hlthInsurGeneWkDys" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="2" defaultValue="0" dataType="number" displayFormat="#,###">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="hlthInsurSpclWkDys" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="2" defaultValue="0" dataType="number" displayFormat="#,###">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="lntmRscrInsurRt" value="" blockSelect="false"
+							displayMode="label" textAlign="right" maxLength="6" allowChar="0-9." defaultValue="0.000" dataType="number" displayFormat="#.000" applyFormat="all">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

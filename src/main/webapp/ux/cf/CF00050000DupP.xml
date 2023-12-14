@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>DEFAULT</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+            <w2:workflowCollection>
+            </w2:workflowCollection>
+        </xf:model>
+         <script type="text/javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CF00050000DupP.xml 
+ * Program Name : 중복로그인 체크 팝업
+ * Author : 오현재 (tpohhj1)
+ * Date : 2020.07.17
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ * 2020.07.17   오현재   최초작성
+  *     
+ **************************************************************************/
+ scwin.sessIdList = "";
+ 
+	scwin.onpageload = function() {		
+	/*
+		selectRowJson = strLib.defaultValue(JSON.parse($p.getPopupParam()).data.selectRowJson, {}, true);
+		ibxEmail.setValue(selectRowJson.byrEmail);
+	*/
+		
+		var infoList = strLib.defaultValue(JSON.parse($p.getPopupParam()).data["infoList"], {}, true);
+		/*
+		var infoMap = strLib.defaultValue(JSON.parse($p.getPopupParam()).data, {}, true);
+	
+		var client = infoMap["client"] || "";
+		var ip = infoMap["ip"] || "";
+		var loginDtm = infoMap["loginDtm"] || "";
+		scwin.sessId = infoMap["sessId"] || "";
+		
+		var clientJson = {
+			"IE" : "인터넷 익스플로러",
+			"IE Edge" : "엣지",
+			"Chrome" : "크롬",
+			"Safari" : "사파리", 
+			"Firefox" : "파이어폭스",
+			"Opera" : "오페라",
+			"Whale" : "웨일",
+			"" : "알수없는"
+		};
+	
+		var info_text_str = "해당 ID는 " + clientJson[client] + "브라우저 ("+ip+"-"+loginDtm+")에서 접속중입니다.";
+		*/
+
+		$.each(infoList, function(index, element) {
+			if ( scwin.sessIdList != "" ) {
+				scwin.sessIdList += ",";
+			} 
+			scwin.sessIdList += element['sessId'];
+		});
+	
+		var ip = infoList[infoList.length-1]["loginIp"] || "";
+		var loginDtm = infoList[infoList.length-1]["loginDtm"] || "";		
+		
+		var info_text_str = "해당 ID는 "+ip+ " ("+loginDtm+") 접속중입니다.";
+		info_text.setValue(info_text_str);
+		
+		// X버튼의 원 이벤트 삭제하고 닫기 버튼의 이벤트 대신 입력
+        var frameIds = $p.getPopupId()+"_close";
+        $("#"+frameIds).off("click").on("click", function() {
+            scwin.close_Action(false);
+        });
+	};
+	
+	/** 로그인 버튼 클릭 시 **/
+	scwin.btnLogin_onclick = function() {
+		ajaxLib.ajax("/cf/CF00050000U/dupLogin", {
+		    mode: "asynchronous",
+		    method: "POST",
+		    requestData: {
+		    	"sessIdList" : scwin.sessIdList
+		    },
+			callback : function(result,e) {
+				var rsCheck = false;
+				
+				if(result["data"]["resultCode"]*1 == -1) {
+					alert(result["data"]["resultMsg"]);
+				} else {
+					rsCheck = true;
+				}
+				
+				scwin.close_Action(rsCheck);                   					
+			},
+		    errCallback: function(result,e) { }
+		});	 
+	};
+	
+	/** 그냥 닫았을 경우엔 아무것도 하지 않는다. **/
+	scwin.btnClose_onclick = function () {
+		scwin.close_Action(false);
+    };
+	
+	scwin.close_Action = function(rsCheck) {
+		var rsJson = {
+			"rsCheck" : rsCheck
+		};
+		com.popup_close(rsJson);
+	};]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload">
+    	<xf:group style="" id="" class="content_body popup">
+    	
+    		<xf:group style="" id="" class="lybox">
+				<w2:textbox class="" id="" label="중복로그인 안내&lt;br/&gt;"
+					style="font-size: 30px;font-weight: bold;text-align: center;margin-top: 10px;" tagname="">
+				</w2:textbox>
+			</xf:group>
+			
+			<xf:group class="lybox" id="" style="margin-top: 25px;">
+				<w2:textbox class="" id="info_text"
+					label="해당 ID는 xxxx브라우저 (ip-접속일시)에서 접속중입니다."
+					style="font-size: 16px;text-align: center;font-weight:bold;" tagname="">
+				</w2:textbox>
+			</xf:group>
+			
+			<xf:group class="lybox" id="" style="margin-top: 5px;">
+				<w2:textbox class="" id=""
+					label="하단 로그인 버튼 클릭 시 다른곳에서 접속되어 있는 로그인을 해제하고 로그인합니다."
+					style="font-size: 14px;text-align: center;font-weight:bold;color:red;" tagname="">
+				</w2:textbox>
+			</xf:group>
+		</xf:group>
+		
+    	<xf:group class="bottombox" id="" style="margin-top:10px;">
+            <w2:anchor class="btn_lcm" clickEventElement="outerDiv" id="btnLogin" 
+            		outerDiv="false" style="" ev:onclick="scwin.btnLogin_onclick">
+                <xf:label>
+                    <![CDATA[로그인]]>
+                </xf:label>
+            </w2:anchor>
+            <w2:anchor class="btn_lcm" clickEventElement="outerDiv" id="btnClose" 
+            		outerDiv="false" style="margin-left:5%;" ev:onclick="scwin.btnClose_onclick">
+                <xf:label>
+                    <![CDATA[닫기]]>
+                </xf:label>
+            </w2:anchor>
+        </xf:group>
+    </body>
+</html>

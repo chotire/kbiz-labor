@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key dataType="text" id="siteNm" name="현장명"></w2:key>
+			            <w2:key id="rptYm" name="작업연월" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false" />
+		<script src="/resources/js/commonUI.js" type="javascript" lazy="false" />
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM30000000U.xml
+ * Program Name : 공무재무시산표차이분석
+ * Author : tpkogh(tpkogh)
+ * Date : 2019.04.26
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ /**************************************************************************
+ * DataCollection description
+ *
+ *  dsSearchMap : 검색조건 Map
+ **************************************************************************/
+
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    };
+
+    scwin.onpageload = function() {
+
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+		var param = sessionLib.get("CM30100000UPARAM").split(":");
+
+		sessionLib.del("CM30100000UPARAM");
+
+		var siteCd = param[0];
+		var siteNm = param[1];
+		var closeYm = param[2];
+
+		if (siteCd == "") {
+
+	        //세션의 현장코드를 셋팅
+	        cmCom.setSite(wfmKeySiteInfo.getWindow());
+			dsSearchMap.set("rptYm", dateLib.addMonths(dateLib.getCurrentDate(), -1).substring(0,6));   //기준연월
+
+		} else {
+
+			//이전화면에서 넘어온 값 세팅
+			wfmKeySiteInfo.getWindow().ibxKeySiteCd.setValue(siteCd);
+			wfmKeySiteInfo.getWindow().ibxKeySiteNm.setValue(siteNm);
+			dsSearchMap.set("rptYm", closeYm);   //기준연월
+			scwin.tacSiteInfo_ontabclick();
+
+		}
+
+        //UI팀용 함수 호출
+        com.commonUI();
+
+    };
+
+
+/************************************************************************************
+ *  [5] Event 함수
+ ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.WFrameSiteInfo_change_callback
+     * 기 능: 현장코드 변경 이벤트
+     **************************************************************************/
+    scwin.WFrameSiteInfo_change_callback = function() {
+        dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+    };
+
+
+    /**************************************************************************
+     * Event: scwin.tacSiteInfo_ontabclick
+     * 기 능: 공무재무시산표차이분석 탭 Click 이벤트
+     **************************************************************************/
+    scwin.tacSiteInfo_ontabclick = function(tabID,idx) {
+        var sTabId = tacSiteInfo.getSelectedTabID();
+        var _selectedTabFrame = tacSiteInfo.getFrame( sTabId );
+        var _localScwin = _selectedTabFrame.getObj("scwin");
+        _localScwin["fnInitial"](); //이벤트명
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 공무재무시산표차이분석 조회 버튼 Click 이벤트
+     **************************************************************************/
+    scwin.btnFind_onclick = function() {
+        if ( dsSearchMap.get("siteCd").length == 0){
+            com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+            return false;
+        }
+        //dsSearchMap.set( "rptYm" , com.getUdcValue("udcRptYm","calYearMonth") );
+        if (dsSearchMap.get("rptYm") == "") {
+			com.showMessage("CFW0003","작업연월","","",calYearMonth.id);//$1 항목을 확인하십시오.
+            return false;
+		}
+
+        scwin.tacSiteInfo_ontabclick();
+    };
+    ]]></script>
+        <w2:require src="/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body" id="" style="">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:30%;" tagname="col"></xf:group>
+						<xf:group tagname="col" style="width:94px;"></xf:group><xf:group tagname="col" style="width:auto;"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+						    <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group tagname="th" class="w2tb_th req">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="작업연월" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:inputCalendar calendarValueType="yearMonth" class="req"
+								ev:onchange="scwin.calYearMonth_onchange" focusOnDateSelect="false" footerDiv="false" id="calYearMonth"
+								mandatory="" placeholder="____-__" ref="data:dsSearchMap.rptYm" renderDiv="true" renderType="component"
+								rightAlign="false" style="width:120px">
+								<script ev:event="onchange" type="text/javascript"><![CDATA[
+			   				        if ( !com.isYearMonth(calYearMonth.getValue()) ){
+			                            com.showMessage("CFW0003","작업연월","","",calYearMonth.id);//$1 항목을 확인하십시오.
+			                        }
+			    				 ]]></script>
+							</w2:inputCalendar>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<w2:tabControl alwaysDraw="false" class="cm_tab" confirmFalseAction="new" confirmTrueAction="exist" id="tacSiteInfo"
+				style="" useConfirmMessage="false" useMoveNextTabFocus="false" useTabKeyOnly="true" ev:ontabclick="scwin.tacSiteInfo_ontabclick">
+				<w2:tabs disabled="false" id="tabs1" label="시산표" style="" localeRef=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs2" label="세부내역(원가)" style="" localeRef=""></w2:tabs>
+				<w2:content alwaysDraw="false" id="content1" style="" src='/ux/cm/cm3000/CM30000005T.xml'></w2:content>
+				<w2:content alwaysDraw="false" id="content2" style="" src="/ux/cm/cm3000/CM30000010T.xml"></w2:content>
+			</w2:tabControl>
+		</xf:group>
+	</body>
+</html>

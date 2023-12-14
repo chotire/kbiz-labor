@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmCloseInfoList" saveRemovedData="true">
+			        <w2:columnInfo>
+			            <w2:column id="siteCd" name="현장_코드" dataType="text"></w2:column>
+			            <w2:column id="closeYm" name="마감_연월" dataType="text"></w2:column>
+			            <w2:column id="sCloseYn" name="외주_상태" dataType="text"></w2:column>
+			            <w2:column id="btnSClose" name="name23" dataType="text"></w2:column>
+			            <w2:column id="sCloseDt" name="외주_작업일시" dataType="text"></w2:column>
+			            <w2:column id="mCloseYn" name="자재_상태" dataType="text"></w2:column>
+			            <w2:column id="btnMClose" name="name24" dataType="text"></w2:column>
+			            <w2:column id="mCloseDt" name="자재_작업일시" dataType="text"></w2:column>
+			            <w2:column id="lCloseYn" name="노무_상태" dataType="text"></w2:column>
+			            <w2:column id="btnLClose" name="name25" dataType="text"></w2:column>
+			            <w2:column id="lCloseDt" name="노무_작업일시" dataType="text"></w2:column>
+			            <w2:column id="eCloseYn" name="장비_상태" dataType="text"></w2:column>
+			            <w2:column id="btnEClose" name="name26" dataType="text"></w2:column>
+			            <w2:column id="eCloseDt" name="장비_작업일시" dataType="text"></w2:column>
+			            <w2:column id="oCloseYn" name="경비_상태" dataType="text"></w2:column>
+			            <w2:column id="btnOClose" name="name27" dataType="text"></w2:column>
+			            <w2:column id="oCloseDt" name="경비_작업일시" dataType="text"></w2:column>
+			            <w2:column id="jCloseYn" name="공동도급_상태" dataType="text"></w2:column>
+			            <w2:column id="jCloseDt" name="공동도급_작업일시" dataType="text"></w2:column>
+			            <w2:column id="itemCnt1" name="현장경비_아이템배분_전체건수" dataType="text"></w2:column>
+			            <w2:column id="itemCnt2" name="현장경비_아이템배분_처리건수" dataType="text"></w2:column>
+			            <w2:column id="rCloseYn" name="실적집계_상태" dataType="text"></w2:column>
+			            <w2:column id="rCloseDt" name="실적집계_작업일시" dataType="text"></w2:column>
+			            <w2:column id="pbsvFnncPcostDiffYn" name="공무재무원가차이여부" dataType="text"></w2:column>
+			            <w2:column id="pCloseYn" name="현장손익마감_싱태" dataType="text"></w2:column>
+			            <w2:column id="pCloseDt" name="현장손익마감_작업일시" dataType="text"></w2:column>
+			            <w2:column id="btnClose" name="name22" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false" />
+		<script src="/resources/js/commonUI.js" type="javascript" lazy="false" />
+		<script type="javascript" lazy="false"><![CDATA[
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {
+        com.commonUI();
+        com.setUdcValue( "udcCloseYm" , "calYear" , WebSquare.date.getCurrentServerDate( "yyyy" ) );
+        cmCom.setSite(wfmKeySiteInfo.getWindow());       
+    };
+
+/************************************************************************************
+ *  [3] Event 함수
+ ************************************************************************************/
+    //현장코드 변경 이벤트
+    scwin.WFrameSiteInfo_change_callback = function(){ 
+        scwin.btnFind_onclick();
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.btnFind_onclick
+     * 기 능: 조회버튼 클릭
+     **************************************************************************/
+    scwin.btnFind_onclick = function() {
+
+        let siteCd = wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue();
+        let closeYm = com.getUdcValue( "udcCloseYm" , "calYear" );
+
+        if (siteCd == "") {
+            com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+            return;
+        }
+
+        if (closeYm == "") {
+            com.showMessage("CFW0004", "조회연월");// $1을(를) 선택하십시오.
+            return;
+        }
+
+        ajaxLib.ajax("/cm/cm3010/CM30100000U/selectCM30100000UList", {
+            method: "POST",
+            requestData: {
+                siteCd: siteCd,
+                closeYm: closeYm
+            },
+            callback: function(result, e){
+                dsTcmCloseInfoList.setJSON(result.data);
+                
+                for(let i=0; i<dsTcmCloseInfoList.getTotalRow(); i++){
+                    let sSCloseYn = dsTcmCloseInfoList.getCellData(i, "sCloseYn");  //외주상태
+                    let sMCloseYn = dsTcmCloseInfoList.getCellData(i, "mCloseYn");  //자재상태
+                    let sLCloseYn = dsTcmCloseInfoList.getCellData(i, "lCloseYn");  //노무상태
+                    let sECloseYn = dsTcmCloseInfoList.getCellData(i, "eCloseYn");  //장비상태
+                    let sOCloseYn = dsTcmCloseInfoList.getCellData(i, "oCloseYn");  //경비상태                    
+                    let sPCloseYn = dsTcmCloseInfoList.getCellData(i, "pCloseYn");  //현장마감                                            
+                                                          
+                    dsTcmCloseInfoList.setCellData(i, "btnSClose", (sSCloseYn == "Y") ? "마감취소" : "마감");
+                    dsTcmCloseInfoList.setCellData(i, "btnMClose", (sMCloseYn == "Y") ? "마감취소" : "마감");
+                    dsTcmCloseInfoList.setCellData(i, "btnLClose", (sLCloseYn == "Y") ? "마감취소" : "마감");
+                    dsTcmCloseInfoList.setCellData(i, "btnEClose", (sECloseYn == "Y") ? "마감취소" : "마감");
+                    dsTcmCloseInfoList.setCellData(i, "btnOClose", (sOCloseYn == "Y") ? "마감취소" : "마감");
+                                                                                                                     
+                    if (sPCloseYn == "Y"){
+                        dsTcmCloseInfoList.setCellData(i, "btnClose", "마감취소");
+                        grdTcmCloseInfoList.setCellInputType(i, "btnClose", {inputType: "button"});  
+                    } 
+                }
+            },
+            errCallback: function(result, e) {
+                console.log(result);
+            }
+        });
+
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.grdTcmCloseInfoList_oncellclick
+     * 기 능: 월별 마감현황 그리드 클릭
+     **************************************************************************/
+    scwin.grdTcmCloseInfoList_oncellclick = function(row,col) {
+            
+        if(!scwin.fnSiteValidate()) return;
+
+        let colId = grdTcmCloseInfoList.getColumnID(col);
+        let value = dsTcmCloseInfoList.getCellData(row, colId);
+        let pCloseYn = dsTcmCloseInfoList.getCellData(row, "pCloseYn");
+                           
+        let sSCloseYn = dsTcmCloseInfoList.getCellData(row, "sCloseYn");  //외주상태
+        let sMCloseYn = dsTcmCloseInfoList.getCellData(row, "mCloseYn");  //자재상태
+        let sLCloseYn = dsTcmCloseInfoList.getCellData(row, "lCloseYn");  //노무상태
+        let sECloseYn = dsTcmCloseInfoList.getCellData(row, "eCloseYn");  //장비상태
+        let sOCloseYn = dsTcmCloseInfoList.getCellData(row, "oCloseYn");  //경비상태                    
+        let sPCloseYn = dsTcmCloseInfoList.getCellData(row, "pCloseYn");  //현장마감                                  
+
+        let obj = {
+            "type" : [
+                {colId: "btnSClose", closeYnNm: "외주", closeJobCd: "CF00109", closeYn: sSCloseYn},
+                {colId: "btnMClose", closeYnNm: "자재", closeJobCd: "CF00110", closeYn: sMCloseYn},
+                {colId: "btnLClose", closeYnNm: "노무", closeJobCd: "CF00112", closeYn: sLCloseYn},
+                {colId: "btnEClose", closeYnNm: "장비", closeJobCd: "CF00111", closeYn: sECloseYn},
+                {colId: "btnOClose", closeYnNm: "경비", closeJobCd: "CF00113", closeYn: sOCloseYn},
+            ]        
+        }            
+                
+        //CF00109: 외주, CF00110:자재, CF00112:노무, CF00111:장비, CF00113:경비                  
+        for (let i in obj.type) {
+            let objLine = obj.type[i];
+            if (colId == objLine.colId){
+                if (sPCloseYn == "Y") {
+                    com.showMessage("CMW0092");     //이미 마감 되었습니다. 
+                    return false;              
+                }
+                
+                let sMessage = objLine.closeYnNm + ((objLine.closeYn == "Y") ? "마감취소": "마감") + " 하시겠습니까?";
+                
+                if (confirm(sMessage)) {
+                    scwin.fnCloseCancel(row, objLine.closeJobCd, ((objLine.closeYn == "Y") ? "N": "Y") );
+                }
+            }
+        }             
+                         
+        //마감, 마감취소처리
+        if (colId == "btnClose") {         
+        
+            let sCloseYn = dsTcmCloseInfoList.getCellData(row, "sCloseYn");     //외주
+            let mCloseYn = dsTcmCloseInfoList.getCellData(row, "mCloseYn");     //자재
+            let lCloseYn = dsTcmCloseInfoList.getCellData(row, "lCloseYn");     //노무
+            let eCloseYn = dsTcmCloseInfoList.getCellData(row, "eCloseYn");     //장비
+            let oCloseYn = dsTcmCloseInfoList.getCellData(row, "oCloseYn");     //경비                
+            
+            /* 현장마감은 다른 화면에서 처리를 해야된다고 함.     
+            if (pCloseYn == "Y"){                        
+                if (confirm("현장마감을 취소하시겠습니까?")) {
+                    scwin.fnCloseCancel(row, "CF00104", "N");
+                }
+            } else {
+                if (!(sCloseYn == "Y" && mCloseYn == "Y" && lCloseYn == "Y" && eCloseYn == "Y" && oCloseYn == "Y")){
+                    let message = (sCloseYn == "Y") ? "" : "외주, "; 
+                    message += (mCloseYn == "Y") ? "" : "자재, ";
+                    message += (lCloseYn == "Y") ? "" : "노무, ";
+                    message += (eCloseYn == "Y") ? "" : "장비, ";
+                    message += (oCloseYn == "Y") ? "" : "경비, ";
+                    
+                    com.showMessage("CMW0070", message);    //$1 업무마감이 되지 않았습니다.
+                    return false;
+                }            
+            
+                if (confirm("현장마감을 진행하시겠습니까?")) {
+                    scwin.fnCloseExec(row);
+                }
+            } 
+            */                              
+		} 
+    };
+
+/************************************************************************************
+ *  [4] 사용자 정의함수 함수
+ ************************************************************************************/
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnSiteValidate
+     * 기 능: 현장 검색조건 관련 Validate
+     **************************************************************************/
+    scwin.fnSiteValidate = function() {
+
+        if (dsTcmCloseInfoList.getTotalRow() == 0) return true;
+
+        let siteCd1 = wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue();
+        let siteCd2 = dsTcmCloseInfoList.getCellData( 0 , "siteCd" );
+
+        if ( siteCd1.length == 0){
+            com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+            return false;
+        }
+
+        // 검색영역의 현장코드와 비교
+        if (siteCd1 != siteCd2) {
+            com.showMessage("EMW0004", "검색항목에 변경된 현장");// $1을(를) 조회 하십시오.
+            return false;
+        }
+
+        return true;
+
+    };    
+    
+    //마감처리 
+    scwin.fnCloseExec = function(row) {
+        let sSiteCd = dsTcmCloseInfoList.getCellData(row, "siteCd");
+        let sCloseYm = dsTcmCloseInfoList.getCellData(row, "closeYm");    
+    
+        ajaxLib.ajax("/cm/cm3005/CM30050000U/saveTcfCloseInfo", {
+            method: "POST",
+            requestData: {
+                siteCd: sSiteCd,
+                workYm: sCloseYm,                           
+            },
+            callback: function(result, e){
+                com.showMessage("SAA0032"); //정상적으로 처리되었습니다.
+                scwin.btnFind_onclick();
+            },
+            errCallback: function(result, e){
+                console.log(result);
+            }
+        });
+    };
+    
+    /* 마감취소처리
+     * @param : row          -> grid row id
+     * @param : sCloseJobCd  -> 마감업무코드[CF001] 
+     * @param : sCloseYn     -> 마감여부 : Y(마감), N(취소)
+     */ 
+    scwin.fnCloseCancel = function(row, sCloseJobCd, sCloseYn) {
+
+        let sSiteCd = dsTcmCloseInfoList.getCellData(row, "siteCd");
+        let sCloseYm = dsTcmCloseInfoList.getCellData(row, "closeYm");
+           
+        ajaxLib.ajax("/cm/cm3010/CM30100010U/saveTcfCloseInfo", {
+            method: "POST",
+            requestData: {
+                closeDeptCd: sSiteCd,
+                closeTypeCd: "CF00302",         /* 마감유형코드[CF003] : 손익추정/실적 */
+                closeYm: sCloseYm,           
+                closeJobCd: sCloseJobCd,        /* 마감업무[CF001] : CF00104  프로젝트손익*/
+                closeYn: sCloseYn               /* 마감여부 : N 취소*/
+            },
+            callback: function(result, e){
+                com.showMessage("SAA0032");     //정상적으로 처리되었습니다.
+                scwin.btnFind_onclick();
+            },
+            errCallback: function(result, e) {
+                console.log(result);
+            }
+        });
+    };    
+    
+	]]></script>
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcYearcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<xf:group class="navigator" id="" style="">
+					<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:94.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:94.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+						    <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="조회연도" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+						    <w2:udc_yearcalendar id="udcCloseYm" style=""></w2:udc_yearcalendar>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+                <xf:group class="right_wrap" id="" style="">
+                </xf:group>
+				<w2:textbox label="월별 마감현황" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+			</xf:group>                                
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmCloseInfoList" fixedColumnWithHidden="true"
+			    focusMode="row" id="grdTcmCloseInfoList" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+			    rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 450px;left:-1px;top:-23px;" useShiftKey="true"
+			    visibleRowNum="" autoFitMinWidth="" setCellInputTypeCustom="true" checkReadOnlyOnCut="true" checkReadOnlyOnPaste="true"
+			    contextMenu="true" ev:oncellclick="scwin.grdTcmCloseInfoList_oncellclick">
+			    <w2:caption style="" id="caption1" value="this is a grid caption."></w2:caption>
+			    <w2:header style="" id="header1">
+			        <w2:row style="" id="row3">
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="height:34px;" id="column54" value="마감연월"
+			                blockSelect="false" displayMode="label" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="height:34px;" id="column53" value="외주"
+			                blockSelect="false" displayMode="label" colSpan="3" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="height:34px;" id="column51" value="자재"
+			                blockSelect="false" displayMode="label" colSpan="3" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="height:34px;" id="column49" value="노무"
+			                blockSelect="false" displayMode="label" colSpan="3" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="height:34px;" id="column55" value="장비"
+			                blockSelect="false" displayMode="label" colSpan="3" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="height:34px;" id="column47" value="경비"
+			                blockSelect="false" displayMode="label" colSpan="3" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="170" inputType="text" style="height:34px;" id="column45" value="공동도급"
+			                blockSelect="false" displayMode="label" colSpan="2" hidden="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="height:34px;" id="column77" value="현장마감"
+			                blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+			            </w2:column>
+			        </w2:row>
+			        <w2:row style="" id="row1">
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="" id="column33" value="상태"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="" id="column61" value="마감"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="" id="column31" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="" id="column29" value="상태"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="" id="column64" value="마감"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="" id="column27" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="" id="column25" value="상태"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="" id="column67" value="마감"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="" id="column23" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="" id="column56" value="상태"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="" id="column73" value="마감"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="" id="column59" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="" id="column21" value="상태"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="text" style="" id="column76" value="마감"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="" id="column19" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="" id="column17" value="상태"
+			                blockSelect="false" displayMode="label" hidden="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="170" inputType="text" style="" id="column15" value="작업일시"
+			                blockSelect="false" displayMode="label" hidden="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="" id="column78" value="상태"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="115" inputType="text" style="" id="column1" value="작업일시"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			        </w2:row>
+			    </w2:header>
+			    <w2:gBody style="" id="gBody1">
+			        <w2:row style="" id="row2">
+			            <w2:column removeBorderStyle="false" width="80" inputType="text" style="height:20px;" id="closeYm"
+			                blockSelect="false" displayMode="label" displayFormat="####-##">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="height:20px;" id="sCloseYn"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="button" style="" id="btnSClose" value=""
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="sCloseDt"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="height:20px;" id="mCloseYn"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="button" style="" id="btnMClose" value=""
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="mCloseDt"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="height:20px;" id="lCloseYn"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="button" style="" id="btnLClose" value=""
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="lCloseDt"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="" id="eCloseYn" value="" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="button" style="" id="btnEClose" value=""
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="170" inputType="text" style="" id="eCloseDt" value=""
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="height:20px;" id="oCloseYn"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="75" inputType="button" style="" id="btnOClose" value=""
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="oCloseDt"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="40" inputType="text" style="height:20px;" id="jCloseYn"
+			                blockSelect="false" displayMode="label" hidden="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="jCloseDt"
+			                blockSelect="false" displayMode="label" hidden="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="pCloseYn" value="" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="200" inputType="text" style="height:20px;" id="pCloseDt"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			        </w2:row>
+			    </w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+					<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfUseSealSituList" saveRemovedData="true">
+							<w2:columnInfo>
+									<w2:column id="tkotOffrNo" name="반출신청번호" dataType="text"></w2:column>
+									<w2:column id="sealNo" name="인감번호" dataType="text"></w2:column>
+									<w2:column id="tkotOffrTtl" name="반출신청제목" dataType="text"></w2:column>
+									<w2:column id="tkotOffrTtl2" name="반출신청제목" dataType="text"></w2:column>
+									<w2:column id="usepCn" name="사용처내용" dataType="text"></w2:column>
+									<w2:column id="useSealTkotStusCd" name="사용인감반출상태코드[CF03004]" dataType="text"></w2:column>
+									<w2:column id="useSealTkotStusNm" name="사용인감반출상태명" dataType="text"></w2:column>
+									<w2:column id="useYn" name="사용여부" dataType="text"></w2:column>
+									<w2:column id="tkotDt" name="반출일자" dataType="text"></w2:column>
+									<w2:column id="rtunDt" name="반납일자" dataType="text"></w2:column>
+									<w2:column id="useSealTkotPrgsStusCd" name="사용인감반출진행상태코드[CF03005]" dataType="text"></w2:column>
+									<w2:column id="useSealTkotPrgsStusNm" name="사용인감반출진행상태명" dataType="text"></w2:column>
+									<w2:column id="tkotTeamDeptNm" name="반출팀 부서명" dataType="text"></w2:column>
+									<w2:column id="tkoprNm" name="반출자명" dataType="text"></w2:column>
+									<w2:column id="tkotConfDtm" name="반출확인일시" dataType="text"></w2:column>
+									<w2:column id="tkotConprNm" name="반출확인자명" dataType="text"></w2:column>
+									<w2:column id="tkotConprJbclNm" name="반출확인자직급명" dataType="text"></w2:column>
+									<w2:column id="rtunConfDtm" name="반납확인일시" dataType="text"></w2:column>
+									<w2:column id="rtunConprNm" name="반납확인자명" dataType="text"></w2:column>
+									<w2:column id="rtunConprJbclNm" name="반납확인자직급명" dataType="text"></w2:column>
+									<w2:column id="rtunSave" name="반납예정일 저장" dataType="text"></w2:column>
+									<w2:column id="orgRtunDt" name="원 반납일자" dataType="text"></w2:column>
+							</w2:columnInfo>
+					</w2:dataList>
+					<w2:dataMap baseNode="map" id="dsSrchParam">
+							<w2:keyInfo>
+									<w2:key id="useSealTkotPrgsStusCd" name="상태" dataType="text"></w2:key>
+									<w2:key id="tkotFromDt" name="반출 검색 시작일" dataType="text"></w2:key>
+									<w2:key id="tkotToDt" name="반출 검색 종료일" dataType="text"></w2:key>
+									<w2:key id="rtunFromDt" name="반납예정 검색 시작일" dataType="text"></w2:key>
+									<w2:key id="rtunToDt" name="반납예정 검색 종료일" dataType="text"></w2:key>
+									<w2:key id="tkotOffrTtl" name="건명" dataType="text"></w2:key>
+									<w2:key id="sealNo" name="인감번호" dataType="text"></w2:key>
+									<w2:key id="tkotTeamDeptNm" name="부서명" dataType="text"></w2:key>
+									<w2:key id="tkotTeamDeptCd" name="부서코드" dataType="text"></w2:key>
+									<w2:key id="pageRowStart" name="페이지 시작행번호" dataType="number"></w2:key>
+									<w2:key id="pageRowCount" name="페이지 요청건수" dataType="number"></w2:key>
+									<w2:key id="adminYn" name="관리자유무" dataType="text"></w2:key>
+									<w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+									<w2:key id="tkotOffrNo" name="반출신청번호" dataType="text"></w2:key>
+							</w2:keyInfo>
+					</w2:dataMap>
+					<w2:dataMap baseNode="map" id="dsTcfUseSealTkot">
+							<w2:keyInfo>
+									<w2:key id="rtunDt" name="반납일자" dataType="text"></w2:key>
+									<w2:key id="tkotOffrNo" name="반출신청번호" dataType="text"></w2:key>
+							</w2:keyInfo>
+					</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF05001001U.xml 
+     * Program Name : 반출기간연장
+     * Author : 강상국 (tpksg)
+     * Date : 2019.09.06
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.09.06   강상국   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+     scwin.param = com.getAllParam();
+     
+    /************************************************************************************
+     *  [2] 초기화 
+     ************************************************************************************/
+	scwin.onpageload = function() {
+        var opt = [
+                    {"CF03005": ["sbxUseSealTkotPrgsStusCd"]}
+                  ];
+        // 1. callback 처리가 필요없는 경우
+        com.setCdComp(opt, scwin.cmmCb); 	
+        
+        /**
+		var nowDate   = $w.getCurrentServerDate()
+		var endDate   = $w.dateAdd( nowDate , 31 );
+  
+        com.setUdcValue( "udcTkotDt", "frDate", com.transDateType("frDay60"));
+        com.setUdcValue( "udcTkotDt", "toDate", endDate);
+        com.setUdcValue( "udcRtunDt", "frDate", com.transDateType("frDay60"));
+        com.setUdcValue( "udcRtunDt", "toDate", endDate);   
+        
+        sbxUseSealTkotPrgsStusCd.setValue( "CF0300505" );
+        */
+        grpSrch.addClass( "hide" );
+        
+		com.setUdcValue( "udcTotalCount", "udcListCount", 0);         
+        dsSrchParam.setJSON(scwin.param);   
+        scwin.btnFind_onclick();
+	};     
+	
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/		
+	
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+	
+	
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/		
+	/**************************************************************************
+	* Event: scwin.btnFind_onclick
+	* 기 능: 조회 버튼 클릭시
+	**************************************************************************/					
+	scwin.btnFind_onclick = function() {
+        ajaxLib.ajax("/cf/CF05001001U/selectTcfUseSealSituTkotPrdExtnList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSrchParam.getJSON(),
+            callback: function(result,e) {
+               	//전체 조회 건수
+                com.setUdcValue("udcTotalCount", "udcListCount", result.data.pageTotalCount);            
+            	dsTcfUseSealSituList.setJSON(result.data.tcfUseSealSituList);
+            },
+            errCallback: function(result,e) {
+            }
+        });		
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnList_onclick
+	* 기 능: 목록 버튼 클릭시
+	**************************************************************************/		
+	scwin.btnList_onclick = function() {
+		dsSrchParam.set("otherPageYn", "Y");
+		var param = dsSrchParam.getJSON();
+		com.detailOpen("인감반출/반납대장목록", "CF05000500U", "/ux/cf/cf0500/CF05000500U.xml", "1", param);		
+	};
+	
+	/**************************************************************************
+	* Event: scwin.grdTcfUseSealSituList_oncellclick
+	* 기 능: 그리드 목록에서 저장 버튼 클릭시
+	**************************************************************************/			
+	scwin.grdTcfUseSealSituList_oncellclick = function(row,col) {
+		if (grdTcfUseSealSituList.getColumnIndex( "rtunSave" ) == col) {
+			var rtunDt  = dsTcfUseSealSituList.getCellData(row , "rtunDt");
+			var orgRtunDt  = dsTcfUseSealSituList.getCellData(row , "orgRtunDt");
+			var tkotDt = dsTcfUseSealSituList.getCellData(row , "tkotDt");;
+			var rtunDt2 = "";
+			if ( rtunDt == "" ) {
+				com.showMessage('CFW0010','반납 예정일을 입력 하세요.');
+				return;
+			}
+			if ( rtunDt.length != 8) {
+				com.showMessage('CFW0010','반납 예정일 값이 잘못 입력 했습니다.');
+				return;
+			}
+			if ( orgRtunDt == rtunDt) {
+				com.showMessage('CFW0010','반납 예정일을 변경하지 않았습니다.');
+				return;			
+			}						
+			if( tkotDt > rtunDt){
+				com.showMessage('CFW0010','반납예정일이 신청일 이후로 선택해 주세요.');
+				return ;
+			}
+			if (rtunDt.length == 8) {
+				rtunDt2 =  rtunDt.substring(0,4) + "-" + rtunDt.substring(4,6) + "-" + rtunDt.substring(6,8);
+			}
+			if (!confirm("[" + dsTcfUseSealSituList.getCellData(row , "tkotOffrNo") + "]번 반출신청의 반납예정일을  [" + rtunDt2 + "]으로  변경하시겠습니까?")) return;
+			
+			dsTcfUseSealTkot.set( "rtunDt" , dsTcfUseSealSituList.getCellData(row , "rtunDt") );
+			dsTcfUseSealTkot.set( "tkotOffrNo" , dsTcfUseSealSituList.getCellData(row , "tkotOffrNo") );
+			
+			ajaxLib.ajax("/cf/CF05001001U/updateTcfUseSealRtunDtExtn", {
+	        	  mode        : "asynchronous"
+	        	, method      : "POST"
+	            , requestData : dsTcfUseSealTkot.getJSON()
+	            , callback    : function(result,e){
+	            	com.showMessage("SCN0002", "저장");			//$1 되었습니다.
+		   			scwin.btnFind_onclick();
+	            }
+	            , errCallback : function(result,e) {
+	            }
+        	});	
+		}
+	};
+	]]></script>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+		<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body" id="" style="">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				<xf:group class="btn_wrap" id="" style="" tagname="">
+					<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnList" outerDiv="false"
+						style="" ev:onclick="scwin.btnList_onclick">
+						<xf:label><![CDATA[목록]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="grpSrch" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span class="" id="" label="상태" style=""></w2:span></xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxUseSealTkotPrgsStusCd" mandatory="true" ref="data:dsSrchParam.useSealTkotPrgsStusCd" style="width:140px;" submenuSize="auto" textAlign="left" chooseOptionLabel="전체">
+									<xf:choices>
+											<xf:itemset nodeset="">
+													<xf:label ref=""></xf:label>
+													<xf:value ref=""></xf:value>
+											</xf:itemset>
+									</xf:choices>
+							</xf:select1>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span class="" id="" label="반출일" style=""></w2:span></xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:udc_periodcalendar id="udcTkotDt" style=""></w2:udc_periodcalendar>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span class="" id="" label="신청일자" style=""></w2:span></xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<w2:udc_periodcalendar id="udcRtunDt" style=""></w2:udc_periodcalendar>
+						</xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="건명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxTkotOffrTtl" style="width:234px;" ref="data:dsSrchParam.tkotOffrTtl"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="인감번호" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxSealNo" style="width:234px;" ref="data:dsSrchParam.sealNo"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="신청팀" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:input id="ibxTkotTeamDeptNm" style="width:234px;" ref="data:dsSrchParam.tkotTeamDeptNm"></xf:input>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="인감반출/반납대장" style="" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="udcTotalCount"></w2:udc_list_count>
+			</xf:group>
+			<w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsTcfUseSealSituList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdTcfUseSealSituList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+				rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true"
+				visibleRowNum="" ev:oncellclick="scwin.grdTcfUseSealSituList_oncellclick">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column23" inputType="text" rowSpan="2" style="height:34px;"
+							value="No." width="60">
+						</w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" rowSpan="2" style="height:34px;"
+							value="상태" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" rowSpan="2" style="height:34px;"
+							value="반출일자" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" rowSpan="2" style="height:34px;"
+							value="반납예정일" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="건명" width="200">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="2" displayMode="label" id="column35" inputType="text"
+							removeBorderStyle="false" style="height:34px;" value="신청팀" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="2" displayMode="label" id="column31" inputType="text"
+							removeBorderStyle="false" style="height:34px;" value="관리팀" width="170" rowSpan="">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column39" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:34px;" value="인감번호" width="70">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="height:68px;"
+							id="column51" value="" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+					</w2:row>
+					<w2:row id="row6" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column47" inputType="text"
+							removeBorderStyle="false" value="신청팀" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column46" inputType="text"
+							removeBorderStyle="false" value="신청자" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column45" inputType="text"
+							removeBorderStyle="false" value="반출일자" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column44" inputType="text"
+							removeBorderStyle="false" value="확인자" width="80">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" expression="" id="tkotOffrNo" inputType="text" style="" width="60"></w2:column>
+						<w2:column blockSelect="false" id="useSealTkotPrgsStusNm" inputType="text" style="" value="반출중"
+							width="120">
+						</w2:column>
+						<w2:column blockSelect="false" id="tkotDt" inputType="calendar" style="" value="2018-12-01" width="100"></w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="rtunDt" inputType="calendar" readOnly="false" removeBorderStyle="false" style="" value="" viewType="icon" width="100"></w2:column>
+						<w2:column blockSelect="false" displayMode="" id="tkotOffrTtl" inputType="text"
+							removeBorderStyle="false" style="" value="인감반출신청1" width="200">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="tkotTeamDeptNm" inputType="text"
+							removeBorderStyle="false" style="" value="개발사업부" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="tkoprNm" inputType="text"
+							removeBorderStyle="false" style="" value="이순신" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="tkotConfDtm" inputType="text"
+							removeBorderStyle="false" style="" value="2018-12-01" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="tkotConprNm" inputType="text"
+							removeBorderStyle="false" style="" value="홍길동" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="sealNo" inputType="text"
+							removeBorderStyle="false" style="" value="14" width="70">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="button" style="" id="rtunSave"
+							value="저장" blockSelect="false" displayMode="label" readOnly="false" viewType="icon">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

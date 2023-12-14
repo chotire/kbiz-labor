@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" ev:oncelldatachange="scwin.dsActbgtConfmList_oncelldatachange"
+			        ev:ondataload="scwin.dsActbgtConfmList_ondataload" id="dsTcmDirmgExctAproList" repeatNode="map"
+			        saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="apro" name="결재번호"></w2:column>
+			            <w2:column id="pbsvOpinCn" name="공무_의견_내용" dataType="text"></w2:column>
+			            <w2:column id="aprvStusCd" name="결재상태코드" dataType="text"></w2:column>
+			            <w2:column id="aprvStusNm" name="결재상태명" dataType="text"></w2:column>
+			            <w2:column id="fstRegprEmpno" name="결재자ID" dataType="text"></w2:column>
+			            <w2:column id="fstRegprEmpnm" name="결재자명" dataType="text"></w2:column>
+			            <w2:column id="fstRegDtm" name="결재일시" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key dataType="text" id="siteNm" name="현장명"></w2:key>
+			            <w2:key dataType="text" id="dirmgExctNo" name="직영_집행_번호"></w2:key>
+			            <w2:key dataType="text" id="chgDgr" name="변경차수"></w2:key>
+			            <w2:key dataType="text" id="aprvTtl" name="결재제목"></w2:key>
+			            <w2:key dataType="text" id="dirmgExctAproCd" name="직영집행승인코드[CM004013]"></w2:key>
+			            <w2:key dataType="text" id="aflId" name="첨부파일"></w2:key>
+			            <w2:key dataType="text" id="pbsvOpinCn" name="공무의견내용"></w2:key>
+			            <w2:key dataType="text" id="aprvNo" name="결재번호"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" ev:oncelldatachange="scwin.dsActbgtConfmList_oncelldatachange"
+			        ev:ondataload="scwin.dsActbgtConfmList_ondataload" id="dsTcmDirmgExctItemiList" repeatNode="map"
+			        saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+			            <w2:column id="siteLpadDirmgExctNo" name="현장-직영_집행_번호" dataType="text"></w2:column>
+			            <w2:column id="actbgtAmtTot" name="전체금액" dataType="number"></w2:column>
+			            <w2:column id="bfActbgtAmt" name="전회금액" dataType="number"></w2:column>
+			            <w2:column id="actbgtAmt" name="금회금액" dataType="number"></w2:column>
+			            <w2:column id="bfAfSum" name="누계금액" dataType="number"></w2:column>
+			            <w2:column id="remainActbgtAmt" name="잔여금액" dataType="number"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/************************************************************************************ 
+ *  [1] onpageload
+************************************************************************************/   
+	scwin.onpageload = function() {
+    
+	   scwin.fnInitial();	
+	};
+	
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {   
+        
+        //UI팀용 함수 호출
+        com.commonUI();
+        debugger;
+        var dsSrch = com.getAprvParam("dsSrch"); // 부모창의 데이터맵을 읽어온다.
+        
+        dsSearchMap.setJSON( dsSrch.getJSON() );                     
+        scwin.fnTcmActbgtWorkTotalSearch();
+        $("body").css("overflow","scroll"); // 링크 팝업시 화면 스크롤 생성
+               
+    };        
+      
+    /************************************************************************************
+     *  [2] 사용자 정의함수 함수 
+     ************************************************************************************/    
+   
+   scwin.fnTcmActbgtWorkTotalSearch = function() {     
+        ajaxLib.ajax("/cm/cm1505/CM15051505/selectExctAprvList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e){
+                dsTcmDirmgExctItemiList.setJSON(result.data.selectExctAprvAproList);  
+                //dsTcmDirmgExctAproList.setJSON(result.data.selectExctPbsvList);  
+            },
+            errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        }); 
+    };
+ ]]></script>		        
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+	    <xf:group style="" id="" class="content_body popup">
+	        <xf:group class="defaultbox" id="" style="margin-top:15px;margin-left:0px;">
+	            <w2:textbox label="집행승인 신청서" style="" id="" class="centerbox" tagname="h3"></w2:textbox>
+	        </xf:group>
+
+	        <xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+	            <w2:attributes>
+	                <w2:summary>표준내역 상세정보 테이블 입니다.</w2:summary>
+	            </w2:attributes>
+	            <xf:group tagname="colgroup">
+	                <xf:group style="width:120px;" tagname="col"></xf:group>
+	                <xf:group style="" tagname="col"></xf:group>
+	                <xf:group style="width:120px;" tagname="col"></xf:group>
+	                <xf:group style="" tagname="col"></xf:group>
+	            </xf:group>
+	            <xf:group style="" tagname="tr">
+	                <xf:group class="w2tb_th" style="" tagname="th">
+	                    <w2:attributes>
+	                        <w2:scope>row</w2:scope>
+	                    </w2:attributes>
+	                    <w2:span id="" label="현장명" style=""></w2:span>
+	                </xf:group>
+	                <xf:group class="w2tb_td" style="" tagname="td">
+	                    <w2:attributes><w2:colspan>3</w2:colspan><w2:rowspan>1</w2:rowspan></w2:attributes><w2:span id="" label="제주공항인프라확충" style="margin-top:15px;margin-left:0px;"
+	                        ref="data:dsSearchMap.siteNm">
+	                    </w2:span>
+	                </xf:group>
+	            </xf:group>
+
+	            <xf:group style="" tagname="tr">
+	                <xf:group class="w2tb_th" style="" tagname="th">
+	                    <w2:attributes>
+	                        <w2:scope>row</w2:scope>
+	                    </w2:attributes>
+	                    <w2:span id="spnReqAprvStusNm" label="제목" style=""></w2:span>
+	                </xf:group>
+	                <xf:group class="w2tb_td" style="" tagname="td">
+	                    <w2:attributes>
+	                        <w2:colspan>3</w2:colspan>
+	                        <w2:rowspan>1</w2:rowspan>
+	                    </w2:attributes>
+	                    <w2:span id="spnReqAprprNm" label="" style=""></w2:span>
+	                    <w2:span id="" label="[제주공항인프라확충][집행승인 - 18차] " style="margin-top:15px;margin-left:-5px;"
+	                        ref="data:dsSearchMap.aprvTtl">
+	                    </w2:span>
+	                </xf:group>
+	            </xf:group>
+	        </xf:group>
+	        <xf:group class="defaultbox" id="" style="">
+	            <w2:textbox class="df_tt" id="" label="집행내역" style="" tagname="h3"></w2:textbox>
+	            <xf:group class="right_wrap" id="" style="">
+	                <xf:group id="" style="">
+	                    <w2:textbox label="(단위 : 원)" style="" id="" class="" tagname=""></w2:textbox>
+	                </xf:group>
+	            </xf:group>
+	        </xf:group>
+
+	        <w2:gridView autoFit="allColumn" dataList="data:dsTcmDirmgExctItemiList" fixedColumnWithHidden="true"
+	            id="grdTcmDirmgExctItemiList" scrollByColumn="false" style="height:100px;" useShiftKey="true"
+	            visibleRowNum="all" rowNumVisible="" rowStatusVisible="" rowStatusWidth="" rowNumHeaderValue="No"
+	            rowStatusHeaderValue="" focusMode="row" class="" readOnly="true" overflowY="">
+	            <w2:header id="header1" style="">
+	                <w2:row style="" id="row8">
+	                    <w2:column removeBorderStyle="false" width="160" inputType="text" style="height:34px;"
+	                        id="column252" value="집행번호" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:34px;"
+	                        id="column249" value="전체" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:34px;"
+	                        id="column248" value="전회" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:34px;"
+	                        id="column247" value="금회" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:34px;"
+	                        id="column246" value="누계" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:34px;"
+	                        id="column253" value="잔여" blockSelect="false" displayMode="label" colSpan="" rowSpan="">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:header>
+	            <w2:gBody id="gBody4" style="">
+	                <w2:row id="row5" style="">
+	                    <w2:column blockSelect="false" id="siteLpadDirmgExctNo" inputType="custom" textAlign="center"
+	                        value="" width="70" colSpan="" rowSpan="" style="height:36px;">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="107" inputType="text" style="" id="actbgtAmtTot" value=""
+	                        blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" id="bfActbgtAmt"
+	                        inputType="text" removeBorderStyle="false" textAlign="right" width="120"
+	                        style="height:37px;">
+	                    </w2:column>
+	                    <w2:column blockSelect="false" displayFormat="#,##0" displayMode="label" id="actbgtAmt"
+	                        inputType="text" removeBorderStyle="false" textAlign="right" width="100"
+	                        style="height:37px;">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="bfAfSum"
+	                        value="" blockSelect="false" displayMode="label" textAlign="right" displayFormat="#,##0">
+	                    </w2:column>
+	                    <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="remainActbgtAmt"
+	                        value="" blockSelect="false" displayMode="label" displayFormat="#,##0" textAlign="right">
+	                    </w2:column>
+	                </w2:row>
+	            </w2:gBody>
+	        </w2:gridView>
+	    </xf:group>
+	</body>
+</html>

@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" id="dsTcmEqpmCdList" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column id="chk" name="선택" dataType="text"></w2:column>
+			            <w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+			            <w2:column dataType="text" id="eqpmCd" name="장비코드"></w2:column>
+			            <w2:column dataType="text" id="tradeCd" name="거래처코드"></w2:column>
+			            <w2:column id="hireTradeNm" name="회사_명" dataType="text"></w2:column>
+			            <w2:column dataType="text" id="eqpmNm" name="장비_명"></w2:column>
+			            <w2:column dataType="text" id="stdrNm" name="규격_명"></w2:column>
+			            <w2:column dataType="text" id="orcoHireGbVal" name="당사_임차_구분_값"></w2:column>
+			            <w2:column dataType="text" id="uctAplyMtdVal" name="단가_적용_방법_값"></w2:column>
+			            <w2:column dataType="number" id="aplyUct" name="적용_단가"></w2:column>
+			            <w2:column dataType="text" id="sortOdr" name="정렬_순서"></w2:column>
+			            <w2:column id="cnt" name="운행일보존재여부" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM700000000U.xml
+ * Program Name : 장비코드 목록
+ * Author : dslee 
+ * Date : 2022.06.03
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ * 2022.06.03   dslee    최초작성
+ **************************************************************************/
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/ 
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+        
+        //임차구분값 코드셋팅
+        com.selCdListVrbl("grdTcmEqpmCdList:orcoHireGbVal", {
+            "upperCd": "CM100019",
+            "setCd": "charValN1",
+            }
+        );
+        
+        //단가적용방법 코드셋팅
+        com.selCdListVrbl("grdTcmEqpmCdList:uctAplyMtdVal", {
+            "upperCd": "CM100020",
+            "setCd": "charValN1",
+            }
+        );
+        
+        //추가 코드값 맵핑 호출
+        com.commonUI();
+    };
+/**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+ 	//임차업체 목록(팝업) 호출
+    scwin.fnHireVendrCall = function(data, callback){
+        let popOps = {
+            popup_name: "임차업체 목록(팝업)",
+            url: "/ux/cm/cm7000/CM70000011P.xml",
+            data: {},
+            widType: "L",
+            height: "678",
+            callbackFn: callback
+        };
+        com.popup_open(popOps);
+    }
+
+    //임차업체 사업자번호 팝업선택 후 callback
+    scwin.popEqpmHireVendrCallback = function(obj){
+        if(obj != ""){
+	        let nFocusedRowIndex = grdTcmEqpmCdList.getFocusedRowIndex();
+	        
+	        dsTcmEqpmCdList.setCellData(nFocusedRowIndex, "tradeCd", obj.tradeCd);	       //거래처번호
+	        dsTcmEqpmCdList.setCellData(nFocusedRowIndex, "hireTradeNm", obj.hireTradeNm); //회사명
+        }
+    }
+/**************************************************************************
+ * [4] Callback
+ **************************************************************************/
+/************************************************************************************
+ * [5] Event 함수
+ ************************************************************************************/
+    //현장코드 변경 이벤트
+    scwin.WFrameSiteInfo_change_callback = function(){
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드
+        scwin.btnFind_onclick();
+    };
+    
+    //사업자번호 cellclick 이벤트
+	scwin.grdTcmEqpmCdList_oncellclick = function(row,col) {
+		let sColunmName = grdTcmEqpmCdList.getColumnID( col );
+        let sRowStatus = dsTcmEqpmCdList.getRowStatus( row );
+
+        if(sColunmName == "popEqpmHireVendr"){//임차업체목록(팝업)
+            scwin.fnHireVendrCall({
+            },
+               "scwin.popEqpmHireVendrCallback"
+            );
+        }
+	};
+
+	//조회 클릭
+	scwin.btnFind_onclick = function() {
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드
+
+        if (dsSearchMap.get("siteCd") == ""){
+            com.showMessage("SAA0031", "현장"); //을(를) 선택하십시오.
+            return false;
+        }
+        
+        ajaxLib.ajax("/cm/cm7000/CM70000000U/selectTcmEqpmCdList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e) {
+                        dsTcmEqpmCdList.setJSON(result.data);
+                        com.setUdcValue("dsTotalCount","udcListCount",dsTcmEqpmCdList.getTotalRow());
+                        grdTcmEqpmCdList.setColumnReadOnly("eqpmCd" , true); 
+            },
+            errCallback: function(result, e) {
+                            console.log(result);
+            }
+        });
+        
+	};
+
+    //엑셀다운
+	scwin.btnExcelDwn_onclick = function() {
+		let result = [];
+		result.push(1); //checkbox 제외
+        result.push(8); //회사팝업 돋보기 제외
+		
+		let totalCol = grdTcmEqpmCdList.getTotalCol();
+		
+		for(let i = 0; i < totalCol; i++) {
+			if (!grdTcmEqpmCdList.getColumnVisible(i)) {
+				result.push(i);
+			}
+		}
+        grdTcmEqpmCdList.advancedExcelDownload({
+            fileName: "장비코드목록.xlsx",
+            useDataFormat : true,
+            useSubTotal : true,             // Sub-Total 표시 
+            headerFontColor : "#FFFFFF",    // Header Font Color
+            headerColor : "#D9D9D9",        // Header Back Color
+            subTotalColor : "#FCE4D6",      // SubTotal Back Color
+            footerColor : "#BDD7EE",         // Footer Color
+            removeColumns: result.join(",")
+        });
+	};
+	
+	//행추가
+	scwin.btnAddRow_onclick = function() {
+		let rowIndex = dsTcmEqpmCdList.insertRow();
+		
+		grdTcmEqpmCdList.setCellReadOnly(rowIndex, "eqpmCd", false);
+		dsTcmEqpmCdList.setCellData(rowIndex, "siteCd", dsSearchMap.get( "siteCd" ));
+		dsTcmEqpmCdList.setCellData(rowIndex, "orcoHireGbVal", 2); //2:임차장비로 최초set
+		dsTcmEqpmCdList.setCellData(rowIndex, "aplyUct", 0 );	   //0으로 set
+		dsTcmEqpmCdList.setCellData(rowIndex, "uctAplyMtdVal", 1); //1:시간당으로 최초set
+	};
+	
+	//행삭제
+	scwin.btnDelRow_onclick = function() {
+		let checkedIndex = grdTcmEqpmCdList.getCheckedIndex( "chk" );
+		
+        if (checkedIndex.length == 0) {
+            com.showMessage("CFA0018", "삭제할 데이터"); //$1을(를)선택하십시오.
+            return;
+        }
+        
+        //TCM_장비운행일지 FK 체크
+        if (dsTcmEqpmCdList.getCellData(checkedIndex , "cnt") > 0) {
+            com.showMessage("CMW0112", "장비 운행일보에 해당 장비코드가"); //$1 존재하기 때문에 삭제할 수 없습니다.
+            return;
+        }
+        
+		dsTcmEqpmCdList.removeRows( checkedIndex );
+	};
+	
+	//저장
+	scwin.btnSave_onclick = function() {
+		if (dsTcmEqpmCdList.getModifiedJSON(true).length  == 0) {
+		 	com.showMessage("CMW0024");	 //저장(변경)할 내용이 없습니다.
+			return false;
+		}
+		
+		for (let i = 0; i < dsTcmEqpmCdList.getTotalRow(); i++) {
+			if (dsTcmEqpmCdList.getCellData(i , "eqpmCd") == "") {
+				com.showMessage("CMW0025", "장비번호");	    //$1은(는) 필수입력사항입니다.
+				return false;
+			}else if (dsTcmEqpmCdList.getCellData(i, "eqpmNm") == "") {
+				com.showMessage("CMW0025", "장비명");       //$1은(는) 필수입력사항입니다.
+				return false;
+			}else if (dsTcmEqpmCdList.getCellData(i, "orcoHireGbVal") == "") {
+				com.showMessage("CMW0025", "구분");	        //$1은(는) 필수입력사항입니다.
+				return false;
+			}else if (dsTcmEqpmCdList.getCellData(i, "uctAplyMtdVal") == "") {
+				com.showMessage("CMW0025", "단가적용방법");	//$1은(는) 필수입력사항입니다.
+				return false;
+			}
+			
+			let eqpmCd1 = dsTcmEqpmCdList.getCellData(i, "eqpmCd");	 //장비번호
+			
+			for (let j = 0; j < i; j++) {
+				let eqpmCd2 = dsTcmEqpmCdList.getCellData(j, "eqpmCd"); //장비번호
+				
+				if (eqpmCd1 == eqpmCd2) {
+					com.showMessage("CMW0001", "장비번호");	 //중복 된 $1가(이) 존재합니다.
+					return false;
+				}
+			}
+		}
+		
+		if (confirm("저장 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm7000/CM70000000U/saveTcmEqpmCd", {
+	            mode: "synchronous",
+	            method: "POST",
+	            requestData: { dsTcmEqpmCdList: dsTcmEqpmCdList.getModifiedJSON() },
+	            callback: function(result, e) {
+                            com.showMessage("CFA0012");// 저장되었습니다.
+                            scwin.btnFind_onclick(); 
+                },
+	            errCallback: function(result, e) { console.log(result);}
+	        });
+	    }
+	};
+	
+    //임차업체등록 버튼 클릭 -> 임차업체 등록 화면으로 이동
+	scwin.addEqpmVendr_onclick = function() {
+        com._openTab("임차업체 등록", "CM70000010U", "/ux/cm/cm7000/CM70000010U.xml");
+	};
+	]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+		    <xf:group class="navigator_wrap" id="" style="">
+		        <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+		    </xf:group>
+		    <xf:group class="tbl_search" id="" style="">
+		        <xf:group class="tb_list" id="" style="" tagname="table">
+		            <w2:attributes>
+		                <w2:summary>조회조건 테이블 입니다.</w2:summary>
+		            </w2:attributes>
+		            <xf:group tagname="colgroup">
+		                <xf:group style="width:96px;" tagname="col"></xf:group>
+		                <xf:group style="width:auto;" tagname="col"></xf:group>
+		                <xf:group tagname="col" style="width:67.00px;"></xf:group>
+		                <xf:group tagname="col" style="width:auto;"></xf:group>
+		                <xf:group style="width:67.00px;" tagname="col"></xf:group>
+		                <xf:group style="width:auto;" tagname="col"></xf:group>
+		            </xf:group>
+		            <xf:group style="" tagname="tr">
+		                <xf:group class="w2tb_th req" style="" tagname="th"><w2:attributes>
+		                        <w2:scope>row</w2:scope>
+		                    </w2:attributes><w2:span class="" id="" label="현장명" style=""></w2:span></xf:group>
+		                <xf:group class="w2tb_td" style="" tagname="td">
+		                    <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+		                </xf:group>
+		            </xf:group>
+		        </xf:group>
+		        <xf:group class="btn_tbl_search" style="" tagname="">
+		            <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+		                <xf:label><![CDATA[조회]]></xf:label>
+		            </w2:anchor>
+		        </xf:group>
+		    </xf:group>
+		    <xf:group class="defaultbox" id="" style="">
+		        <w2:textbox class="df_tt" id="" label="장비코드 목록" style="" tagname="h3"></w2:textbox>
+                <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+		        <xf:group class="right_wrap" id="" style="">
+		            <xf:group id="" style="">
+		            	<w2:anchor class="btn_gcm" clickEventElement="" id="addEqpmVendr" outerDiv="false" style="" ev:onclick="scwin.addEqpmVendr_onclick">
+							<xf:label><![CDATA[임차업체등록]]></xf:label>
+						</w2:anchor>
+		            	<w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_add" clickEventElement="" id="btnAddRow"
+							outerDiv="false" style="" toolTip="행추가" ev:onclick="scwin.btnAddRow_onclick">
+							<xf:label><![CDATA[행추가]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_del" clickEventElement="" id="btnDelRow"
+							outerDiv="false" style="" toolTip="행삭제" ev:onclick="scwin.btnDelRow_onclick">
+							<xf:label><![CDATA[행삭제]]></xf:label>
+						</w2:anchor>
+		                <w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+		                    outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+		                    <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+		                </w2:anchor>
+		            </xf:group>
+		        </xf:group>
+		    </xf:group>
+		    <w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsTcmEqpmCdList" fixedColumnWithHidden="true"
+		        focusMode="row" id="grdTcmEqpmCdList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+		        rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" checkReadOnlyOnPaste="true"
+		        enterKeyMove="down" keyMoveEditMode="true" preventAddRowOnPaste="true" ev:oncellclick="scwin.grdTcmEqpmCdList_oncellclick">
+		        <w2:header id="header1" style="">
+		            <w2:row id="row2" style="">
+		                <w2:column blockSelect="false" id="column23" inputType="text" rowSpan="2" value="No." width="50"
+		                    style="height:34px;">
+		                </w2:column>
+		                <w2:column blockSelect="false" id="column19" inputType="checkbox" rowSpan="2" width="50" style="height:34px;"></w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column106" value="장비번호" blockSelect="false"
+		                    displayMode="label" rowSpan="2" class="req" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="200" inputType="text" id="column107" value="장비명" blockSelect="false"
+		                    displayMode="label" rowSpan="2" class="req" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" id="column66" value="규격" blockSelect="false"
+		                    displayMode="label" rowSpan="2" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column108" value="구분" blockSelect="false"
+		                    displayMode="label" rowSpan="2" class="req" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" style="height:34px;" id="column109" value="임차회사"
+		                    blockSelect="false" displayMode="label" colSpan="3" rowSpan="">
+		                </w2:column>
+		                <w2:column blockSelect="false" displayMode="label" id="column41" inputType="text" removeBorderStyle="false"
+		                    rowSpan="2" value="단가" width="120" class="req" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="120" inputType="text" id="column69" value="단가적용방법" blockSelect="false"
+		                    displayMode="label" rowSpan="2" class="req" style="height:34px;">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" id="column72" value="정렬순서" blockSelect="false"
+		                    displayMode="label" rowSpan="2" style="height:34px;">
+		                </w2:column>
+		            </w2:row>
+		            <w2:row id="row6" style="">
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column110" value="업체코드"
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column hidden="false" removeBorderStyle="false" width="150" inputType="text" id="column85" value="회사명"
+		                    blockSelect="false" displayMode="label" class="" colSpan="2" rowSpan="" style="">
+		                </w2:column>
+		            </w2:row>
+		        </w2:header>
+		        <w2:gBody id="gBody4" style="">
+		            <w2:row id="row5" style="">
+		                <w2:column blockSelect="false" expression="rowindex()+1" id="column24" inputType="expression" width="40">
+		                </w2:column>
+		                <w2:column blockSelect="false" id="chk" inputType="checkbox" width="200" readOnly="false"></w2:column>
+		                <w2:column blockSelect="false" id="eqpmCd" inputType="text" removeBorderStyle="false" style="" textAlign="center"
+		                    value="" width="313" dataType="text" readOnly="false">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="200" inputType="text" id="eqpmNm" blockSelect="false" textAlign="left"
+		                    editModeEvent="onclick" readOnly="false">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" id="stdrNm" blockSelect="false" textAlign="left"
+		                    editModeEvent="onclick" readOnly="false">
+		                </w2:column>
+		                <w2:column blockSelect="false" id="orcoHireGbVal" inputType="select" style="" textAlign="left" width="170"
+		                    class="" allOption="" chooseOption="" ref="data:dsTcmEqpmCdList.orcoHireGbVal" viewType="icon" readOnly="false">
+		                    <w2:choices></w2:choices>
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="150" inputType="text" id="tradeCd" blockSelect="false" textAlign="left"
+		                    editModeEvent="" readOnly="true">
+		                </w2:column>
+		                <w2:column blockSelect="false" id="hireTradeNm" inputType="text" style="" textAlign="left" value="" width="120"
+		                    displayFormat="" dataType="text" readOnly="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="30" inputType="image" style="" id="popEqpmHireVendr" value=""
+		                    displayMode="label" blockSelect="false" imageSrc="/resources/images/content/ico_grid_find.png" viewType="icon"
+		                    class="bl0" textAlign="right">
+		                </w2:column>
+		                <w2:column blockSelect="false" displayFormat="#,###,###,###,###" id="aplyUct" inputType="text" removeBorderStyle="false"
+		                    textAlign="right" width="120" editModeEvent="onclick" readOnly="false" allowChar="0-9">
+		                </w2:column>
+		                <w2:column blockSelect="false" id="uctAplyMtdVal" inputType="select" style="" textAlign="left" width="170" class=""
+		                    allOption="" chooseOption="" ref="data:dsTcmEqpmCdList.uctAplyMtdVal" viewType="icon" readOnly="false">
+		                    <w2:choices></w2:choices>
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="80" inputType="text" id="sortOdr" blockSelect="false" textAlign="center"
+		                    readOnly="false">
+		                </w2:column>
+		            </w2:row>
+		        </w2:gBody>
+		    </w2:gridView>
+		</xf:group>
+	</body>
+</html>

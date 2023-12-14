@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataMap baseNode="map" id="dsSearchParam">
+                <w2:keyInfo>
+                    <w2:key id="keyUserId" name="아이디" dataType="text"></w2:key>
+                    <w2:key id="keyPwEnc" name="비밀번호" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+
+    <w2:require src="/WEB-INF/ux/common/udc/udcUserPopup.xml"></w2:require>
+
+    <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00050000U.xml 
+     * Program Name : 로그인 관리 
+     * Author : 강상국 (tpksg)
+     * Date : 2019.02.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.02.15   강상국   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    scwin.svcId = "";
+
+    /************************************************************************************
+     *  [2] 초기화 
+     ************************************************************************************/
+    scwin.onpageload = function () {
+		scwin.fnTelepiaFirstLogOut();
+        sessionStorage.clear();
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * Event: scwin.fnTelepiaFirstLogOut
+     * 기 능: 텔레피아 로그아웃 시키는 함수
+     **************************************************************************/
+    scwin.fnTelepiaFirstLogOut = function() {
+        // prdMail 메일시스템 운영 전환 by shryu1 2020-01-31
+		// var strLogOutOWA = "http://owa.sdcit.co.kr/owa/auth/logoff.aspx?Cmd=logoff&src=exch";
+		
+		var strLogOutOWA = "https://owa.sdcit.co.kr/sso/Logout.aspx";
+		telepiaLogOut.setSrc( strLogOutOWA );
+		scwin.fnTelepiaSecondLogOut();
+	};
+	
+    /**************************************************************************
+     * Event: scwin.fnTelepiaSecondLogOut
+     * 기 능: 텔레피아 로그아웃 시키는 함수
+     **************************************************************************/		
+	scwin.fnTelepiaSecondLogOut = function() {
+		//var strLogOutOWA = TELEPIA_MAIN_URL + "/Telepia/LogoutPage.bzr";
+		//setTimeout( function() { telepiaLogOut.setSrc( strLogOutOWA ); }, 3000)
+	};
+	
+    /**************************************************************************
+     * Event: scwin.fnLogIn
+     * 기 능: 로그인
+     **************************************************************************/
+    scwin.fnLogIn = function () {
+//    console.log("dsSearchParam.getJSON=={}",dsSearchParam.getJSON())
+        scwin.svcId = "logInTcfUserInfo";
+        ajaxLib.ajax("/cf/CF00050000U/selectTcfUserInfoByAdminLogin", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSearchParam.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     * Event: scwin.fnValid
+     * 기 능: Valid 검사
+     **************************************************************************/
+    scwin.fnValid = function () {
+        if (strLib.isEmpty(keyUserId.getValue(), false)) {
+            alert('아이디를 입력 하세요.');
+            keyUserId.focus();
+            return false;
+        }
+//        if (strLib.isEmpty(keyPwEnc.getValue(), false)) {
+//            alert('비밀번호를 입력 하세요.');
+//            msgTypeCd.focus();
+//            return false;
+//        }
+        return true;
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+        switch (scwin.svcId) {
+            case "logInTcfUserInfo":
+                if (result.data.accessUser.rstCode == 'O') {
+                    // 세션스토로지 입력
+                    com.setSessionStorage(result);
+    
+                    var Backlen = history.length;
+                    history.go(-Backlen);
+                    window.location.replace("/");
+                }
+                break;
+        }
+    };
+
+    // 에러 후처리
+	scwin.fnErrCallBack = function (e) {
+        switch (scwin.svcId) {
+            case "logInTcfUserInfo":
+                console.log('logIn Error');
+                break;
+        }
+    }
+        
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+
+    /**************************************************************************
+     * Event: scwin.ibxUserId_onkeyup
+     * 기 능: 아이디 입력박스에 키를 눌렀을때 이벤트
+     **************************************************************************/
+    scwin.keyUserId_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            scwin.btnFind_onclick();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxPwEnc_onkeyup
+     * 기 능: 비밀번호 입력박스에 키를 눌렀을때 이벤트
+     **************************************************************************/
+    scwin.keyPwEnc_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            scwin.btnFind_onclick();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 로그인 버튼
+     **************************************************************************/
+    scwin.btnFind_onclick = function () {
+        if (!scwin.fnValid()) {
+            return;
+        }
+        scwin.fnLogIn();
+    };
+
+	// 사용자검색
+	scwin.btnSrch_onclick = function() {
+        alert("이곳에입력하세요.");
+	};
+	]]></script>
+</head>
+
+<body ev:onpageload="scwin.onpageload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group adaptive="" adaptiveThreshold="" tagname="table" style="width:Infinity%;" id="" class="w2tb">
+            <w2:attributes>
+                <w2:summary>업무구분, 메세지유형, 메세지코드, 메세지내용, 비고에 대한 목록 테이블 입니다.</w2:summary>
+            </w2:attributes>
+            <xf:group tagname="colgroup">
+                <xf:group tagname="col" style="width:100.00px;"></xf:group>
+                <xf:group tagname="col" style=""></xf:group>
+            </xf:group>
+            <xf:group tagname="tr" style="">
+                <xf:group tagname="th" style="" class="w2tb_th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span style="" id="" label="아이디"></w2:span>
+                </xf:group>
+                <xf:group tagname="td" style="" class="w2tb_td"><xf:input style="width:250px;margin-left:4px;" id="keyUserId" ev:onkeyup="scwin.keyUserId_onkeyup" ref="data:dsSearchParam.keyUserId" enterBlur="true" ev:onblur="" initValue="erptf"></xf:input></xf:group>
+            </xf:group>
+            <xf:group tagname="tr" style="" class="">
+                <xf:group tagname="th" style="" class="w2tb_th">
+                    <w2:attributes>
+                        <w2:scope>row</w2:scope>
+                    </w2:attributes>
+                    <w2:span style="" id="" label="비밀번호"></w2:span>
+                </xf:group>
+                <xf:group tagname="td" style="" class="w2tb_td"><w2:attributes>
+                        <w2:colspan>1</w2:colspan>
+                        <w2:rowspan>1</w2:rowspan>
+                    </w2:attributes><xf:input style="width:250px;margin-left:4px;" id="keyPwEnc" ev:onkeyup="scwin.keyPwEnc_onkeyup" displayFormat="" ref="data:dsSearchParam.keyPwEnc" type="password" enterBlur="true" ev:onkeydown="" ev:onblur="" initValue="Rmaghrjstjf1!#"></xf:input></xf:group>
+            </xf:group>
+        </xf:group>
+        <xf:group style="" id="" class="bottombox">
+            
+           <!--  <w2:anchor class="btn_gcm_ic src" id="btnSrch" outerDiv="false" style="" ev:onclick="scwin.btnSrch_onclick"></w2:anchor> -->            
+            <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnFind" class="btn_gcm" ev:onclick="scwin.btnFind_onclick">
+                <xf:label>
+                    <![CDATA[로그인]]>
+                </xf:label>
+            </w2:anchor>
+        </xf:group>
+    </xf:group>
+    <w2:iframe src="" style="width:0;height:0;" id="telepiaLogOut"></w2:iframe>
+</body>
+
+</html>

@@ -1,0 +1,549 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="workYm" name="기준년월" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsPlSituList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="gubun" name="구분" dataType="text"></w2:column>
+						<w2:column id="itexpGbNm" name="비목" dataType="text"></w2:column>
+						<w2:column id="bfYyAsumAmt" name="전년누계" dataType="text"></w2:column>
+						<w2:column id="bfMmAsumAmt" name="전월누계" dataType="text"></w2:column>
+						<w2:column id="thmmAmt" name="당월" dataType="text"></w2:column>
+						<w2:column id="mmAsumAmt" name="월누계" dataType="text"></w2:column>
+						<w2:column id="totAmt" name="총계" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSiteStaf">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="stafEmpno" name="직원_사번" dataType="text"></w2:key>
+						<w2:key id="userNm" name="성명" dataType="text"></w2:key>
+						<w2:key id="siteDtyGbCd" name="현장직무구분코드[CM100001]" dataType="text"></w2:key>
+						<w2:key id="siteStafGbCd" name="현장직원구분코드[CM100004]" dataType="text"></w2:key>
+						<w2:key id="apntDt" name="발령_일자" dataType="text"></w2:key>
+						<w2:key id="dtyEndDt" name="직무_종료_일자" dataType="text"></w2:key>
+						<w2:key id="wthdPrDt" name="철수_예정_일자" dataType="text"></w2:key>
+						<w2:key id="wthdDt" name="철수_일자" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsTcmAprv">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="aprvMappId" name="결재매핑ID" dataType="text"></w2:key>
+						<w2:key id="aprvPgmId" name="결재프로그램ID" dataType="text"></w2:key>
+						<w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+						<w2:key id="aproId" name="승인ID" dataType="text"></w2:key>
+						<w2:key id="aprvCharN1Val" name="결재_문자_1_값" dataType="text"></w2:key>
+						<w2:key id="aprvCharN2Val" name="결재_문자_2_값" dataType="text"></w2:key>
+						<w2:key id="aprvCharN3Val" name="결재_문자_3_값" dataType="text"></w2:key>
+						<w2:key id="intAprvStusCd" name="결재진행상태" dataType="text"></w2:key>
+						<w2:key id="apprEmpno" name="승인자사번" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsTcmAprvCheckMap">
+					<w2:keyInfo>
+						<w2:key id="sCloseYn" name="외주_마감여부" dataType="text"></w2:key>
+						<w2:key id="mCloseYn" name="자재_마감여부" dataType="text"></w2:key>
+						<w2:key id="lCloseYn" name="노무_마감여부" dataType="text"></w2:key>
+						<w2:key id="oCloseYn" name="경비_마감여부" dataType="text"></w2:key>
+						<w2:key id="jCloseYn" name="공동도급_마감여부" dataType="text"></w2:key>
+						<w2:key id="aCloseYn" name="실적집계_마감여부" dataType="text"></w2:key>
+						<w2:key id="pCloseYn" name="프로젝트손익_마감여부" dataType="text"></w2:key>
+						<w2:key id="jvSiteYn" name="공동도급 현장인지 유/무" dataType="text"></w2:key>
+						<w2:key id="diffYn" name="공무재무원가차이여부" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM30050000U.xml
+ * Program Name : 손익현황
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+     /************************************************************************************
+        DataCollection description
+
+        dsSearchMap : 검색 parameter
+        dsPlSituList : 손익현황 LIST
+        dsSiteStaf : 현장소장
+        dsTcmAprv : 내부결재
+        dsTcmAprvCheckMap : 결재전 validation 체크값
+     ************************************************************************************/
+
+    /************************************************************************************
+    *  [1] 전역변수
+    ************************************************************************************/
+    //var svcId;      //callback 처리용 서비스ID
+
+    /************************************************************************************
+    *  [2] onpageload(초기화포함)
+    ************************************************************************************/
+	scwin.onpageload = function() {
+	    //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+
+		dsSearchMap.set("workYm", dateLib.addMonths(dateLib.getCurrentDate(), -1).substring(0,6));   //작업년월
+
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        grdPlSituList.initGrid();	//원가이체청구 목록 GRID 초기화
+
+        btnApprRequest.setDisabled( true );//승인요청
+        btnApproval.setDisabled( true );//승인
+        btnStatus.setDisabled( true );//승인현황
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+	//조회
+    scwin.fnSearch = function() {
+        ajaxLib.ajax("/cm/cm3005/CM30050000U/selectPlSituList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+
+            	dsPlSituList.removeAll();
+            	dsSiteStaf.setEmptyValue();
+            	dsTcmAprv.setEmptyValue();
+            	dsTcmAprvCheckMap.setEmptyValue();
+
+				dsPlSituList.setJSON( result.data.dsPlSituList );//손익현황 조회
+				dsSiteStaf.setJSON( result.data.dsSiteStaf );//현장 소장
+				dsTcmAprv.setJSON( result.data.dsTcmAprv );//결재조회
+               	dsTcmAprvCheckMap.setJSON( result.data.dsTcmAprvCheckMap );//승인요청전 validation 체크
+
+               	grdPlSituList.setHeaderValue( "column19" , calYearMonth.getValue().substring(0,4) + "년도" );//헤더 TITLE변경
+               	if(dsPlSituList.getRowCount() > 0){
+               		grdPlSituList.mergeCell({"rowIndex" : 0, "colIndex" : 0, "colSpan" : 2, "rowSpan" : 1});//매출
+               		grdPlSituList.mergeCell({"rowIndex" : 1, "colIndex" : 0, "colSpan" : 2, "rowSpan" : 1});//공사원가
+               		grdPlSituList.mergeCell({"rowIndex" : 2, "colIndex" : 0, "colSpan" : 2, "rowSpan" : 1});//원가율
+               		grdPlSituList.mergeCell({"rowIndex" : 3, "colIndex" : 0, "colSpan" : 2, "rowSpan" : 1});//매출이익
+					grdPlSituList.mergeCell({"rowIndex" : 4, "colIndex" : 0, "colSpan" : 1, "rowSpan" : 4});//공사원가
+               	}
+
+               	scwin.fnBtnDisabled();//버튼제어
+           	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+    // "승인요청" 팝업 호출
+    scwin.fnApprRequestPop = function(){
+		var yyyy = dsSearchMap.get( "workYm" ).substring(0,4);
+		var mm = dsSearchMap.get( "workYm" ).substring(4,6);
+		var popOps = {
+				popup_name : "승인요청"								// 팝업 타이틀
+		       ,url        : "/ux/cf/CF00350502P.xml"
+		       ,data       :  {   gubunCd : gcm.APPR_REQUEST		// gcm.APPR_REQUEST : 승인요청
+		                        , intAprvNo : ""						// 승인아이디 (승인/반려 시 또는 조회 시에만 필요)
+		                        , cancelYn : "" 					// 승인을 취소할 수 있는 경우 “Y” – 승인내역 조회 시에 사용
+		                        , intAprvTtl : "손익현황 승인("+yyyy+"/"+mm+")"					// 내부결재제목
+								, intAprvReqOpinCn : ""				// 내부_결재_요청_의견_내용
+						        , apprEmpno : dsSiteStaf.get( "stafEmpno" )					// 승인자사번
+						        , apprEmpNm : dsSiteStaf.get( "userNm" )					// 승인자명
+						        , intAprvAproOpinCn : ""			// 내부_결재_승인_의견_내용  - 승인/반려 시에 사용
+						        , jobGbCd : "CM"					// 업무구분코드
+						        , menuId : "JJCM01"					// 메뉴ID
+						        , scrUrl : ""						// 화면_URL
+			      }
+		       ,width      : "600"
+		       ,height     : "400"
+		       ,callbackFn : "scwin.fnPopupCallback"
+			};
+		svcIdPop = "intAprvPopup";
+		com.popup_open(popOps);
+    }
+
+    //내부 결재 저장
+    scwin.fnTcmAprv = function() {
+        ajaxLib.ajax("/cm/cm4015/CM40150000U/saveTcmAprv", {
+            method : "POST",
+            requestData : dsTcmAprv.getJSON(),
+            callback : function(result, e){
+				scwin.fnSearch();
+           	},
+            errCallback : "fnErrCallBack"
+        });
+    };
+
+    //승인 후 후처리
+    scwin.fnAproProc = function() {
+        ajaxLib.ajax("/cm/cm3005/CM30050000U/saveTcfCloseInfo", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+				scwin.fnSearch();
+           	},
+            errCallback : "fnErrCallBack"
+        });
+    };
+
+	//버튼제어
+	scwin.fnBtnDisabled = function(){
+    	var intAprvStusCd = dsTcmAprv.get( "intAprvStusCd" );//결재진행상태
+    	var pCloseYn = dsTcmAprvCheckMap.get( "pCloseYn" );//프로젝트손익_마감여부
+
+    	if(intAprvStusCd == "CF00702" || pCloseYn == "Y"){//확정 및 프로젝트 손익이 마감된 경우
+	        btnApprRequest.setDisabled( true );//승인요청
+			btnApproval.setDisabled( true );//승인
+	        btnStatus.setDisabled( false );//승인현황
+    	}else if(intAprvStusCd == "CF00701"){
+	        btnApprRequest.setDisabled( true );//승인요청
+	        //if(sessionStorage.getItem("userEmpno") == dsSiteStaf.get( "stafEmpno" )){//세션사용자와 승인자가 동일한지 여부
+			if(sessionStorage.getItem("userEmpno") == dsTcmAprv.get( "apprEmpno" )){//세션사용자와 승인자가 동일한지 여부
+	        	btnApproval.setDisabled( false );//승인
+	        }else{
+				btnApproval.setDisabled( true );//승인
+	        }
+	        btnStatus.setDisabled( false );//승인현황
+    	}else{
+	        btnApprRequest.setDisabled( false );//승인요청
+	        btnApproval.setDisabled( true );//승인
+	        btnStatus.setDisabled( true );//승인현황
+    	}
+	};
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    //팝업 콜백함수
+    scwin.fnPopupCallback = function(arg) {
+    	switch (svcIdPop) {
+			case "intAprvPopup" :        //승인요청
+                dsTcmAprv.set("siteCd"        , dsSearchMap.get("siteCd"));    //현장코드
+                dsTcmAprv.set("aprvMappId"    , dsSearchMap.get("workYm"));    //결재매핑ID
+                dsTcmAprv.set("aprvPgmId"     , 'CMGA0010AG');                 //결재프로그램ID
+                dsTcmAprv.set("aprvNo"        , '');                           //결재번호
+                dsTcmAprv.set("aproId"        , arg.intAprvNo);                //승인ID
+                dsTcmAprv.set("aprvCharN1Val" , '');                           //결재_문자_1_값
+                dsTcmAprv.set("aprvCharN2Val" , '');                           //결재_문자_2_값
+                dsTcmAprv.set("aprvCharN3Val" , '');                           //결재_문자_3_값
+                scwin.fnTcmAprv();  //내부 결재 저장
+                break;
+            case "intAprvProcPopup" :   //승인
+				if(arg.intAprvStusCd == "CF00702"){//승인
+					scwin.fnAproProc();//승인 후 후처리
+				}
+                break;
+            case "intAprvSituPopup" :   //승인현황
+                break;
+			default :
+				break;
+    	}
+    }
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//조회 클릭 이벤트
+	scwin.btnFind_onclick = function() {
+		scwin.fnSearch();
+	};
+
+	/* 현장코드 변경 이벤트 */
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+		scwin.btnFind_onclick();
+	};
+
+	//엑셀다운로드
+	scwin.btnExcelDwn_onclick = function() {
+		var excelOpt = {
+			 fileName: "CM30050000U.xlsx"    //또는 xlsx 확장자 사용
+		    ,useSubTotal: true    			//colMerge된 컬럼을 Merge해서 출력 할 지 여부
+		    ,colMergeTextAlign: "center"    //colMerge된 컬럼의 textAlign설정 (bottom, center, top 설정)
+            ,headerFontColor : "#FFFFFF"    // Header Font Color
+            ,headerColor : "#D9D9D9"        // Header Back Color
+            ,subTotalColor : "#FCE4D6"      // SubTotal Back Color
+            ,footerColor : "#BDD7EE"         // Footer Color
+		};  //excel download 옵션
+		grdPlSituList.advancedExcelDownload( excelOpt );
+	};
+
+	//승인요청
+	scwin.btnApprRequest_onclick = function() {
+		//승인요청 전 validation 체크
+        ajaxLib.ajax("/cm/cm3005/CM30050000U/selectTcmAprvCheck", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+            	dsTcmAprvCheckMap.setEmptyValue();
+            	dsTcmAprvCheckMap.setJSON( result.data.dsTcmAprvCheckMap );
+
+            	if(dsTcmAprvCheckMap.get( "sCloseYn" ) != "Y"){//외주_마감여부
+            		com.showMessage("CMW0070", "외주");//$1 업무마감이 되지 않았습니다.
+            		return;
+            	}else if(dsTcmAprvCheckMap.get( "mCloseYn" ) != "Y"){//자재_마감여부
+            		com.showMessage("CMW0070", "자재");//$1 업무마감이 되지 않았습니다.
+            		return;
+            	}else if(dsTcmAprvCheckMap.get( "lCloseYn" ) != "Y"){//노무_마감여부
+            		com.showMessage("CMW0070", "노무");//$1 업무마감이 되지 않았습니다.
+            		return;
+            	}else if(dsTcmAprvCheckMap.get( "aCloseYn" ) != "Y"){//실적집계_마감여부
+            		com.showMessage("CMW0070", "실적집계");//$1 업무마감이 되지 않았습니다.
+            		return;
+            	}else if(dsTcmAprvCheckMap.get( "diffYn" ) != "Y"){//공무재무원가차이여부
+            		com.showMessage("CMW0071");//공무재무원가 차이가 존재합니다.공무재무시산표차이분석 화면에서 확인하십시요.
+            		return;
+            	}
+
+            	//validation 체크 후 성공 시 팝업 호출
+            	scwin.fnApprRequestPop();
+           	},
+            errCallback : "fnErrCallBack"
+        });
+	};
+
+	//승인
+	scwin.btnApproval_onclick = function() {
+		var sAproId = dsTcmAprv.get( "aproId" );
+		var yyyy = dsSearchMap.get( "workYm" ).substring(0,4);
+		var mm = dsSearchMap.get( "workYm" ).substring(4,6);
+		var popOps = {
+				popup_name : "승인"									// 팝업 타이틀
+		       ,url        : "/ux/cf/CF00350502P.xml"
+		       ,data       :  {   gubunCd:gcm.APPR_PROC				// [gcm.APPR_REQUEST : 승인요청], [gcm.APPR_PROC : 승인/반려], [gcm.APPR_FIND : 승인현황조회(승인취소)]
+		                        , intAprvNo : sAproId				// 승인아이디 (승인/반려 시 또는 조회 시에만 필요)
+		                        , cancelYn : "Y" 					// 승인을 취소할 수 있는 경우 “Y” – 승인내역 조회 시에 사용
+		                        , intAprvTtl : "손익현황 승인("+yyyy+"/"+mm+")"					// 내부결재제목
+								, intAprvReqOpinCn : ""				// 내부_결재_요청_의견_내용
+						        , apprEmpno : dsSiteStaf.get( "stafEmpno" )					// 승인자사번
+						        , apprEmpNm : dsSiteStaf.get( "userNm" )					// 승인자명
+						        , intAprvAproOpinCn : ""			// 내부_결재_승인_의견_내용  - 승인/반려 시에 사용
+						        , jobGbCd : "CM"					// 업무구분코드
+						        , menuId : "JJCM01"					// 메뉴ID
+						        , scrUrl : ""						// 화면_URL
+			      }
+		       ,width      : "600"
+		       ,height     : "500"
+		       ,callbackFn : "scwin.fnPopupCallback"
+			};
+		svcIdPop = "intAprvProcPopup";
+		com.popup_open(popOps);
+	};
+
+	//승인현황
+	scwin.btnStatus_onclick = function() {
+		var sAproId = dsTcmAprv.get( "aproId" );
+		var yyyy = dsSearchMap.get( "workYm" ).substring(0,4);
+		var mm = dsSearchMap.get( "workYm" ).substring(4,6);
+		var popOps = {
+				popup_name : "승인현황"								// 팝업 타이틀
+		       ,url        : "/ux/cf/CF00350502P.xml"
+		       ,data       :  {   gubunCd:gcm.APPR_FIND				// [gcm.APPR_REQUEST : 승인요청], [gcm.APPR_PROC : 승인/반려], [gcm.APPR_FIND : 승인현황조회(승인취소)]
+		                        , intAprvNo : sAproId				// 승인아이디 (승인/반려 시 또는 조회 시에만 필요)
+		                        , cancelYn : "" 					// 승인을 취소할 수 있는 경우 “Y” – 승인내역 조회 시에 사용
+		                        , intAprvTtl : "손익현황 승인("+yyyy+"/"+mm+")"	// 내부결재제목
+								, intAprvReqOpinCn : ""				// 내부_결재_요청_의견_내용
+						        , apprEmpno : dsSiteStaf.get( "stafEmpno" )					// 승인자사번
+						        , apprEmpNm : dsSiteStaf.get( "userNm" )					// 승인자명
+						        , intAprvAproOpinCn : ""			// 내부_결재_승인_의견_내용  - 승인/반려 시에 사용
+						        , jobGbCd : "CM"					// 업무구분코드
+						        , menuId : "JJCM01"					// 메뉴ID
+						        , scrUrl : ""						// 화면_URL
+			      }
+		       ,width      : "600"
+		       ,height     : "500"
+		       ,callbackFn : "scwin.fnPopupCallback"
+			};
+		svcIdPop = "intAprvSituPopup";
+		com.popup_open(popOps);
+	};
+
+	//작업년월 변경시
+	scwin.calYearMonth_onchange = function() {
+		scwin.btnFind_onclick();
+	};
+	]]></script>
+
+	<w2:require src="/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				<xf:group class="btn_wrap" id="" style="" tagname="">
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:40%;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="작업년월" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:inputCalendar calendarValueType="yearMonth" class="req"
+								focusOnDateSelect="false" footerDiv="false" id="calYearMonth"
+								mandatory="" placeholder="____-__" ref="data:dsSearchMap.workYm" renderDiv="true" renderType="component"
+								rightAlign="false" style="width:120px" ev:onchange="scwin.calYearMonth_onchange">
+								<script ev:event="onchange" type="text/javascript"><![CDATA[
+			   				        if ( !com.isYearMonth(calYearMonth.getValue()) ){
+			                            alert("년월을 확인하십시오.");
+			                            calYearMonth.setValue("");
+			                            calYearMonth.focus();
+			                        }
+			    				 ]]></script>
+							</w2:inputCalendar>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="descbox" id="" style="">
+						<w2:textbox class="" id="" label="(단위: 백만원)" tagname=""></w2:textbox>
+					</xf:group>
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnApprRequest_onclick"
+							id="btnApprRequest" outerDiv="false" style="">
+							<xf:label><![CDATA[승인요청]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnApproval_onclick"
+							id="btnApproval" outerDiv="false" style="">
+							<xf:label><![CDATA[승인]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnStatus_onclick"
+							id="btnStatus" outerDiv="false" style="">
+							<xf:label><![CDATA[승인현황]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm excel_down" clickEventElement=""
+							ev:onclick="scwin.btnExcelDwn_onclick" id="btnExcelDwn" localeRef="" outerDiv="false" style=""
+							toolTip="엑셀다운로드">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+
+				<w2:textbox class="" id="" label="당월 매출액과 원가율은 회계팀의 매출작업 이후에 확인하실수 있습니다." style="" tagname="h4"></w2:textbox>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsPlSituList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdPlSituList" readOnly="true" rowNumHeaderValue="No"
+				rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false"
+				style="height: 450px;" useShiftKey="true" visibleRowNum="">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="height:34px;"
+							id="column79" value="구분" blockSelect="false" displayMode="label" colSpan="2" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" style="height:34px;" value="전년누계"
+							width="150" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" style="height:34px;" value="년도"
+							width="150" colSpan="3" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:34px;"
+							id="column75" value="총계" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column56"
+							value="전월누계" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column55"
+							value="당월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column54"
+							value="월누계" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;"
+							id="gubun" value="" blockSelect="false" displayMode="label" colMerge="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;"
+							id="itexpGbNm" value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" id="bfYyAsumAmt" inputType="text" style="height:24px;"
+							textAlign="right" value="" width="150" displayFormat="#,###.##" dataType="bigDecimal">
+						</w2:column>
+						<w2:column blockSelect="false" class="" id="bfMmAsumAmt" inputType="text" style="height:24px;"
+							textAlign="right" value="" width="150" displayFormat="#,###.##" dataType="bigDecimal">
+						</w2:column>
+						<w2:column blockSelect="false" id="thmmAmt" inputType="text" style="height:24px;"
+							textAlign="right" value="" width="150" displayFormat="#,###.##" dataType="bigDecimal">
+						</w2:column>
+						<w2:column blockSelect="false" id="mmAsumAmt" inputType="text" style="height:24px;"
+							textAlign="right" value="" width="150" displayFormat="#,###.##" dataType="bigDecimal">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:24px;"
+							id="totAmt" value="" blockSelect="false" displayMode="label" displayFormat="#,###.##" dataType="bigDecimal" textAlign="right">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

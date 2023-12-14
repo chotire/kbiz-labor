@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="pjtId" name="프로젝트ID" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsTactbgtRptPlngInfoMap">
+					<w2:keyInfo>
+						<w2:key id="pjtId" name="프로젝트ID" dataType="text"></w2:key>
+						<w2:key id="drafpr" name="요청자" dataType="text"></w2:key>
+						<w2:key id="drafprDt" name="요청일자" dataType="text"></w2:key>
+						<w2:key id="appr" name="최종결재자" dataType="text"></w2:key>
+						<w2:key id="apprDt" name="최종결재일자" dataType="text"></w2:key>
+						<w2:key id="bgtReflYm" name="반영연월" dataType="text"></w2:key>
+						<w2:key id="bgtChrgrNm" name="재무확인자" dataType="text"></w2:key>
+						<w2:key id="bgtPlngConfDtm" name="재무확인일자" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM00150541.xml
+ * Program Name : 가실행예산 전략기획팀 확인
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+     /************************************************************************************
+        DataCollection description
+
+        dsTactbgtRptPlngInfoMap: 상세 정보
+        dsSearchMap: 검색조건 parameter
+     ************************************************************************************/
+
+    /************************************************************************************
+    *  [1] 전역변수
+    ************************************************************************************/
+    //var svcId;      //callback 처리용 서비스ID
+
+    /************************************************************************************
+    *  [2] onpageload(초기화포함)
+    ************************************************************************************/
+	scwin.onpageload = function() {
+	    //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+		//파리미터
+        dsSearchMap.set( "pjtId" , JSON.parse($p.getPopupParam()).data.paramKeyPjtId );//프로젝트ID
+
+        //조회
+        scwin.fnSearch();
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+    scwin.fnSearch = function() {
+        ajaxLib.ajax("/cm/cm0015/CM00150541P/selectTactbgtRptPlngInfo", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : //"fnCallback",
+                function(result, e){
+	                dsTactbgtRptPlngInfoMap.setJSON(result.data);
+	                scwin.fnDataSet();
+            	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+    //조회 정보 setting
+    scwin.fnDataSet = function() {
+    	spnDrafpr.setValue( dsTactbgtRptPlngInfoMap.get( "drafpr" ) );//요청자
+    	spnDrafprDt.setValue( dsTactbgtRptPlngInfoMap.get( "drafprDt" ) );//요청일자
+    	spnAppr.setValue( dsTactbgtRptPlngInfoMap.get( "appr" ) );//최종결재자
+    	spnApprDt.setValue( dsTactbgtRptPlngInfoMap.get( "apprDt" ) );//최종결재일자
+    	spnBgtChrgrNm.setValue( dsTactbgtRptPlngInfoMap.get( "bgtChrgrNm" ) );//재무확인자
+    	spnBgtPlngConfDtm.setValue( dsTactbgtRptPlngInfoMap.get( "bgtPlngConfDtm" ) );//재무확인일자
+
+    	if(dsTactbgtRptPlngInfoMap.get( "bgtReflYm" ) == ""){
+    		calYearMonth.setValue( scwin.$w.getCurrentServerDate( "yyyyMM" ) );//반영연월
+    	}else{
+    		calYearMonth.setReadOnly( true );
+    		grpBottomBox.hide();
+    	}
+    }
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    //저장
+	scwin.btnSave_onclick = function() {
+		if(calYearMonth.getValue() == ""){
+			com.showMessage("SAA0043", "반영연월", "", "", calYearMonth.id);//$1은(는) 필수입력사항입니다.
+			return;
+		}else if (confirm("저장 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm0015/CM00150541P/updateTcmTactbgtRptPlng", {
+	            method : "POST",
+	            requestData : dsTactbgtRptPlngInfoMap.getJSON(),
+	            callback : //"fnCallback",
+	                function(result, e){
+	                   	var _obj = new Object();
+					   	_obj.event = "C";
+		                com.popup_close(_obj);
+	            	},
+	            errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+
+	//취소
+	scwin.btnCancel_onclick = function() {
+		$p.closePopup($p.getPopupId());
+	};
+	
+	//반려
+	scwin.btnReject_onclick = function() {
+		if (confirm("반려 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm0015/CM00150541P/updateTcmTactbgtRptPlngReject", {
+	            method : "POST",
+	            requestData : dsTactbgtRptPlngInfoMap.getJSON(),
+	            callback : //"fnCallback",
+	                function(result, e){
+	                   	var _obj = new Object();
+					   	_obj.event = "R";
+		                com.popup_close(_obj);
+	            	},
+	            errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+	]]></script>
+
+		<w2:require src="/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+
+			<xf:group style="" id="" class="defaultbox"></xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>가실행예산 전략기획팀 확인</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:142px;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+					<xf:group style="width:142px;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="요청자" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:attributes>
+							<w2:colspan></w2:colspan>
+						</w2:attributes>
+						<w2:span id="spnDrafpr" label="" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="요청일자" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span id="spnDrafprDt" label="" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group tagname="th" class="w2tb_th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="최종결재자" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:span id="spnAppr" label="" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="최종결재일자" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:span id="spnApprDt" label="" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group tagname="th" class="w2tb_th req">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="반영연월" style="" class=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes>
+							<w2:colspan>3</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>
+						<!-- <w2:udc_yearMonthcalendar id="udcBgtReflYm" style=""></w2:udc_yearMonthcalendar> -->
+						<w2:inputCalendar footerDiv="false" id="calYearMonth" style="width:120px" renderDiv="true" focusOnDateSelect="false"
+		    				calendarValueType="yearMonth" rightAlign="false" renderType="component" class="req" mandatory=""  placeholder="____-__" ref="data:dsTactbgtRptPlngInfoMap.bgtReflYm">
+		    				<script ev:event="onchange" type="text/javascript"><![CDATA[
+		   				        if ( !com.isYearMonth(calYearMonth.getValue()) ){
+		                            alert("년월을 확인하십시오.");
+		                            calYearMonth.setValue("");
+		                            calYearMonth.focus();
+		                        }
+		    				 ]]></script>
+		    			</w2:inputCalendar>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group tagname="th" class="w2tb_th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="재무확인자" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:span id="spnBgtChrgrNm" label="" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="재무확인일자" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:span id="spnBgtPlngConfDtm" label="" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+
+
+			<xf:group class="bottombox" id="grpBottomBox" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnSave_onclick" id="btnSave"
+					outerDiv="false" style="">
+					<xf:label><![CDATA[저장]]></xf:label>
+				</w2:anchor>
+				<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnReject_onclick" id="btnReject"
+					outerDiv="false" style="">
+					<xf:label><![CDATA[반려]]></xf:label>
+				</w2:anchor>
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnCancel_onclick"
+					id="btnCancel" outerDiv="false" style="">
+					<xf:label><![CDATA[취소]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

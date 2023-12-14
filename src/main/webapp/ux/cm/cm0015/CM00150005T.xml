@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcmStndJobtypCdTreeList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="stndItemiCd" name="표준내역코드" dataType="text"></w2:column>
+						<w2:column id="stndItemiNm" name="표준내역명" dataType="text"></w2:column>
+						<w2:column id="upperStndItemiCd" name="상위표준내역코드" dataType="text"></w2:column>
+						<w2:column id="stndItemiLv" name="표준내역레벨" dataType="text"></w2:column>
+						<w2:column id="itemiYn" name="내역여부" dataType="text"></w2:column>
+						<w2:column id="stndItemiCdNavi" name="표준내역코드NAVI" dataType="text"></w2:column>
+						<w2:column id="stndItemiNmNavi" name="표준내역명NAVI" dataType="text"></w2:column>
+						<w2:column id="sortOdrNavi" name="정렬NAVI" dataType="text"></w2:column>
+						<w2:column id="itemiYnNext" name="하위레벨 내역여부" dataType="text"></w2:column>
+						<w2:column id="upperStndItemiCdNext" name="하위레벨의 상위_표준내역코드" dataType="text"></w2:column>
+						<w2:column id="upperLvStndItemiCd" name="상위레벨 표준내역코드" dataType="text"></w2:column>
+						<w2:column id="upperLvStndItemNm" name="상위레벨 표준내역명" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcmStndJobtypCdList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="chk" name="체크박스" dataType="text"></w2:column>
+						<w2:column id="no" name="No" dataType="text"></w2:column>
+						<w2:column id="stndItemiCd" name="공종코드" dataType="text"></w2:column>
+						<w2:column id="stndItemiNm" name="공종명" dataType="text"></w2:column>
+						<w2:column id="sortOdr" name="정렬순서" dataType="text"></w2:column>
+						<w2:column id="upperStndItemiCd" name="상위표준내역코드" dataType="text"></w2:column>
+						<w2:column id="itemiYn" name="내역여부" dataType="text"></w2:column>
+						<w2:column id="stndItemiLv" name="표준내역레벨" dataType="text"></w2:column>
+						<w2:column id="lowerItemiYn" name="하위내역 존재 유무" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchParamMap">
+					<w2:keyInfo>
+						<w2:key id="stndItemiCd" name="표준내역코드" dataType="text"></w2:key>
+						<w2:key id="tabGubun" name="탭구분" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM00150005T.xml
+ * Program Name : 현장관리비기준정보 - 표준공종TAB
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+	/************************************************************************************
+		DataCollection description
+
+		dsTcmStndJobtypCdTreeList: 좌측 TREE
+		dsTcmStndJobtypCdList: 우측 GRID 표준공종 상세정보
+		dsSearchParamMap: 검색조건 parameter
+	 ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+	var svcId;		//callback 처리용 서비스ID
+	var selectStndItemiCd = "";	//TREE에서 선택된 표준내역코드
+	var topLvCd = "ROOT";	//최상위레벨 표준내역코드
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+	scwin.onpageload = function() {
+
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+		//표준공종TAB - 표준공종 상세정보 GRID 초기화
+        grdTcmStndJobtypCdList.initGrid();
+
+		//선택된 표준내역코드 초기화
+		selectStndItemiCd = "";
+
+		dsSearchParamMap.set( "tabGubun" , "tabs1" );//표준공종TAB
+		dsSearchParamMap.set( "stndItemiCd" , "" );//표준공종 상세정보 검색조건 초기화
+
+		//표준공종 TAB - TREE 조회
+		scwin.fnTreeList();
+
+		//표준공종 TAB - 버튼 비활성화
+		scwin.fnStndBtnDisabled(true);
+
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+	//트리조회
+	//표준공종TAB과 표준내역TAB에서 동일하게 사용함.
+	//dsSearchParamMap.tabGubun의 구분값으로 Business logic에서 분기처리함.
+	scwin.fnTreeList = function(){
+		svcId = "selectTcmStndJobtypCdTreeList";
+        ajaxLib.ajax("/cm/cm0015/CM00150000U/selectTcmStndJobtypCdTreeList", {
+        	mode : "asynchronous"
+        	, method : "POST"
+            , requestData : dsSearchParamMap.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+	};
+
+	//표준공종TAB - 상세정보
+	scwin.fnStndJobtypCdList = function(){
+		svcId = "selectTcmStndJobtypCdList";
+        ajaxLib.ajax("/cm/cm0015/CM00150005T/selectTcmStndJobtypCdList", {
+        	mode : "asynchronous"
+        	, method : "POST"
+            , requestData : dsSearchParamMap.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+	}
+
+	//표준공종TAB - 버튼 활성/비활성화
+	scwin.fnStndBtnDisabled = function(flag){
+		btnSave.setDisabled(flag);//표준공종TAB - 저장버튼
+		btnAddRow.setDisabled(flag);//표준공종TAB - 행추가버튼
+		btnDelRow.setDisabled(flag);//표준공종TAB - 행삭제버튼
+	}
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+	/** 오류시 처리 **/
+	scwin.fnErrCallBack = function(result, e) {
+
+	};
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function(result, e) {
+    	switch(svcId) {
+    		//표준공종 TAB - TREE 조회
+    		case "selectTcmStndJobtypCdTreeList" :
+    			dsTcmStndJobtypCdTreeList.setJSON(result.data.dsTcmStndJobtypCdTreeList);
+
+    			//저장 후 TREE 조회 후 해당 내역으로 focus 처리
+    			trvCodeList.findNodeByValue( selectStndItemiCd , true );
+
+    			//TREE조회후 표준공종 상세정보를 자동으로 조회 한다.
+    			scwin.fnStndJobtypCdList();
+
+    			break;
+    		//표준공종 TAB - 표준공종 상세정보 조회
+    		case "selectTcmStndJobtypCdList" :
+    			dsTcmStndJobtypCdList.setJSON(result.data.dsTcmStndJobtypCdList);
+
+    			//하위내역이 존재하면 checkbox Disabled
+    			for(var i=0; i<grdTcmStndJobtypCdList.getTotalRow(); i++){
+    				var lowerItemiYn = dsTcmStndJobtypCdList.getCellData( i , "lowerItemiYn" );//하위내역 존재 유무
+    				if(lowerItemiYn == "Y"){
+    					grdTcmStndJobtypCdList.setDisabled( "cell" , i , "chk" , true );
+    				}
+    			}
+
+    			break;
+    		//표준공종 TAB - 저장
+    		case "saveTcmStndJobtypCd" :
+    			com.showMessage("CFA0012");//저장되었습니다.
+    			scwin.fnTreeList();
+    			break;
+			default :
+				break;
+    	}
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//표준공종TAB - 트리 클릭 이벤트
+	scwin.trvCodeList_onlabelclick = function(value,nodeElement,index) {
+		var itemiYn = dsTcmStndJobtypCdTreeList.getCellData( index-1 , "itemiYn" );//내역여부
+		var itemiYnNext = dsTcmStndJobtypCdTreeList.getCellData( index-1 , "itemiYnNext" );//하위레벨 내역여부
+
+		/*
+		 * itemiYn: 내역코드 여부
+		 * itemiYnNext: 하위레벨에 내역코드 존재여부
+		 * itemiYn[N]공종이면서, itemiYnNext[N] 하위레벨에 내역이 존재하지 않는 DATA
+		 */
+		if(itemiYn == "N" && itemiYnNext != "Y"){
+			scwin.fnStndBtnDisabled(false);//표준공종 TAB 버튼 활성화
+		}else{
+			btnSave.setDisabled(false);//표준공종TAB - 저장버튼
+			btnAddRow.setDisabled(true);//표준공종TAB - 행추가버튼
+			btnDelRow.setDisabled(true);//표준공종TAB - 행삭제버튼
+		}
+
+		selectStndItemiCd = value;//TREE에서 선택된 표준내역코드
+		dsSearchParamMap.set( "stndItemiCd" , value );
+		scwin.fnStndJobtypCdList();
+	};
+
+	//표준공종TAB - 저장
+	scwin.btnSave_onclick = function(e) {
+		var arrMdfIdx = dsTcmStndJobtypCdList.getModifiedIndex();
+		for(var i=0; i<arrMdfIdx.length; i++){
+			var rowData = dsTcmStndJobtypCdList.getRowJSON( arrMdfIdx[i] );
+			if(rowData.stndItemiNm == ""){
+				com.showMessage("SAA0043", "공종명", "", "", grdTcmStndJobtypCdList.id, arrMdfIdx[i] , "stndItemiNm");//$1은(는) 필수입력사항입니다.
+				return false;
+			}else if(rowData.rowStatus == "U" && rowData.sortOdr == ""){//수정된 내역중 정렬순서가 없으면.
+				com.showMessage("SAA0043", "정렬순서", "", "", grdTcmStndJobtypCdList.id, arrMdfIdx[i] , "sortOdr");//$1은(는) 필수입력사항입니다.
+				return false;
+			}
+		}
+
+    	//중복체크
+    	for (var i = 0; i < dsTcmStndJobtypCdList.getRowCount(); i++) {
+            if (dsTcmStndJobtypCdList.getCellData( i , "stndItemiCd" ) == ""){
+                continue;
+            }
+            
+    		for (var j = 1; j < dsTcmStndJobtypCdList.getRowCount(); j++) {
+    			if (i !== j && dsTcmStndJobtypCdList.getCellData( i , "stndItemiCd" ) == dsTcmStndJobtypCdList.getCellData( j , "stndItemiCd" )) {
+    				com.showMessage("CMW0001", "공종코드["+dsTcmStndJobtypCdList.getCellData( i , "stndItemiCd" )+"] ", "", "", grdTcmStndJobtypCdList.id, i, "stndItemiCd"); //중복 된 $1가(이) 존재합니다.
+					return;
+    			}
+    		}
+    	}
+
+		if(dsTcmStndJobtypCdList.getModifiedJSON() == ""){
+			com.showMessage("CSA0003");//저장(변경)할 내용이 없습니다.
+			return;
+		}else if (confirm("저장 하시겠습니까?")) {
+			svcId = "saveTcmStndJobtypCd";
+	        ajaxLib.ajax("/cm/cm0015/CM00150005T/saveTcmStndJobtypCd", {
+	        	mode : "asynchronous"
+	        	, method : "POST"
+	            , requestData : {
+									tcmStndJobtypCdList : dsTcmStndJobtypCdList.getModifiedJSON()
+	            				}
+	            , callback : "fnCallback"
+	            , errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+
+    //표준공종TAB - 행추가
+    scwin.btnAddRow_onclick = function() {
+        var selectIdx = trvCodeList.getSelectedIndex();
+        var stndItemiCd = dsTcmStndJobtypCdTreeList.getCellData( selectIdx-1 , "stndItemiCd" );//내역코드
+        var upperStndItemiCd = dsTcmStndJobtypCdTreeList.getCellData( selectIdx-1 , "upperStndItemiCd" );//상위표준내역코드
+        var itemiYn = dsTcmStndJobtypCdTreeList.getCellData( selectIdx-1 , "itemiYn" );//내역여부
+        var itemiYnNext = dsTcmStndJobtypCdTreeList.getCellData( selectIdx-1 , "itemiYnNext" );//하위레벨 내역여부
+        var stndItemiLv = dsTcmStndJobtypCdTreeList.getCellData( selectIdx-1 , "stndItemiLv" );//표준내역레벨
+
+        /*
+         * itemiYn: 내역코드 여부
+         * itemiYnNext: 하위레벨에 내역코드 존재여부
+         * itemiYn[N]공종이면서, itemiYnNext[N] 하위레벨에 내역이 존재하지 않는 DATA
+         */
+        if(itemiYn == "N" && itemiYnNext != "Y"){
+            var rowIndex = dsTcmStndJobtypCdList.insertRow();
+            dsTcmStndJobtypCdList.setCellData( rowIndex , "upperStndItemiCd", stndItemiCd);//상위표준내역코드
+            dsTcmStndJobtypCdList.setCellData( rowIndex , "itemiYn", "N");//내역여부
+            dsTcmStndJobtypCdList.setCellData( rowIndex , "stndItemiLv", WebSquare.util.parseInt( stndItemiLv , 2 )+1);//표준내역레벨
+
+            if(stndItemiCd == topLvCd){//최상위 레벨 [표준공종]
+                grdTcmStndJobtypCdList.setReadOnly( "cell" , rowIndex , "stndItemiCd" , false );//공종코드
+            }else{
+                grdTcmStndJobtypCdList.setReadOnly( "cell" , rowIndex , "stndItemiCd" , true );//공종코드
+            }
+            grdTcmStndJobtypCdList.setReadOnly( "cell" , rowIndex , "sortOdr" , true );//정렬순서 (최초 행 추가시 EDIT불가능)
+        }else{
+        	com.showMessage("SAA0041", "동일한 레벨에 표준내역");//$1이(가) 존재합니다.
+        	return;
+        }
+    };
+
+    //표준공종TAB - 행삭제
+    scwin.btnDelRow_onclick = function() {
+        var checkedIndex = grdTcmStndJobtypCdList.getCheckedIndex( "chk" );
+        if (checkedIndex.length == 0) {
+            com.showMessage("PRA0003");//삭제할 데이터를 선택해 주십시오.
+            return;
+        }
+        dsTcmStndJobtypCdList.removeRows( checkedIndex );
+    };
+
+	//전체 펼치기, 접기
+	scwin.btnTreeSpanAll_onclick = function() {
+        if (dsTcmStndJobtypCdTreeList.getTotalRow() <= 0) {
+            return false;
+        }
+
+        if (btnTreeSpanAll.getValue() == "전체 펼치기"){
+            btnTreeSpanAll.setValue("전체 접기");
+            trvCodeList.spanAll(true);
+        } else {
+            btnTreeSpanAll.setValue("전체 펼치기");
+            trvCodeList.spanNode({depth:2}, false);
+        }		
+	};
+	]]></script>
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="tab_body">
+			<xf:group class="lybox_wrap fix_300" id="" style="">
+				<xf:group class="lybox" id="" style="">
+					<xf:group class="lycolumn " id="" style="">
+						<xf:group class="lyinner" id="" style="">
+							<xf:group class="defaultbox" id="" style="">
+								<w2:textbox class="df_tt" id="" label="표준공종" style="" tagname="h3"></w2:textbox>
+								<xf:group class="right_wrap" id="" style="">
+									<xf:group id="" style="">
+										<w2:anchor class="btn_gcm" clickEventElement=""
+											ev:onclick="scwin.btnTreeSpanAll_onclick" id="btnTreeSpanAll" outerDiv="false" style="">
+											<xf:label><![CDATA[전체 펼치기]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+							<w2:treeview class="autoHeight" dataType="listed"
+								ev:onlabelclick="scwin.trvCodeList_onlabelclick" id="trvCodeList" lineShow="" showTreeDepth="1"
+								style="height:300px" tooltipGroupClass="false" useDrag="">
+								<w2:itemset nodeset="data:dsTcmStndJobtypCdTreeList">
+									<w2:label ref="stndItemiNm"></w2:label>
+									<w2:value ref="stndItemiCd"></w2:value>
+									<w2:depth ref="stndItemiLv"></w2:depth>
+									<w2:folder ref=""></w2:folder>
+									<w2:checkbox ref=""></w2:checkbox>
+									<w2:checkboxDisabled ref=""></w2:checkboxDisabled>
+									<w2:image ref=""></w2:image>
+									<w2:iconImage ref=""></w2:iconImage>
+									<w2:selectedImage ref=""></w2:selectedImage>
+									<w2:expandedImage ref=""></w2:expandedImage>
+									<w2:leafImage ref=""></w2:leafImage>
+								</w2:itemset>
+							</w2:treeview>
+						</xf:group>
+					</xf:group>
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="" style="">
+							<xf:group class="defaultbox" id="" style="">
+								<w2:textbox class="df_tt" id="" label="표준공종 상세정보" style="" tagname="h3"></w2:textbox>
+								<xf:group class="right_wrap" id="" style="">
+									<xf:group id="" style="">
+										<w2:anchor class="btn_gcm" clickEventElement=""
+											ev:onclick="scwin.btnSave_onclick" id="btnSave" outerDiv="false" style="">
+											<xf:label><![CDATA[저장]]></xf:label>
+										</w2:anchor>
+										<w2:anchor class="btn_gcm row_add" clickEventElement=""
+											ev:onclick="scwin.btnAddRow_onclick" id="btnAddRow" outerDiv="false" style="" toolTip="행추가">
+											<xf:label><![CDATA[행추가]]></xf:label>
+										</w2:anchor>
+										<w2:anchor class="btn_gcm row_del" clickEventElement=""
+											ev:onclick="scwin.btnDelRow_onclick" id="btnDelRow" outerDiv="false" style="" toolTip="행삭제">
+											<xf:label><![CDATA[행삭제]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+							<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmStndJobtypCdList"
+								fixedColumnWithHidden="" focusMode="row" id="grdTcmStndJobtypCdList" rowNumHeaderValue="No" rowNumVisible=""
+								rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 336px;"
+								useShiftKey="true" visibleRowNum="" checkReadOnlyOnPaste="true" enterKeyMove="down" keyMoveEditMode="true">
+								<w2:header id="header1" style="">
+									<w2:row id="row2" style="">
+										<w2:column blockSelect="false" id="column23" inputType="checkbox" style=""
+											value="체크박스" width="30">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column29"
+											inputType="text" removeBorderStyle="false" style="" value="No" width="70">
+										</w2:column>
+										<w2:column id="column43" style="" value="공종코드" width="100"></w2:column>
+										<w2:column class="req" id="column44" style="" value="공종명" width="200"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column33"
+											inputType="text" removeBorderStyle="false" style="" value="정렬순서" width="120">
+										</w2:column>
+										<w2:column hidden="true" id="column20" style="" value="상위표준내역코드" width="120"></w2:column>
+										<w2:column hidden="true" id="column21" style="" trueValue="" value="내역여부"
+											width="70">
+										</w2:column>
+										<w2:column hidden="true" id="column39" style="" value="표준내역레벨" width="100"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" hidden="true" id="column45"
+											inputType="text" removeBorderStyle="false" style="" value="하위내역 존재 유무" width="140">
+										</w2:column>
+									</w2:row>
+								</w2:header>
+								<w2:gBody id="gBody4" style="">
+									<w2:row id="row5" style="">
+										<w2:column blockSelect="false" id="chk" inputType="checkbox" width="30"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" embeddedInput="false"
+											expression="rowindex()+1" id="no" inputType="expression" removeBorderStyle="false" width="70">
+										</w2:column>
+										<w2:column disabled="" embeddedInput="false" id="stndItemiCd" readOnly="true"
+											width="100">
+										</w2:column>
+										<w2:column embeddedInput="false" id="stndItemiNm" textAlign="left"
+											width="200" ignoreChar="》">
+										</w2:column>
+										<w2:column allowChar="0-9" blockSelect="false" displayMode="label"
+											embeddedInput="false" id="sortOdr" inputType="text" removeBorderStyle="false" textAlign="" width="120">
+										</w2:column>
+										<w2:column id="upperStndItemiCd" width="120"></w2:column>
+										<w2:column id="itemiYn" width="70"></w2:column>
+										<w2:column id="stndItemiLv" width="100"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="lowerItemiYn"
+											inputType="text" removeBorderStyle="false" style="" value="" width="140">
+										</w2:column>
+									</w2:row>
+								</w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+
+
+	</body>
+</html>

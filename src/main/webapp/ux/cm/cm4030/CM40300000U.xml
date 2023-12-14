@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+							<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmApprMngList"
+											saveRemovedData="true">
+											<w2:columnInfo>
+															<w2:column id="deptCd" name="부서코드" dataType="text"></w2:column>
+															<w2:column id="deptNm" name="부서_명" dataType="text"></w2:column>
+															<w2:column id="apprEmpno" name="승인자_사번" dataType="text"></w2:column>
+															<w2:column id="apprNm" name="승인자_명" dataType="text"></w2:column>
+											</w2:columnInfo>
+											<w2:data use="false"></w2:data>
+							</w2:dataList>
+							<w2:dataMap baseNode="map" id="dsSrchMap" style="">
+											<w2:keyInfo>
+											</w2:keyInfo>
+							</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/><script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM40300000U.xml
+ * Program Name : 승인권자관리
+ * Author : tpyhyoj (tpyhyoj)
+ * Date : 2019.08.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ 
+
+    /************************************************************************************
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+//--------  미처리 내용--------
+// 마이그레이션 후 데이터가 보이지 않음.
+// 기존 시스템 SQL문은 다음과 같으며, 디비링크로 연결되어있다.
+
+// 기존 sql
+//SELECT  DEPTCODE
+//,  SF_TX_GETSITENM(DEPTCODE) AS DEPTNAME
+//,  APPROVEREMPNO
+//,  APPROVERNM
+//,  REGDATE
+//,  REGEMPNO
+//,  CHGDATE
+//,  CHGEMPNO
+//FROM    TX_APPROVERINFO
+
+// 기존 디비 링크
+//Host	(DESCRIPTION=
+//(ADDRESS_LIST=
+//(ADDRESS=(PROTOCOL=TCP)(HOST=165.141.187.6)(PORT=1544)))
+//(CONNECT_DATA=
+//(SERVICE_NAME=KENCHNT2)))
+
+// --------- 확인사항 ----------
+// insert는 존재하지 않은 어디서 등록하는지 확인 필요
+//  => 디비에서 직접 등록 한다고함.
+
+
+ 		//화면초기화
+        scwin.fnInitial();
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        scwin.fnSearchList();
+        //UI팀용 함수 호출
+        scwin.commonUI();
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수
+     ************************************************************************************/
+    var svcId = "";
+
+    /************************************************************************************
+     *  [3] Event 함수
+     ************************************************************************************/
+
+    // 그리드 저장
+    scwin.btnSave_onclick = function() {
+        scwin.fnUpdate();
+    };
+    
+    
+    //엑셀다운 버튼
+    scwin.btnExcelDwn_onclick = function() {
+        if(dsTcmApprMngList.getTotalRow() <= 0){
+            com.showMessage("CMW0042");     //다운로드할 내역이 존재하지 않습니다.
+            return;
+        }else{
+            var excelOpt = {};  						//excel download 옵션
+            excelOpt.fileName = "승인권자관리.xlsx";    	//또는 xlsx 확장자 사용
+            grdTcmApprMngList.advancedExcelDownload( excelOpt );
+        }
+    };
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    // 결과 후처리
+    scwin.fnCallback = function(result, e) {
+        switch (svcId) {
+            case "selectTcmApprMngList" :		//조회
+                dsTcmApprMngList.setJSON(result.data.tcmApprMngList);        //그리드 검색 결과
+                break;
+            case "saveTcmApprMng" :				//저장
+                com.showMessage("CFA0012");     //저장되었습니다.
+                scwin.fnSearchList();
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        switch (svcId) {
+            case "selectTcmApprMngList" :        //조회
+                console.log('조회오류: ' + e);
+                break;
+            case "saveTcmApprMng" :              //저장
+                console.log('저장오류: ' + e);
+                break;
+        }
+    }
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+
+    // 조회 List
+    scwin.fnSearchList = function() {
+
+        svcId = "selectTcmApprMngList";
+
+        ajaxLib.ajax("/cm/cm4030/CM40300000U/selectTcmApprMngList", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : dsSrchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+    };
+
+    // 저장
+    scwin.fnUpdate = function() {
+
+        if( dsTcmApprMngList.getModifiedJSON().length == 0 ){
+            com.showMessage("CMW0024"); //저장(변경)할 내용이 없습니다.
+            return ;
+        }
+
+        svcId = "saveTcmApprMng";
+
+        if (confirm("저장 하시겠습니까?")) {
+
+            ajaxLib.ajax("/cm/cm4030/CM40300000U/updateTcmApprMng", {
+                mode : "asynchronous",
+                method : "POST",
+                requestData : {
+                                param : dsSrchMap.getJSON()
+                             , tcmApprMngList : dsTcmApprMngList.getModifiedJSON()
+                              },
+                callback : "fnCallback",
+                errCallback : "fnErrCallBack"
+            });
+        }
+    };
+]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcICnumber.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchCode.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>	<!-- 승인권자관리 -->
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="승인권자관리" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<xf:group style="" id="" class="right_wrap">
+					<xf:group style="" id="">
+						<w2:anchor outerDiv="false" clickEventElement="" style="" id="btnSave" class="btn_gcm" ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						
+						<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+							outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmApprMngList" fixedColumnWithHidden="true"
+				focusMode="row" id="grdTcmApprMngList" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+				rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true"
+				visibleRowNum="" enterKeyMove="down" keyMoveEditMode="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column43" value="No"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" style="" value="부서코드" width="120"></w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" style="" value="부서명" width="200">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" style="" value="사번" width="150">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column35" inputType="text"
+							removeBorderStyle="false" style="" value="성명" width="120">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column removeBorderStyle="false" width="70" inputType="expression" style="" id="column44"
+							value="" blockSelect="false" displayMode="label" expression="rowindex()+1">
+						</w2:column>
+						<w2:column blockSelect="false" class="" id="deptCd" inputType="text" style=""
+							textAlign="" value="" width="120">
+						</w2:column>
+						<w2:column blockSelect="false" id="deptNm" inputType="text" style=""
+							textAlign="left" value="" width="200" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="apprEmpno" inputType="text"
+							removeBorderStyle="false" style="" textAlign="" value="" width="150" readOnly="false" allowChar="0-9" maxLength="10">
+						</w2:column>
+						<w2:column blockSelect="false" class="" dataType="" displayFormat="" displayMode="label"
+							id="apprNm" inputType="text" removeBorderStyle="false" style="" textAlign="" value=""
+							width="120" readOnly="false" maxLength="100" maxByteLength="100">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+    <?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <w2:type>DEFAULT</w2:type>
+        <w2:buildDate />
+        <xf:model>
+            <xf:instance>
+                <data xmlns="" />
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+                <w2:dataMap baseNode="map" id="dsAprvMap">
+                    <w2:keyInfo>
+                        <w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+                        <w2:key id="aprvStusCd" name="결재상태코드" dataType="text"></w2:key>
+                        <w2:key id="aprvTtl" name="결재_제목" dataType="text"></w2:key>
+                        <w2:key id="rvwrEmpno" name="검토자_사번" dataType="text"></w2:key>
+                        <w2:key id="fnlAprprEmpno" name="최종승인자_사번" dataType="text"></w2:key>
+                        <w2:key id="aprvPrcgPrcdNm" name="결재_처리_프로시저_명" dataType="text"></w2:key>
+                        <w2:key id="aprvPrcgEventNm" name="결재_처리_이벤트_명" dataType="text"></w2:key>
+                        <w2:key id="aprvPrcgNm" name="결재_처리_명" dataType="text"></w2:key>
+                        <w2:key id="aprvDocModiPsblYn" name="결재_문서_수정_가능_여부" dataType="text"></w2:key>
+                        <w2:key id="aprlnModiPsblYn" name="결재선_수정_가능_여부" dataType="text"></w2:key>
+                        <w2:key id="aprvAtchModiPsblYn" name="결재_첨부_수정_가능_여부" dataType="text"></w2:key>
+                        <w2:key id="kmsTrsctYn" name="KMS_이관_여부" dataType="text"></w2:key>
+                        <w2:key id="kmsMapVal" name="KMS_맵_값" dataType="text"></w2:key>
+                        <w2:key id="jobGbCd" name="업무구분코드" dataType="text"></w2:key>
+                        <w2:key id="aprvSbrqCmtryCn" name="결재_상신_주석_내용" dataType="text"></w2:key>
+                        <w2:key id="aflId" name="첨부파일 ID" dataType="text"></w2:key>
+                        <w2:key id="menuId" name="메뉴ID" dataType="text"></w2:key>
+                        <w2:key id="userId" name="사용자계정" dataType="text"></w2:key>
+                        <w2:key id="pwEnc" name="패스워드" dataType="text"></w2:key>
+                        <w2:key id="keyType" name="패스워드타입" dataType="text"></w2:key>
+                        <w2:key id="docType" name="문서종류" dataType="text"></w2:key>
+                        <w2:key id="aprvDoc" name="결재문서" dataType="text"></w2:key>
+                        <w2:key id="anchorUrl" name="첨부링크" dataType="text"></w2:key>
+                        <w2:key id="anchorUrlMsg" name="첨부링크메시지" dataType="text"></w2:key>
+                        <w2:key id="anchorReportJrfId" name="첨부레포트ID" dataType="text"></w2:key>
+                        <w2:key id="anchorReportLinkMsg" name="첨부레포트링크메시지" dataType="text"></w2:key>
+                        <w2:key id="anchorReportParam" name="첨부레포트PARAM" dataType="text"></w2:key>
+                    </w2:keyInfo>
+                </w2:dataMap>
+            </w2:dataCollection>
+            <w2:workflowCollection></w2:workflowCollection>
+        </xf:model>
+
+        <script type="text/javascript" src="/resources/js/lib/util/jquery.blockUI.js"></script>
+
+        <w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+
+        <script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CF00350500P.xml
+ * Program Name : 결재상신(팝업) 의견달기
+ * Author : 김환섭 (tpkhs1)
+ * Date : 2019.04.11
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+var param = null;
+
+//open 팝업에서 호출시
+try {
+    if($w.isPopup()) {
+        var winPopParam = JSON.parse(sessionStorage.winpopParam);
+        var parentId    = winPopParam.dataObj.data.pframeId;
+
+        if(parentId != undefined && parentId != "") {
+              param = opener.frames[parentId].getObj("dsAprvMap");
+        }
+    }else{
+        param = $p.getFrame().getParentFrame().getObj("dsAprvMap");  // 부모창 CF00350500U dsAprvMap 데이터
+    }
+} catch(e) {
+    console.log("eee :"+e.toString());
+}  
+/************************************************************************************
+ *  [1] onpageload(초기화포함)
+ ************************************************************************************/
+scwin.onpageload = function() {
+    scwin.initScreen();
+
+    // 첨부파일영역보기 숨기기
+    if( param.get("aprvAtchAreaYn") == "N" ) {
+        aprvAtchArea.hide();
+    } else if( param.get("aprvAtchAreaYn") == "P" ) {
+        aprvAtchGrp1.hide();
+    }
+
+    /*
+    // 본문첨부링크ID
+    if( param.get("aprvAflId") == "" || param.get("aprvAflId") == null ) {
+        aprvAtchGrp2.hide();
+    }
+    */
+    // 본문첨부링크ID
+    aprvAtchGrp2.hide();
+    
+    // 첨부용 첨부ID
+    if( param.get("aprvAddAflId") == "" || param.get("aprvAddAflId") == null ) {
+        aprvAtchGrp3.hide();
+    }
+
+    // 첨부링크 세팅을 한다.
+    if( param.get("anchorUrl") != "" && param.get("anchorUrl") != null ) {
+        var urls = '<a href=/common/notifyAprvHtml?movePage='+encodeURI(param.get("anchorUrl"))+' target=_blank>'+param.get("anchorUrlMsg")+'</a>';
+        anchorUrl.setValue(urls);
+    } else {
+        grpAnchorUrl.hide();
+    }
+    
+    // 첨부리포트링크 세팅을 한다.
+    if ( param.get("anchorReportJrfId") != "" && param.get("anchorReportJrfId")!= null ) {       
+        anchorReportUrl.setValue(param.get("anchorReportLinkMsg")); 
+    } else {
+        grpAnchorReportUrl.hide();      
+    }
+        
+    // 결재제목을 가져온다 
+    if( param.get("aprvTtl") != null &&  param.get("aprvTtl") != "" ) {
+        ibxAprvTtl.setValue(param.get("aprvTtl"));
+    }
+            
+    // X버튼의 원 이벤트 삭제하고 닫기 버튼의 이벤트 대신 입력
+    var frameIds = $p.getPopupId()+"_close";
+    $("#"+frameIds).off("click").on("click", function() {
+        scwin.btnCancel_onclick();
+    });
+    //teaAprvSbrqCmtryCn.setHTML("무료 에디터 입니다.<br/>무료인점 감안 하여 테스트 하여 주시기 바랍니다.");
+    
+};
+
+scwin.onpageunload = function() {
+
+};
+
+scwin.testFunction = function(){
+    console.log("test");
+};
+
+// 화면 초기화(필수)
+scwin.initScreen = function() {
+    var sJobGbCd = "CF";
+    var sMenuId  = "CF00350500P";
+    var sAflId   = param.get("aflId");
+    //var sFileExt = "gif,jpg,doc,xls,ppt,pdf,txt,xlsx,png,pptx,xml,docx,zip,dwg";
+    var sFileExt = "*.*";
+
+    // 결재페이지에서 직접 입력 첨부파일
+    com.setUdcValue("uFileList", "jobGbCd", sJobGbCd);
+    com.setUdcValue("uFileList", "menuId", sMenuId);
+    com.setUdcValue("uFileList", "aflId", sAflId);
+    com.setUdcValue("uFileList", "fileExt", sFileExt);
+    com.setUdcValue("uFileList", "usage", "INS"); // 버튼숨기기처리 : 필수값
+    com.setUdcValue("uFileList", "fileSize", "INS"); // 용량표시안함(표시함:INS) : 필수값
+    com.getUdcComp("uFileList", "gen_aflList").addClass("databox"); // 리스트 출력형식
+
+    /*
+    // 본문링크용
+    if( param.get("aprvAflId") != "" ) {
+        scwin.getAprvAflIdFile1();
+    }
+    */
+    
+    // 첨부용 첨부파일ID
+    if( param.get("aprvAddAflId") != "" ) {
+        scwin.getAprvAflIdFile2();
+    }
+};
+
+/************************************************************************************
+ *  [3] Event 함수
+ ************************************************************************************/
+
+// 확인 버튼 클릭
+scwin.btnConfirm_onclick = function () {
+
+    
+    dsAprvMap.set("aflId", com.getUdcComp("uFileList", "aflId").getValue());// 첨부파일ID 저장 : UDC입력_첨부파일ID
+    dsAprvMap.set("aprvTtl", ibxAprvTtl.getValue());    // 결재 제목 
+    dsAprvMap.set("aprvSbrqCmtryCn", teaAprvSbrqCmtryCn.getHTML());    // 결재 내용
+         
+    
+    // 결재 데이터 리턴
+    var result = new Object();
+    result.data = dsAprvMap.get("aprvSbrqCmtryCn");
+    result.aprvTtl = dsAprvMap.get("aprvTtl"); // 수정된 결제 제목 전달 전달
+    result.aflId = dsAprvMap.get("aflId"); // 첨부파일ID 전달
+    result.flag = "ok";
+
+    com.popup_close(result);
+};
+
+// 닫기 버튼 클릭이나 취소버튼 클릭시 작동
+scwin.btnCancel_onclick = function () {
+    if( com.getUdcComp("uFileList", "aflId").getValue() != "" ) {
+        ajaxLib.ajax("/cf/CF00350000P/deleteTcfAflAll", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData :  {aflId : com.getUdcComp("uFileList", "aflId").getValue()},
+            callback    : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+        param.set("aflId", ""); // 첨부파일 초기화
+    }
+    com.popup_close("");
+};
+
+// 결과 후처리
+scwin.fnCallback = function(result, e) {
+    console.log(e);
+};
+
+// 에러 후처리
+scwin.fnErrCallBack = function(e) {
+    console.log(e);
+};
+
+/*
+// 업무팀 파일 로드 : 본문첨부 ID
+scwin.getAprvAflIdFile1 = function() {
+    var aprvAflId = param.get("aprvAflId").split(",");
+    for (var i = 0; i < aprvAflId.length; i++) {
+        var rtnArr = com.udcAflList(aprvAflId[i]) || [];
+
+        $.each(rtnArr, function(key,data){
+            var idx = gen_aflList1.insertChild();
+            var gen_Obj = gen_aflList1.getChild(idx,"gen_generator1");
+            var t = gen_Obj.insertChild();
+            var btn_obj = gen_Obj.getChild(t,"btn_addFile1");
+            var dFileSizeInit = "<span style='display:none;'>"+data.aflNm+"("+data.fileSize+"byte)</span>";
+            var dFileSize = "("+data.fileSize+"byte)";
+            btn_obj.setValue(data.aflNm + dFileSize + dFileSizeInit);
+            btn_obj.setUserData("userData",data);
+            var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+            $("#"+btn_obj.getID()).off("click").on("click", function() {
+                $.fileDownload(href);
+                 return;
+            });
+        });
+    }
+};
+*/
+
+// 업무팀 파일 로드 : 첨부용 첨부ID
+scwin.getAprvAflIdFile2 = function() {
+    var aprvAflId = param.get("aprvAddAflId").split(",");
+    for (var i = 0; i < aprvAflId.length; i++) {
+        var rtnArr = com.udcAflList(aprvAflId[i]) || [];
+
+        $.each(rtnArr, function(key,data){
+            var idx = gen_aflList2.insertChild();
+            var gen_Obj = gen_aflList2.getChild(idx,"gen_generator2");
+            var t = gen_Obj.insertChild();
+            var btn_obj = gen_Obj.getChild(t,"btn_addFile2");
+            var dFileSizeInit = "<span style='display:none;'>"+data.aflNm+"("+data.fileSize+"byte)</span>";
+            var dFileSize = "("+data.fileSize+"byte)";
+            btn_obj.setValue(data.aflNm + dFileSize + dFileSizeInit);
+            btn_obj.setUserData("userData",data);
+            var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+            $("#"+btn_obj.getID()).off("click").on("click", function() {
+                $.fileDownload(href);
+                 return;
+            });
+        });
+    }
+};
+
+    //리포트 출력 
+    scwin.btnReport_onclick = function() {
+        com.ubiReportPopup(
+            param.get("anchorReportJrfId"), 
+            JSON.parse(param.get("anchorReportParam")), 
+            param.get("anchorReportJobGbCd"), 
+            param.get("anchorReportCallbackurl")
+        );  
+    };	
+	]]></script>
+
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <xf:group class="content_body popup" id="" style="">
+
+            <xf:group class="defaultbox" id="" style="">
+                <w2:textbox class="df_tt" id="" label="결재상신의견" style="" tagname="h3"></w2:textbox>
+
+                <xf:group class="btn_wrap" id="" style="float:right;" tagname="">
+                    <w2:anchor ev:onclick="scwin.btnConfirm_onclick" outerDiv="false" localeRef=""
+                        clickEventElement="outerDiv" style="left:0px;top:0px;" id="anchor1" class="btn_gcm">
+                        <xf:label><![CDATA[확인]]></xf:label>
+                    </w2:anchor>
+                    <w2:anchor ev:onclick="scwin.btnCancel_onclick" outerDiv="false" clickEventElement="outerDiv"
+                        style="left:0px;top:0px;" id="anchor2" class="btn_gcm">
+                        <xf:label><![CDATA[취소]]></xf:label>
+                    </w2:anchor>
+                </xf:group>
+
+            </xf:group>
+
+            <xf:group class="w2tb" id="" style="width:Infinity%;" tagname="table">
+                <w2:attributes>
+                    <w2:summary>결재상신 주석, 파일첨부 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:100.00px;" tagname="col"></xf:group>
+                    <xf:group style="" tagname="col"></xf:group>
+                </xf:group>
+
+
+				<xf:group class="" style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="제목" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <xf:input id="ibxAprvTtl" style="width:98%;margin-left:5px;" ref="" readOnly="false"></xf:input>
+                    </xf:group>				
+				 </xf:group>
+ 
+                <xf:group class="" style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="의견달기" style=""></w2:span>
+                    </xf:group>
+                    <!-- 에디터 -->
+                    <xf:group class="w2tb_td" style="height:420px;" tagname="td">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <!-- 덱스트5 에디터 -->
+                        <!-- <xf:textarea id="teaAprvSbrqCmtryCn" style="width:98%;height:405px;;margin-left:5px"></xf:textarea> -->
+                        <w2:editor id="teaAprvSbrqCmtryCn" style="width:98%;height:405px;margin:20px;" version="4.5.1"  menubar="toolbar_default" subDir="2022" imageLoadURL="/cf/ckImgSubmit.do"></w2:editor>
+                    </xf:group>
+                    <!-- #에디터 -->
+                </xf:group>
+            </xf:group>
+
+            <xf:group class="w2tb" id="aprvAtchArea" style="width:100%;" tagname="table">
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:100.00px;" tagname="col"></xf:group>
+                    <xf:group style="" tagname="col"></xf:group>
+                </xf:group>
+
+                <xf:group class="" style="" tagname="tr" id="aprvAtchGrp1">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="첨부파일" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <!-- 파일업로드 -->
+                        <w2:udc_file_list style="" id="uFileList"></w2:udc_file_list>
+                        <!-- #파일업로드 -->
+                    </xf:group>
+                </xf:group>
+                <xf:group class="" style="" tagname="tr" id="aprvAtchGrp2">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="본문첨부" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:generator class="databox" id="gen_aflList1" tagname="ul">
+                            <w2:generator id="gen_generator1" tagname="li">
+                                <w2:anchor id="btn_addFile1" outerDiv="false">
+                                    <xf:label><![CDATA[]]></xf:label>
+                                </w2:anchor>
+                            </w2:generator>
+                        </w2:generator>
+                    </xf:group>
+                </xf:group>
+                <xf:group class="" style="" tagname="tr" id="aprvAtchGrp3">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="첨부용" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <w2:generator class="databox col2" id="gen_aflList2" tagname="ul">
+                            <w2:generator id="gen_generator2" tagname="li">
+                                <w2:anchor id="btn_addFile2" outerDiv="false">
+                                    <xf:label><![CDATA[]]></xf:label>
+                                </w2:anchor>
+                            </w2:generator>
+                        </w2:generator>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr" id="grpAnchorUrl">
+                    <xf:group tagname="th" class="w2tb_th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="첨부링크" style=""></w2:span>
+                    </xf:group>
+                    <xf:group tagname="td" class="w2tb_td">
+                        <w2:attributes></w2:attributes>
+                        <w2:span id="anchorUrl" label="" style=""></w2:span>
+                    </xf:group>
+                </xf:group>
+                <xf:group tagname="tr" id="grpAnchorReportUrl" >
+                    <xf:group class="w2tb_th" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span id="" label="첨부리포트" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes></w2:attributes>
+                        <w2:span id="anchorReportUrl" label="" style="color:blue;cursor:pointer;text-decoration:underline;"  ev:onclick="scwin.btnReport_onclick" ></w2:span>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+
+        </xf:group>
+    </body>
+</html>

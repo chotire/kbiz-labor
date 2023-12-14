@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CF07000001U.xml
+ * Program Name : 부서정보관리
+ * Author : sychoi
+ * Date : 2022.05.11
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+        DataCollection description
+
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    //var svcId;      //callback 처리용 서비스ID
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+		scwin.tabTcfDept_ontabclick();
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//TAB 클릭 이벤트
+	scwin.tabTcfDept_ontabclick = function(tabID,idx) {
+		var sTabId = tabTcfDept.getSelectedTabID();
+		var _selectedTabFrame = tabTcfDept.getFrame( sTabId );
+		var _localScwin = _selectedTabFrame.getObj("scwin");
+		_localScwin["fnInitial"]();	//이벤트명
+	};
+
+	//조회
+	scwin.btnFind_onclick = function() {
+		scwin.tabTcfDept_ontabclick();
+	};
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchCode.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body" id="" style="">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<w2:tabControl alwaysDraw="false" class="cm_tab" confirmFalseAction="new" confirmTrueAction="exist" id="tabTcfDept"
+				style="" useConfirmMessage="false" useMoveNextTabFocus="false" useTabKeyOnly="true" ev:onchange="scwin.tabTcfDept_onchange" ev:ontabclick="scwin.tabTcfDept_ontabclick">
+				<w2:tabs disabled="false" id="tabs1" label="부서분류" style="" localeRef=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs2" label="부서등록" style="" localeRef=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs3" label="부서이동" style="" localeRef=""></w2:tabs>
+				<w2:content alwaysDraw="false" id="content1" style="" src="/ux/cf/cf0700/CF07000005T.xml"></w2:content>
+				<w2:content alwaysDraw="false" id="content2" style="" src="/ux/cf/cf0700/CF07000010T.xml"></w2:content>
+				<w2:content alwaysDraw="false" id="content3" style="" src="/ux/cf/cf0700/CF07000015T.xml"></w2:content>
+			</w2:tabControl>
+		</xf:group>
+	</body>
+</html>

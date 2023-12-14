@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>UDC</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">				
+            </w2:dataCollection>
+        </xf:model>
+        <script type="javascript"><![CDATA[
+		]]></script>
+    </head>
+    <body>
+    	<!--/** WEBSQUARE UDC */
+    		{
+    		"componentName": "udc_tradepopup",
+    		"pluginName": "udc_tradepopup",
+    		"company": "",
+    		"developer": "",
+    		"category": "Basic",
+    		"notSupportBrowser": "",
+    		"version": "",
+    		"htmlRender": "",
+    		"icon": "",
+    		"disableIcon": "",
+    		"description": "",
+    		"width": "",
+    		"height": "",
+    		"properties": [
+    		{
+    		"name": "id",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "Y",
+    		"hidden": "N",
+    		"description": "udc 아이디"
+    		},
+    		{
+    		"name": "date",
+    		"default": "",
+    		"type": "number",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 초기 값"
+    		},
+    		{
+    		"name": "ref",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 Ref"
+    		},
+    		{
+    		"name": "class",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "udc 클래스"
+    		},
+    		{
+    		"name": "disabled",
+    		"default": "",
+    		"type": "combobox",
+    		"option": "[true,false]",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "desc"
+    		}
+    		],
+    		"events": [],
+    		"apis": [
+    		{
+    		"name": "getDate",
+    		"description": "desc",
+    		"params": [],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		},
+    		{
+    		"name": "setDate",
+    		"description": "desc",
+    		"params": [{
+    		"type": "Number",
+    		"name": "strDate",
+    		"description": "desc"
+    		}],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		}
+    		]
+    		}
+    		}
+    	-->
+    	<xf:group class="udc_wrap udc_tradepopup" id="" style="" pluginName="udc_tradepopup">
+    		<xf:input adjustMaxLength="false" id="tradeNm" style="width:200px;" class="" mandatory="">
+    			<script ev:event="onkeydown(e)" type="text/javascript"><![CDATA[
+	    			if ( e.keyCode == 13 ){
+		   			    if ( btnSrch.getDisabled() ){
+	  				        return;
+		   			    } else {
+		    			    tradeCd.setValue("");
+		    			    sapTradeCd.setValue("");
+		    			    if ( tradeNm.getValue() == "" ){
+		    			        com.udcPopup("TradePopup",{comp:[tradeNm,tradeCd,sapTradeCd]}, tradeCd.getValue(), tradeNm.getValue(), cond.getValue());
+		    			    }else{
+		    			        com.udcSelNm("TradeSelNm",{comp:[tradeNm,tradeCd,sapTradeCd]}, tradeCd.getValue(), tradeNm.getValue(), cond.getValue());
+		    			    }
+		   			    }
+	    			}
+    			 ]]></script>
+    			<script ev:event="onchange" type="text/javascript"><![CDATA[
+    				if ( tradeNm.getValue() == "" ){
+    			    	this.getParent().setUserData("pageData","");
+    				    tradeCd.setValue("");
+	    			    sapTradeCd.setValue("");
+    				}
+    			 ]]></script>
+    		</xf:input>
+
+    		<w2:anchor class="btn_gcm_ic src" id="btnSrch" outerDiv="false" style="">
+    			<xf:label><![CDATA[조회]]></xf:label>
+    			<script ev:event="onclick" type="text/javascript"><![CDATA[
+    			    // url:'/ux/cf/CF00300003P.xml'
+   			        com.udcPopup("TradePopup",{comp:[tradeNm,tradeCd,sapTradeCd]}, tradeCd.getValue(), tradeNm.getValue(), cond.getValue());
+    			 ]]></script>
+    		</w2:anchor>
+    		<xf:input adjustMaxLength="false" id="tradeCd" style="width:80px" disabled="" class="" mandatory="" readOnly="true"> </xf:input>
+    		<xf:input adjustMaxLength="false" id="sapTradeCd" style="width:5px;display:none;" disabled="true" class="" mandatory=""> </xf:input>
+    		<xf:input adjustMaxLength="false" id="cond" style="width:5px;display:none;" disabled="true" class="" mandatory=""> </xf:input>
+    	</xf:group>
+    </body>
+</html>

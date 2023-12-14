@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmWbsPlan" saveRemovedData="true" ev:oncelldatachange="scwin.dsTcmWbsPlan_oncelldatachange">
+			        <w2:columnInfo>
+			            <w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+			            <w2:column id="planYm" name="계획연월" dataType="text"></w2:column>
+			            <w2:column id="planWbsRt" name="공정율" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataList baseNode="list" id="dsTcmWbsPfmc" repeatNode="map" saveRemovedData="true" style="" ev:oncelldatachange="scwin.dsTcmWbsPfmc_oncelldatachange">
+			        <w2:columnInfo>
+			            <w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+			            <w2:column id="pfmcYm" name="실적연월" dataType="text"></w2:column>
+			            <w2:column id="pfmcWbsRt" name="원가율" dataType="text"></w2:column>
+			            <w2:column id="pfmcPcostRt" name="기성율" dataType="text"></w2:column>
+			            <w2:column id="pfmcAcomRt" name="공정율" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsTcmSiteMap">
+			        <w2:keyInfo>
+			            <w2:key id="siteCd" name="name1" dataType="text"></w2:key>
+			            <w2:key id="assmConstStrtDt" name="name2" dataType="text"></w2:key>
+			            <w2:key id="assmConstEndDt" name="name3" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+
+    var currKey1 = "";
+    var currKey2 = "";
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+	scwin.onpageload = function() {
+        com.commonUI();
+
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+	};
+
+/************************************************************************************
+ *  [3] Event 함수
+ ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.WFrameSiteInfo_change_callback
+     * 기 능: 현장코드 변경 이벤트
+     **************************************************************************/
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsTcmSiteMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+	};
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.btnFind_onclick
+	 * 기 능: 조회버튼 클릭
+	 **************************************************************************/
+    scwin.btnFind_onclick = function() {
+        var siteCd = wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue();
+        if (siteCd == "") {
+            com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+            return;
+		}
+        ajaxLib.ajax("/cm/cm1000/CM10000000U/selectTcmSite", {
+            method : "POST",
+            requestData : {
+                siteCd : wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue()
+            },
+            callback : function(result, e){
+                dsTcmSiteMap.setJSON( result.data.tcmSite );
+                dsTcmWbsPlan.setJSON( result.data.tcmWbsPlan );
+                dsTcmWbsPfmc.setJSON( result.data.tcmWbsPfmc );
+                com.setUdcValue("cntLeft","udcListCount",dsTcmWbsPlan.getTotalRow());
+                com.setUdcValue("cntRight","udcListCount",dsTcmWbsPfmc.getTotalRow());
+                if (dsTcmSiteMap.get( "assmConstStrtDt" ) != "" && dsTcmSiteMap.get( "assmConstEndDt" ) != "") {
+                    spnAssmConstStrtDt.setValue( dsTcmSiteMap.get( "assmConstStrtDt" ) );
+                    spnMark.setValue( "~" );
+                    spnAssmConstEndDt.setValue( dsTcmSiteMap.get( "assmConstEndDt" ) );
+				}else{
+                    spnAssmConstStrtDt.setValue( "" );
+                    spnMark.setValue( "" );
+                    spnAssmConstEndDt.setValue( "" );
+                }
+                currRow = dsTcmWbsPlan.getMatchedIndex( "planYm" , currKey1 , true , 0 , dsTcmWbsPlan.getTotalRow() )[0];
+                grdTcmWbsPlan.setFocusedCell( currRow , 0 , false );
+                currRow = dsTcmWbsPfmc.getMatchedIndex( "pfmcYm" , currKey2 , true , 0 , dsTcmWbsPfmc.getTotalRow() )[0];
+                grdTcmWbsPfmc.setFocusedCell( currRow , 0 , false );
+                currKey1 = "";
+                currKey2 = "";
+            },
+            errCallback : ""
+        });
+    };
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.btnCrtWbsPlan_onclick
+	 * 기 능: 계획자료생성 클릭
+	 **************************************************************************/
+	scwin.btnCrtWbsPlan_onclick = function() {
+        if(!scwin.fnSiteValidate()) return;
+        var stdt = dsTcmSiteMap.get( "assmConstStrtDt" );
+        var eddt = dsTcmSiteMap.get( "assmConstEndDt" );
+        if (stdt == "" || eddt == "") {
+        	com.showMessage("CSA0031", "추정공사기간 자료가");//$1 없습니다..
+            return;
+        }
+        if (confirm("계획자료를 생성하시겠습니까? 추정공사기간에서 벗어난 항목은 삭제됩니다.")) {
+            var da1 = new Date(stdt.substr(0,4), stdt.substr(4,2), stdt.substr(6,2));
+            var da2 = new Date(eddt.substr(0,4), eddt.substr(4,2), eddt.substr(6,2));
+            var dif = da2 - da1;
+            var cMonth = 24 * 60 * 60 * 1000 * 30;// 시 * 분 * 초 * 밀리세컨 월 만듬
+            var difMon = parseInt(dif/cMonth);
+            var rowCnt = dsTcmWbsPlan.getTotalRow();
+            var ym = stdt.substr(0,6);
+            var ymArr = new Array();
+            for (var i = 0; i < difMon; i++) {
+                ymArr[i] = ym;
+                ym = dateLib.addMonths(ym + "01", 1).substr(0,6);//1달씩 추가
+            }
+            for (var i = 0; i < ymArr.length ; i++) {
+                if (dsTcmWbsPlan.getMatchedIndex( "planYm" , ymArr[i] , true , 0 , dsTcmWbsPlan.getTotalRow() ) == "") {
+                    var insRow = dsTcmWbsPlan.getTotalRow();
+                    dsTcmWbsPlan.insertRow( insRow );
+                    dsTcmWbsPlan.setCellData( insRow , "siteCd" , dsTcmSiteMap.get("siteCd") );
+                    dsTcmWbsPlan.setCellData( insRow , "planYm" , ymArr[i] );
+                    dsTcmWbsPlan.setCellData( insRow , "planWbsRt" , 0 );
+                }
+            }
+            ajaxLib.ajax("/cm/cm1000/CM10000000U/createTcmWbsPlan", {
+                method : "POST",
+                requestData : {
+                    siteCd : dsTcmSiteMap.get("siteCd"),
+                    assmConstStrtDt : dsTcmSiteMap.get( "assmConstStrtDt" ).substr(0,6),
+                    assmConstEndDt : dsTcmSiteMap.get( "assmConstEndDt" ).substr(0,6),
+                    tcmWbsPlanList : dsTcmWbsPlan.getModifiedJSON()
+                },
+                callback : function(result, e){
+                	com.showMessage("CMW0011", "추정공사기간 자료");//$1이(가) 생성 되었습니다.
+                    scwin.btnFind_onclick();
+                },
+                errCallback : ""
+            });
+        }
+	};
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.btnSaveWbsPlan_onclick
+	 * 기 능: 공정계획 저장버튼 클릭
+	 **************************************************************************/
+	scwin.btnSaveWbsPlan_onclick = function() {
+        if (!scwin.fnSiteValidate()) return;
+        if (dsTcmWbsPlan.getModifiedIndex() == "") {
+        	com.showMessage("CSA0031", "저장할 변경사항이");//$1 없습니다..
+            return;
+		}
+        if (confirm("저장 하시겠습니까?")) {
+            currKey1 = dsTcmWbsPlan.getCellData( grdTcmWbsPlan.getFocusedRowIndex() , "planYm" );
+            ajaxLib.ajax("/cm/cm1000/CM10000000U/saveTcmWbsPlan", {
+                method : "POST",
+                requestData : {
+                    tcmWbsPlanList : dsTcmWbsPlan.getModifiedJSON()
+                },
+                callback : function(result, e){
+		        	com.showMessage("CFA0012");//저장되었습니다.
+                    scwin.btnFind_onclick();
+                },
+                errCallback : ""
+            });
+        }
+	};
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.btnSaveWbsPfmc_onclick
+	 * 기 능: 실적현황 저장버튼 클릭
+	 **************************************************************************/
+	scwin.btnSaveWbsPfmc_onclick = function() {
+        if (!scwin.fnSiteValidate()) return;
+        if (dsTcmWbsPfmc.getModifiedIndex() == "") {
+        	com.showMessage("CSA0031", "저장할 변경사항이");//$1 없습니다..
+            return;
+        }
+        if (confirm("저장 하시겠습니까?")) {
+            currKey2 = dsTcmWbsPfmc.getCellData( grdTcmWbsPfmc.getFocusedRowIndex() , "pfmcYm" );
+            ajaxLib.ajax("/cm/cm1000/CM10000000U/saveTcmWbsPfmc", {
+                method : "POST",
+                requestData : {
+                    tcmWbsPfmcList : dsTcmWbsPfmc.getModifiedJSON()
+                },
+                callback : function(result, e){
+		        	com.showMessage("CFA0012");//저장되었습니다.
+                    scwin.btnFind_onclick();
+                },
+                errCallback : ""
+            });
+        }
+	};
+
+    /**************************************************************************
+     * 함 수 명: scwin.grdTcmWbsPlan_onafteredit
+     * 기 능: 공정계획 편집 후 체크
+     **************************************************************************/
+    scwin.dsTcmWbsPlan_oncelldatachange = function(info) {
+        if (info.colID == "planWbsRt") {
+            var msg = "";
+            if(chkNum(info.newValue) == "A"){
+                dsTcmWbsPlan.setCellData( info.rowIndex , "planWbsRt" , info.oldValue );
+            	com.showMessage("CSW0000", "공정율은", "정수3자리", "소수2자리");//$1은(는) $2 ~ $3까지의 값을 가져야 합니다.
+                return;
+            } else if(chkNum(info.newValue) == "B"){
+                dsTcmWbsPlan.setCellData( info.rowIndex , "planWbsRt" , info.oldValue );
+            	com.showMessage("CSA0031", "공정율은 100%를 초과 할 수");//$1 없습니다.
+                return;
+            }
+		}
+    };
+    /**************************************************************************
+     * 함 수 명: scwin.grdTcmWbsPfmc_onafteredit
+     * 기 능: 실적현황 편집 후 체크
+     **************************************************************************/
+    scwin.dsTcmWbsPfmc_oncelldatachange = function(info) {
+        if (info.colID == "pfmcAcomRt") {
+            var msg = "";
+            if(chkNum(info.newValue) == "A"){
+                dsTcmWbsPlan.setCellData( info.rowIndex , "planWbsRt" , info.oldValue );
+            	com.showMessage("CSW0000", "공정율은", "정수3자리", "소수2자리");//$1은(는) $2 ~ $3까지의 값을 가져야 합니다.
+                return;
+            } else if(chkNum(info.newValue) == "B"){
+                dsTcmWbsPlan.setCellData( info.rowIndex , "planWbsRt" , info.oldValue );
+            	com.showMessage("CSA0031", "공정율은", "100%를 초과 할 수");//$1 없습니다.
+                return;
+            }
+        }
+    };
+
+
+	/************************************************************************************
+	 *  [4] 사용자 정의함수 함수
+	 ************************************************************************************/
+
+ 	/**************************************************************************
+	 * 함 수 명: scwin.fnSiteValidate
+	 * 기 능: 현장 검색조건 관련 Validate
+	 **************************************************************************/
+	scwin.fnSiteValidate = function() {
+	    if ( dsTcmSiteMap.get("siteCd").length == 0){
+	        com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+	        return false;
+	    }
+		// 검색영역의 현장코드와 비교
+		if (wfmKeySiteInfo.getObj( "ibxKeySiteCd" ).getValue() != dsTcmSiteMap.get("siteCd")) {
+	        com.showMessage("EMW0004", "검색항목에 변경된 현장");// $1을(를) 조회 하십시오.
+	        return false;
+		}
+	    return true;
+	};
+
+    /**************************************************************************
+     * 함 수 명: chkNum
+     * 기 능: 공정율 자릿수 검사
+     **************************************************************************/
+    function chkNum(num){
+        var retVal = "";
+        var numArr = num.split(".");
+        if (numArr[0].length > 3 || numArr[1].length > 2) {
+            retVal = "A";
+		}
+        if (Number(numArr[0]) > 99) {
+            retVal = "B";
+		}
+        return retVal;
+    }
+	]]></script>
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group style="" id="" class="tbl_search ">
+				<xf:group adaptive="" adaptiveThreshold="" tagname="table" style="" id="" class="tb_list">
+					<w2:attributes>
+						<w2:summary>거래처 정보 입력 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group tagname="col" style="width:74px;"></xf:group>
+						<xf:group tagname="col" style="width:45%;"></xf:group>
+						<xf:group tagname="col" style="width:100px;"></xf:group>
+						<xf:group tagname="col" style="width:40%;"></xf:group>
+					</xf:group>
+					<xf:group tagname="tr" style="">
+						<xf:group tagname="th" style="" class="w2tb_th req"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span style="" id="" label="현장"></w2:span></xf:group>
+						<xf:group tagname="td" style="" class="w2tb_td"><w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe></xf:group>
+						<xf:group tagname="th" style="" class="w2tb_th"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span style="" id="" label="추정공사기간"></w2:span></xf:group>
+						<xf:group tagname="td" style="" class="w2tb_td"><w2:span label="" style="position: relative ;width:100px;height: 20px;"
+						        id="spnAssmConstStrtDt" displayFormat="####-##-##">
+						    </w2:span><w2:span id="spnMark" label="" style="position: relative ;height: 20px;"></w2:span><w2:span id="spnAssmConstEndDt" label="" style="position: relative ;width:100px;height: 20px;" displayFormat="####-##-##"></w2:span></xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="lybox_wrap suttle">
+				<xf:group style="" id="" class="lybox">
+					<xf:group style="" id="" class="lycolumn ">
+						<xf:group style="" id="" class="lyinner">
+							<xf:group style="" id="" class="defaultbox">
+								<w2:textbox tagname="h3" style="" label="공정계획" id="" class="df_tt"></w2:textbox>
+								<w2:udc_list_count id="cntLeft" style=""></w2:udc_list_count>
+								<xf:group class="right_wrap" id="" style="">
+									<xf:group id="" style="">
+										<w2:anchor class="btn_gcm" id="btnCrtWbsPlan" outerDiv="false" style="" ev:onclick="scwin.btnCrtWbsPlan_onclick">
+									<xf:label><![CDATA[계획자료생성]]></xf:label>
+								</w2:anchor><w2:anchor class="btn_gcm" id="btnSaveWbsPlan" outerDiv="false" style="" ev:onclick="scwin.btnSaveWbsPlan_onclick">
+											<xf:label><![CDATA[저장]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+								</xf:group>
+
+							</xf:group>
+							<w2:gridView readOnly="" rowNumVisible="" rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No"
+								scrollByColumn="false" rowStatusHeaderValue="" focusMode="row" rowStatusVisible="" fixedColumnWithHidden=""
+								dataList="data:dsTcmWbsPlan" style="height: 300px;" autoFit="allColumn" id="grdTcmWbsPlan" visibleRowNum="" class="autoHeight" checkReadOnlyOnCut="true" checkReadOnlyOnPaste="true">
+								<w2:header style="" id="header1">
+									<w2:row style="" id="row2">
+										<w2:column removeBorderStyle="false" width="40" inputType="text" style=""
+											id="column29" value="No" blockSelect="false" displayMode="label">
+										</w2:column>
+										<w2:column removeBorderStyle="false" width="150" inputType="text" style=""
+											id="column27" value="계획연월" blockSelect="false" displayMode="label">
+										</w2:column>
+										<w2:column removeBorderStyle="false" width="150" inputType="text" style=""
+											id="column33" value="공정율(%)" blockSelect="false" displayMode="label">
+										</w2:column>
+									</w2:row>
+								</w2:header>
+								<w2:gBody style="" id="gBody4">
+									<w2:row style="" id="row5">
+										<w2:column removeBorderStyle="false" width="40" inputType="expression" style=""
+											id="column30" value="" blockSelect="false" displayMode="label" textAlign="" expression="rowindex()+1" readOnly="true">
+										</w2:column>
+										<w2:column removeBorderStyle="false" width="150" inputType="text" style=""
+											id="planYm" value="" blockSelect="false" displayMode="label" readOnly="true">
+										</w2:column>
+										<w2:column removeBorderStyle="false" width="150" inputType="text" style=""
+											id="planWbsRt" value="" blockSelect="false" displayMode="label" textAlign="right" dataType="number" displayFormat="#,###.00" allowChar="0-9 .">
+										</w2:column>
+									</w2:row>
+								</w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+					<xf:group style="" id="" class="lycolumn">
+						<xf:group style="" id="" class="lyinner">
+							<xf:group style="" id="" class="defaultbox">
+								<w2:textbox tagname="h3" style="" id="" label="실적현황" class="df_tt"></w2:textbox>
+								<w2:udc_list_count id="cntRight" style=""></w2:udc_list_count>
+								<xf:group class="right_wrap" id="" style="">
+									<xf:group id="" style="">
+										<w2:anchor class="btn_gcm" id="btnSaveWbsPfmc" outerDiv="false" style="" ev:onclick="scwin.btnSaveWbsPfmc_onclick">
+											<xf:label><![CDATA[저장]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+							<w2:gridView readOnly="" autoFit="allColumn" class="autoHeight" dataList="data:dsTcmWbsPfmc"
+								fixedColumnWithHidden="" focusMode="row" id="grdTcmWbsPfmc" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+								rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true"
+								visibleRowNum="" checkReadOnlyOnCut="true" checkReadOnlyOnPaste="true">
+								<w2:header id="header1" style="">
+									<w2:row id="row2" style="">
+										<w2:column blockSelect="false" displayMode="label" id="column29"
+											inputType="text" removeBorderStyle="false" style="" value="No" width="40">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column27"
+											inputType="text" removeBorderStyle="false" style="" value="실적연월" width="100">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column33"
+											inputType="text" removeBorderStyle="false" style="" value="원가율(%)" width="100">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column31"
+											inputType="text" removeBorderStyle="false" style="" value="기성율(%)" width="150">
+										</w2:column>
+										<w2:column removeBorderStyle="false" width="150" inputType="text" style=""
+											id="column35" value="공정율(%)" blockSelect="false" displayMode="label">
+										</w2:column>
+									</w2:row>
+								</w2:header>
+								<w2:gBody id="gBody4" style="">
+									<w2:row id="row5" style="">
+										<w2:column blockSelect="false" displayMode="label" id="column30"
+											inputType="expression" removeBorderStyle="false" style="" textAlign="" value="" width="40"
+											expression="rowindex()+1" readOnly="true">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="pfmcYm"
+											inputType="text" removeBorderStyle="false" style="" value="" width="100" readOnly="true">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="pfmcPcostRt"
+											inputType="text" removeBorderStyle="false" style="" value="" width="100" readOnly="true">
+										</w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="pfmcAcomRt"
+											inputType="text" removeBorderStyle="false" style="" value="" width="150" textAlign="" readOnly="true">
+										</w2:column>
+										<w2:column removeBorderStyle="false" width="150" inputType="text" style=""
+											id="pfmcWbsRt" value="" blockSelect="false" displayMode="label" dataType="number" displayFormat="#,###.00" allowChar="0-9 ." textAlign="right">
+										</w2:column>
+									</w2:row>
+								</w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+
+		</xf:group>
+
+	</body>
+</html>

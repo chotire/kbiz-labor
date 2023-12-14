@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataMap baseNode="map" id="dsSearchMap">
+			        <w2:keyInfo>
+			            <w2:key id="yyyy" name="사업년도" dataType="text"></w2:key>
+			            <w2:key id="selType" name="보관구분" dataType="text"></w2:key>
+			            <w2:key id="bungi" name="분기" dataType="text"></w2:key>
+			            <w2:key id="submitDt" name="제출일자" dataType="text"></w2:key>
+			            <w2:key id="wkrNo" name="근로자번호" dataType="text"></w2:key>
+			            <w2:key id="wkrNm" name="근로자명" dataType="text"></w2:key>
+			            <w2:key id="secResno" name="주민번호" dataType="text"></w2:key>
+			            <w2:key id="mskSecResno" name="주민번호 마스킹 처리" dataType="text"></w2:key>
+			            <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+			            <w2:key id="startDate" name="분기에 따른 From" dataType="text"></w2:key>
+			            <w2:key id="endDate" name="분기에 따른 To" dataType="text"></w2:key>
+			            <w2:key id="siteType" name="현장코드 검색 시 사용" dataType="text"></w2:key>
+			            <w2:key id="popType" name="현장코드 검색하기 위해 사용" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" id="dsInit" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column id="select1" name="근무일자" dataType="text"></w2:column>
+			            <w2:column id="select2" name="분기" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		
+		<script type="text/javascript" src="/resources/js/common/cmn_SC.js" lazy="false"></script>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM60250035U.xml
+ * Program Name : 일용근로소득지급조서
+ * Author : JHLEE
+ * Date : 2022.07.04
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ *    
+ **************************************************************************/
+
+	/**************************************************************************
+	 * [1] 전역변수 선언
+	 **************************************************************************/
+ 
+	/**************************************************************************
+	 * [2] onpageload(초기화포함)
+	 **************************************************************************/
+    scwin.onpageload = function() {   
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        calLbatnDt.setValue($p.getCurrentServerDate("yyyyMM") + "01");
+        let yyyy = $p.getCurrentServerDate("yyyy");  
+        ibxYyyy.setValue( yyyy );
+        com.commonUI();	//UI팀용 함수 호출
+        scwin.init();   //분기 검색
+    };
+
+	/**************************************************************************
+	 * [3] 사용자정의 함수
+	 **************************************************************************/
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnInit
+	 * 기 능: 분기검색
+	 **************************************************************************/
+     scwin.init = function()
+     {
+         ajaxLib.ajax("/cm/cm6025/CM60250000U/selectIncomeBungi",{
+                method : "POST",
+                requestData : dsSearchMap.getJSON(),
+                callback : function(result, e) {
+                            dsInit.setJSON(result.data.dsInit);
+                            sbxBungi.setValue(dsInit.getCellData( 0 , "select2"));
+                           },
+                errCallback : function(result, e) {}
+          });
+     }    
+      
+    //출역자 (팝업) 호출
+    scwin.fnWkrNmCall = function(data, callback){
+        dsSearchMap.set("siteType", "ALL"); //현장코드를 전체 현장코드로 검색하기 위해 사용
+        dsSearchMap.set("popType","N");   //현장코드를 전체 현장코드로 검색하기 위해 사용
+        let popWkrNmOps = {
+            popup_name :"출역자 목록",
+            url :"/ux/cm/cm6020/CM60200021P.xml",
+            data : {siteType:dsSearchMap.get("siteType")
+                   ,popType:dsSearchMap.get("popType")
+                   ,blackListDisplay:"N"
+                   ,colType:"S2"
+                 //  ,wkrNm:ibxWkrNm.getValue()
+                   },
+            widType:"S",
+            height:"620",
+            callbackFn : "scwin.popWkrNmCallback"
+        };
+        
+        com.popup_open(popWkrNmOps);
+    }
+    
+    //날짜 셋팅 및 리포트 호출 파라미터 생성
+    scwin.dateSetting = function()
+    {
+        let sBungi     = dsSearchMap.get("bungi");    //지급분기 
+        let startDate; //시작일
+        let endDate;   //종료일
+        let storgeType = dsSearchMap.get("selType");  //보관구분 
+        let wkrNm      = dsSearchMap.get("wkrNm");    //작업자명
+        let submitDt   = dsSearchMap.get("submitDt"); //제출일자
+        let wkrNo      = dsSearchMap.get("wkrNo");    //근로자번호
+        
+        if(sBungi == "0")      //1분기
+        {
+           startDate = dsSearchMap.get("yyyy") + "0101";
+           endDate   = dsSearchMap.get("yyyy") + "0331";
+        }
+        else if(sBungi == "1") //2분기
+        {
+           startDate = dsSearchMap.get("yyyy") + "0401";
+           endDate   = dsSearchMap.get("yyyy") + "0630";        
+        }
+        else if(sBungi == "2") //3분기
+        {
+           startDate = dsSearchMap.get("yyyy") + "0701";
+           endDate   = dsSearchMap.get("yyyy") + "0930";          
+        }
+        else                   //4분기
+        {
+           startDate = dsSearchMap.get("yyyy") + "1001";
+           endDate   = dsSearchMap.get("yyyy") + "1231";            
+        }
+        
+        dsSearchMap.set("startDate",startDate);
+        dsSearchMap.set("endDate",endDate);
+        
+        let reportParam = { FROM      : startDate
+                          , TO        : endDate
+                          , SUBMIT_DT : submitDt
+                          , WKR_NM    : wkrNm
+                          , WKR_NO    : wkrNo
+                          , PRINT_GB  : 1
+                          };
+        
+        com.ubiReportPopup("CM60250036R.jrf", reportParam, "CM", "");      
+    }
+
+	/**************************************************************************
+	 * [4] Callback
+	 **************************************************************************/
+    //출역자 팝업선택 후 callback
+    scwin.popWkrNmCallback = function(obj){
+        if(obj != ""){
+            let sWkrNm       = obj.wkrNm;
+            let sWkrNo       = obj.wkrNo;
+            let sMskSecResno = obj.mskSecResno;
+            let sSecResno    = obj.secResno;
+             
+            dsSearchMap.set( "mskSecResno" , sMskSecResno);  
+            dsSearchMap.set( "secResno"    , sSecResno);     //주민번호
+            dsSearchMap.set( "wkrNm"       , sWkrNm );       //근로자명
+            dsSearchMap.set( "wkrNo"       , sWkrNo );       //근로자번호
+        }
+    } 
+
+	/************************************************************************************
+	 *  [5] Event 함수
+	 ************************************************************************************/
+	/*인쇄 Report 이벤트*/
+	scwin.btnPrint_onclick = function() {
+		if (com.isEmpty(dsSearchMap.get("yyyy"))) {
+            com.showMessage("CMW0025", "년도");     //$1은(는) 필수입력입니다.
+            return false;
+        }
+ 
+        if (com.isEmpty(dsSearchMap.get("wkrNm"))) {
+            com.showMessage("CMW0025", "근로자명"); //$1은(는) 필수입력입니다.
+            return false;
+        }
+ 
+         if (com.isEmpty(dsSearchMap.get("submitDt"))) {
+            com.showMessage("CMW0025", "제출일자"); //$1은(는) 필수입력입니다.
+            return false;
+        }     
+        
+        //지급자보관용으로 강제셋팅
+        rdoUseYn.setValue("1");
+        
+        scwin.dateSetting();                       //날짜 셋팅 및 리포트 호출 파라미터 생성   
+	};
+	
+	scwin.anchor1_onclick = function() {
+		scwin.fnWkrNmCall();
+	};
+	]]></script>
+    	<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:108px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:121px;" tagname="col"></xf:group>
+						<xf:group style="width:25%;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span class="" id="" label="사업명" style=""></w2:span></xf:group>
+
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input allowChar="" class="" dataType="" disabled="" id="" mandatory="" ref="" style="width:180px;"
+                                readOnly="true">
+                                <w2:attributes>
+                                    <w2:value>주식회사 소노인터내셔널</w2:value>
+                                </w2:attributes>
+                            </xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="년도" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input adjustMaxLength="false" id="ibxYyyy" style="width:60px;" ref="data:dsSearchMap.yyyy" ev:onkeyup="scwin.onkeyup" minlength="" maxlength="4" allowChar='"0-9"' dataType="date"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th req" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="분기" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:select1 allOption="" appearance="minimal" chooseOption="" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxBungi" ref="data:dsSearchMap.bungi"
+								style="width:100px;" submenuSize="auto" textAlign="left" chooseOptionLabel="분기" >
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[1분기]]></xf:label>
+										<xf:value><![CDATA[0]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[2분기]]></xf:label>
+										<xf:value><![CDATA[1]]></xf:value>
+									</xf:item>
+                                    <xf:item>
+                                        <xf:label><![CDATA[3분기]]></xf:label>
+                                        <xf:value><![CDATA[2]]></xf:value>
+                                    </xf:item>
+                                                                                                            <xf:item>
+                                        <xf:label><![CDATA[4분기]]></xf:label>
+                                        <xf:value><![CDATA[3]]></xf:value>
+                                    </xf:item>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+					<xf:group tagname="tr">
+						<xf:group tagname="th" class="w2tb_th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="보관구분" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td" style="">
+							<xf:select1 appearance="full" class="" cols="3" id="rdoUseYn"
+								ref="data:dsSearchMap.selType" renderType="radiogroup" rows="" selectedIndex="0" style="margin-top:-7px;">
+								<xf:choices>
+									<xf:item>
+										<xf:label>지급자보관용</xf:label>
+										<xf:value><![CDATA[1]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label>소득자보관용</xf:label>
+										<xf:value><![CDATA[2]]></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+                    </xf:group>
+						<xf:group tagname="th" class="w2tb_th req">
+							<w2:attributes></w2:attributes>
+							<w2:span class="" id="" label="근로자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+                            <xf:input adjustMaxLength="false" class="req" disabled="" ev:onchange=""
+								ev:onviewchange="" id="ibxWkrNm" mandatory="true" ref="data:dsSearchMap.wkrNm"
+								style="width:100px" ev:onkeyup="" readOnly="true" >
+							</xf:input>
+							<w2:anchor class="btn_gcm_ic src" ev:onclick="scwin.anchor1_onclick"
+								id="anchor1" outerDiv="false" style="">
+								<xf:label><![CDATA[조회]]></xf:label>
+							</w2:anchor>
+							<xf:input adjustMaxLength="false" ev:onchange="" ev:onkeydown="" ev:onviewchange=""
+								id="ibxSecResno" ref="data:dsSearchMap.mskSecResno" style="width:150px;" readOnly="true" displayFormatter="">
+							</xf:input>
+                        </xf:group>
+                         <xf:group tagname="th" class="w2tb_th req">
+                            <w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes>
+                            <w2:span class="" id="" label="제출일자" style=""></w2:span>
+                        </xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            <w2:inputCalendar calendarClass="" calendarValueType="yearMonthDate" focusOnDateSelect="false"
+                                footerDiv="false" id="calLbatnDt" renderDiv="true" renderType="component" rightAlign="false" style="width: 100px;"
+                                weekStartsOn="0" ref="data:dsSearchMap.submitDt" ev:ondateselect="" ev:onkeyup="" ev:onviewchange="scwin.calLbatnDt_onviewchange" ev:onkeydown="scwin.calLbatnDt_onkeydown" ev:onclick="scwin.calLbatnDt_onclick">
+                            </w2:inputCalendar>
+                        </xf:group>
+                        
+					</xf:group></xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="display:none;" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<xf:group class="right_wrap" id="" style="">
+		           <w2:anchor class="btn_gcm" clickEventElement="" id="btnPrint" outerDiv="false" style="" ev:onclick="scwin.btnPrint_onclick">
+                        <xf:label><![CDATA[인쇄]]></xf:label>
+                    </w2:anchor>
+		        </xf:group>
+			</xf:group>
+			
+			<xf:group class="defaultbox" id="" style="">
+		    </xf:group>
+		</xf:group>
+	</body>
+</html>

@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="siteNm" name="현장명" dataType="text"></w2:key>
+						<w2:key id="publCvlGbCd" name="공사구분" dataType="text"></w2:key>
+						<w2:key id="actbgtConfmStusCd" name="진행상태" dataType="text"></w2:key>
+						<w2:key id="bzpjGbCd" name="사업구분코드" dataType="text"></w2:key>
+						<w2:key id="listSearchYn" name="리스트화면조회여부" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcmCfrRptList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="siteCd" name="name1" dataType="text"></w2:column>
+						<w2:column id="rptYm" name="보고년월" dataType="text"></w2:column>
+						<w2:column id="mmsRptAflId" name="name3" dataType="text"></w2:column>
+						<w2:column id="cfrAflId" name="name4" dataType="text"></w2:column>
+						<w2:column id="isRptId" name="name5" dataType="text"></w2:column>
+						<w2:column id="release" name="첨부" dataType="text"></w2:column>
+						<w2:column id="release1" name="name7" dataType="text"></w2:column>
+						<w2:column id="release2" name="name8" dataType="text"></w2:column>
+						<w2:column id="mmsRptAflNm" name="name9" dataType="text"></w2:column>
+						<w2:column id="cfrAflNm" name="name10" dataType="text"></w2:column>
+						<w2:column id="isRptNm" name="name11" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" ><![CDATA[
+ /**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+    var svcId = "";
+	var pMap;
+	// 공통 참고 @RequestMapping(value="/cf/CF00350000P/downloadMAV",method=RequestMethod.GET)
+ 	var fileUrlPath = "/cf/CF00350000P/downloadMAV";	// 첨부파일 다운로드 경로 Call(공통)
+
+
+/**************************************************************************
+ * [1] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    	
+    };
+
+    scwin.onpageload = function() {
+    	
+		//tab main의 map정보
+		pMap = $p.getFrame().getParentFrame().getObj("dsSearchMap");
+		
+		var callPage = pMap.get("callPage") || "";
+		if ( callPage == "/ux/mg/mg3025/MG30254001U.xml" ) {
+			/** 현장포탈 **/
+			btnSave.setStyle("display", "none");
+			btnAddRow.setStyle("display", "none");
+			btnDelRow.setStyle("display", "none");
+			grdTcmCfrRptList.setColumnVisible( "release" , false );
+			grdTcmCfrRptList.setColumnVisible( "release1" , false );
+			grdTcmCfrRptList.setColumnVisible( "release2" , false );
+			
+		}
+		
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+        
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+    	console.log("회의/보고자료T fnInitial Call");
+		 
+		//화면로딩 시 자동 조회
+		scwin.fnTcmCfrRpt();
+		
+        com.commonUI();
+    };
+
+/**************************************************************************
+ * [2] Event 정의
+ **************************************************************************/
+
+    //
+	scwin.fnTcmCfrRpt = function() {
+        ajaxLib.ajax("/cm/cm0500/CM05000040T/selectTcmCfrRptList", {
+            method: "POST",
+            requestData: pMap.getJSON(),
+            callback: function(result, e) {
+                dsTcmCfrRptList.setJSON(result.data);
+                
+            },
+            errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+	};
+
+    
+    /**************************************************************************
+     * 함 수 명: scwin.fnSiteValidate
+     * 기 능: 현장 검색조건 관련 Validate
+     **************************************************************************/
+    scwin.fnSiteValidate = function() {
+    	if (dsTcmCfrRptList.getTotalRow() == 0) return true;
+        if ( pMap.get("siteCd").length == 0){
+            com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+            return false;
+        }
+        // 검색영역의 현장코드와 비교
+        if (pMap.get("siteCd") != dsTcmCfrRptList.getCellData( 0 , "siteCd" )) {
+	        com.showMessage("EMW0004", "검색항목에 변경된 현장");// $1을(를) 조회 하십시오.
+	        return false;
+        }
+        return true;
+    };
+    
+    /**************************************************************************
+     * 함 수 명: scwin.grdTcmCfrRptList_oncellclick
+     * 기 능: 월별 마감현황 그리드 클릭
+     **************************************************************************/
+    scwin.grdTcmCfrRptList_oncellclick = function(row,col) {
+
+        if(!scwin.fnSiteValidate()){
+        	return;
+        } 
+
+        var colId = grdTcmCfrRptList.getColumnID( col );
+        var value = dsTcmCfrRptList.getCellData( row , colId );
+        
+   
+        var ss = grdTcmCfrRptList.getColumnIndex("release1"); 
+        var index = grdTcmCfrRptList.getFocusedColumnIndex();      
+        
+
+
+		if(colId == "release" || colId == "release1" || colId == "release2") {//첨부 버튼 클릭 시
+			scwin.fnCloseInfoCheck(row, col, value);
+		}
+		
+		else if(colId == "mmsRptAflNm" || colId == "cfrAflNm" || colId == "isRptNm"){// 파일명 클릭 시
+		
+			scwin.getStwkRptAflIdFile(row,col)
+		}
+    };
+    
+     /**************************************************************************
+     * 함 수 명: scwin.getStwkRptAflIdFile
+     * 기 능: 첨부파일 다운로드
+     **************************************************************************/    
+        scwin.getStwkRptAflIdFile = function(row,col) {
+    	if(dsTcmCfrRptList.getCellData( row , grdTcmCfrRptList.getColumnID(col))){  
+    		/*첨부파일 명 저장*/
+	        var aprvAflId = dsTcmCfrRptList.getCellData( row , grdTcmCfrRptList.getColumnID(col).replace('Nm','Id')).split(",");
+	        for (var i = 0; i < aprvAflId.length; i++) {
+	            var rtnArr = com.udcAflList(aprvAflId[i]) ;
+	            $.each(rtnArr, function(key,data){
+
+	                var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+	                $.fileDownload(href);
+	                
+	            });
+	        }
+    	}
+    	else{
+    	
+    	}
+    };
+    
+        /**************************************************************************
+     * 함 수 명: scwin.fnCloseInfoCheck
+     * 기 능: 마감/해제시 validation 체크
+     **************************************************************************/ 
+	scwin.fnCloseInfoCheck = function(row, col, value) {
+
+		if (!scwin.fnSiteValidate()) return false;
+		
+
+        var sAflId   = dsTcmCfrRptList.getCellData( row , grdTcmCfrRptList.getColumnID(col - 1) );// 첨부파일ID	
+		var sJobGbCd = "CM";							// 업무구분
+		var sMenuId  = "CM05000040T";					// 메뉴ID
+        var popOps = {
+				pid: "AflPopup"+"_" +new Date().getTime()
+		        ,url:"/ux/cf/CF00350002P.xml"	
+		        ,modal : true //true || false
+		        ,popup_name:"착공서류 파일첨부"
+		        ,callbackFn : "scwin.popCfrRptAflCallback"
+		        ,widType : "M"
+		        ,height : 540
+		        ,data : {
+		                 aflId   : sAflId,
+		                 jobGbCd : sJobGbCd,
+		                 menuId  : sMenuId,
+		                 fileExt : "jpg,png,gif,pdf,ppt,pptx,xls,xlsx",
+		                 usage : "INS",
+		                 fileSize : "20971520" // 업로드 가능 파일사이즈 추가(20MB제한)
+		                }
+               };
+        com.popup_open(popOps);
+	};
+	
+	  	/**************************************************************************
+	 * 함 수 명: scwin.popCfrRptAflCallback
+	 * 기 능: 회의/보고자료 Callback 처리
+	 **************************************************************************/
+	scwin.popCfrRptAflCallback = function(result){
+	
+		if(result.aflId == "") return;
+		console.log("result.aflId >> " + result.aflId);
+		console.log("result.aflNm >> " + result.aflNm);
+		var row = grdTcmCfrRptList.getFocusedRowIndex();
+		var col = grdTcmCfrRptList.getFocusedColumnIndex();   
+		dsTcmCfrRptList.setCellData( row , grdTcmCfrRptList.getColumnID( col - 1 ) , result.aflNm );
+		dsTcmCfrRptList.setCellData( row , grdTcmCfrRptList.getColumnID( col - 1 ).replace('Nm','Id') , result.aflId );
+	};
+
+	  	/**************************************************************************
+	 * 함 수 명: scwin.fnSave
+	 * 기 능: 저장처리
+	 **************************************************************************/
+	scwin.fnSave = function() {
+
+        var validInfo = [
+            { id: "rptYm", mandatory: true }        //보고연월
+        ];
+
+        //data유효성체크
+        if (!com.validateGridView(grdTcmCfrRptList, validInfo)) {
+            return;
+        }
+
+		var row = dsTcmCfrRptList.getModifiedIndex()[0];
+
+		var ym = dsTcmCfrRptList.getCellData( row , "rptYm" );
+
+		for( var i = 0 ; i < dsTcmCfrRptList.getRowCount(); i++){
+			if (i != row) {
+				var rptYm =  dsTcmCfrRptList.getCellData( i , "rptYm" );
+
+				if ( rptYm == ym ) {
+					com.showMessage("SAW0001", "보고연월");
+					return;
+				}
+			}
+		}
+
+		if (confirm("저장 하시겠습니까?")) {
+			ajaxLib.ajax("/cm/cm0500/CM05000040T/saveTcmCfrRpt", {
+				mode : "synchronous",
+				method : "POST",
+			    requestData : {
+			    				tcmCfrRptList : dsTcmCfrRptList.getModifiedJSON()
+							  },
+	            callback : function(result, e){
+					com.showMessage("PON0001");// 저장되었습니다.
+					currRow = grdTcmCfrRptList.getFocusedRowIndex();
+					scwin.fnTcmCfrRpt();
+	            },
+				errCallback : "fnErrCallBack"
+			});
+		}
+	};
+
+	
+	scwin.btnSave_onclick = function() {
+		if (!scwin.fnSiteValidate()) return false;
+		scwin.fnSave();
+	};
+	
+	scwin.btnAddRow_onclick = function() {
+		
+		if (!scwin.fnSiteValidate()) return false;
+
+		if (dsTcmCfrRptList.getModifiedIndex().length > 0) {
+			com.showMessage("CSA0007");
+			return;
+		}
+		
+
+		var rowIndex = dsTcmCfrRptList.insertRow();
+
+		dsTcmCfrRptList.setCellData(rowIndex, "siteCd", $p.getFrame().getParentFrame().getObj("dsSearchMap").getJSON().siteCd);
+	//	dsTcmCfrRptList.setFocusedCell( rowIndex , 0 , false );
+		grdTcmCfrRptList.setCellReadOnly( rowIndex , "rptYm" , false ); 
+	};
+	
+	scwin.btnDelRow_onclick = function() {
+		
+		if (!scwin.fnSiteValidate()) return false;
+		var row = grdTcmCfrRptList.getFocusedRowIndex();
+	 	dsTcmCfrRptList.removeRow(row);
+		
+	};
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+			<w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+
+		<xf:group style="" id="" class="tab_body">
+
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="회의/보고자료" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+
+
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnSave_onclick" id="btnSave"
+							outerDiv="false" style="">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_add" clickEventElement="" ev:onclick="scwin.btnAddRow_onclick"
+							id="btnAddRow" outerDiv="false" style="" toolTip="행추가">
+							<xf:label><![CDATA[행추가]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_del" clickEventElement="" ev:onclick="scwin.btnDelRow_onclick"
+							id="btnDelRow" outerDiv="false" style="" toolTip="행삭제">
+							<xf:label><![CDATA[행삭제]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmCfrRptList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdTcmCfrRptList" rowNumHeaderValue="" rowNumVisible="false"
+				rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;"
+				useShiftKey="true" visibleRowNum="" sortable="true" resize="true" titleAuto="" readOnly="true"
+				ev:oncellclick="scwin.grdTcmCfrRptList_oncellclick">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column removeBorderStyle="false" width="40" inputType="text" style="" id="column55"
+							value="NO" blockSelect="true" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column57"
+							value="보고연월" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" style="height:34px;" value="월간보고"
+							width="370" sortable="true" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" style="height:34px;" value="소장단회의"
+							width="370" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" style="height:34px;" value="이슈보고"
+							width="440" colSpan="2" rowSpan="">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column removeBorderStyle="false" width="40" inputType="expression" style="" id="column56"
+							value="" blockSelect="false" displayMode="label" expression="rowIndex()+1">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="calendar" style="" id="rptYm"
+							value="" blockSelect="false" displayMode="label" viewType="icon" readOnly="" calendarValueType="yearMonth">
+						</w2:column>
+						<w2:column blockSelect="false" id="mmsRptAflNm" inputType="link" style="" textAlign="center"
+							value="" width="300" displayMode="label" calendarValueType="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="button" style="border-left:none;"
+							id="release1" value="" blockSelect="false" displayMode="label" defaultValue="첨부">
+						</w2:column>
+						<w2:column blockSelect="false" class="" id="cfrAflNm" inputType="link" style=""
+							textAlign="center" value="" width="300" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="button" style="border-left:none;"
+							id="release" value="" blockSelect="false" displayMode="label" defaultValue="첨부">
+						</w2:column>
+						<w2:column blockSelect="false" id="isRptNm" inputType="link" style="border-right : none;"
+							textAlign="center" value="" width="300" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="button" style="border-left:none;"
+							id="release2" value="" blockSelect="false" displayMode="label" defaultValue="첨부">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

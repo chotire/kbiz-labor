@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" repeatNode="map" style="" id="dsStndJobtypCdList" saveRemovedData="true">
+			        <w2:columnInfo>
+			            <w2:column id="chk" name="체크박스" dataType="text"></w2:column>
+			            <w2:column id="stndItemiCd" name="표준내역코드" dataType="text"></w2:column>
+			            <w2:column id="stndItemiNm" name="표준_내역_명" dataType="text"></w2:column>
+			            <w2:column id="upperStndItemiCd" name="상위_표준내역코드" dataType="text"></w2:column>
+			            <w2:column id="stndItemiLv" name="표준_내역_레벨" dataType="text"></w2:column>
+			            <w2:column id="itemiYn" name="사용_여부" dataType="text"></w2:column>
+			            <w2:column id="stndItemiUnit" name="표준_내역_단위" dataType="text"></w2:column>
+			            <w2:column id="itexpGb" name="비목구분" dataType="text"></w2:column>
+			            <w2:column id="itexpGbNm" name="비목구분명" dataType="text"></w2:column>
+			            <w2:column id="ctrlTypeCd" name="통제유형코드" dataType="text"></w2:column>
+			            <w2:column id="ctrlTypeNm" name="통제유형명" dataType="text"></w2:column>
+
+			            <w2:column id="bgtNewAddYn" name="예산_신규_추가_여부" dataType="text"></w2:column>
+			            <w2:column id="bgtItemiJnlzYn" name="예산_내역_분개_여부" dataType="text"></w2:column>
+			            <w2:column id="bgtItexpChgYn" name="예산_비목_변경_여부" dataType="text"></w2:column>
+			            <w2:column id="bgtAmtVrtnYn" name="예산_금액_증감_여부" dataType="text"></w2:column>
+			            <w2:column id="bgtMinusWrtYn" name="예산_마이너스_작성_여부" dataType="text"></w2:column>
+
+			            <w2:column id="stndItemiExitYn" name="표준코드존재여부" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false">
+			            <w2:row></w2:row>
+			        </w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key dataType="text" id="upperStndItemiCd" name="상위_표준내역코드"></w2:key>
+			            <w2:key id="multiSelectYn" name="멀티선택여부" dataType="text"></w2:key>
+			            <w2:key id="actbgtGb" name="가실행구분" dataType="text"></w2:key>
+			            <w2:key id="bgtNewAddYn" name="예산_신규_추가_여부" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataList baseNode="list" id="dsCdStndJobtypCd" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="stndItemiCd" name="표준내역코드"></w2:column>
+			            <w2:column dataType="text" id="stndItemiNm" name="표준내역명"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+    var svcId = "";
+    var bOrdFlag = false;
+    var multiSelectYn = false;
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    };
+
+    scwin.onpageload = function() {
+        multiSelectYn = JSON.parse($p.getPopupParam()).data.multiSelectYn;
+        dsSearchMap.set("siteCd", JSON.parse($p.getPopupParam()).data.siteCd);
+        dsSearchMap.set("multiSelectYn", multiSelectYn );
+        dsSearchMap.set("actbgtGb", JSON.parse($p.getPopupParam()).data.actbgtGb );
+        dsSearchMap.set("bgtNewAddYn", JSON.parse($p.getPopupParam()).data.bgtNewAddYn );
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+        svcId = "selectTcmStndJobtypCdUpperList";
+        ajaxLib.ajax("/cm/cm1500/CM15000015P/selectTcmStndJobtypCdUpperList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e) {
+                dsCdStndJobtypCd.setJSON(result.data);
+                scwin.btnFind_onclick();
+            },
+            errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+
+        com.setUdcValue("dsStndJobtypCdListTotalCount", "udcListCount", 0);
+
+        //그리드 체크박스 hidden 여부
+        grdStndJobtypCdList.setColumnVisible( "chk" , multiSelectYn);
+
+        com.commonUI();
+    };
+/**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+
+    scwin.fnReturnValue = function() {
+
+		//상위내역 해제
+		for (var i = 0; i < dsStndJobtypCdList.getTotalRow(); i++) {
+			if (dsStndJobtypCdList.getCellData( i , "stndItemiCd" ).split("-").length != 3) {
+				grdStndJobtypCdList.setCellChecked( i , "chk" , false );
+			}
+		}
+
+        if (multiSelectYn){
+            var _jsn = grdStndJobtypCdList.getCheckedJSON( "chk" );
+            if (_jsn.length <= 0) {
+                com.showMessage("CMW0065"); //"내역을 선택 후 확인버튼을 클릭하세요.
+                return false;
+            }
+        } else {
+            var _jsn = dsStndJobtypCdList.getRowJSON(grdStndJobtypCdList.getAllFocusedRowIndex());
+            if (!_jsn.stndItemiCd) {
+                com.showMessage("CMW0065"); //"내역을 선택 후 확인버튼을 클릭하세요.
+                return false;
+            }
+        }
+
+        com.popup_close(_jsn);
+    }
+
+/**************************************************************************
+ * [5] Event 정의
+ **************************************************************************/
+
+/**************************************************************************
+ * Event: scwin.btnFind_onclick
+ * 기 능: 조회버튼 클릭 이벤트
+ **************************************************************************/
+	scwin.btnFind_onclick = function() {
+        dsStndJobtypCdList.removeAll();
+        svcId = "selectTcmStndJobtypCdList";
+        ajaxLib.ajax("/cm/cm1500/CM15000015P/selectTcmStndJobtypCdList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e) {
+                dsStndJobtypCdList.setJSON(result.data);
+                com.setUdcValue("dsStndJobtypCdListTotalCount", "udcListCount", dsStndJobtypCdList.getRowCount());
+                //표준코드 존재하면 체크박스 비활성화
+                for (var i=0; i < dsStndJobtypCdList.getTotalRow(); i++ ){
+					if (dsStndJobtypCdList.getCellData( i , "stndItemiLv" ) != 4) {
+                        grdStndJobtypCdList.setRowBackgroundColor( i , "#d3d3d3" );//백그라운드 색 추가 190619
+					}else{
+	                    if (dsStndJobtypCdList.getCellData( i , "itemiYn" ) == "N") {
+	                        grdStndJobtypCdList.setReadOnly( "cell" , i , "chk" , true );//상위선택시 하위항목 체크하게 변경 190620
+	                    } else if (dsStndJobtypCdList.getCellData( i , "stndItemiExitYn" ) == "Y") {
+	                        grdStndJobtypCdList.setReadOnly( "cell" , i , "chk" , true );//상위선택시 하위항목 체크하게 변경 190620
+	                    }
+					}
+                }
+            },
+            errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+	};
+
+    //확인버튼 클릭
+	scwin.btnConfirm_onclick = function() {
+        scwin.fnReturnValue();
+	};
+
+    //취소버튼 클릭
+	scwin.btnCancel_onclick = function() {
+        $p.closePopup($p.getPopupId());
+	};
+
+	scwin.grdStndJobtypCdList_oncelldblclick = function(row,col) {
+        if (!multiSelectYn){
+            scwin.fnReturnValue();
+        }
+	};
+
+	/**************************************************************************
+	 * Event: scwin.grdStndJobtypCdList_oncellclick
+	 * 기 능: 그리드 클릭 이벤트
+	 **************************************************************************/
+	scwin.grdStndJobtypCdList_oncellclick = function(row,col) {
+		var colId = grdStndJobtypCdList.getColumnID( col );
+		var chkCnt = 0;
+		var checked = dsStndJobtypCdList.getCellData( row , "chk" );
+		if (colId == "chk") {
+			var stndItemiCdArr = dsStndJobtypCdList.getCellData( row , "stndItemiCd" ).split("-");
+			if (stndItemiCdArr.length == 1) {
+				for (var i = 0; i < dsStndJobtypCdList.getTotalRow(); i++) {
+					if (dsStndJobtypCdList.getCellData( i , "stndItemiCd" ).split("-")[0] == stndItemiCdArr[0]) {
+						if (grdStndJobtypCdList.getCellReadOnly( i , "chk" ) == false) {
+							grdStndJobtypCdList.setCellChecked( i , "chk" , checked == "1" ? true : false );
+							chkCnt++;
+						}
+					}
+				}
+			}
+			if (stndItemiCdArr.length == 2) {
+				for (var i = 0; i < dsStndJobtypCdList.getTotalRow(); i++) {
+					if (dsStndJobtypCdList.getCellData( i , "stndItemiCd" ).split("-")[0]+dsStndJobtypCdList.getCellData( i , "stndItemiCd" ).split("-")[1] == stndItemiCdArr[0]+stndItemiCdArr[1]) {
+						if (grdStndJobtypCdList.getCellReadOnly( i , "chk" ) == false) {
+							grdStndJobtypCdList.setCellChecked( i , "chk" , checked == "1" ? true : false );
+							chkCnt++;
+						}
+					}
+				}
+			}
+		}
+	};
+	]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:120.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="구분" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto"
+							    disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="" ref="data:dsSearchMap.upperStndItemiCd" style="width:140px;"
+							    submenuSize="auto" textAlign="left" chooseOptionLabel="전체">
+							    <xf:choices>
+							        <xf:itemset nodeset="data:dsCdStndJobtypCd">
+							            <xf:label ref="stndItemiNm"></xf:label>
+							            <xf:value ref="stndItemiCd"></xf:value>
+							        </xf:itemset>
+							    </xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+				</xf:group><xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+							<w2:udc_list_count style="position: absolute;" id="dsStndJobtypCdListTotalCount"></w2:udc_list_count>
+						</xf:group>
+			<w2:gridView readOnly="false" rowNumVisible="" rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No"
+			    scrollByColumn="false" rowStatusHeaderValue="" focusMode="row" rowStatusVisible="" fixedColumnWithHidden="true"
+			    dataList="data:dsStndJobtypCdList" style="height:450px;" autoFit="allColumn" id="grdStndJobtypCdList"
+			    visibleRowNum="" class="autoHeight" ev:oncelldblclick="scwin.grdStndJobtypCdList_oncelldblclick" ev:oncellclick="scwin.grdStndJobtypCdList_oncellclick">
+			    <w2:header style="" id="header1">
+			        <w2:row style="" id="row2">
+			            <w2:column removeBorderStyle="false" width="70" inputType="checkbox" style="height:68px;"
+			                id="" value="" blockSelect="false" displayMode="" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column width="61" inputType="text" style="" id="column23" value="NO" blockSelect="false"
+			                colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column width="120" inputType="text" style="" id="column21" value="내역코드" blockSelect="false"
+			                colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column width="170" inputType="text" style="" id="column19" value="내역명" blockSelect="false"
+			                colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column width="100" inputType="text" style="" id="column17" value="단위" blockSelect="false"
+			                colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column37"
+			                value="비목" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column35"
+			                value="통제유형" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:34px;"
+			                id="column33" value="예산관리" blockSelect="false" displayMode="label" colSpan="4" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:68px;"
+			                id="column31" value="(-)내역편성" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			        </w2:row>
+			        <w2:row style="" id="row6">
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column53"
+			                value="신규추가" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column52"
+			                value="내역분개" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column51"
+			                value="비목변경" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column50"
+			                value="금액증감" blockSelect="false" displayMode="label">
+			            </w2:column>
+			        </w2:row>
+			    </w2:header>
+			    <w2:gBody style="" id="gBody4">
+			        <w2:row style="" id="row5">
+			            <w2:column removeBorderStyle="" width="70" inputType="checkbox" style="" id="chk" value=""
+			                blockSelect="false" displayMode="" hidden="">
+			            </w2:column>
+			            <w2:column expression="rowindex()+1" textAlign="" width="71" inputType="expression" style=""
+			                id="" value="" blockSelect="false">
+			            </w2:column>
+			            <w2:column textAlign="left" width="120" inputType="text" style="" id="stndItemiCd" value=""
+			                blockSelect="false" readOnly="true">
+			            </w2:column>
+			            <w2:column textAlign="left" width="170" inputType="text" style="" id="stndItemiNm" class=""
+			                value="" blockSelect="false" readOnly="true">
+			            </w2:column>
+			            <w2:column textAlign="" width="100" inputType="text" style="" id="stndItemiUnit" value=""
+			                blockSelect="false" readOnly="true">
+			            </w2:column>
+			            <w2:column textAlign="" removeBorderStyle="false" width="100" inputType="text" style=""
+			                id="itexpGbNm" value="" blockSelect="false" displayMode="label" readOnly="true">
+			            </w2:column>
+			            <w2:column textAlign="" removeBorderStyle="false" width="120" inputType="text" style=""
+			                id="ctrlTypeNm" value="" blockSelect="false" displayMode="label" readOnly="true">
+			            </w2:column>
+			            <w2:column textAlign="" removeBorderStyle="false" width="100" inputType="text" style=""
+			                id="bgtNewAddYn" value="" blockSelect="false" displayMode="label" readOnly="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="bgtItemiJnlzYn"
+			                value="" blockSelect="false" displayMode="label" readOnly="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="bgtItexpChgYn"
+			                value="" blockSelect="false" displayMode="label" readOnly="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="bgtAmtVrtnYn"
+			                value="" blockSelect="false" displayMode="label" readOnly="true">
+			            </w2:column>
+			            <w2:column textAlign="" removeBorderStyle="false" width="120" inputType="text" style=""
+			                id="bgtMinusWrtYn" value="" blockSelect="false" displayMode="label" readOnly="true">
+			            </w2:column>
+			        </w2:row>
+			    </w2:gBody>
+			</w2:gridView>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancel_onclick">
+					<xf:label><![CDATA[취소]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+
+
+	</body>
+</html>

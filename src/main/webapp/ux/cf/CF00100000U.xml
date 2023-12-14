@@ -1,0 +1,1067 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+            <w2:dataList baseNode="list" repeatNode="map" id="dsTcfMenuMngTreeList" saveRemovedData="true">
+                <w2:columnInfo>
+                    <w2:column id="menuId" name="메뉴ID" dataType="text"></w2:column>
+                    <w2:column id="menuNm" name="메뉴명" dataType="text"></w2:column>
+                    <w2:column id="level" name="메뉴레벨" dataType="text"></w2:column>
+                    <w2:column id="upperMenuId" name="상위메뉴ID" dataType="text"></w2:column>
+                    <w2:column id="menuOdr" name="메뉴정렬순서" dataType="number"></w2:column>
+                </w2:columnInfo>
+            </w2:dataList>
+            <w2:dataMap baseNode="map" id="dsSearchParamMap">
+                <w2:keyInfo>
+                    <w2:key id="keyMenuId" name="메뉴ID" dataType="text"></w2:key>
+                    <w2:key id="keyMenuNm" name="메뉴명" dataType="text"></w2:key>
+                    <w2:key id="keyUpperCd" name="상위코드" dataType="text"></w2:key>
+                    <w2:key id="keyTreeYn" name="트리클릭시검색유무" dataType="text"></w2:key>
+                </w2:keyInfo>
+            </w2:dataMap>
+            <w2:dataList baseNode="list" repeatNode="map" id="dsTcfMenuMngList" saveRemovedData="true">
+                <w2:columnInfo>
+                    <w2:column id="menuId" name="메뉴ID" dataType="text"></w2:column>
+                    <w2:column id="menuNm" name="메뉴명" dataType="text"></w2:column>
+                    <w2:column id="upperMenuId" name="상위메뉴ID" dataType="text"></w2:column>
+                    <w2:column id="menuOdr" name="메뉴순서" dataType="number"></w2:column>
+                    <w2:column id="useYn" name="사용여부" dataType="text"></w2:column>
+                    <w2:column id="personalYn" name="개인정보여부" dataType="text"></w2:column>
+                    <w2:column id="scrId" name="화면ID" dataType="text"></w2:column>
+                    <w2:column id="scrNm" name="화면명" dataType="text"></w2:column>
+                    <w2:column id="scrPathNm" name="화면경로" dataType="text"></w2:column>
+                    <w2:column id="menuYn" name="메뉴여부" dataType="text"></w2:column>
+                    <w2:column id="helpAflId" name="도움말_첨부파일ID" dataType="text"></w2:column>
+                    <w2:column id="sysChrgr" name="시스템담당" dataType="text"></w2:column>
+                    
+                </w2:columnInfo>
+            </w2:dataList>
+            <w2:dataMap baseNode="list" repeatNode="map" id="dsTcfMenuMngMap" saveRemovedData="true">
+                <w2:keyInfo>
+                    <w2:key id="menuId" name="메뉴ID" dataType="text"></w2:key>
+                    <w2:key id="menuNm" name="메뉴명" dataType="text"></w2:key>
+                    <w2:key id="upperMenuId" name="상위메뉴ID" dataType="text"></w2:key>
+                    <w2:key id="menuOdr" name="메뉴순서" dataType="text"></w2:key>
+                    <w2:key id="useYn" name="사용여부" dataType="text"></w2:key>
+                    <w2:key id="personalYn" name="개인정보여부" dataType="text"></w2:key><w2:key id="scrId" name="화면ID" dataType="text"></w2:key>
+                    <w2:key id="scrNm" name="화면명" dataType="text"></w2:key>
+                    <w2:key id="scrPathNm" name="화면경로" dataType="text"></w2:key>
+                    <w2:key id="rowStatus" name="상태" dataType="text"></w2:key>
+                    <w2:key id="helpAflId" name="도움말_첨부파일ID" dataType="text"></w2:key>
+                    <w2:key id="sysChrgr" name="시스템담당" dataType="text"></w2:key>
+                    
+                </w2:keyInfo>
+            </w2:dataMap>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+    <script type="javascript" lazy="false"><![CDATA[
+     /***************************************************************************
+     * Program ID : CF00100000U.xml 
+     * Program Name : 메뉴관리 
+     * Author : 남상열 (tpnsr)
+     * Date : 2019.02.14
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     수정자   내 용 
+     * ======================================== 
+     *     
+     **************************************************************************/
+    /************************************************************************************
+     *  [1] 초기화 
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        //화면초기화
+        scwin.initScreen();
+        // 트리 조회
+        scwin.fnTreeList();
+    };
+
+    scwin.onpageunload = function () {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.initScreen = function () {
+        menuSearch.init();
+        menuInfoView.init();
+        grdTcfMenuMngList.initGrid();
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수 
+     ************************************************************************************/
+    scwin.svcId = "";
+    scwin.upperCd = "";
+    scwin.newMenuYn = "N"
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함수명: scwin.fnTreeList
+     * 기 능: 메뉴트리 조회 
+     **************************************************************************/
+    scwin.fnTreeList = function () {
+        scwin.svcId = "selectTcfMenuMngTreeList";
+
+        ajaxLib.ajax("/cf/CF00100000U/selectTcfMenuMngTreeList", {
+            mode: "synchronous",
+            method: "POST",
+            requestData: "",
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+
+    };
+
+    /**************************************************************************
+     * 함수명: scwin.fnSearch
+     * 기 능: 메뉴상세목록조회
+     **************************************************************************/
+    scwin.fnSearch = function () {
+        scwin.svcId = "selectTcfMenuMngList";
+        ajaxLib.ajax("/cf/CF00100000U/selectTcfMenuMngList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSearchParamMap.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     * 함수명: scwin.fnTreeSearch
+     * 기 능: 메뉴트리 선택시 메뉴상세목록 조회 
+     **************************************************************************/
+    scwin.fnTreeSearch = function (upperCd) {
+        scwin.svcId = "selectTcfMenuMngTreeSearchList"
+
+        //param setting
+        dsSearchParamMap.setEmptyValue();
+        dsSearchParamMap.set("keyTreeYn", "Y");
+        dsSearchParamMap.set("keyUpperCd", scwin.upperCd);
+
+        ajaxLib.ajax("/cf/CF00100000U/selectTcfMenuMngList", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSearchParamMap.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+
+    };
+
+    /**************************************************************************
+     * 함수명: scwin.fnSave
+     * 기 능: 메뉴정보 저장 
+     **************************************************************************/
+    scwin.fnSave = function () {
+        scwin.svcId = "saveTcfMenuMng";
+        var menuId = "";
+        
+        if (scwin.newMenuYn == "Y") {
+        	menuId = ibxMenuIdPrefix.getValue()+ ibxMenuIdMidfix.getValue() + ibxMenuIdSubfix.getValue();
+        	
+            dsTcfMenuMngMap.set("menuId", menuId);
+            dsTcfMenuMngMap.set("menuNm", ibxMenuNm.getValue());
+            dsTcfMenuMngMap.set("upperMenuId", ibxUpperMenuId.getValue());
+            dsTcfMenuMngMap.set("menuOdr", ibxMenuOdr.getValue());
+            dsTcfMenuMngMap.set("useYn", rdoUseYn.getValue());
+            dsTcfMenuMngMap.set("personalYn", rdoPersonalYn.getValue());
+            dsTcfMenuMngMap.set("scrId", ibxScrId.getValue());
+            dsTcfMenuMngMap.set("scrNm", ibxScrNm.getValue());
+            dsTcfMenuMngMap.set("scrPathNm", ibxScrPathNm.getValue());
+            dsTcfMenuMngMap.set("helpAflId", ibxAflId.getValue());
+            dsTcfMenuMngMap.set("sysChrgr", ibxSysChrgr.getValue());
+            dsTcfMenuMngMap.set("rowStatus", "C");
+        } else {
+            var rowIndex = dsTcfMenuMngList.getRowPosition();
+            dsTcfMenuMngMap.setJSON(dsTcfMenuMngList.getRowJSON(rowIndex));
+            dsTcfMenuMngMap.set("helpAflId", ibxAflId.getValue());
+            dsTcfMenuMngMap.set("rowStatus", "U");
+        }
+
+        if (confirm("저장 하시겠습니까?")) {
+            ajaxLib.ajax("/cf/CF00100000U/saveTcfMenuMng", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsTcfMenuMngMap.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    /**************************************************************************
+     * 함수명: scwin.fnDelete
+     * 기 능: 메뉴정보 삭제 
+     **************************************************************************/
+    scwin.fnDelete = function () {
+    
+        scwin.svcId = "deleteTcfMenuMng";
+		var menuId = ibxMenuIdPrefix.getValue()+ ibxMenuIdMidfix.getValue() + ibxMenuIdSubfix.getValue(); 
+        if (dsTcfMenuMngList.getRowCount() == 0 || menuId == "") {
+            com.showMessage('CFW0010','삭제할내역이 없습니다.');
+            return;
+        }
+
+        dsTcfMenuMngMap.setEmptyValue();
+        var rowIndex = dsTcfMenuMngList.getRowPosition();
+        dsTcfMenuMngMap.setJSON(dsTcfMenuMngList.getRowJSON(rowIndex));
+        dsTcfMenuMngMap.set("rowStatus", "D");
+
+        if (confirm("삭제 하시겠습니까?")) {
+            ajaxLib.ajax("/cf/CF00100000U/deleteTcfMenuMng", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsTcfMenuMngMap.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+        }
+    };
+
+    /**************************************************************************
+     * 함수명: scwin.fnCallScrSearchPopup
+     * 기 능: 화면관리 팝업 호출 
+     **************************************************************************/
+    scwin.fnCallScrSearchPopup = function () {
+
+        var rowIndex = dsTcfMenuMngList.getRowPosition();
+        var menuYn = dsTcfMenuMngList.getCellData(rowIndex, "menuYn");
+
+        var rowIndex = dsTcfMenuMngTreeList.getRowPosition();
+        var rowData = dsTcfMenuMngTreeList.getDataRow(rowIndex);
+
+        if ("N" == scwin.newMenuYn && ("N" == menuYn || "" == menuYn || (Number(rowData.level) + 1) < 3)) {
+            com.showMessage('CFW0010','선택한 메뉴는 화면정보를 선택할수 없습니다.');
+            return;
+        } else if ("Y" == scwin.newMenuYn && (Number(rowData.level) + 1) < 3) {
+            com.showMessage('CFW0010','선택한 메뉴는 화면정보를 선택할수 없습니다.');
+            return;
+        }
+
+        var popOps = {
+            popup_name: "화면검색",
+            url: "/ux/cf/CF00100003P.xml",
+            data: {},
+            width: "1047",
+            height: "520",
+            callbackFn: "scwin.fnPopScrSearchCallback"
+        };
+        com.popup_open(popOps);
+    };
+    
+    /**************************************************************************
+	* 함 수 명: scwin.fnUpdateAflId
+	* 기 능:퀵메뉴관리 테이블 파일ID 수정
+	**************************************************************************/
+	scwin.fnUpdateAflId = function(){
+		 
+		 var rowIndex = dsTcfMenuMngList.getRowPosition();
+         dsTcfMenuMngMap.setJSON(dsTcfMenuMngList.getRowJSON(rowIndex));
+         dsTcfMenuMngMap.set("helpAflId", ibxAflId.getValue());
+         dsTcfMenuMngMap.set("rowStatus", "U");
+         
+         scwin.svcId = "saveTcfMenuMngHelpAflId";
+         
+          ajaxLib.ajax("/cf/CF00100000U/saveTcfMenuMngHelpAflId", {
+                mode: "asynchronous",
+                method: "POST",
+                requestData: dsTcfMenuMngMap.getJSON(),
+                callback: "fnCallback",
+                errCallback: "fnErrCallBack"
+            });
+	};
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    /**************************************************************************
+     * Event: scwin.popScrSearchCallback
+     * 기 능:화면목록 팝업 callBack method 
+     **************************************************************************/
+    scwin.fnPopScrSearchCallback = function (arg) {
+        ibxScrId.setValue(arg.scrId);
+        ibxScrNm.setValue(arg.scrNm);
+        ibxScrPathNm.setValue(arg.scrPathNm);
+    };
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function (result, e) {
+        switch (scwin.svcId) {
+            case "selectTcfMenuMngTreeList":
+                dsTcfMenuMngTreeList.setJSON(result.data.menuTreeList);
+                break;
+            case "selectTcfMenuMngTreeSearchList":
+            	ibxAflId.setValue("");
+                ibxDownFile.setValue(""); // 파일명 입력
+                dsTcfMenuMngList.setJSON(result.data.menuList);
+                break;
+            case "selectTcfMenuMngList":
+                dsTcfMenuMngList.setJSON(result.data.menuList);
+                break;
+            case "saveTcfMenuMngHelpAflId":
+            
+            	var rowIndex = dsTcfMenuMngList.getRowPosition();
+            	dsTcfMenuMngList.setCellData( rowIndex , "helpAflId" , ibxAflId.getValue() );
+            	dsTcfMenuMngList.reform();
+            	
+            	break;
+            case "saveTcfMenuMng":
+                var treeObj = trvTcfMenuMngList.getSelectedNode();
+
+                //메뉴트리 조회
+                scwin.fnTreeList();
+
+                //메뉴상세목록 조회
+                scwin.fnSearch();
+
+                scwin.newMenuYn = "N";
+                
+                menuInfoView.init();
+                
+                ibxAflId.setValue("");
+                ibxDownFile.setValue(""); // 파일명 입력
+
+                //트리 선택
+                trvTcfMenuMngList.selectNode(treeObj.value);
+                com.showMessage("SCN0002", "저장");			//$1 되었습니다.
+
+                break;
+            case "deleteTcfMenuMng":
+                var treeObj = trvTcfMenuMngList.getSelectedNode();
+                
+                com.showMessage("SCN0002", "삭제");			//$1 되었습니다.
+
+                //메뉴트리 조회
+                scwin.fnTreeList();
+
+                //메뉴상세목록 조회
+                scwin.fnSearch();
+
+                //트리 선택
+                trvTcfMenuMngList.selectNode(treeObj.value);
+                
+                menuInfoView.init();
+                
+                ibxAflId.setValue("");
+                ibxDownFile.setValue(""); // 파일명 입력
+
+                break;
+        }
+    };
+
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function (e) {
+
+        switch (scwin.svcId) {
+            case "selectTcfMenuMngTreeList":
+                break;
+            case "selectTcfMenuMngTreeSearchList":
+                break;
+            case "selectTcfMenuMngList":
+                break;
+            case "saveTcfMenuMng":
+                break;
+            case "deleteTcfMenuMng":
+                break;
+        }
+
+    };
+
+
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능:메뉴 상세목록 조회
+     **************************************************************************/
+    scwin.btnFind_onclick = function () {
+        //조회버튼 클릭시
+        dsSearchParamMap.set("keyTreeYn", "N");
+        dsSearchParamMap.set("keyUpperCd", "");
+
+        grdTcfMenuMngList.initGrid();
+        dsTcfMenuMngMap.setEmptyValue();
+        trvTcfMenuMngList.deselectNode();
+        scwin.upperCd = "";
+        
+        btnNew.setDisabled(true);
+        
+        scwin.fnSearch();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnNew_onclick
+     * 기 능:메뉴정보 신규버튼 클릭시 
+     **************************************************************************/
+    scwin.btnNew_onclick = function () {
+		
+		var treeIndex =  trvTcfMenuMngList.getSelectedIndex();
+		var rowData = dsTcfMenuMngTreeList.getDataRow(treeIndex - 1);
+		var level   = Number(rowData.level)+1;
+		var menuIdPrefix = "";
+		var menuIdMidfix = "";
+		
+		scwin.newMenuYn = "Y";
+        scwin.PersonalYn = "N";
+        grdTcfMenuMngList.removeFocusedCell();
+        dsTcfMenuMngMap.setEmptyValue();
+        dsTcfMenuMngMap.set("rowStatus", "C");
+		menuInfoView.init();
+        
+		if (scwin.upperCd == "") {
+            com.showMessage('CFW0010','신규입력시 반드시 메뉴트리를 먼저선택해주세요.');
+            return;
+        }
+        
+        if(scwin.upperCd == "*" && level == 1){
+        	ibxMenuIdPrefix.setMaxLength(7);
+        	ibxMenuIdPrefix.setReadOnly( false );
+        	ibxMenuIdMidfix.setReadOnly( true );
+        	ibxMenuIdSubfix.setReadOnly( true );
+        	ibxSysChrgr.setReadOnly( false ); 
+        } else if(level == 2) {
+        	ibxMenuIdPrefix.setValue(scwin.upperCd);
+        	ibxMenuIdPrefix.setReadOnly( true );
+        	ibxMenuIdMidfix.setReadOnly( false );
+        	ibxMenuIdSubfix.setReadOnly( false );
+        	ibxSysChrgr.setReadOnly( true );
+        } else if(level == 3) {
+        	menuIdPrefix = scwin.upperCd.substring(0,7);
+        	menuIdMidfix = scwin.upperCd.substring(7);
+        	ibxMenuIdPrefix.setValue(menuIdPrefix);
+        	ibxMenuIdMidfix.setValue(menuIdMidfix);
+        	ibxMenuIdPrefix.setReadOnly( true );
+        	ibxMenuIdMidfix.setReadOnly( true );
+        	ibxMenuIdSubfix.setReadOnly( false );
+        	ibxSysChrgr.setReadOnly( true );
+        }
+
+        rdoUseYn.setValue('Y'); //사용여부
+        rdoPersonalYn.setValue('N'); //개인정보 여부
+        ibxUpperMenuId.setValue(scwin.upperCd); //상위메뉴 SET
+        
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnSave_onclick
+     * 기 능:메뉴정보 수정/등록 
+     **************************************************************************/
+    scwin.btnSave_onclick = function () {
+    	
+    	var treeIndex =  trvTcfMenuMngList.getSelectedIndex();
+		var rowData   = dsTcfMenuMngTreeList.getDataRow(treeIndex - 1);
+		var level     = Number(rowData.level)+1;
+    	
+    	ibxMenuIdPrefix.removeClass("req");
+    	ibxMenuIdSubfix.removeClass("req");
+    	ibxMenuIdMidfix.removeClass("req");
+    	ibxMenuIdPrefix.setMandatory(false);
+    	ibxMenuIdSubfix.setMandatory(false);
+    	ibxMenuIdMidfix.setMandatory(false);
+    	if(scwin.upperCd == "*" && level == 1 ){
+    		ibxMenuIdPrefix.addClass( "req" );
+    		ibxMenuIdPrefix.setMandatory(true);
+    	} else if(level ==2) {
+    		ibxMenuIdMidfix.addClass( "req" );
+    		ibxMenuIdMidfix.setMandatory(true);
+    		
+    	} else if(level == 3) {
+    		ibxMenuIdSubfix.addClass( "req" );
+    		ibxMenuIdSubfix.setMandatory(true);
+    	} 
+
+        if (!com.validateGroup([menuInfoView])) {
+            return;
+        }
+        
+        if(level == 1  && ibxMenuIdPrefix.getValue().length < 7){
+        	 com.showMessage('CFW0010','1레벨 메뉴ID 는 7자리입니다.');
+        	 return;
+        }
+        
+        if(level == 2  && ibxMenuIdMidfix.getValue().length < 4){
+        	 com.showMessage('CFW0010','2레벨 메뉴ID 는 4자리입니다.');
+        	 return;
+        }
+        
+        if(level == 3  && ibxMenuIdMidfix.getValue().length < 2){
+        	 com.showMessage('CFW0010','3레벨 메뉴ID 는 2자리입니다.');
+        	 return;
+        }
+        
+        //메뉴ID 부분 DISABLE
+        ibxMenuIdPrefix.setReadOnly(true);
+        ibxMenuIdMidfix.setReadOnly(true);
+        ibxMenuIdSubfix.setReadOnly(true);
+
+        scwin.fnSave();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnDel_onclick
+     * 기 능:메뉴정보 삭제 
+     **************************************************************************/
+    scwin.btnDel_onclick = function () {
+        scwin.fnDelete();
+    };
+
+    /**************************************************************************
+     * Event: scwin.trvTcfMenuMngList_onlabelclick
+     * 기 능:메뉴트리 선택시 메뉴상세목록 그리드 조회 
+     **************************************************************************/
+    scwin.trvTcfMenuMngList_onlabelclick = function (value, nodeElement, index) {
+
+        var rowData = dsTcfMenuMngTreeList.getDataRow(index - 1);
+        scwin.upperCd = value;
+        
+        //메뉴상세정보 초기화
+        menuInfoView.init();
+        
+        if (Number(rowData.level) >= 3) {
+            setTimeout(function () {
+                trvTcfMenuMngList.deselectNode();
+            }, 100);
+            
+            com.showMessage('CFW0010','메뉴생성은 3단계이상으로는 생성할수없습니다.');
+            
+
+            //메뉴상세목록 그리드 초기화 
+            grdTcfMenuMngList.initGrid();
+            scwin.upperCd = "";
+            return;
+        }
+        
+        if(btnNew.getDisabled())
+        {
+			btnNew.setDisabled(false);
+        }
+        
+        scwin.fnTreeSearch(scwin.upperCd);
+
+    };
+
+    /**************************************************************************
+     * Event: scwin.grdTcfMenuMngList_oncellclick
+     * 기 능:메뉴상세목록 그리드 선택시 메뉴상세정보 
+     **************************************************************************/
+    scwin.grdTcfMenuMngList_oncellclick = function (row, col) {
+		
+		var rowObj  = dsTcfMenuMngList.getDataRow(row);
+		var upperMenuId = rowObj.upperMenuId;
+		var menuId      = rowObj.menuId;
+        dsTcfMenuMngMap.setEmptyValue();
+        
+        var menuIdPrefix = "";
+        var menuIdMidfix = "";
+        var menuIdSubfix = "";
+        
+        if(upperMenuId == "*" && menuId.length == 7 ){
+           menuIdPrefix = menuId;	
+           ibxMenuIdPrefix.setValue(menuId);
+           ibxSysChrgr.setReadOnly( false );  
+        } if(menuId.length == 11){
+           menuIdPrefix = menuId.substring(0,7);
+           menuIdMidfix = menuId.substring(7);
+           ibxSysChrgr.setReadOnly( true );
+           menuIdSubfix = "";
+        } if(menuId.length == 13){
+           menuIdPrefix = menuId.substring(0,7);
+           menuIdMidfix = menuId.substring(7,11);
+           menuIdSubfix = menuId.substring(11);;
+           ibxSysChrgr.setReadOnly( true );
+        }
+        
+        ibxMenuIdPrefix.setValue(menuIdPrefix);
+        ibxMenuIdMidfix.setValue(menuIdMidfix);
+        ibxMenuIdSubfix.setValue(menuIdSubfix);
+
+        //메뉴ID 부분 DISABLE
+        ibxMenuIdPrefix.setReadOnly(true);
+        ibxMenuIdMidfix.setReadOnly(true);
+        ibxMenuIdSubfix.setReadOnly(true);
+        scwin.newMenuYn = "N";
+        ibxAflId.setValue(rowObj.helpAflId);
+        dsTcfMenuMngMap.set("helpAflId", rowObj.helpAflId);
+        scwin.fnFileLink();
+    };
+
+    //화면검색 팝업 호출 
+    scwin.btnFindScrInfo_onclick = function () {
+        scwin.fnCallScrSearchPopup();
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxKeyMenuId_onkeyup
+     * 기 능: 메뉴ID ENTER KEY  
+     **************************************************************************/
+    scwin.ibxKeyMenuId_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnFind.trigger("onClick");
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxKeyMenuId_onkeyup
+     * 기 능: 메뉴ID ENTER KEY  
+     **************************************************************************/
+    scwin.ibxKeyMenuNm_onkeyup = function (e) {
+        if (e.keyCode == 13) {
+            btnFind.trigger("onClick");
+        }
+    };
+
+	
+	scwin.btnAfl_onclick = function(e) {
+		//메뉴선택 여부체크
+		if ( strLib.isEmpty(ibxMenuIdPrefix.getValue()) ) {
+			return;
+		};
+	
+		var sAflId   = ibxAflId.getValue();
+		var sJobGbCd = ibxJobGbCd.getValue();
+		var sMenuId  = ibxFileMenuId.getValue();
+		var popOps = {
+				pid: "AflPopup"+"_" +new Date().getTime()
+		        ,url:"/ux/cf/CF00350002P.xml"
+		        ,modal : true //true || false
+		        ,popup_name:"파일 첨부"
+		        ,callbackFn : "scwin.fnSingleUploadCallBack"
+		        ,widType : "M"
+		        ,height : 270
+		        ,data : {
+		                 aflId   : sAflId,
+		                 jobGbCd : sJobGbCd,
+		                 menuId  : sMenuId,
+		                 fileExt : "pdf",
+		                 usage   : "INS"
+		                }
+               };
+  		com.popup_open(popOps);
+	};
+	
+	/* 싱글업로드 파일첨부 팝업 콜백 */
+    scwin.fnSingleUploadCallBack = function(result){
+        ibxAflId.setValue(result.aflId);
+        ibxJobGbCd.setValue(result.jobGbCd);
+        ibxFileMenuId.setValue(result.menuId);
+        scwin.fnFileLink(); // 파일보기 및 다운로드 매핑
+        
+        //메뉴 가존재시 해당메뉴 의 도움말을 반영한다.
+        if(scwin.newMenuYn == "N")
+        {
+        	scwin.fnUpdateAflId();
+        }
+        
+    };
+    
+    // 싱글첨부파일 다운로드 매핑 : 첨부파일ID입력 후 클릭(aflId를 미리 입력해 놓으면 미리 보여준다)
+	/**************************************************************************
+	* 함 수 명: scwin.fnFileLink
+	* 기 능: 파일다운로드
+	**************************************************************************/
+    scwin.fnFileLink = function(){
+    	
+        var aflId   = ibxAflId.getValue(); // 아이디 매핑
+        var aflData = com.udcAflSingle(aflId); // 싱글 데이터 불러오기
+        
+        
+        if(aflId == "" || aflData == null)
+        {
+        	ibxAflId.setValue("");
+        	ibxDownFile.setValue("");
+         	return;
+        }
+        
+        ibxDownFile.setValue(aflData.aflNm); // 파일명 입력
+        // 클릭이벤트 입력
+        var href = "/cf/CF00350000P/downloadMAV?aflp="+aflData.aflp;
+        $("#"+ibxDownFile.getID()).off("click").on("click", function() {
+            $.fileDownload(href);
+        });
+    };	   
+	
+	scwin.trvTcfMenuMngList_ondrop = function(dragNode,dropNode,dragControl,dropControl,e) {
+        
+        if (!confirm("메뉴를 이동 저장 하시겠습니까?")) {
+            return;
+        }
+    
+        let objParentNode = dragNode.parentNode;
+        this.appendNode(dropNode,dragNode);   
+        
+        /* drag 로 노드 이동 후 자동으로 트리가 접히는 문제.
+		 * drag한 노드의 상위부모들의 메뉴 펼침.
+         */
+        while (objParentNode.index != 0){
+            trvTcfMenuMngList.spanNode(objParentNode.index, true);
+            objParentNode = objParentNode.parentNode; 
+        }
+             
+        //drag 한 곳의 메뉴 펼침.              
+        trvTcfMenuMngList.spanNode(dropNode.index, true);             
+        
+        ajaxLib.ajax("/cf/CF00100000U/updateTcfMenuMngByUpperMenuId", {
+            method: "POST",
+            requestData: {
+                menuId: dragNode.value,
+                upperMenuId: dropNode.value       
+            },
+            callback: function(result, e){
+                com.showMessage("SCN0002", "저장");           //$1 되었습니다.
+            },
+            errCallback: function(result, e) {
+                console.log(result);
+            }
+        });        
+	};
+	
+
+	]]></script>
+</head>
+<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    <xf:group style="" id="" class="content_body">
+        <xf:group class="navigator_wrap" id="" style="">
+            <w2:wframe id="wfrTitle" src="/ux/common/navigator.xml" style=""></w2:wframe>
+            <xf:group class="btn_wrap" id="" style="" tagname=""></xf:group>
+        </xf:group>
+        <xf:group class="tbl_search" id="" style="">
+            <xf:group class="tb_list" id="menuSearch" style="" tagname="table">
+                <w2:attributes>
+                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+                </w2:attributes>
+                <xf:group tagname="colgroup">
+                    <xf:group style="width:120.00px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                    <xf:group style="width:120.00px;" tagname="col"></xf:group>
+                    <xf:group style="width:auto;" tagname="col"></xf:group>
+                </xf:group>
+                <xf:group style="" tagname="tr">
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="메뉴ID" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input class="" id="ibxKeyMenuId" mandatory="" style="width: 140px;" ref="data:dsSearchParamMap.keyMenuId" ev:onkeyup="scwin.ibxKeyMenuId_onkeyup" maxlength="13" allowChar="0-9A-Z_"></xf:input>
+                    </xf:group>
+                    <xf:group class="w2tb_th" style="" tagname="th">
+                        <w2:attributes>
+                            <w2:scope>row</w2:scope>
+                        </w2:attributes>
+                        <w2:span class="" id="" label="메뉴명" style=""></w2:span>
+                    </xf:group>
+                    <xf:group class="w2tb_td" style="" tagname="td">
+                        <xf:input id="ibxKeyMenuNm" style="width: 140px;" ref="data:dsSearchParamMap.keyMenuNm" ev:onkeyup="scwin.ibxKeyMenuNm_onkeyup" maxByteLength="50"></xf:input>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+            <xf:group class="btn_tbl_search" style="" tagname="">
+                <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+                    <xf:label>
+                        <![CDATA[조회]]>
+                    </xf:label>
+                </w2:anchor>
+            </xf:group>
+
+        </xf:group>
+        <xf:group style="" id="" class="lybox_wrap fix_300">
+            <xf:group style="" id="" class="lybox ">
+                <xf:group style="" id="" class="lycolumn ">
+                    <xf:group style="" id="" class="lyinner">
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" label="메뉴 트리" id="" class="df_tt"></w2:textbox>
+                        </xf:group>
+                        <w2:treeview tooltipGroupClass="false" dataType="listed" lineShow="" style="height:300px" id="trvTcfMenuMngList" useDrag="true" class="autoHeight" ev:onlabelclick="scwin.trvTcfMenuMngList_onlabelclick" showTreeDepth="1" ev:ondragover="" ev:ondrop="scwin.trvTcfMenuMngList_ondrop">
+                            <w2:itemset nodeset="data:dsTcfMenuMngTreeList">
+                                <w2:label ref="menuNm"></w2:label>
+                                <w2:value ref="menuId"></w2:value>
+                                <w2:depth ref="level"></w2:depth>
+                                <w2:folder ref=""></w2:folder>
+                                <w2:checkbox ref=""></w2:checkbox>
+                                <w2:checkboxDisabled ref=""></w2:checkboxDisabled>
+                                <w2:image ref=""></w2:image>
+                                <w2:iconImage ref=""></w2:iconImage>
+                                <w2:selectedImage ref=""></w2:selectedImage>
+                                <w2:expandedImage ref=""></w2:expandedImage>
+                                <w2:leafImage ref=""></w2:leafImage>
+                            </w2:itemset>
+                        </w2:treeview>
+                    </xf:group>
+                </xf:group>
+                <xf:group style="" id="" class="lycolumn">
+                    <xf:group style="" id="" class="lyinner">
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" id="" label="메뉴상세 목록" class="df_tt"></w2:textbox>
+                        </xf:group>
+                        <w2:gridView rowStatusWidth="30" useShiftKey="true" rowNumHeaderValue="No" scrollByColumn="false" focusMode="row" fixedColumnWithHidden="true" dataList="data:dsTcfMenuMngList" style="height: 280px;" autoFit="allColumn" id="grdTcfMenuMngList" class="autoHeight" ev:oncellclick="scwin.grdTcfMenuMngList_oncellclick">
+                            <w2:header style="" id="header1">
+                                <w2:row style="" id="row2">
+                                    <w2:column width="100" inputType="text" style="height:24px;" id="column23" value="메뉴ID" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="120" inputType="text" style="height:24px;" id="column21" value="메뉴명" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="250" inputType="text" style="height:24px;" id="column19" value="화면경로" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column width="70" inputType="text" style="height:24px;" id="column17" value="메뉴순서" blockSelect="false">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;" id="column37" value="상위메뉴ID" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="70" inputType="text" style="height:24px;" id="column35" value="사용여부" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                    <w2:column removeBorderStyle="false" width="70" inputType="text" style="height:24px;" id="column36" value="개인정보" blockSelect="false" displayMode="label">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:header>
+                            <w2:gBody style="" id="gBody4">
+                                <w2:row style="" id="row5">
+                                    <w2:column expression="" textAlign="" width="100" inputType="text" style="height:24px;" id="menuId" value="" blockSelect="false" readOnly="true">
+                                    </w2:column>
+                                    <w2:column textAlign="" width="120" inputType="text" style="height:24px;" id="menuNm" value="" blockSelect="false" readOnly="true">
+                                    </w2:column>
+                                    <w2:column textAlign="left" width="250" inputType="text" style="height:24px;" id="scrPathNm" class="" value="" blockSelect="false" readOnly="true">
+                                    </w2:column>
+                                    <w2:column textAlign="" width="70" inputType="text" style="height:24px;" id="menuOdr" value="" blockSelect="false" readOnly="true">
+                                    </w2:column>
+                                    <w2:column textAlign="" removeBorderStyle="false" width="100" inputType="text" style="height:24px;" id="upperMenuId" value="" blockSelect="false" displayMode="label" readOnly="true">
+                                    </w2:column>
+                                    <w2:column textAlign="" removeBorderStyle="false" width="70" inputType="text" style="height:24px;" id="useYn" value="" blockSelect="false" displayMode="label" readOnly="true">
+                                    </w2:column>
+                                    <w2:column textAlign="" removeBorderStyle="false" width="70" inputType="text" style="height:24px;" id="personalYn" value="" blockSelect="false" displayMode="label" readOnly="true">
+                                    </w2:column>
+                                </w2:row>
+                            </w2:gBody>
+                        </w2:gridView>
+                        <xf:group style="" id="" class="defaultbox">
+                            <w2:textbox tagname="h3" style="" id="" label="메뉴상세 정보" class="df_tt"></w2:textbox>
+                            <xf:group style="" id="" class="right_wrap">
+                                <xf:group style="" id="" class="">
+                                    <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnNew" class="btn_gcm" ev:onclick="scwin.btnNew_onclick" disabled="true">
+                                        <xf:label>
+                                            <![CDATA[신규]]>
+                                        </xf:label>
+                                    </w2:anchor>
+                                    <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnSave" class="btn_gcm" ev:onclick="scwin.btnSave_onclick">
+                                        <xf:label>
+                                            <![CDATA[저장]]>
+                                        </xf:label>
+                                    </w2:anchor>
+                                    <w2:anchor outerDiv="false" clickEventElement="outerDiv" style="" id="btnDel" class="btn_gcm" ev:onclick="scwin.btnDel_onclick">
+                                        <xf:label>
+                                            <![CDATA[삭제]]>
+                                        </xf:label>
+                                    </w2:anchor>
+                                </xf:group>
+                            </xf:group>
+                        </xf:group>
+                        <xf:group adaptive="" adaptiveThreshold="" tagname="table" style="" id="menuInfoView" class="w2tb">
+                            <w2:attributes>
+                                <w2:summary>메뉴상세 정보 입력 테이블 입니다.</w2:summary>
+                            </w2:attributes>
+                            <xf:group tagname="colgroup">
+                                <xf:group tagname="col" style="width:100.00px;"></xf:group>
+                                <xf:group tagname="col" style=""></xf:group>
+                                <xf:group tagname="col" style="width:100.00px;"></xf:group>
+                                <xf:group tagname="col" style=""></xf:group>
+                                <xf:group tagname="col" style="width:120px;"></xf:group>
+                                <xf:group tagname="col" style=""></xf:group>
+                            </xf:group>
+                            <xf:group tagname="tr" style="">
+                                <xf:group tagname="th" style="" class="w2tb_th req">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span style="" id="" label="메뉴ID"></w2:span>
+                                </xf:group>
+                                <xf:group tagname="td" style="" class="w2tb_td">
+                                		<xf:input style="width:90px;" id="ibxMenuIdPrefix" ref="" disabled="false" readOnly="true" class="req" mandatory="true" allowChar="0-9A-Z_" maxlength="7">
+                                				<xf:input style="width:90px;" id="ibxMenuId" ref="data:dsTcfMenuMngList.menuId" disabled="false" readOnly="true" class="req" mandatory="true" allowChar="0-9A-Z_"></xf:input>
+                                		</xf:input>
+                                		<xf:input allowChar="0-9" class="" disabled="false" id="ibxMenuIdMidfix" mandatory="" readOnly="true" ref="" style="width:47px;" maxlength="4">
+                                				<xf:input allowChar="0-9A-Z_" class="req" disabled="false" id="ibxMenuId" mandatory="true" readOnly="true" ref="data:dsTcfMenuMngList.menuId" style="width:90px;"></xf:input>
+                                		</xf:input>
+                                		<xf:input allowChar="0-9" class="" disabled="false" id="ibxMenuIdSubfix" mandatory="" maxlength="2" readOnly="true" ref="" style="width:46px;">
+                                				<xf:input allowChar="0-9A-Z_" class="req" disabled="false" id="menuId" mandatory="true" readOnly="true" ref="data:dsTcfMenuMngList.menuId" style="width:90px;"></xf:input>
+                                		</xf:input>
+                                </xf:group>
+                                <xf:group tagname="th" style="" class="w2tb_th">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span style="" id="" label="사용여부"></w2:span>
+                                </xf:group>
+                                <xf:group tagname="td" style="" class="w2tb_td">
+                                    <xf:select1 ref="data:dsTcfMenuMngList.useYn" appearance="full" style="" id="rdoUseYn" renderType="radiogroup" rows="" cols="" selectedIndex="">
+                                        <xf:choices>
+                                            <xf:item>
+                                                <xf:label><![CDATA[Y]]></xf:label>
+                                                <xf:value><![CDATA[Y]]></xf:value>
+                                            </xf:item>
+                                            <xf:item>
+                                                <xf:label><![CDATA[N]]></xf:label>
+                                                <xf:value><![CDATA[N]]></xf:value>
+                                            </xf:item>
+                                        </xf:choices>
+                                    </xf:select1>
+                                </xf:group>
+                                <xf:group tagname="th" style="" class="w2tb_th">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span style="" id="" label="상위메뉴ID"></w2:span>
+                                </xf:group>
+                                <xf:group tagname="td" style="" class="w2tb_td">
+                                    <xf:input style="width: 100%;" disabled="false" id="ibxUpperMenuId" ref="data:dsTcfMenuMngList.upperMenuId" readOnly="true">
+                                    </xf:input>
+                                </xf:group>
+                            </xf:group>
+                            <xf:group tagname="tr" style="">
+                                <xf:group tagname="th" style="" class="w2tb_th req">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span style="" id="" label="메뉴명"></w2:span>
+                                </xf:group>
+                                <xf:group tagname="td" style="" class="w2tb_td">
+                                    <w2:attributes>
+                                        <w2:colspan>3</w2:colspan>
+                                        <w2:rowspan>1</w2:rowspan>
+                                    </w2:attributes>
+                                    <xf:input style="width: 100%;" id="ibxMenuNm" ref="data:dsTcfMenuMngList.menuNm" readOnly="" class="req" mandatory="true" maxByteLength="50">
+                                    </xf:input>
+                                </xf:group>
+                                <xf:group tagname="th" style="" class="w2tb_th req">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span style="" id="" label="순서"></w2:span>
+                                </xf:group>
+                                <xf:group tagname="td" style="" class="w2tb_td">
+                                    <xf:input disabled="" style="width:100px;" id="ibxMenuOdr" ref="data:dsTcfMenuMngList.menuOdr" class="req" mandatory="true" dataType="number" maxlength="6" allowChar="0-9">
+                                    </xf:input>
+                                </xf:group>
+                            </xf:group>
+                            <xf:group style="" tagname="tr">
+                                <xf:group class="w2tb_th" style="" tagname="th">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span id="" label="화면ID" style=""></w2:span>
+                                </xf:group>
+                                <xf:group class="w2tb_td" style="" tagname="td">
+                                    <xf:input adjustMaxLength="false" class="" id="ibxScrId" mandatory="" style="width:140px" disabled="true" ref="data:dsTcfMenuMngList.scrId">
+                                    </xf:input>
+                                    <w2:anchor class="btn_gcm_ic src" id="btnFindScrInfo" outerDiv="false" style="" ev:onclick="scwin.btnFindScrInfo_onclick">
+                                        <xf:label>
+                                            <![CDATA[조회]]>
+                                        </xf:label>
+                                    </w2:anchor>
+                                </xf:group>
+                                <xf:group class="w2tb_th" style="" tagname="th">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span id="" label="화면명" style=""></w2:span>
+                                </xf:group>
+                                
+                                <xf:group class="w2tb_td" style="" tagname="td">
+                                    <w2:attributes>
+                                        <w2:colspan>3</w2:colspan>
+                                        <w2:rowspan>1</w2:rowspan>
+                                    </w2:attributes>
+                                    <xf:input id="ibxScrNm" style="width: 100%;" disabled="true" ref="data:dsTcfMenuMngList.scrNm"></xf:input>
+                                </xf:group>
+                            </xf:group>
+                            <xf:group tagname="tr" style="" class="">
+                                <xf:group tagname="th" style="" class="w2tb_th">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span style="" id="" label="화면경로"></w2:span>
+                                </xf:group>
+                                
+                                <xf:group tagname="td" style="" class="w2tb_td">
+                                    <w2:attributes>
+                                        <w2:colspan>3</w2:colspan>
+                                        <w2:rowspan>1</w2:rowspan>
+                                    </w2:attributes>
+                                    <xf:input style="width: 100%;" id="ibxScrPathNm" ref="data:dsTcfMenuMngList.scrPathNm" disabled="true">
+                                    </xf:input>
+                                </xf:group>
+                                
+                                <xf:group tagname="th" style="" class="w2tb_th">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span style="" id="" label="도움말"></w2:span>
+                                </xf:group>
+                                
+                                <xf:group class="w2tb_td" style="" tagname="td">
+                                    <w2:anchor outerDiv="false" id="ibxDownFile">
+			                           <xf:label><![CDATA[파일링크위치]]></xf:label>
+			                        </w2:anchor>
+                                    
+			    					<xf:trigger id="btnAfl" style="" type="button" ev:onclick="scwin.btnAfl_onclick">
+			    					   <xf:label><![CDATA[단건첨부(pdf)]]></xf:label>
+			    					</xf:trigger>
+			    					<xf:input adjustMaxLength="false" id="ibxAflId"       style="display : none;" initValue=""            placeholder="ibxAflId" ></xf:input>
+			    					<xf:input adjustMaxLength="false" id="ibxJobGbCd"     style="display : none;" initValue="CF"          placeholder="ibxJobGbCd"></xf:input>
+			    					<xf:input adjustMaxLength="false" id="ibxFileMenuId"  style="display : none;" initValue="CF00100000U" placeholder="ibxMenuId"></xf:input>
+                                </xf:group>
+                            </xf:group>
+                            <xf:group tagname="tr" style="" class="">
+                                <xf:group tagname="th" style="" class="w2tb_th">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span style="" id="" label="시스템담당자"></w2:span>
+                                </xf:group>
+                                <xf:group tagname="td" style="" class="w2tb_td">
+                                    <w2:attributes>
+                                        <w2:colspan>3</w2:colspan>
+                                        <w2:rowspan>1</w2:rowspan>
+                                    </w2:attributes>
+                                <xf:input style="width: 100%;" id="ibxSysChrgr" ref="data:dsTcfMenuMngList.sysChrgr" maxByteLength="100" readOnly="true">
+                                    </xf:input>
+                               </xf:group>
+                               <xf:group tagname="th" style="" class="w2tb_th">
+                                    <w2:attributes>
+                                        <w2:scope>row</w2:scope>
+                                    </w2:attributes>
+                                    <w2:span style="" id="" label="개인정보여부"></w2:span>
+                                </xf:group>
+                                <xf:group tagname="td" style="" class="w2tb_td">
+                                    <xf:select1 ref="data:dsTcfMenuMngList.personalYn" appearance="full" style="" id="rdoPersonalYn" renderType="radiogroup" rows="" cols="" selectedIndex="">
+                                        <xf:choices>
+                                            <xf:item>
+                                                <xf:label><![CDATA[Y]]></xf:label>
+                                                <xf:value><![CDATA[Y]]></xf:value>
+                                            </xf:item>
+                                            <xf:item>
+                                                <xf:label><![CDATA[N]]></xf:label>
+                                                <xf:value><![CDATA[N]]></xf:value>
+                                            </xf:item>
+                                        </xf:choices>
+                                    </xf:select1>
+                                </xf:group>
+                            </xf:group>
+                        </xf:group>
+                    </xf:group>
+                </xf:group>
+            </xf:group>
+        </xf:group>
+    </xf:group>
+</body>
+</html>

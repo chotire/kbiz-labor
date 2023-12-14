@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="workYm" name="기준년월" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM20001000U.xml
+ * Program Name : 각사별원가이체내역서
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+    /************************************************************************************
+        DataCollection description
+
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+
+		dsSearchMap.set("workYm", dateLib.addMonths(dateLib.getCurrentDate(), -1).substring(0,6));   //기준연월
+
+    };
+
+    scwin.onpageunload = function() {
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+	scwin.fnSearch = function() {
+		var siteCd = wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue();//현장코드
+		var workYm = calYearMonth.getValue();//기준연월
+
+		var sTabId = tacTactbgtMng.getSelectedTabID();
+		var _selectedTabFrame = tacTactbgtMng.getFrame( sTabId );
+		var _localScwin = _selectedTabFrame.getObj("scwin");
+		_localScwin["fnInitial"](siteCd, workYm);	//이벤트명
+	}
+
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//TAB 클릭 이벤트
+	scwin.tacTactbgtMng_ontabclick = function(tabID,idx) {
+		scwin.fnSearch();
+	};
+
+	//조회
+	scwin.btnFind_onclick = function() {
+		if(wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() == "") {
+			com.showMessage("CFW0004", "현장");//$1을(를) 선택하십시오.
+			return;
+		} else if (calYearMonth.getValue() == "") {
+			com.showMessage("CFW0004", "기준연월");//$1을(를) 선택하십시오.
+			return;
+		} else {
+			scwin.fnSearch();
+		}
+	};
+
+	/* 현장코드 변경 이벤트 */
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+		if(dsSearchMap.get( "workYm" ) != ""){
+			scwin.fnSearch();
+		}
+	};
+
+	//기준연월 변경 이벤트
+	scwin.calYearMonth_onchange = function() {
+		scwin.fnSearch();
+	};
+	]]></script>
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="content_body" id="" style="">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group tagname="col" style="width:94px;"></xf:group><xf:group tagname="col" style="width:auto;"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span class="" id="" label="현장" style=""></w2:span></xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group tagname="th" class="w2tb_th"><w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes><w2:span class="" id="" label="기준연월" style=""></w2:span></xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<!-- <w2:udc_yearMonthcalendar id="udcLbatnYymm" style=""></w2:udc_yearMonthcalendar> -->
+							<w2:inputCalendar footerDiv="false" id="calYearMonth" style="width:120px" renderDiv="true" focusOnDateSelect="false"
+			    				calendarValueType="yearMonth" rightAlign="false" renderType="component" class="req" mandatory=""  placeholder="____-__" ev:onchange="scwin.calYearMonth_onchange" ref="data:dsSearchMap.workYm">
+			    				<script ev:event="onchange" type="text/javascript"><![CDATA[
+			   				        if ( !com.isYearMonth(calYearMonth.getValue()) ){
+			                            alert("년월을 확인하십시오.");
+			                            calYearMonth.setValue("");
+			                            calYearMonth.focus();
+			                        }
+			    				 ]]></script>
+			    			</w2:inputCalendar>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<w2:tabControl alwaysDraw="false" class="cm_tab" confirmFalseAction="new" confirmTrueAction="exist" id="tacTactbgtMng"
+				style="" useConfirmMessage="false" useMoveNextTabFocus="false" useTabKeyOnly="true" ev:ontabclick="scwin.tacTactbgtMng_ontabclick">
+				<w2:tabs disabled="false" id="tabs1" label="원가이체내역" style="" localeRef=""></w2:tabs>
+				<w2:tabs disabled="false" id="tabs2" label="외주비이체내역" style="" localeRef=""></w2:tabs>
+				<w2:tabs disabled="false" style="" label="미인정원가내역" id="tabs3"></w2:tabs>
+				<w2:tabs disabled="false" style="" label="이체내역상세" id="tabs4"></w2:tabs>
+				<w2:content alwaysDraw="false" id="content1" style="" src="/ux/cm/cm2000/CM20001005T.xml"></w2:content>
+				<w2:content alwaysDraw="false" id="content2" style="" src="/ux/cm/cm2000/CM20001010T.xml"></w2:content>
+				<w2:content alwaysDraw="false" style="" id="content3" src="/ux/cm/cm2000/CM20001015T.xml"></w2:content>
+				<w2:content alwaysDraw="false" style="" id="content4" src="/ux/cm/cm2000/CM20001020T.xml"></w2:content>
+			</w2:tabControl>
+		</xf:group>
+	</body>
+</html>

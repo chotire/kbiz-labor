@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dataList1" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="column24" name="name2" dataType="text"></w2:column>
+						<w2:column id="column22" name="name3" dataType="text"></w2:column>
+						<w2:column id="column20" name="name4" dataType="text"></w2:column>
+						<w2:column id="column18" name="name5" dataType="text"></w2:column>
+						<w2:column id="column16" name="name6" dataType="text"></w2:column>
+						<w2:column id="column14" name="name7" dataType="text"></w2:column>
+						<w2:column id="column12" name="name8" dataType="text"></w2:column>
+						<w2:column id="column10" name="name9" dataType="text"></w2:column>
+						<w2:column id="column8" name="name10" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true">
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+						<w2:row></w2:row>
+					</w2:data>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+	var gubun    = "";
+	var erpCount = null;
+	var timer    = null;
+	var obj      = gcm.tab_main.scope_obj.getObj("scwin");
+	
+	scwin.onpageload = function() {
+	
+		// alert class 추가
+		$("#"+$p.getPopupId()).addClass('alert');
+		
+		// X버튼 숨김
+        var frameIds = $p.getPopupId()+"_close";
+        $("#"+frameIds).hide();
+	
+		var param = JSON.parse($p.getPopupParam()).data;
+		
+		gubun    = param.gubun;
+		erpCount = obj.erpCount;
+		
+		if(gubun == "E")
+		{
+			scwin.fnIntervalCount();
+			grpTimeExtension.show();
+		}
+		else if(gubun == "L")
+		{
+			grpTimeOut.show();	
+		}
+		
+	};
+	
+	scwin.onpageunload = function() {
+		
+	};
+	
+	scwin.fnIntervalCount = function(){
+		timer = setInterval(function(){
+			scwin.fnTimerExtension();
+		}, 1000);
+	};
+	
+	scwin.fnTimerExtension = function(){
+	
+		var time  = scwin.fnExtensionTimeFormat(erpCount);
+		var label = "<span class=\"fc_red_bold\">"+time+"</span>이후 자동 로그아웃됩니다.<br/>로그인상태를 유지하려면 <span class=\"fc_red_bold\">“계속“</span><br/>버튼을 누르세요";
+		
+		erpCount--;
+		 
+		grpTbExetensionLabel.setValue(label);
+		
+		if(erpCount < 0 )
+		{
+			if (typeof(obj["fnTelepiaFirstLogOut"]) == "function"){
+	        	obj["fnTelepiaFirstLogOut"]();
+			}
+		}
+	}
+	
+	/**************************************************************************
+	 * 함 수 명: scwin.fnTimeFormat
+	 * 기 능: 자동로그아웃 타이머 시간:분:초 포맷터
+	 **************************************************************************/
+	scwin.fnExtensionTimeFormat = function(count){
+		var nHour=0;
+		var nMin=0;
+		var nSec=0;
+		if(count>0) {
+			nMin = parseInt(count/60);
+			nSec = count%60;
+	
+			if(nMin>60) {
+				nHour = parseInt(nMin/60);
+				nMin = nMin%60;
+			}
+		} 
+		if(nSec<10) nSec = "0"+nSec;
+		if(nMin<10) nMin = "0"+nMin;
+	
+		return nMin+":"+nSec; 
+	};
+	
+	scwin.btnExtension_onclick = function() {
+		if (typeof(obj["fnTimerReset"]) == "function"){
+        	obj["fnTimerReset"]();
+		}
+		com.popup_close("");
+	};
+	]]></script>
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+	
+		<xf:group style="display :none" id="grpTimeExtension" class="content_body popup">
+				<w2:textbox class="txt_msg" id="grpTbExetensionLabel" label='&lt;span class="fc_red_bold"&gt;05:00&lt;/span&gt;이후 자동 로그아웃됩니다.&lt;br/&gt;로그인상태를 유지하려면 &lt;span class="fc_red_bold"&gt;“계속“&lt;/span&gt;&lt;br/&gt;버튼을 누르세요' style=""></w2:textbox><xf:group class="bottombox" id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnExtension" outerDiv="false" style="" ev:onclick="scwin.btnExtension_onclick">
+								<xf:label><![CDATA[계속]]></xf:label>
+						</w2:anchor>
+				</xf:group>
+		</xf:group>
+		
+		<xf:group style="display :none" id="grpTimeOut" class="content_body popup">
+			<w2:textbox id="" label='장시간 미사용으로 &lt;span class="fc_red_bold"&gt;로그아웃&lt;/span&gt;&lt;br/&gt;되었습니다. &lt;br/&gt;다시 로그인해 주세요.' class="txt_msg"></w2:textbox>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="" outerDiv="false" style="">
+					<xf:label><![CDATA[로그인바로가기]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

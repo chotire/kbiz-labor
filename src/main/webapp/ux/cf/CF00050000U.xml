@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+
+<head>
+    <w2:type>DEFAULT</w2:type>
+    <w2:buildDate />
+    <xf:model>
+        <xf:instance>
+            <data xmlns="" />
+        </xf:instance>
+        <w2:dataCollection baseNode="map">
+        		<w2:dataMap baseNode="map" id="dsSearchParam">
+        				<w2:keyInfo>
+        						<w2:key id="keyUserId" name="아이디" dataType="text"></w2:key>
+        						<w2:key id="keyPwEnc" name="비밀번호" dataType="text"></w2:key>
+        				</w2:keyInfo>
+        		</w2:dataMap>
+        		<w2:dataMap baseNode="map" id="dsPwChngParam" style="">
+        				<w2:keyInfo>
+        						<w2:key dataType="text" id="keyUserId" name="아이디"></w2:key>
+        						<w2:key dataType="text" id="keyPwEnc" name="비밀번호"></w2:key>
+        				</w2:keyInfo>
+        		</w2:dataMap>
+        		<w2:dataMap baseNode="map" id="dsInsaParam" style="">
+        				<w2:keyInfo>
+        						<w2:key dataType="text" id="keyUserId" name="아이디"></w2:key>
+        						<w2:key dataType="text" id="keyPwEnc" name="비밀번호"></w2:key>
+        						<w2:key id="keyHrUserId" name="인사아이디" dataType="text"></w2:key>
+        				</w2:keyInfo>
+        		</w2:dataMap>
+        </w2:dataCollection>
+        <w2:workflowCollection></w2:workflowCollection>
+    </xf:model>
+	<script src="/resources/js/lib/jquery.bxslider.js" type="javascript" lazy="false" />
+    <script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID : CF00050000U.xml 
+     * Program Name : 로그인 관리 
+     * Author : 강상국 (tpksg)
+     * Date : 2019.02.15
+     * 
+     * History 
+     * ======================================== 
+     * 변경일자     	  수정자   내 용 
+     * ======================================== 
+     * 2019.02.15   강상국   최초작성
+     *     
+     **************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+    scwin.svcId = "";
+	scwin.today = "";
+	scwin.closeDate = "";
+	
+    /************************************************************************************
+     *  [2] 초기화 
+     ************************************************************************************/
+    scwin.onpageload = function () {
+        /*
+    	$("#"+grpBxsSlider.id).bxSlider({
+		  auto: true,
+		  autoControls: true,
+		  stopAutoOnClick: true,
+		  pager: true,
+		  controls: false,
+		  slideMargin: 0,
+		  maxSlides: 4,
+		  speed: 400,
+		  autoControlsCombine: true,
+		  slideWidth: 479
+		});
+        */		
+		/*
+        if (!com.isEmpty(sessionStorage.getItem("accessToken"))) {
+			var Backlen=history.length; 
+			history.go(-Backlen);
+			window.location.replace("/");				
+		}
+        */
+        
+      	//운영일시 id ,pwd 삭제
+      	if (gcm.khProp.environment == "prd") {
+			ibxUserId.setValue(""); 	
+			ibxPwEnc.setValue(""); 	
+		}
+		
+        if (localStorage.getItem('idSave') == '' || localStorage.getItem('idSave') == null) {
+	        selIdSave.checkAll( false );
+        } else {
+	        ibxUserId.setValue(localStorage.getItem('idSave'));
+	        selIdSave.checkAll( true );        
+      	}  
+      	sessionStorage.clear();
+      	
+        //scwin.fnSsoLogin();
+		
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+     
+    scwin.fnSsoLogin = function() {
+        
+        ajaxLib.ajax("/ep/ssoLogIn", {
+            method: "POST",
+            requestData: dsSearchParam.getJSON(),
+            callback: function(result, e){
+                debugger;
+                console.log(e);
+                //$('body').append(e);
+            },
+            errCallback: function(result, e){
+            }
+        });
+    };      
+     
+    /**************************************************************************
+     * Event: scwin.fnLogIn
+     * 기 능: 로그인
+     **************************************************************************/
+    scwin.fnLogIn = function () {
+        scwin.svcId = "logInTcfUserInfo";
+        ajaxLib.ajax("/cf/CF00050000U/selectTcfUserInfo", {
+            mode: "asynchronous",
+            method: "POST",
+            requestData: dsSearchParam.getJSON(),
+            callback: "fnCallback",
+            errCallback: "fnErrCallBack"
+        });
+    };
+
+    /**************************************************************************
+     * Event: scwin.fnValid
+     * 기 능: Valid 검사
+     **************************************************************************/
+    scwin.fnValid = function () {
+        if (strLib.isEmpty(ibxUserId.getValue(), false)) {
+            alert('아이디를 입력 하세요.');
+            ibxUserId.focus();
+            return false;
+        }
+        if (strLib.isEmpty(ibxPwEnc.getValue(), false)) {
+            alert('비밀번호를 입력 하세요.');
+            msgTypeCd.focus();
+            return false;
+        }
+        return true;
+    };
+
+    /**************************************************************************
+     * Event: scwin.fnTodayMove
+     * 기 능: today 페이지로 이동한다.
+     **************************************************************************/
+	scwin.fnTodayMove = function () {
+		$w.url("/ux/ep/EP10050001U.xml",{"spa":true});
+	};
+	
+    /**************************************************************************
+     * Event: scwin.fnIndexMove
+     * 기 능: index_tab 페지지로 이동한다.
+     **************************************************************************/
+	scwin.fnIndexMove = function () {
+        $w.url("/ux/index_tab.xml",{"spa":true});
+	}
+	
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+    // 결과 후처리
+    scwin.fnCallback = function (result, e) {
+        switch (scwin.svcId) {
+            case "logInTcfUserInfo":
+                var param1 = "";
+
+				if (result.data.accessUser.rstCode == 'O') { 
+                    // 세션스토로지 입력
+                    com.setSessionStorage(result);
+                    scwin.fnIndexMove();
+                } else if (result.data.accessUser.rstCode == 'dup') {
+                	/** 중복로그인 중 **/
+					var infoList = result.data.infoList;
+					var popOps = {
+							pid: "CF00050000DupP"+"_" +new Date().getTime()
+					    ,	url:"/ux/cf/CF00050000DupP.xml"
+					    ,	modal : true //true || false
+					    ,	popup_name:"중복로그인"
+					    ,	callbackFn : "scwin.rsDupPop"
+					    ,	height : 300
+					    ,	width : 620
+					    ,	data : {
+					    	"infoList" : infoList
+					    }
+			         };
+			  		com.popup_open(popOps);	
+				} else {
+                	alert(result.data.accessUser.rstMsg);
+                }
+                break;
+        }
+    };
+    
+    scwin.rsDupPop = function(result, e) {
+    	if(result.rsCheck) {
+    		//다시한번 로그인 프로세스 실행
+    		scwin.fnLogIn();
+    	}
+	};
+
+    // 에러 후처리
+	scwin.fnErrCallBack = function (e) {
+        switch (scwin.svcId) {
+            case "logInTcfUserInfo":
+                console.log('logIn Error');
+                break;
+        }
+    }
+        
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+
+    /**************************************************************************
+     * Event: scwin.ibxUserId_onkeyup
+     * 기 능: 아이디 입력박스에 키를 눌렀을때 이벤트
+     **************************************************************************/
+    scwin.ibxUserId_onkeyup = function (e) {
+    	selIdSave.checkAll( false );
+        if (e.keyCode == '13') {
+            scwin.btnFind_onclick();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.ibxPwEnc_onkeyup
+     * 기 능: 비밀번호 입력박스에 키를 눌렀을때 이벤트
+     **************************************************************************/
+    scwin.ibxPwEnc_onkeyup = function (e) {
+        if (e.keyCode == '13') {
+            scwin.btnFind_onclick();
+        }
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 로그인 버튼
+     **************************************************************************/
+    scwin.btnFind_onclick = function () {
+        if (!scwin.fnValid()) {
+            return;
+        }
+        scwin.fnLogIn();
+    };
+
+	
+    /**************************************************************************
+     * Event: scwin.selIdSave_onlabelclick
+     * 기 능: 아이디 저장 버튼
+     **************************************************************************/		
+	scwin.selIdSave_onlabelclick = function(index,checked,value) {
+		if (checked) {
+			localStorage.setItem('idSave', ibxUserId.getValue());
+		} else {
+			localStorage.removeItem('idSave');
+		}		
+	};
+	]]></script>
+</head>
+
+<body ev:onpageload="scwin.onpageload">
+	<xf:group style="" id="" class="login_wrap">		
+		<w2:textbox class="logo" ev:onclick="scwin.topLogo_onclick" id="topLogo" label="SONO INTERNATIONAL" tagname="h1" style=""></w2:textbox><xf:group style="" id="" class="loginbox_wrap">
+			
+			<xf:group class="login_form_wrap" id="">
+					<xf:group class="logingrp_title" id="">
+						<w2:textbox id="" label="MEMBERS&lt;br/&gt;LOGIN"></w2:textbox>
+					</xf:group>
+					<xf:group style="" id="" class="form_box">
+						<xf:input ref="data:dsSearchParam.keyUserId" ev:onblur="" ev:onkeyup="scwin.ibxUserId_onkeyup" style="" id="ibxUserId" enterBlur="true" initValue="" placeholder="사용자ID 를 입력해주세요."></xf:input>
+						<xf:input ref="data:dsSearchParam.keyPwEnc" ev:onblur="" ev:onkeydown="" ev:onkeyup="scwin.ibxPwEnc_onkeyup" displayFormat="" style="" id="ibxPwEnc" enterBlur="true" type="password" initValue="" placeholder="비밀번호"></xf:input>
+						<xf:group style="" id="" class="form_btmbox">
+							<xf:group style="" id="" class="fl">
+								<xf:select ref="" appearance="full" style="" id="selIdSave" renderType="checkboxgroup" rows="" selectedindex="-1" class="" cols="1" ev:onlabelclick="scwin.selIdSave_onlabelclick">
+									<xf:choices>
+										<xf:item>
+											<xf:label>아이디저장</xf:label>
+											<xf:value><![CDATA[]]></xf:value>
+										</xf:item>
+									</xf:choices>
+								</xf:select>
+							</xf:group>
+                            <!-- 
+							<xf:group class="fr" id="" style="">
+								<w2:span id="" label="비밀번호"></w2:span>
+								<w2:anchor id="btnPwReset" outerDiv="false" class="pw_link" ev:onclick="scwin.btnPwReset_onclick">
+									<xf:label><![CDATA[초기화]]></xf:label>
+								</w2:anchor>
+								<w2:anchor class="pw_link" id="btnPwChange" outerDiv="false" style="" ev:onclick="scwin.btnPwChange_onclick">
+									<xf:label><![CDATA[수정]]></xf:label>
+								</w2:anchor>
+							</xf:group>
+                             -->
+						</xf:group>					
+					</xf:group>
+					<w2:anchor class="btn_mian_login" clickEventElement="outerDiv" ev:onclick="scwin.btnFind_onclick" id="btnFind" outerDiv="false" style="">
+						<xf:label><![CDATA[로그인]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			<xf:group class="login_footer" id="">
+				<w2:textbox id="" label="서울특별시 송파구 법원로 135 소노타워&lt;br/&gt;전화 02)2222-(내선번호)"></w2:textbox>
+				<w2:textbox id="" label="COPYRIGHT(C) SONO INTERNATIONAL Co.&lt;br/&gt;Ltd. ALL RIGHTS RESERVED." style="" class="copyright"></w2:textbox>
+			</xf:group>
+		</xf:group>
+	</xf:group>
+	<w2:iframe id="telepiaLogOut" src="" style="width:0;height:0;" class="w2iframe hide" frameborder="0"></w2:iframe>
+</body>
+
+</html>

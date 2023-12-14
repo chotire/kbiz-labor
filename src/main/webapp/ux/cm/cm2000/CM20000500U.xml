@@ -1,0 +1,987 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장" dataType="text"></w2:key>
+						<w2:key id="workYm" name="기준년월" dataType="text"></w2:key>
+						<w2:key id="tradeCd" name="공동도급사" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsOtcoList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="cd" name="코드" dataType="text"></w2:column>
+						<w2:column id="cdNm" name="코드명" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsOtcoAcctPcostList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="chk" name="chk" dataType="text"></w2:column>
+						<w2:column id="no" name="No" dataType="text"></w2:column>
+						<w2:column id="tradeCd" name="거래처코드" dataType="text"></w2:column>
+						<w2:column id="acctNm" name="계정명" dataType="text"></w2:column>
+						<w2:column id="taxnPcostAmt" name="세금계산서" dataType="text"></w2:column>
+						<w2:column id="ntaxPcostAmt" name="계산서" dataType="text"></w2:column>
+						<w2:column id="rcpsPcostAmt" name="영수증" dataType="text"></w2:column>
+						<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+						<w2:column id="workYm" name="작업_연월" dataType="text"></w2:column>
+						<w2:column id="acctCd" name="계정코드" dataType="text"></w2:column>
+						<w2:column id="pcostTrnmGbCd" name="원가이체구분코드" dataType="text"></w2:column>
+						<w2:column id="possDgr" name="지분차수" dataType="text"></w2:column>
+						<w2:column id="itexpGb" name="비목구분" dataType="text"></w2:column>
+
+
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsConstPcostList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="chk" name="chk" dataType="text"></w2:column>
+						<w2:column id="no" name="no" dataType="text"></w2:column>
+						<w2:column id="pcostSeq" name="원가순번" dataType="text"></w2:column>
+						<w2:column id="bgtItemiNm" name="Item" dataType="text"></w2:column>
+						<w2:column id="bgtItemiStdr" name="규격" dataType="text"></w2:column>
+						<w2:column id="bgtItemiUnit" name="단위" dataType="text"></w2:column>
+						<w2:column id="itexpGbNm" name="비목" dataType="text"></w2:column>
+						<w2:column id="plActbgtAmt" name="실행예산" dataType="text"></w2:column>
+						<w2:column id="pcostAmt" name="누계집행원가" dataType="text"></w2:column>
+						<w2:column id="taxnRcgtPcostAmt" name="세금계산서" dataType="text"></w2:column>
+						<w2:column id="ntaxRcgtPcostAmt" name="계산서" dataType="text"></w2:column>
+						<w2:column id="rcpsRcgtPcostAmt" name="영수증" dataType="text"></w2:column>
+						<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+						<w2:column id="workYm" name="작업_연월" dataType="text"></w2:column>
+						<w2:column id="tradeCd" name="거래처코드" dataType="text"></w2:column>
+						<w2:column id="bgtItemiCd" name="예산내역코드" dataType="text"></w2:column>
+						<w2:column id="acctCd" name="계정코드" dataType="text"></w2:column>
+
+
+
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchMap2">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="workYm" name="작업_연월" dataType="text"></w2:key>
+						<w2:key id="tradeCd" name="거래처코드" dataType="text"></w2:key>
+						<w2:key id="acctCd" name="계정코드" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsJvInfo">
+					<w2:keyInfo>
+						<w2:key id="bfmmDataYn" name="전월_데이터_존재_여부" dataType="text"></w2:key>
+						<w2:key id="thmmDataYn" name="당월_데이터_존재_여부" dataType="text"></w2:key>
+						<w2:key id="nemmDataYn" name="익월_데이터_존재_여부" dataType="text"></w2:key>
+						<w2:key id="possDgr" name="최종차수" dataType="text"></w2:key>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="workYm" name="작업연월" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsJvCheckMap">
+					<w2:keyInfo>
+						<w2:key id="trnmYn" name="공동도급_원가_이체 DATA 존재_유무" dataType="text"></w2:key>
+						<w2:key id="trnmWorkYn" name="공동도급_원가_이체 DATA 존재_유무(작업년월별)" dataType="text"></w2:key>
+						<w2:key id="trnmPyrqYn" name="공동도급_원가_이체_청구 DATA 존재_유무" dataType="text"></w2:key>
+						<w2:key id="intAprvStusCd" name="공동도급 결재진행상태" dataType="text"></w2:key>
+						<w2:key id="closeYn" name="마감여부" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsOtcoList2" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="cd" name="코드" dataType="text"></w2:column>
+						<w2:column id="cdNm" name="코드명" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM20000500U.xml
+ * Program Name : 타사원가관리
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+     /************************************************************************************
+        DataCollection description
+
+        dsOtcoList: 공동도급사
+        dsOtcoAcctPcostList: 공동도급사 계정내역 GRID
+        dsConstPcostList: 계정별 Item 내역 GRID
+        dsSearchMap: 검색조건 parameter
+        dsSearchMap2: 계정별 Item 내역 검색조건 parameter
+        dsJvInfo: 공동도급 정보
+        dsJvCheckMap: 공동도급 체크 리스트
+     ************************************************************************************/
+
+    /************************************************************************************
+    *  [1] 전역변수
+    ************************************************************************************/
+ 	scwin.selectRow = -1;//공동도급사 계정내역 GRID 선택된 ROW
+
+    /************************************************************************************
+    *  [2] onpageload(초기화포함)
+    ************************************************************************************/
+	scwin.onpageload = function() {
+	    //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+
+		dsSearchMap.set("workYm", dateLib.addMonths(dateLib.getCurrentDate(), -1).substring(0,6));   //기준연월
+
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        grdOtcoAcctPcostList.initGrid();//공동도급사 계정내역 GRID 초기화
+        grdConstPcostList.initGrid();//계정별 Item 내역 GRID 초기화
+        scwin.selectRow = -1;//공동도급사 계정내역 GRID 선택된 ROW
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+    //공동도급 정보 조회
+    scwin.fnOtcoList = function(flag) {
+        ajaxLib.ajax("/cm/cm2000/CM20000500U/selectOtcoList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+				dsOtcoList.setJSON(result.data.dsOtcoList);//공동도급사 조회
+				dsOtcoList2.setJSON(result.data.dsOtcoList2);//타사원가계정의 공동도급사 조회
+				dsJvInfo.setJSON(result.data.dsJvInfo);//공동도급 정보
+
+				//=============== 공동도급 체크 리스트 ===============
+				dsJvCheckMap.setJSON(result.data.dsJvCheckMap);//공동도급 체크 리스트
+				scwin.fnbtnDisabled();//버튼 활성화/비활성화
+				//=============== 공동도급 체크 리스트 ===============
+
+				//초기화
+        		dsOtcoAcctPcostList.setJSON( "" ); //공동도급사 계정내역 GRID
+				dsConstPcostList.setJSON( "" );	//계정별 Item 내역 GRID
+
+				if(flag) {//조회버튼 클릭 시, 전월복사시 자동 조회
+					scwin.fnOtcoAcctPcostList();
+				}
+			},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+	//공동도급사 계정내역 조회
+    scwin.fnOtcoAcctPcostList = function() {
+        ajaxLib.ajax("/cm/cm2000/CM20000500U/selectOtcoAcctPcostList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+				dsOtcoAcctPcostList.setJSON(result.data);
+				com.setUdcValue("dsTotalCount","udcListCount",dsOtcoAcctPcostList.getTotalRow());   //GRID ROW COUNT
+
+				scwin.fnbtnDisabled();//버튼 활성화/비활성화
+
+				if(dsOtcoAcctPcostList.getTotalRow() > 0){
+					grdOtcoAcctPcostList.setFocusedCell( 0 , "tradeCd" , false );
+					scwin.fnConstPcostList(0);//계정별 Item 내역 조회
+					scwin.selectRow = 0;//공동도급사 계정내역 GRID 선택된 ROW
+				}else{
+					scwin.selectRow = -1;//공동도급사 계정내역 GRID 선택된 ROW
+				}
+           	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+	//계정별 Item 내역 조회
+    scwin.fnConstPcostList = function(row) {
+    	dsSearchMap2.set( "siteCd" , dsOtcoAcctPcostList.getCellData( row , "siteCd" ) );//현장코드
+    	dsSearchMap2.set( "workYm" , dsOtcoAcctPcostList.getCellData( row , "workYm" ) );//기준연월
+    	dsSearchMap2.set( "tradeCd" , dsOtcoAcctPcostList.getCellData( row , "tradeCd" ) );//공동도급사
+    	dsSearchMap2.set( "acctCd" , dsOtcoAcctPcostList.getCellData( row , "acctCd" ) );//계정코드
+
+        ajaxLib.ajax("/cm/cm2000/CM20000500U/selectConstPcostList", {
+            method : "POST",
+            requestData : dsSearchMap2.getJSON(),
+            callback : function(result, e){
+				dsConstPcostList.setJSON(result.data);
+				com.setUdcValue("dsTotalCount1","udcListCount",dsConstPcostList.getTotalRow());   //GRID ROW COUNT
+
+				scwin.fnbtnDisabled();//버튼 활성화/비활성화
+           	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+    //버튼 활성화/비활성화
+    scwin.fnbtnDisabled = function() {
+    	var bFlg = false;//EDIT 가능
+    	tbxCloseDisp.setValue( "" );
+		if(dsJvCheckMap.get( "trnmWorkYn" ) == "Y"){//공동도급_원가_이체 DATA 존재_유무
+			tbxCloseDisp.setValue( "원가이체집계 처리 되었습니다." );
+			bFlg = true;//EDIT 불가능
+		}else if(dsJvCheckMap.get( "trnmPyrqYn" ) == "Y"){//공동도급_원가_이체_청구 DATA 존재_유무
+			tbxCloseDisp.setValue( "원가이체청구집계 처리 되었습니다." );
+			bFlg = true;//EDIT 불가능
+		}else if(dsJvCheckMap.get( "intAprvStusCd" ) == "CF00702"){//공동도급 결재진행상태 [CF00702:확정]
+			tbxCloseDisp.setValue( "원가이체청구집계 결재 확정 되었습니다." );
+			bFlg = true;//EDIT 불가능
+		}
+		
+    	btnSave.setDisabled( bFlg );//저장
+    	btnAddRow1.setDisabled( bFlg );//공동도급사 계정내역 - 행추가
+    	btnDelRow1.setDisabled( bFlg );//공동도급사 계정내역 - 행삭제
+    	btnAddRow2.setDisabled( bFlg );//계정별 Item 내역 - 행추가
+    	btnDelRow2.setDisabled( bFlg );//계정별 Item 내역 - 행삭제
+   		//공동도급사 계정내역 GRID
+   		grdOtcoAcctPcostList.setColumnReadOnly( "taxnPcostAmt" , bFlg );//세금계산서
+   		grdOtcoAcctPcostList.setColumnReadOnly( "ntaxPcostAmt" , bFlg );//계산서
+   		grdOtcoAcctPcostList.setColumnReadOnly( "rcpsPcostAmt" , bFlg );//영수증
+    	//계정별 Item 내역 GRID
+		grdConstPcostList.setColumnReadOnly( "taxnRcgtPcostAmt" , bFlg );//세금계산서
+   		grdConstPcostList.setColumnReadOnly( "ntaxRcgtPcostAmt" , bFlg );//계산서
+   		grdConstPcostList.setColumnReadOnly( "rcpsRcgtPcostAmt" , bFlg );//영수증
+   		
+   		//Migration이후 TCM_POSS_INFO 테이블에는 1~N차수가 존재하지만 TCM_OTCO_ACCT_PCOST 테이블에는 1차만 존재함.
+		//그래서 EDIT가 불가능 할 경우 타사원가계정의 공동도급사 정보를 GRID 공동도급사 selectbox에 다시 셋팅한다.
+		if(bFlg){
+			grdOtcoAcctPcostList.setColumnNodeSet( "tradeCd" , "data:dsOtcoList2" , "cdNm" , "cd" );//공동도급사 계정내역 GRID 공동도급사 selectBox
+		}else{
+			grdOtcoAcctPcostList.setColumnNodeSet( "tradeCd" , "data:dsOtcoList" , "cdNm" , "cd" );//공동도급사 계정내역 GRID 공동도급사 selectBox
+		}
+   		   		
+    }
+
+    //조회조건 필수 체크
+    scwin.fnSearchChk = function(){
+		if(dsSearchMap.get( "siteCd" ) == "") {
+    		com.showMessage("CFW0004", "현장", "", "", wfmKeySiteInfo.getWindow().ibxKeySiteNm.id);//$1을(를) 선택하십시오.
+    		return false;
+    	} else if (dsSearchMap.get( "workYm" ) == "") {
+    		com.showMessage("CFW0004", "기준연월", "", "", calYearMonth.id);//$1을(를) 선택하십시오.
+    		return false;
+    	}
+    	return true;
+    }
+
+    //계정선택(팝업) 호출
+    scwin.fnAcctCdCall = function(data, callback){
+        var popOps = {
+            popup_name :"계정선택(팝업)",
+            url :"/ux/cm/cm2000/CM20000505P.xml",
+            data : {},
+            widType:"M",
+            height:"620",
+            callbackFn : callback
+        };
+        com.popup_open(popOps);
+    }
+
+    //계정선택(팝업) - 팝업선택 후 callback
+    scwin.popAcntCdCallback = function(obj){
+        if(obj != ""){
+            var cnt = 0;
+            var nFocusedRowIndex = grdOtcoAcctPcostList.getFocusedRowIndex();
+            $.each(obj, function(key, value){
+            	if(cnt == 0){
+	                dsOtcoAcctPcostList.setCellData( nFocusedRowIndex , "acctNm" , value.acctNm );//계정명
+	                dsOtcoAcctPcostList.setCellData( nFocusedRowIndex , "acctCd" , value.acctCd );//계정코드
+            	}else{
+					var rowIndex = dsOtcoAcctPcostList.insertRow();
+					grdOtcoAcctPcostList.setReadOnly( "cell" , rowIndex , "tradeCd" , false );//공동도급사
+					dsOtcoAcctPcostList.setCellData( rowIndex , "tradeCd", dsOtcoAcctPcostList.getCellData( nFocusedRowIndex , "tradeCd" ));//공동도급사
+					dsOtcoAcctPcostList.setCellData( rowIndex , "siteCd", dsOtcoAcctPcostList.getCellData( nFocusedRowIndex , "siteCd" ));//현장
+					dsOtcoAcctPcostList.setCellData( rowIndex , "workYm", dsOtcoAcctPcostList.getCellData( nFocusedRowIndex , "workYm" ));//작업_연월
+					dsOtcoAcctPcostList.setCellData( rowIndex , "possDgr", dsOtcoAcctPcostList.getCellData( nFocusedRowIndex , "possDgr" ));//차수
+	                dsOtcoAcctPcostList.setCellData( rowIndex , "taxnPcostAmt" , 0 );//세금계산서
+	                dsOtcoAcctPcostList.setCellData( rowIndex , "ntaxPcostAmt" , 0 );//계산서
+	                dsOtcoAcctPcostList.setCellData( rowIndex , "rcpsPcostAmt" , 0 );//영수증
+	               	dsOtcoAcctPcostList.setCellData( rowIndex , "acctNm" , value.acctNm );//계정명
+	                dsOtcoAcctPcostList.setCellData( rowIndex , "acctCd" , value.acctCd );//계정코드
+	                grdOtcoAcctPcostList.setFocusedCell( rowIndex , "tradeCd" , false );
+	                scwin.selectRow = rowIndex;
+            	}
+                cnt++;
+            });
+            dsConstPcostList.setJSON( "" );	//계정별 Item 내역 GRID
+        }
+    }
+
+    //손익실행예산 Item 선택(팝업) 호출
+    scwin.fnPcostCall = function(data, callback){
+        var popOps = {
+                      popup_name: "손익실행예산 Item 선택"
+                    , url:"/ux/cm/cm4010/CM40100505P.xml"
+                    , data:{
+                             paramKeySiteCd:dsSearchMap.get("siteCd")   //현장코드
+                           , paramKeyItexpGb : 'L,O'                  	//비목구분 노무[L], 경비[O]
+                           , paramKeyPageGb : 'CM20000500U'             //페이지 구분 CM40150000U : 퇴직정정산 처리
+                           , paramKeyChkCnt : '2'                       //체크 항목  1 : 단건 , 1이 아닌경우 다건
+                           , paramKeyYyyyMm : dsSearchMap.get("workYm") //작업년월
+                      }
+                    , callbackFn : callback
+                    , widType:"XL"
+                    , height:"700"
+                 };
+
+        com.popup_open(popOps);
+    }
+
+    //손익실행예산 Item 선택(팝업) - 팝업선택 후 callback
+    scwin.popPcostCallback = function(obj){
+    	if(obj != ""){
+            var cnt = 0;
+            var nFocusIdx = grdOtcoAcctPcostList.getFocusedRowIndex();//선택된 공동도급사 계정내역 GRID index값
+            $.each(obj, function(key, value){
+            	if(dsConstPcostList.getMatchedJSON( "bgtItemiCd" , value.bgtItemiCd , true ) == ""){//동일한 예산내역코드가 존재하지 않을경우.
+	            	if(cnt == 0){
+	            		var rowIndex = grdConstPcostList.getFocusedRowIndex();//선택된 계정별 Item 내역 GRID index값
+						dsConstPcostList.setCellData( rowIndex , "bgtItemiNm" , value.bgtItemiNm );//Item
+						dsConstPcostList.setCellData( rowIndex , "bgtItemiStdr" , value.bgtItemiStdr );//규격
+						dsConstPcostList.setCellData( rowIndex , "bgtItemiUnit" , value.bgtItemiUnit );//단위
+						dsConstPcostList.setCellData( rowIndex , "itexpGbNm" , value.itexpGbNm );//비목
+						dsConstPcostList.setCellData( rowIndex , "plActbgtAmt" , value.plActbgtAmt );//손익실행예산
+						dsConstPcostList.setCellData( rowIndex , "pcostAmt" , value.pcostAmt );//누계집행원가
+						dsConstPcostList.setCellData( rowIndex , "bgtItemiCd" , value.bgtItemiCd );//예산내역코드
+	            	}else{
+						var rowIndex = dsConstPcostList.insertRow();
+						dsConstPcostList.setCellData( rowIndex , "siteCd" , dsOtcoAcctPcostList.getCellData( nFocusIdx , "siteCd" ) );//현장코드
+						dsConstPcostList.setCellData( rowIndex , "workYm" , dsOtcoAcctPcostList.getCellData( nFocusIdx , "workYm" ) );//작업연월
+						dsConstPcostList.setCellData( rowIndex , "tradeCd" , dsOtcoAcctPcostList.getCellData( nFocusIdx , "tradeCd" ) );//거래처코드
+						dsConstPcostList.setCellData( rowIndex , "acctCd" , dsOtcoAcctPcostList.getCellData( nFocusIdx , "acctCd" ) );//계정코드
+						dsConstPcostList.setCellData( rowIndex , "taxnRcgtPcostAmt" , 0 );//세금계산서
+						dsConstPcostList.setCellData( rowIndex , "ntaxRcgtPcostAmt" , 0 );//계산서
+						dsConstPcostList.setCellData( rowIndex , "rcpsRcgtPcostAmt" , 0 );//영수증
+	
+						dsConstPcostList.setCellData( rowIndex , "bgtItemiNm" , value.bgtItemiNm );//Item
+						dsConstPcostList.setCellData( rowIndex , "bgtItemiStdr" , value.bgtItemiStdr );//규격
+						dsConstPcostList.setCellData( rowIndex , "bgtItemiUnit" , value.bgtItemiUnit );//단위
+						dsConstPcostList.setCellData( rowIndex , "itexpGbNm" , value.itexpGbNm );//비목
+						dsConstPcostList.setCellData( rowIndex , "plActbgtAmt" , value.plActbgtAmt );//손익실행예산
+						dsConstPcostList.setCellData( rowIndex , "pcostAmt" , value.pcostAmt );//누계집행원가
+						dsConstPcostList.setCellData( rowIndex , "bgtItemiCd" , value.bgtItemiCd );//예산내역코드
+	
+						grdConstPcostList.setFocusedCell( rowIndex , "bgtItemiNm" , false );
+	            	}
+	                cnt++;
+				}
+            });
+    	}
+    }
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//조회 클릭 이벤트
+	scwin.btnFind_onclick = function() {
+		if(scwin.fnSearchChk()) {
+			scwin.fnOtcoList(true);
+		}
+	};
+
+	//기준연월 변경 이벤트
+	scwin.calYearMonth_onchange = function() {
+		//공동도급 정보 조회
+        scwin.fnOtcoList(true);
+	}
+
+	/* 현장코드 변경 이벤트 */
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+		//공동도급 정보 조회
+		if(dsSearchMap.get( "workYm" ) != ""){
+			scwin.fnOtcoList(false);
+		}
+	};
+
+	//저장
+	scwin.btnSave_onclick = function() {
+
+		if(dsOtcoAcctPcostList.getModifiedJSON() == "" && dsConstPcostList.getModifiedJSON() == ""){
+			com.showMessage("PRA0002", "");//저장할내역이 없습니다.
+			return;
+		}
+
+		//공동도급사 계정내역 GRID
+		var validInfo = [
+				 { id: "tradeCd", 			mandatory: true }//공동도급사
+				,{ id: "acctNm", 			mandatory: true }//계정명
+			];
+		//계정별 Item 내역 GRID
+		var validInfo2 = [
+				 { id: "bgtItemiNm", 		mandatory: true }//내역코드
+			];
+
+		//data유효성체크 - 공동도급사 계정내역
+		if (!com.validateGridView(grdOtcoAcctPcostList, validInfo)) {
+			return;
+		}
+		//data유효성체크 - 계정별 Item 내역
+		if (!com.validateGridView(grdConstPcostList, validInfo2)) {
+			return;
+		}
+
+		if(grdConstPcostList.getTotalRow() > 0) {//계정별 Item 내역 GRID ROW가 존재할 경우
+			//공동도급사 계정내역 GRID
+			var nFocusIdx = grdOtcoAcctPcostList.getFocusedRowIndex();
+			var taxnPcostAmt = dsOtcoAcctPcostList.getCellData( nFocusIdx , "taxnPcostAmt" );//세금계산서
+			var ntaxPcostAmt = dsOtcoAcctPcostList.getCellData( nFocusIdx , "ntaxPcostAmt" );//계산서
+			var rcpsPcostAmt = dsOtcoAcctPcostList.getCellData( nFocusIdx , "rcpsPcostAmt" );//영수증
+			var acctNm = dsOtcoAcctPcostList.getCellData( nFocusIdx , "acctNm" );//계정명
+
+			//계정별 Item 내역 GRID
+			var taxnRcgtPcostAmtSum = grdConstPcostList.getFooterData( "taxnRcgtPcostAmtSum" );//세금계산서
+			var ntaxRcgtPcostAmtSum = grdConstPcostList.getFooterData( "ntaxRcgtPcostAmtSum" );//계산서
+			var rcpsRcgtPcostAmtSum = grdConstPcostList.getFooterData( "rcpsRcgtPcostAmtSum" );//영수증
+
+			//공동도급사 계정내역 합계와 계정별 Item 내역 합계가 동일하지 않으면...
+			if(taxnPcostAmt != taxnRcgtPcostAmtSum){//세금계산서
+				com.showMessage("CMW0012", acctNm, "", "", grdOtcoAcctPcostList.id, nFocusIdx, "taxnPcostAmt");//$1 Item배분금액을 바르게 입력하십시오.
+				return;
+			}else if(ntaxPcostAmt != ntaxRcgtPcostAmtSum){//계산서
+				com.showMessage("CMW0012", acctNm, "", "", grdOtcoAcctPcostList.id, nFocusIdx, "ntaxPcostAmt");//$1 Item배분금액을 바르게 입력하십시오.
+				return;
+			}else if(rcpsPcostAmt != rcpsRcgtPcostAmtSum){//영수증
+				com.showMessage("CMW0012", acctNm, "", "", grdOtcoAcctPcostList.id, nFocusIdx, "rcpsPcostAmt");//$1 Item배분금액을 바르게 입력하십시오.
+				return;
+			}
+		}
+
+		if (confirm("저장 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm2000/CM20000500U/saveOtcoAcctPcost", {
+	            method : "POST",
+	            requestData : {
+	            				 siteCd : dsJvInfo.get( "siteCd" )//현장코드
+	            				,workYm : dsJvInfo.get( "workYm" )//기준연월
+	            				,tcmOtcoAcctPcostList : dsOtcoAcctPcostList.getModifiedJSON()//공동도급사 계정내역 GRID
+	            				,tcmConstPcostList : dsConstPcostList.getModifiedJSON()//계정별 Item 내역 GRID
+	            				,insList : dsOtcoAcctPcostList.getInsertedJSON()//추가된 공동도급사 계정내역
+	            },
+	            callback : function(result, e){
+	            	com.showMessage("CFA0012");//저장되었습니다.
+			        scwin.fnOtcoAcctPcostList();
+	            },
+	            errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+
+	//공동도급사 계정내역 - 행추가
+	scwin.btnAddRow1_onclick = function() {
+		if(scwin.fnSearchChk()) {
+
+			dsConstPcostList.setJSON( "" );//계정별 Item DataSet 삭제
+
+			var rowIndex = dsOtcoAcctPcostList.insertRow();
+			grdOtcoAcctPcostList.setReadOnly( "cell" , rowIndex , "tradeCd" , false );//공동도급사
+			dsOtcoAcctPcostList.setCellData( rowIndex , "siteCd", dsSearchMap.get( "siteCd" ));//현장
+			dsOtcoAcctPcostList.setCellData( rowIndex , "workYm", dsSearchMap.get( "workYm" ));//작업_연월
+			dsOtcoAcctPcostList.setCellData( rowIndex , "possDgr", dsJvInfo.get( "possDgr" ));//차수
+            dsOtcoAcctPcostList.setCellData( rowIndex , "taxnPcostAmt" , 0 );//세금계산서
+            dsOtcoAcctPcostList.setCellData( rowIndex , "ntaxPcostAmt" , 0 );//계산서
+            dsOtcoAcctPcostList.setCellData( rowIndex , "rcpsPcostAmt" , 0 );//영수증
+			if(sbxTradeCd.getValue() != "all"){//공동도급사 SELECT BOX 조회조건
+				dsOtcoAcctPcostList.setCellData( rowIndex , "tradeCd", sbxTradeCd.getValue());//공동도급사
+			}else{
+				dsOtcoAcctPcostList.setCellData( rowIndex , "tradeCd", dsOtcoList.getCellData( 0 , "cd" ));//공동도급사
+			}
+
+            grdOtcoAcctPcostList.setFocusedCell( rowIndex , "tradeCd" , false );
+            scwin.selectRow = rowIndex;
+
+		}
+	};
+
+	//공동도급사 계정내역 - 행삭제
+	scwin.btnDelRow1_onclick = function() {
+		var checkedIndex = grdOtcoAcctPcostList.getCheckedIndex( "chk" );
+        if (checkedIndex.length == 0) {
+            com.showMessage("POA0003", "");//삭제할 데이터를 선택해 주십시오.
+            return;
+        }
+        dsOtcoAcctPcostList.removeRows( checkedIndex );
+		dsConstPcostList.setJSON( "" );//계정별 Item 내역 GRID 초기화
+	};
+
+	//계정별 Item 내역 - 행추가
+	scwin.btnAddRow2_onclick = function() {
+		if(scwin.fnSearchChk()) {
+			var nFocusIdx = grdOtcoAcctPcostList.getFocusedRowIndex();//선택된 공동도급사 계정내역 GRID index값
+			if(nFocusIdx < 0) {
+				com.showMessage("CSA0008", "공동도급사 계정내역");//$1이(가) 존재하지 않습니다.
+				return;
+			}else if(dsOtcoAcctPcostList.getCellData( nFocusIdx , "acctCd" ) == ""){
+				com.showMessage("CFW0004", "계정");//$1을(를) 선택하십시오.
+				return;
+			}else{
+				var rowIndex = dsConstPcostList.insertRow();
+				dsConstPcostList.setCellData( rowIndex , "siteCd" , dsOtcoAcctPcostList.getCellData( nFocusIdx , "siteCd" ) );//현장코드
+				dsConstPcostList.setCellData( rowIndex , "workYm" , dsOtcoAcctPcostList.getCellData( nFocusIdx , "workYm" ) );//작업연월
+				dsConstPcostList.setCellData( rowIndex , "tradeCd" , dsOtcoAcctPcostList.getCellData( nFocusIdx , "tradeCd" ) );//거래처코드
+				dsConstPcostList.setCellData( rowIndex , "acctCd" , dsOtcoAcctPcostList.getCellData( nFocusIdx , "acctCd" ) );//계정코드
+				dsConstPcostList.setCellData( rowIndex , "taxnRcgtPcostAmt" , 0 );//세금계산서
+				dsConstPcostList.setCellData( rowIndex , "ntaxRcgtPcostAmt" , 0 );//계산서
+				dsConstPcostList.setCellData( rowIndex , "rcpsRcgtPcostAmt" , 0 );//영수증
+				grdConstPcostList.setFocusedCell( rowIndex , "bgtItemiNm" , false );
+
+				//손익실행예산 Item 선택(팝업) 호출
+	            scwin.fnPcostCall({
+	                },
+	                "scwin.popPcostCallback"
+	            );
+			}
+		}
+	};
+
+	//계정별 Item 내역 - 행삭제
+	scwin.btnDelRow2_onclick = function() {
+		var checkedIndex = grdConstPcostList.getCheckedIndex( "chk" );
+        if (checkedIndex.length == 0) {
+            com.showMessage("POA0003", "");//삭제할 데이터를 선택해 주십시오.
+            return;
+        }
+        dsConstPcostList.removeRows( checkedIndex );
+	};
+
+	//공동도급사 계정내역 - 클릭 이벤트
+	scwin.grdOtcoAcctPcostList_oncellclick = function(row,col) {
+		var sColunmName = grdOtcoAcctPcostList.getColumnID( col );
+		var sRowStatus = dsOtcoAcctPcostList.getRowStatus( row );
+
+		if(scwin.selectRow != row){
+			scwin.fnConstPcostList(row);//계정별 Item 내역 조회
+		}
+
+		if(sColunmName == "popAcntCd" && sRowStatus == "C"){//회계계정(팝업) - 행추가시만.
+			//계정선택(팝업) 호출
+            scwin.fnAcctCdCall({
+                },
+                "scwin.popAcntCdCallback"
+            );
+        }
+        scwin.selectRow = row;
+	};
+
+	//공동도급사 계정내역 - 변경 이벤트
+	//info값 - {"oldValue":"","newValue":"1","rowIndex":4,"colIndex":4}
+	scwin.grdOtcoAcctPcostList_onviewchange = function(info) {
+		var sColunmName = grdOtcoAcctPcostList.getColumnID( info.colIndex );
+		var row = info.rowIndex;
+		var col = info.colIndex;
+
+		if(sColunmName == "tradeCd") {//공동도급사 변경시
+			dsConstPcostList.setJSON( "" );//계정별 Item 내역 GRID 초기화
+		}
+	};
+
+	//계정별 Item 내역 - 클릭 이벤트
+	scwin.grdConstPcostList_oncellclick = function(row,col) {
+		var sColunmName = grdConstPcostList.getColumnID( col );
+		var sRowStatus = dsConstPcostList.getRowStatus( row );
+
+		if(sColunmName == "popPcost" && sRowStatus == "C"){//손익실행예산 Item 선택 - 행추가시만.
+			//손익실행예산 Item 선택(팝업) 호출
+            scwin.fnPcostCall({
+                },
+                "scwin.popPcostCallback"
+            );
+		}
+	};
+	]]></script>
+	<!-- <w2:require src="/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require> -->
+	<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				<xf:group class="btn_wrap" id="" style="" tagname="">
+					<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnSave" outerDiv="false"
+						style="" ev:onclick="scwin.btnSave_onclick">
+						<xf:label><![CDATA[저장]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group tagname="col" style="width:108px;"></xf:group>
+						<xf:group tagname="col" style="width:auto;"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style="" class=""></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기준연월" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<!-- <w2:udc_yearMonthcalendar id="udcLbatnYymm" style=""></w2:udc_yearMonthcalendar> -->
+							<w2:inputCalendar footerDiv="false" id="calYearMonth" style="width:120px" renderDiv="true" focusOnDateSelect="false"
+			    				calendarValueType="yearMonth" rightAlign="false" renderType="component" class="req" mandatory=""  placeholder="____-__" ev:onchange="scwin.calYearMonth_onchange" ref="data:dsSearchMap.workYm">
+			    				<script ev:event="onchange" type="text/javascript"><![CDATA[
+			   				        if ( !com.isYearMonth(calYearMonth.getValue()) ){
+			                            alert("년월을 확인하십시오.");
+			                            calYearMonth.setValue("");
+			                            calYearMonth.focus();
+			                        }
+			    				 ]]></script>
+			    			</w2:inputCalendar>
+						</xf:group>
+						<xf:group tagname="th" class="w2tb_th">
+							<w2:attributes></w2:attributes>
+							<w2:span class="" id="" label="공동도급사" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes></w2:attributes>
+							<xf:select1 allOption="true" appearance="minimal" chooseOption="" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxTradeCd" ref="data:dsSearchMap.tradeCd"
+								style="width:140px;" submenuSize="auto" textAlign="left">
+								<xf:choices>
+									<xf:itemset nodeset="data:dsOtcoList">
+										<xf:label ref="cdNm"></xf:label>
+										<xf:value ref="cd"></xf:value>
+									</xf:itemset>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<!-- <w2:anchor outerDiv="false" style="" id="" class="btn_swich">
+					<xf:label>검색열고닫기</xf:label>
+					</w2:anchor> -->
+
+
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="공동도급사 계정내역" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount" style=""></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="descbox" id="" style="">
+						<w2:textbox class="" id="tbxCloseDisp" label="" tagname=""></w2:textbox>
+					</xf:group><xf:group id="" style="">
+						<w2:anchor class="btn_gcm row_add" clickEventElement="" id="btnAddRow1" outerDiv="false"
+							style="" toolTip="행추가" ev:onclick="scwin.btnAddRow1_onclick">
+							<xf:label><![CDATA[행추가]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_del" clickEventElement="" id="btnDelRow1" outerDiv="false"
+							style="" toolTip="행삭제" ev:onclick="scwin.btnDelRow1_onclick">
+							<xf:label><![CDATA[행삭제]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+					
+				</xf:group>
+
+			</xf:group>
+			<w2:gridView readOnly="true" autoFit="allColumn" class="" dataList="data:dsOtcoAcctPcostList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdOtcoAcctPcostList" rowNumHeaderValue="No" rowNumVisible=""
+				rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height:288px;"
+				useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdOtcoAcctPcostList_oncellclick" ev:onviewchange="scwin.grdOtcoAcctPcostList_onviewchange" checkReadOnlyOnPaste="true" enterKeyMove="down" keyMoveEditMode="true" preventAddRowOnPaste="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column removeBorderStyle="false" width="40" inputType="checkbox" style="height:69px;"
+							id="column89" value="" blockSelect="false" displayMode="label" readOnly="false" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column49" inputType="text"
+							removeBorderStyle="false" style="height:69px;" value="No" width="40" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" style="height:69px;" value="공동도급사"
+							width="170" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" style="height:69px;" value="계정명"
+							width="200" colSpan="2" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" style="height:35px;" value="집행원가" width="120" colSpan="3" rowSpan="">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row7">
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column100"
+							value="세금계산서" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column99"
+							value="계산서" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column98"
+							value="영수증" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column removeBorderStyle="false" width="60" inputType="checkbox" style="" id="chk" value=""
+							blockSelect="false" displayMode="label" readOnly="false">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="no"
+							inputType="expression" removeBorderStyle="false" style="" value="" width="60">
+						</w2:column>
+						<w2:column blockSelect="false" id="tradeCd" inputType="select" style="" textAlign="left"
+							value="대림산업(주)" width="170" class="" readOnly="true" allOption="" chooseOption="" ref="" viewType="icon">
+							<w2:choices>
+								<w2:itemset nodeset="data:dsOtcoList">
+									<w2:label ref="cdNm"></w2:label>
+									<w2:value ref="cd"></w2:value>
+								</w2:itemset>
+							</w2:choices>
+						</w2:column>
+						<w2:column blockSelect="false" id="acctNm" inputType="text" style="" textAlign="left" value=""
+							width="200" displayFormat="" dataType="text">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="image" style="" id="popAcntCd"
+							value="" blockSelect="false" displayMode="label" imageSrc="/resources/images/content/ico_grid_find.png"
+							viewType="icon" class="bl0" textAlign="right">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="taxnPcostAmt" inputType="text"
+							removeBorderStyle="false" style="" textAlign="right" value="" width="120" displayFormat="#,##0" dataType="number"
+							allowChar="0-9" readOnly="false">
+						</w2:column>
+						<w2:column blockSelect="false" class="" dataType="number" displayFormat="#,##0"
+							displayMode="label" id="ntaxPcostAmt" inputType="text" removeBorderStyle="false" style="" textAlign="right"
+							value="" width="120" allowChar="0-9" readOnly="false">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="rcpsPcostAmt" inputType="text"
+							removeBorderStyle="false" style="" value="" width="120" displayFormat="#,##0" dataType="number" textAlign="right"
+							allowChar="0-9" readOnly="false">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+				<w2:footer style="" id="footer1">
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="60" inputType="text" style="" id="column91" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="60" inputType="text" style="" id="column88" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="170" inputType="text" style="" id="column87"
+							value="합계" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column86"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column94" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style=""
+							id="taxnPcostAmtSum" value="" blockSelect="false" displayMode="label" expression="sum('taxnPcostAmt')"
+							displayFormat="#,##0" textAlign="right" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style=""
+							id="ntaxPcostAmtSum" value="" blockSelect="false" displayMode="label" expression="sum('ntaxPcostAmt')"
+							displayFormat="#,##0" textAlign="right" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style=""
+							id="rcpsPcostAmtSum" value="" blockSelect="false" displayMode="label" expression="sum('rcpsPcostAmt')"
+							displayFormat="#,##0" textAlign="right" dataType="number">
+						</w2:column>
+					</w2:row>
+				</w2:footer>
+			</w2:gridView>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="계정별 Item 내역" style="" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount1" style=""></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm row_add" clickEventElement="" id="btnAddRow2" outerDiv="false"
+							style="" toolTip="행추가" ev:onclick="scwin.btnAddRow2_onclick">
+							<xf:label><![CDATA[행추가]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm row_del" clickEventElement="" id="btnDelRow2" outerDiv="false"
+							style="" toolTip="행삭제" ev:onclick="scwin.btnDelRow2_onclick">
+							<xf:label><![CDATA[행삭제]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsConstPcostList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdConstPcostList" readOnly="false" rowNumHeaderValue="No"
+				rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false"
+				style="height:288px;" useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdConstPcostList_oncellclick" checkReadOnlyOnPaste="true" keyMoveEditMode="true" enterKeyMove="down" preventAddRowOnPaste="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" colSpan="" displayMode="label" id="column89" inputType="checkbox"
+							readOnly="false" removeBorderStyle="false" rowSpan="2" style="height:69px;" value="" width="40">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="" displayMode="label" id="column49" inputType="text"
+							removeBorderStyle="false" rowSpan="2" style="height:68px;" value="No" width="40">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="" id="column15" inputType="text" rowSpan="2"
+							style="height:68px;" value="Item" width="150">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:68px;"
+							id="column121" value="규격" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:68px;"
+							id="column118" value="단위" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:68px;"
+							id="column115" value="비목" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:68px;"
+							id="column112" value="실행예산" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:68px;"
+							id="column109" value="누계집행원가" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="height:68px;"
+							id="column133" value="선택" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="height:34px;"
+							id="column130" value="타사원가" blockSelect="false" displayMode="label" colSpan="3" rowSpan="">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row8">
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column138"
+							value="세금계산서" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column137"
+							value="계산서" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column136"
+							value="영수증" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" id="chk" inputType="checkbox"
+							readOnly="false" removeBorderStyle="false" style="" value="" width="60">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="no"
+							inputType="expression" removeBorderStyle="false" style="" value="" width="60" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" dataType="text" displayFormat="" id="bgtItemiNm" inputType="text"
+							style="" textAlign="left" value="" width="150" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="bgtItemiStdr"
+							value="" blockSelect="false" displayMode="label" textAlign="left" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="bgtItemiUnit"
+							value="" blockSelect="false" displayMode="label" textAlign="center" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="itexpGbNm"
+							value="" blockSelect="false" displayMode="label" textAlign="center" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="plActbgtAmt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,###.#" dataType="number" textAlign="right"
+							readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="pcostAmt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,###.#" dataType="number" textAlign="right"
+							readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="image" style="" id="popPcost"
+							value="" blockSelect="false" displayMode="label" imageSrc="/resources/images/content/ico_grid_find.png"
+							viewType="icon">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="taxnRcgtPcostAmt"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" dataType="number" textAlign="right"
+							readOnly="false" allowChar="0-9">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="ntaxRcgtPcostAmt"
+							value="" blockSelect="false" displayMode="label" textAlign="right" readOnly="false" displayFormat="#,##0" allowChar="0-9" dataType="number">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="rcpsRcgtPcostAmt"
+							value="" blockSelect="false" displayMode="label" textAlign="right" readOnly="false" displayFormat="#,##0" allowChar="0-9" dataType="number">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+				<w2:footer id="footer1" style="">
+					<w2:row id="row6" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column91" inputType="text"
+							removeBorderStyle="false" style="" value="" width="60">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column88" inputType="text"
+							removeBorderStyle="false" style="" value="" width="60">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column86" inputType="text"
+							removeBorderStyle="false" style="" value="합계" width="150">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column123"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="" id="column120"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column117"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column114"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column111"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column135"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style=""
+							id="taxnRcgtPcostAmtSum" value="" blockSelect="false" displayMode="label" dataType="number" displayFormat="#,##0"
+							expression="sum('taxnRcgtPcostAmt')" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style=""
+							id="ntaxRcgtPcostAmtSum" value="" blockSelect="false" displayMode="label" dataType="number" displayFormat="#,##0"
+							expression="sum('ntaxRcgtPcostAmt')" textAlign="right">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="expression" style=""
+							id="rcpsRcgtPcostAmtSum" value="" blockSelect="false" displayMode="label" dataType="number" displayFormat="#,##0"
+							expression="sum('rcpsRcgtPcostAmt')" textAlign="right">
+						</w2:column>
+					</w2:row>
+				</w2:footer>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

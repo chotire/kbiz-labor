@@ -1,0 +1,921 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>DEFAULT</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+            <w2:workflowCollection>
+            </w2:workflowCollection>
+        </xf:model>
+        <script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID   : todo.xml
+ * Program Name : To-do
+ * Author       : 남상열 (tpnsr)
+ * Date         : 2019.07.03
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ========================================  
+ * 2019-07-03   남상열   최초작성 
+ **************************************************************************/ 
+ 
+	/************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+	scwin.svcId = "";
+	scwin.mailCount = 0;
+	scwin.approvalCount = 0;
+	scwin.slipCount = 0;
+	scwin.busCardCount = 0;
+	scwin.etcCount =0;
+	scwin.totalCount = 0;
+
+	
+    /************************************************************************************ 
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/   
+    scwin.onpageload = function() { 
+ 		scwin.initScreen();
+    };
+
+    scwin.onpageunload = function() {
+		
+	};
+
+	// 화면 초기화(필수)
+	scwin.initScreen = function() {
+	
+		var userTypeGb = sessionStorage.getItem("userTypeGb");
+		
+		if(userTypeGb == "1" || userTypeGb == "3"){
+			//메일        
+		    scwin.fnMailReloadList();
+		        
+		    //결재
+		    scwin.fnApproveReloadList();
+		}
+		else if(userTypeGb == "4" || userTypeGb == "5"){
+			btnMailLink.setStyle( "display" , "none" );
+			btnMailReload.setStyle( "display" , "none" );
+			btnApproveLink.setStyle( "display" , "none" );
+			btnApprovalReload.setStyle( "display" , "none" );
+		} 
+        
+        //전표
+        scwin.fnSearchTodoSlipList();
+        
+        //법인카드
+        scwin.fnSearchCorporationCardList();
+        
+        //기타
+        scwin.fnSearchTodoEtcList(); 
+	}; 
+
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+	/**************************************************************************
+	* 함 수 명: scwin.fnSearchCorporationCard
+	* 기 능: 법인카드 내역
+	**************************************************************************/ 
+	scwin.fnSearchCorporationCardList = function(){
+		ajaxLib.ajax("/ep/Main/selectCorporationCardInfo", {
+             mode       : "asynchronous"
+            ,method     : "POST"
+            ,requestData: ''
+            ,processMsg: ''
+            ,callback   : function(result,e){
+		  		var epCorpCardInfoList = result.data.epCorpCardInfoList;
+		  		
+		  		//console.log(epCorpCardInfoList);
+		  		
+		  		scwin.fnCorpCardGenertor(epCorpCardInfoList);
+			},
+			errCallback : function(result,e){
+			}
+        });
+	};
+	
+	/**************************************************************************
+	* 함 수 명: scwin.fnCorpCardGenertor
+	* 기 능: 법인카드 제너레이터
+	**************************************************************************/
+	scwin.fnCorpCardGenertor = function(epCorpCardInfoList){
+		
+		var count = 0;
+		
+		console.log(epCorpCardInfoList.length);
+		
+		grpCorpCardEmpty.removeClass("hide");
+		genCorpCard.removeClass("hide");
+		
+		genCorpCard.removeAll();
+		if(epCorpCardInfoList != null && epCorpCardInfoList.length >0){
+			count = epCorpCardInfoList.length;
+			
+			spanCorpCardCount.setLabel(count);	
+			grpCorpCardEmpty.addClass("hide");
+			
+			var genCorpCardIndex , spanGenApvDt , spanGenMestNm , spanGenBuySum;
+			
+			$.each(epCorpCardInfoList,function(index,item){
+				genCorpCardIndex = genCorpCard.insertChild();
+				spanGenApvDt     = genCorpCard.getChild( genCorpCardIndex , "spanApvDt" );
+				spanGenMestNm    = genCorpCard.getChild( genCorpCardIndex , "spanMestNm" );
+				spanGenBuySum    = genCorpCard.getChild( genCorpCardIndex , "spanBuySum" );
+				
+				spanGenApvDt.setLabel(com.transDate(item.apvDt, "dash"));
+				spanGenApvDt.setUserData(item);
+				spanGenMestNm.setLabel(item.mestNm);
+				spanGenMestNm.setUserData(item);
+				spanGenBuySum.setLabel(com.formatComma(item.buySum,false));
+				spanGenBuySum.setUserData(item);
+			}); 
+			
+			
+		} else {
+			count = 0;	
+			spanCorpCardCount.setLabel(count);	
+			genCorpCard.addClass("hide");
+		
+		}
+		
+		scwin.busCardCount = Number(count);
+		
+		scwin.fnSumCount();
+	
+	};  
+	 
+	
+	/**************************************************************************
+	* 함 수 명: scwin.fnSearchTodoEtcList
+	* 기 능: TO-DO 기타 리로드
+	**************************************************************************/
+    scwin.fnSearchTodoEtcList = function() {
+    
+        ajaxLib.ajax("/ep/Main/selectTodoEtcInfo", {
+             mode       : "asynchronous"
+            ,method     : "POST"
+            ,requestData: ''
+            ,processMsg: ''
+            ,callback   : function(result,e){
+            
+            	var todoEtcList   = result.data.todoEtcList;
+	   			var totalEtcCount     = result.data.totalEtcCount;
+	   			
+	   			scwin.etcCount = Number(totalEtcCount);
+	   			
+	   			spanTodoEtcCount.setLabel(totalEtcCount);
+	   			
+	   			//TODO ETC 정보
+	   			scwin.fnTodoEtcGenertor(todoEtcList);    
+			},
+			errCallback : function(result,e){
+			}
+        });
+    };
+    
+    /**************************************************************************
+	* 함 수 명: scwin.fnSearchTodoSlipList
+	* 기 능: TO-DO 기타 리로드
+	**************************************************************************/
+    scwin.fnSearchTodoSlipList = function() {
+        
+        ajaxLib.ajax("/ep/Main/selectTodoSlipInfo", {
+             mode       : "asynchronous"
+            ,method     : "POST"
+            ,requestData: ''
+            ,processMsg: ''
+            ,callback   : function(result,e){
+		  		var epTemSlipAprvInfoList = result.data.epTemSlipAprvInfoList;
+	   			
+	   			//자재
+	   			scwin.fnTodoSlipGenertor(epTemSlipAprvInfoList);    
+			},
+			errCallback : function(result,e){
+			}
+        });
+    };
+    
+    /**************************************************************************
+	* 함 수 명: scwin.fnMailReloadList
+	* 기 능: 메일 리로드
+	**************************************************************************/
+    scwin.fnMailReloadList = function() {
+        
+        ajaxLib.ajax("/ep/Main/selectTodoMailInfo", {
+             mode       : "asynchronous"
+            ,method     : "POST"
+            ,requestData: ''
+            ,processMsg: ''
+            ,callback   : function(result,e){
+		  		var mailData     = result.data.mailData;
+		  		
+	   			//메일
+	   			scwin.fnUnreadMailGenertor(mailData);    
+	   			
+			},
+			errCallback : function(result,e){
+			}
+        });
+    };
+    
+    /**************************************************************************
+	* 함 수 명: scwin.fnApproveReloadList
+	* 기 능: 미승인결재 리로드
+	**************************************************************************/
+    scwin.fnApproveReloadList = function() {
+        
+        ajaxLib.ajax("/ep/Main/selectTodoApprovalInfo", {
+             mode       : "asynchronous"
+            ,method     : "POST"
+            ,requestData: ''
+            ,processMsg: ''
+            ,callback   : function(result,e){
+		  		var approvalData     = result.data.approvalData;
+		  		var authXml          = result.data.authXml;
+		  		
+		  		approvalData.authXml = authXml;
+	
+				scwin.fnUnApprovaledGenertor(approvalData);	  		
+			},
+			errCallback : function(result,e){
+			}
+        });
+    };
+    
+    /**************************************************************************
+	* 함 수 명: scwin.fnUnApprovaledGenertor
+	* 기 능: 미승인 결재 generator
+	**************************************************************************/
+    scwin.fnUnApprovaledGenertor = function(approvalData){
+    	
+    	var approvalCount = approvalData.approvalCount;
+    	var approvalList  = approvalData.approvalList;
+    	var authXml       = approvalData.authXml;
+    	var approvalDetailUrl       = approvalData.approvalDetailUrl;
+    	
+    	
+    	genApprove.removeAll();
+    	scwin.approvalCount = Number(approvalCount);
+    	spanApproveCount.setLabel(approvalCount);
+    	
+    	grpApproveEmpty.removeClass( "hide" );
+    	genApprove.removeClass('hide');
+    	if(approvalList == "" ||  approvalList == null){
+    		genApprove.addClass('hide');
+    	} else {
+    		
+    		grpApproveEmpty.addClass( "hide" );
+    		
+    		var genTodoApproveIndex , spanApproveStatus , spanApproveSubject , spanApproveFromName , spanApproveDate;
+	    	
+	    	$.each(approvalList,function(index,item){
+//	    		console.log(item);
+	    		var docTypeNm  = "";
+	    		var docType    = item.docType;
+	    		var title      = item.title;
+	    		var senderName = item.senderName;
+	    		var oid        = item.oid;
+	    		var docId      = item.docId;
+	    		var docType    = item.docType;
+	    		var date    = item.date
+	    		
+//	    		var popupUrl   = approvalDetailUrl + "&oid="+oid +"&docType="+docType+"&docID="+docId;
+	    		var popupUrl   = approvalDetailUrl + "&oid="+oid +"&docType=R&docID="+docId;
+
+	    		item.popupUrl  = popupUrl;
+	    		item.authXml   = authXml; 
+	    		
+	    		switch (docType) {
+					case "A":
+						docTypeNm = "합의요청";
+						break;
+					case "A1":
+						docTypeNm = "합의이송";
+						break;
+					case "A2":
+						docTypeNm = "합의이송";
+						break;
+					case "C":
+						docTypeNm = "승인";
+						break;
+					case "V":
+						docTypeNm = "검토";
+						break;
+					case "B":
+						docTypeNm = "반려";
+						break;
+					default:
+						docTypeNm = "";
+						break;
+				}
+	    		
+	    		genTodoApproveIndex = genApprove.insertChild();
+	    		
+	    		spanApproveStatus   = genApprove.getChild(genTodoApproveIndex , "spanApproveStatus" );
+	    		spanApproveSubject  = genApprove.getChild(genTodoApproveIndex , "spanApproveSubject" );
+	    		spanApproveFromName = genApprove.getChild(genTodoApproveIndex , "spanApproveFromName" );
+	    		spanApproveDate     = genApprove.getChild(genTodoApproveIndex , "spanApproveDate" );
+	    		
+	    		//결재상태
+	    		spanApproveStatus.setLabel(docTypeNm);
+	    		spanApproveStatus.setUserData("approvalData",item);
+	    		
+	    		//결재 제목
+	    		spanApproveSubject.setValue(title);
+	    		spanApproveSubject.setUserData("approvalData",item);
+	    		
+	    		//결재 보낸이 성명
+	    		spanApproveFromName.setLabel(senderName);
+	    		spanApproveFromName.setUserData("approvalData",item);
+	    		
+	    		//보낸시간
+	    		spanApproveDate.setLabel(date);
+	    		spanApproveDate.setUserData("approvalData",item);
+	    		
+	    	});
+    	}
+    	
+    	// TODO 뱃지
+    	scwin.fnSumCount();
+    };
+    
+    /**************************************************************************
+	* 함 수 명: scwin.fnUnreadMailGenertor
+	* 기 능: 안읽은 메일  generator
+	**************************************************************************/
+    scwin.fnUnreadMailGenertor = function(mailData){
+    	
+    	var mailList      = mailData.mailList;
+    	var mailCount     = mailData.mailCount;
+    	var mailDetailUrl = mailData.mailDetailUrl;
+    	var authXml       = mailData.authXml;
+    	
+    	var genTodoMailIndex , spanMailReceiveTime , spanMailSubject , spanMailFromName;
+    	
+    	genMail.removeAll();
+    	
+    	grpMailEmpty.removeClass( "hide" );
+    	genMail.removeClass('hide');
+    	if(mailList == "" || mailList == null )
+    	{
+    		scwin.mailCount = 0;
+    		spanMailCount.setLabel( "0");
+    		genMail.addClass('hide');
+    	}
+    	else
+    	{
+    		grpMailEmpty.addClass( "hide" );
+    		
+    		scwin.mailCount = Number(mailCount);
+    		spanMailCount.setLabel( mailCount);
+    		
+    		$.each(mailList,function(index,item){
+
+	    		genTodoMailIndex = genMail.insertChild();
+	    		spanMailReceiveTime      = genMail.getChild( genTodoMailIndex , "spanMailReceiveTime" );
+	    		spanMailSubject          = genMail.getChild( genTodoMailIndex , "spanMailSubject" );
+	    		spanMailFromName         = genMail.getChild( genTodoMailIndex , "spanMailFromName" );
+	    		
+	    		
+	    		var receive =  item.receiveTime.split(" ");
+	    		
+	    		spanMailReceiveTime.setValue(receive[0]);
+	    		spanMailReceiveTime.setUserData("mailData" ,item);
+	    		spanMailSubject.setValue(item.subject);
+	    		spanMailSubject.setUserData("mailData" ,item);
+	    		spanMailFromName.setValue(item.fromName);
+	    		spanMailFromName.setUserData("mailData" ,item);
+	    	});
+    	}
+    	
+    	// TODO 뱃지
+    	scwin.fnSumCount();
+    	
+    };
+    
+    /**************************************************************************
+	* 함 수 명: scwin.fnTodoEtcGenertor
+	* 기 능: ETC generator
+	**************************************************************************/
+    scwin.fnTodoEtcGenertor = function(todoEtcList){
+    
+    	//scwin.etcCount
+    	grpTodoEtcEmpty.removeClass( 'hide' );
+    	genTodoEtc.removeClass( 'hide' );
+    	var rowCount  =  0;
+    	
+    	if(todoEtcList != null){
+    		rowCount  =  todoEtcList.length;
+    	}
+    	
+    	if(rowCount == 0){
+    		genTodoEtc.addClass('hide')
+    	}else{
+    		grpTodoEtcEmpty.addClass( 'hide' );
+    	}
+    		
+    	var genTodoEtcIndex , genTodoEtcTtl , genTodoEtcCnt;
+    	
+    	genTodoEtc.removeAll();
+    	
+    	if(todoEtcList != null && todoEtcList.length == 0) return;
+    	
+    	//기타 TODO 리스트 
+    	$.each(todoEtcList, function(index,item){
+    		
+    		genTodoEtcIndex = genTodoEtc.insertChild();
+	    	genTodoEtcTtl   = genTodoEtc.getChild( genTodoEtcIndex , "spnTodoTtl" );
+	    	genTodoEtcCnt   = genTodoEtc.getChild( genTodoEtcIndex , "spnTodoCnt" );
+	    	
+	    	genTodoEtcTtl.setValue(item.todoTtl);
+    	    genTodoEtcCnt.setValue(item.todoCnt);
+	    	genTodoEtcTtl.setUserData("todoDiv" ,"B");
+	    	genTodoEtcTtl.setUserData("todoData",item);
+	    	genTodoEtcCnt.setUserData("todoDiv" ,"B");
+	    	genTodoEtcCnt.setUserData("todoData",item);
+    	});
+    	
+    	// TODO 뱃지
+    	scwin.fnSumCount();
+    }
+    
+    /**************************************************************************
+	* 함 수 명: scwin.fnTodoSlipGenertor
+	* 기 능: 전표 generator
+	**************************************************************************/
+    scwin.fnTodoSlipGenertor = function(epTemSlipAprvInfoList){
+    
+    	var genSlipIndex , genAprvSbrqDtm , genRmkCn , genspAmt;
+    	
+    	grpSlipEmpty.removeClass("hide" );
+    	genSlip.removeClass("hide" );
+    	
+    	if(epTemSlipAprvInfoList != null && epTemSlipAprvInfoList.length == 0)
+    	{
+    		scwin.slipCount = 0;
+    		spanSlipCount.setLabel("0");
+    		genSlip.addClass("hide" );
+    	}
+    	else 
+    	{
+    		//자재카운터
+    		scwin.slipCount = Number(epTemSlipAprvInfoList.length);
+    		spanSlipCount.setLabel( epTemSlipAprvInfoList.length );
+    		genSlip.removeAll();
+    		$.each(epTemSlipAprvInfoList,function(index,item){
+    			genSlipIndex = genSlip.insertChild();
+    			genAprvSbrqDtm = genSlip.getChild( genSlipIndex , "spanAprvSbrqDtm" );
+    			genRmkCn       = genSlip.getChild( genSlipIndex , "spanRmkCn"       );
+    			genspAmt       = genSlip.getChild( genSlipIndex , "spanSpAmt"       );
+    			
+    			genAprvSbrqDtm.setValue(item.aprvSbrqDtm);
+    			genRmkCn.setValue(item.rmkCn);
+    			genspAmt.setValue(com.formatComma(item.spAmt,false));
+    		});
+    		
+    		grpSlipEmpty.addClass("hide" );
+    	}
+    	
+    	// TODO 뱃지
+    	scwin.fnSumCount();
+    };
+    
+    scwin.fnCallSlipPopup = function(){
+    	var popOps = {
+         		     url        : '/ux/em/em0025/EM00250004U.xml'
+         		    ,modal      : false
+	                ,type       :"browser"
+	               	,height     :"900"
+	               	,width      :"1400"
+	               	,popup_name :"전표결재 목록"
+	               	,resizable  :true
+	               	,scrollbars :true 
+	               	,data       :{menuNm    : "전표결재 목록"}
+	              };
+	 	com.popup_open(popOps);
+    };
+    
+    scwin.fnSumCount = function(){
+    	
+    	scwin.totalCount = 0;
+    	
+    	scwin.totalCount += Number(scwin.mailCount); 
+    	scwin.totalCount += Number(scwin.approvalCount);  
+    	scwin.totalCount += Number(scwin.slipCount);  
+    	scwin.totalCount += Number(scwin.busCardCount);  
+    	scwin.totalCount += Number(scwin.etcCount);
+    	
+    	//spnaTodoCount
+    	//var indexWindow   = gcm.tab_main.getScopeWindow();
+		//indexWindow.spanTodoCount.setValue(scwin.totalCount);	    	
+    };
+    
+   /**************************************************************************
+	*  [4] Callback
+    **************************************************************************/
+	
+	
+     
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/
+    /**************************************************************************
+	* Event: scwin.spnTodoTtl_onclick
+	* 기 능: TODO 기타 onClick 
+	**************************************************************************/
+	scwin.spnTodoTtl_onclick = function(e) {
+		
+		var todoData = this.getUserData("todoData");
+		
+		var menuDatas = $.grep(JSON.parse(gcm.MENU_LIST), function( n, i ) { if( n.menuId == todoData.todoPathNm ) return n; });
+		
+		if(menuDatas.length ==  0 ){
+			alert("해당메뉴가 없습니다.");
+            return;
+		}
+		
+		if(menuDatas.length > 0)
+        {
+	        gcm.MENU_ID    = menuDatas[0].menuId;
+	        gcm.MENU_TITLE = menuDatas[0].menuNm;
+	        gcm.MENU_URL   = menuDatas[0].scrPathNm;
+        }
+        
+        var indexWindow   = gcm.tab_main.getScopeWindow();
+		var indexLeftArea = indexWindow.grpLeftArea;
+		
+		$("#"+indexLeftArea.id).find('> li').removeClass('on');
+		$('.wrap').removeClass('lnb_on');
+		
+		indexWindow.scwin.fnAddRemoveClass('N','N','N','N','N','N');
+		
+        com.setAuthInfo(gcm.MENU_ID);
+                
+        com._openTab(gcm.MENU_TITLE, gcm.MENU_ID, gcm.MENU_URL);
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnTodoEtcReload_onclick
+	* 기 능: TODO 기타 리로드 
+	**************************************************************************/
+	scwin.btnTodoEtcReload_onclick = function() {
+		scwin.fnSearchTodoEtcList();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnSlipAddMore_onclick
+	* 기 능: TODO 전표 더보기 
+	**************************************************************************/
+	scwin.btnSlipAddMore_onclick = function() {
+		scwin.fnCallSlipPopup();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.spanAprvSbrqDtm_onclick
+	* 기 능: TODO 전표  
+	**************************************************************************/
+	scwin.spanAprvSbrqDtm_onclick = function(e) {
+		scwin.fnCallSlipPopup();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.spanRmkCn_onclick
+	* 기 능: TODO 전표 
+	**************************************************************************/
+	scwin.spanRmkCn_onclick = function(e) {
+		scwin.fnCallSlipPopup();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.spanSpAmt_onclick
+	* 기 능: TODO 전표 
+	**************************************************************************/
+	scwin.spanSpAmt_onclick = function(e) {
+		scwin.fnCallSlipPopup();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnSlipReload_onclick
+	* 기 능: 전표 리로드 
+	**************************************************************************/
+	scwin.btnSlipReload_onclick = function() {
+		scwin.fnSearchTodoSlipList();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnMailReload_onclick
+	* 기 능: 메일 리로드 
+	**************************************************************************/
+	scwin.btnMailReload_onclick = function() {
+		scwin.fnMailReloadList();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.spanMailReceiveTime_onclick
+	* 기 능: 메일 onClick 시 
+	**************************************************************************/
+	scwin.spanMailReceiveTime_onclick = function(e) {
+		var mailData = this.getUserData('mailData');
+		
+		ajaxLib.ajax("/ep/Main/selectTodoMailDetailPopupLink", {
+             mode       : "synchronous"
+            ,method     : "POST"
+            ,requestData: {
+            				queryString : mailData.queryString
+                          }
+            ,processMsg: ''              
+            ,callback   : function(result,e){
+            	var authXml = result.data.authXml;
+            	var mailDetailUrl = result.data.mailDetailUrl;
+            	
+            	var left = (screen.width / 2 - 470);
+			    var top = (screen.height / 2 - 340);
+				var teleplaMailDetailPop = window.open('about:blank', "teleplaMailDetailPop", "top="+top+", left="+left+", width=1000,height=700,resizable=yes,toolbar=no,scrollbars=yes,menubar=no,status=yes, location=no");
+				       
+		        var $form = $("<form></form>");
+		       
+		        $form.attr("target", "teleplaMailDetailPop");
+	        
+				$form.attr("action", mailDetailUrl);
+							
+		        $form.attr("method", "post");
+		        $form.attr("accept-language", "ko")
+		        $form.appendTo('body');
+		      	
+		        $input = $("<input></input>");
+		        $input.attr({type:"hidden",  name:"Message",  id:"Message",  value:authXml});
+		        $input.appendTo($form);
+		      	
+			    $input = $("<input></input>");
+		        $input.attr({type:"hidden",  name:"isTelepiaYN",  id:"isTelepiaYN",  value:"true"});
+		        $input.appendTo($form);	  
+					
+		        $form.submit();
+		       
+		        setTimeout(function() { scwin.fnMailReloadList(); }, 1500);
+		  		
+			},
+			errCallback : function(result,e){
+			}
+        });
+	
+	};
+	
+	/**************************************************************************
+	* Event: scwin.spanApproveStatus_onclick
+	* 기 능: 결재 onClick 시 
+	**************************************************************************/
+	scwin.spanApproveStatus_onclick = function(e) {
+		var approvalData = this.getUserData('approvalData');
+		var popupUrl     = "";
+		var authXml      = "";
+		
+		if(approvalData.popupUrl != undefined){
+			popupUrl = approvalData.popupUrl; 
+		}
+		
+		if(approvalData.authXml != undefined){
+			authXml = approvalData.authXml; 
+		}
+		
+		var left = (screen.width / 2 - 470);
+	    var top = (screen.height / 2 - 340);
+		var teleplaApprovalDetailPop = window.open('about:blank', "teleplaApprovalDetailPop", "top="+top+", left="+left+", width=1000,height=700,resizable=yes,toolbar=no,scrollbars=yes,menubar=no,status=yes, location=no");
+		       
+        var $form = $("<form></form>");
+       
+        $form.attr("target", "teleplaApprovalDetailPop");
+		$form.attr("action", popupUrl);
+        $form.attr("method", "post");
+        $form.attr("accept-language", "ko")
+        $form.appendTo('body');
+      	
+        $input = $("<input></input>");
+        $input.attr({type:"hidden",  name:"Message",  id:"Message",  value:authXml});
+        $input.appendTo($form);
+      	
+	    $input = $("<input></input>");
+        $input.attr({type:"hidden",  name:"isTelepiaYN",  id:"isTelepiaYN",  value:"true"});
+        $input.appendTo($form);	  
+			
+        $form.submit();
+		
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnApprovalReload_onclick
+	* 기 능: 결재 리로드 
+	**************************************************************************/
+	scwin.btnApprovalReload_onclick = function() {
+		scwin.fnApproveReloadList();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnMailLink_onclick
+	* 기 능: 메일 탭으로 이동 
+	**************************************************************************/
+	scwin.btnMailLink_onclick = function() {
+		var indexWindow   = gcm.tab_main.getScopeWindow();
+		var indexLeftArea = indexWindow.grpLeftArea;
+		
+		$("#"+indexLeftArea.id).find('> li').removeClass('on');
+		indexWindow.grpMailLi.addClass('on');
+		
+		$('.wrap').removeClass('lnb_on');
+		
+		gcm.tab_main.scope_obj.getObj("scwin")["grpMail_onclick"]();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnApproveLink_onclick
+	* 기 능: 결재 탭으로 이동 
+	**************************************************************************/
+	scwin.btnApproveLink_onclick = function() {
+		var indexWindow   = gcm.tab_main.getScopeWindow();
+		var indexLeftArea = indexWindow.grpLeftArea;
+		
+		$("#"+indexLeftArea.id).find('> li').removeClass('on');
+		indexWindow.grpAprvLi.addClass('on');
+		
+		$('.wrap').removeClass('lnb_on');
+	
+		gcm.tab_main.scope_obj.getObj("scwin")["grpAprv_onclick"]();
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnRcadAddMore_onclick
+	* 기 능: 법인카드내역 팝업호출 
+	**************************************************************************/
+	scwin.btnRcadAddMore_onclick = function() {
+	    //카드정산 11107 , 카드결제 89
+		com.fnBizplayBusinessCardPopup('11107');
+	};
+	
+	/**************************************************************************
+	* Event: scwin.btnRcadAddMore_onclick
+	* 기 능: 법인카드내역 팝업호출 
+	**************************************************************************/
+	scwin.btnCorpCardReload_onclick = function() {
+		scwin.fnSearchCorporationCardList();
+	};
+	]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    		<xf:group style="" id="" class="todo_left_wrap">
+    				<xf:group class="todo_cont_wrap" id="" style="">
+    						<xf:group class="todo_top_wrap" id="" style="">
+    								<w2:textbox class="" id="" label="메일" style="" tagname="h3"></w2:textbox>
+    								<xf:group class="right_wrap" id="" style="">
+    										<w2:span id="spanMailCount" label="" class="top_badge"></w2:span>
+    										<w2:anchor class="top_refresh" clickEventElement="outerDiv" id="btnMailReload" outerDiv="false" style="" ev:onclick="scwin.btnMailReload_onclick">
+    												<xf:label><![CDATA[새로고침]]></xf:label>
+    										</w2:anchor>
+    										<w2:anchor class="top_more" clickEventElement="outerDiv" id="btnMailLink" outerDiv="false" style="" ev:onclick="scwin.btnMailLink_onclick">
+    												<xf:label><![CDATA[더 보기]]></xf:label>
+    										</w2:anchor>
+    								</xf:group>
+    						</xf:group>
+    						<xf:group class="todo_list hide" id="grpMailEmpty" style="" tagname="ul">
+    								<xf:group class="nodata" id="" style="" tagname="li">
+    										<w2:textbox id="" label="해당 건이 없습니다."></w2:textbox>
+    								</xf:group>
+    						</xf:group>
+    						<w2:generator class="todo_list" id="genMail" style="" tagname="ul">
+    								<xf:group class="" id="" style="" tagname="li">
+    										<xf:group class="todo_details" id="" style="" tagname="a">
+    												<w2:span class="wid20" id="spanMailReceiveTime" label="" style="" ev:onclick="scwin.spanMailReceiveTime_onclick" />
+    												<w2:span class="wid60" id="spanMailSubject" label="" style="" ev:onclick="scwin.spanMailReceiveTime_onclick" />
+    												<w2:span class="wid20" id="spanMailFromName" label="" style="" ev:onclick="scwin.spanMailReceiveTime_onclick" />
+    										</xf:group>
+    								</xf:group>
+    						</w2:generator>
+    				</xf:group>
+    				<xf:group class="todo_cont_wrap" id="" style="">
+    						<xf:group class="todo_top_wrap" id="" style="">
+    								<w2:textbox class="" id="" label="전표" style="" tagname="h3"></w2:textbox>
+    								<xf:group class="right_wrap" id="" style="">
+    										<w2:span class="top_badge" id="spanSlipCount" label=""></w2:span>
+    										<w2:anchor class="top_refresh" clickEventElement="outerDiv" id="btnSlipReload" outerDiv="false" style="" ev:onclick="scwin.btnSlipReload_onclick">
+    												<xf:label><![CDATA[새로고침]]></xf:label>
+    										</w2:anchor>
+    										<w2:anchor class="top_more" clickEventElement="outerDiv" id="btnSlipAddMore" outerDiv="false" style="" ev:onclick="scwin.btnSlipAddMore_onclick">
+    												<xf:label><![CDATA[더 보기]]></xf:label>
+    										</w2:anchor>
+    								</xf:group>
+    						</xf:group>
+    						<xf:group class="todo_list hide" id="grpSlipEmpty" style="" tagname="ul">
+    								<xf:group class="nodata" id="" style="" tagname="li">
+    										<w2:textbox id="" label="해당 건이 없습니다."></w2:textbox>
+    								</xf:group>
+    						</xf:group>
+    						<w2:generator class="todo_list" id="genSlip" style="" tagname="ul">
+    								<xf:group class="" id="" style="" tagname="li">
+    										<xf:group class="todo_details" id="" style="" tagname="a">
+    												<w2:span class="wid20" id="spanAprvSbrqDtm" label="" style="" ev:onclick="scwin.spanAprvSbrqDtm_onclick" />
+    												<w2:span class="wid60" id="spanRmkCn" label="" style="" ev:onclick="scwin.spanRmkCn_onclick" />
+    												<w2:span class="wid20 ar" id="spanSpAmt" label="" style="" ev:onclick="scwin.spanSpAmt_onclick" />
+    										</xf:group>
+    								</xf:group>
+    						</w2:generator>
+    				</xf:group>
+    		</xf:group>
+    		<xf:group style="" id="" class="todo_mid_wrap">
+    				<xf:group class="todo_cont_wrap" id="" style="">
+    						<xf:group class="todo_top_wrap" id="" style="">
+    								<w2:textbox class="" id="" label="결재" style="" tagname="h3"></w2:textbox>
+    								<xf:group class="right_wrap" id="" style="">
+    										<w2:span class="top_badge" id="spanApproveCount" label=""></w2:span>
+    										<w2:anchor class="top_refresh" clickEventElement="outerDiv" id="btnApprovalReload" outerDiv="false" style="" ev:onclick="scwin.btnApprovalReload_onclick">
+    												<xf:label><![CDATA[새로고침]]></xf:label>
+    										</w2:anchor>
+    										<w2:anchor class="top_more" clickEventElement="outerDiv" id="btnApproveLink" outerDiv="false" style="" ev:onclick="scwin.btnApproveLink_onclick">
+    												<xf:label><![CDATA[더 보기]]></xf:label>
+    										</w2:anchor>
+    								</xf:group>
+    						</xf:group>
+    						<xf:group class="todo_list hide" id="grpApproveEmpty" style="" tagname="ul">
+    								<xf:group class="nodata" id="" style="" tagname="li">
+    										<w2:textbox id="" label="해당 건이 없습니다."></w2:textbox>
+    								</xf:group>
+    						</xf:group>
+    						<w2:generator class="todo_list" id="genApprove" style="" tagname="ul">
+    								<xf:group class="" id="" style="" tagname="li">
+    										<xf:group class="todo_details" id="" style="" tagname="a">
+    												<w2:span class="wid10" id="spanApproveStatus" label="" style="" ev:onclick="scwin.spanApproveStatus_onclick" escape="true"/><!-- 결재상태      -->
+    												<w2:span class="wid50" id="spanApproveSubject" label="" style="" ev:onclick="scwin.spanApproveStatus_onclick" escape="true"/><!-- 결재제목      -->
+    												<w2:span class="wid20 ac" id="spanApproveFromName" label="" style="" ev:onclick="scwin.spanApproveStatus_onclick" escape="true"/><!-- 결재보낸이    -->
+    												<w2:span class="wid20 ac" id="spanApproveDate" label="" style="" ev:onclick="scwin.spanApproveStatus_onclick" escape="true"/><!-- 결재보낸시간  -->
+    										</xf:group>
+    								</xf:group>
+    						</w2:generator>
+    				</xf:group>
+    				<xf:group class="todo_cont_wrap" id="" style="">
+    						<xf:group class="todo_top_wrap" id="" style="">
+    								<w2:textbox class="" id="" label="카드" style="" tagname="h3"></w2:textbox>
+    								<xf:group class="right_wrap" id="" style="">
+    										<w2:span class="top_badge" id="spanCorpCardCount" label=""></w2:span>
+    										<w2:anchor class="top_refresh" clickEventElement="outerDiv" id="btnCorpCardReload" outerDiv="false" style="" ev:onclick="scwin.btnCorpCardReload_onclick">
+    												<xf:label><![CDATA[새로고침]]></xf:label>
+    										</w2:anchor>
+    										<w2:anchor class="top_more" clickEventElement="outerDiv" id="btnRcadAddMore" outerDiv="false" style="" ev:onclick="scwin.btnRcadAddMore_onclick">
+    												<xf:label><![CDATA[더 보기]]></xf:label>
+    										</w2:anchor>
+    								</xf:group>
+    						</xf:group>
+    						<xf:group class="todo_list" id="grpCorpCardEmpty" style="" tagname="ul">
+    								<xf:group class="nodata" id="" style="" tagname="li">
+    										<w2:textbox id="" label="해당 건이 없습니다."></w2:textbox>
+    								</xf:group>
+    						</xf:group>
+    						<w2:generator class="todo_list hide" id="genCorpCard" style="" tagname="ul">
+    								<xf:group class="" id="" style="" tagname="li">
+    										<xf:group class="todo_details" id="" style="" tagname="a">
+    												<w2:span class="wid20"     id="spanApvDt"  label="" style="" ev:onclick="scwin.btnRcadAddMore_onclick"></w2:span>
+    												<w2:span class="wid60"     id="spanMestNm" label="" style="" ev:onclick="scwin.btnRcadAddMore_onclick"></w2:span>
+    												<w2:span class="wid20 ar"  id="spanBuySum" label="" style="" ev:onclick="scwin.btnRcadAddMore_onclick"></w2:span>
+    										</xf:group>
+    								</xf:group>
+    						</w2:generator>
+    				</xf:group>
+    		</xf:group>
+    		<xf:group style="" id="" class="todo_right_wrap">
+    				<xf:group class="todo_cont_wrap" id="" style="">
+    						<xf:group class="todo_top_wrap" id="" style="">
+    								<w2:textbox class="" id="" label="기타" style="" tagname="h3"></w2:textbox>
+    								<xf:group class="right_wrap" id="" style="">
+    										<w2:span class="top_badge" id="spanTodoEtcCount" label=""></w2:span>
+    										<w2:anchor class="top_refresh" clickEventElement="outerDiv" id="btnTodoEtcReload" outerDiv="false" style="" ev:onclick="scwin.btnTodoEtcReload_onclick">
+    												<xf:label><![CDATA[새로고침]]></xf:label>
+    										</w2:anchor>
+    								</xf:group>
+    						</xf:group>
+    						<xf:group class="todo_list etc hide" id="grpTodoEtcEmpty" style="" tagname="ul">
+    								<xf:group class="nodata" id="" style="" tagname="li">
+    										<w2:textbox id="" label="해당 건이 없습니다."></w2:textbox>
+    								</xf:group>
+    						</xf:group>
+    						<w2:generator class="todo_list etc" id="genTodoEtc" style="" tagname="ul">
+    								<xf:group class="" id="" style="" tagname="li">
+    										<xf:group class="todo_details" id="" style="" tagname="a">
+    												<w2:span class="wid80" id="spnTodoTtl" label="" style="" ev:onclick="scwin.spnTodoTtl_onclick"></w2:span>
+    												<w2:span class="wid20 ar" id="spnTodoCnt" label="" style=""></w2:span>
+    										</xf:group>
+    								</xf:group>
+    						</w2:generator>
+    				</xf:group>
+    		</xf:group>
+    		<w2:iframe src="" style="position: absolute;width: 0px;height: 0px;" id="ifrmHiddenTelepia" name="ifrmHiddenTelepia"></w2:iframe>
+    </body>
+</html>

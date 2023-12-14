@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>UDC</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+        </xf:model>
+        <script type="javascript"><![CDATA[
+
+		
+		]]></script>
+    </head>
+    <body>
+    	<!--/** WEBSQUARE UDC */
+    		{
+    		"componentName": "udc_gridfix",
+    		"pluginName": "udc_gridfix",
+    		"company": "",
+    		"developer": "",
+    		"category": "Basic",
+    		"notSupportBrowser": "",
+    		"version": "",
+    		"htmlRender": "",
+    		"icon": "",
+    		"disableIcon": "",
+    		"description": "",
+    		"width": "",
+    		"height": "",
+    		"properties": [
+    		{
+    		"name": "id",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "Y",
+    		"hidden": "N",
+    		"description": "udc 아이디"
+    		},
+    		{
+    		"name": "date",
+    		"default": "",
+    		"type": "number",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 초기 값"
+    		},
+    		{
+    		"name": "ref",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 Ref"
+    		},
+    		{
+    		"name": "class",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "udc 클래스"
+    		},
+    		{
+    		"name": "disabled",
+    		"default": "",
+    		"type": "combobox",
+    		"option": "[true,false]",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "desc"
+    		}
+    		],
+    		"events": [],
+    		"apis": [
+    		{
+    		"name": "getDate",
+    		"description": "desc",
+    		"params": [],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		},
+    		{
+    		"name": "setDate",
+    		"description": "desc",
+    		"params": [{
+    		"type": "Number",
+    		"name": "strDate",
+    		"description": "desc"
+    		}],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		}
+    		]
+    		}
+    		}
+    	-->
+    	<xf:group class="udc_wrap udc_gridfix" id="" style="" pluginName="udc_gridfix">
+    		<w2:anchor class="btn_gcm fix" clickEventElement="outerDiv" id="btnGridFix" outerDiv="false" style="">
+    			<xf:label><![CDATA[그리드고정설정]]></xf:label>
+    			<script ev:event="onclick" type="text/javascript"><![CDATA[
+    			var grdObjID = this.scope_obj.getUserData("userData1");
+    			var _grdComp = $w.getComponentById(grdObjID);
+    			var htobData = _grdComp.headerToBodyRelation
+    			grd_Fix.initGrid();
+    			grp_fixBox.show();
+    			//메인그리드의 fix정보가 있을경우
+    			var _fixedColIdx = _grdComp.getFixedColumnLastIndex();    			
+    			//메인그리드의 hiddenColumn정보가 있을경우
+    			var _hidColid = [];
+    			var _cnt = 0;
+    			$.each(_grdComp.hiddenList,function(idx,data){
+    				if(data)_hidColid.push(_cnt);
+    				_cnt++;
+    			});    			
+    			var _list = _grdComp.getHeaderValueList(true);    			
+    			var columnArr_id = [["radio","고정"] ,["chk","제외"],["colName","Label"]];
+				var dltId = this.scope_id+"_dlt_fixInfo";
+				gcm.fixGridId = dltId ; 
+				com.createDataObj("dataList",dltId,columnArr_id);
+				
+	
+    			  var gridViewInfo = [{ //gridview동적생성
+				        id:"grd_Fix"
+				        ,ref:dltId
+				        ,colTpJsn: {"chk":"checkbox","radio":"radio"}//default column의 inputType은 'text' 입니다. 기타 inputType에 대해 기술합니다.
+				        ,type:"R" //"C": parent밑에 생성,"R":이미 생성된 그리드뷰의 스타일을 변경
+				        ,style:"height: 257px;" //
+				   }];
+				  com.createGridView(gridViewInfo,grd_Fix);
+				  var _data = [];
+				  var _1idx = 0;
+				  var _2chk = 0;
+				  $.each(_list,function(idx,colval){
+				     var rdoIdx = "0";
+				     _2chk = "0";
+				     _1idx = idx;
+				  	 if(_fixedColIdx-1 == _1idx && _fixedColIdx != 0){
+				  	 	rdoIdx = 1;
+				  	 }
+				  	 $.each(_hidColid,function(_idx,data){
+    					if(_1idx == data){
+    						_2chk = 1;
+    					}
+    				 });
+				  	_data.push({radio:rdoIdx,chk:_2chk,colName:colval});
+				  });				  
+				  var _dlt = $w.getComponentById(gcm.fixGridId);
+				  _dlt.setJSON(_data);
+    			 ]]></script>
+    		</w2:anchor>
+    		<xf:group class="fixbox" id="grp_fixBox" style="display: none;">
+    			<xf:group class="btn_wrap" id="">
+    				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="" outerDiv="false" style="">
+    					<xf:label><![CDATA[적용]]></xf:label>
+    					<script ev:event="onclick" type="text/javascript"><![CDATA[
+    					/*적용버튼 클릭*/    				
+    					grp_fixBox.hide();
+    					var _dlt = $w.getComponentById(gcm.fixGridId);
+    					var _fixArr = _dlt.getMatchedIndex("radio",1,false);
+    					
+    					var _fixIndex = _fixArr.length > 0 ? parseInt(_fixArr[0],10)+1 : 0;
+    					
+    					var _hiddenIndexArr = _dlt.getMatchedIndex("chk","1");
+    					
+    					var grdObjID = this.scope_obj.getUserData("userData1");
+    					var pGrdComp  = $w.getComponentById(grdObjID);
+    					
+    					pGrdComp.setFixedColumn(_fixIndex);
+    					$.each(_hiddenIndexArr,function(_idx,idxData){
+    						pGrdComp.setColumnVisible(idxData,false);
+    					});
+    					 ]]></script>
+    				</w2:anchor>
+    				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="" outerDiv="false" style="">
+    					<xf:label><![CDATA[해제]]></xf:label>
+    					<script ev:event="onclick" type="text/javascript"><![CDATA[
+    					/*해제버튼클릭*/    					
+    					grp_fixBox.hide();    					
+    					var _dlt = $w.getComponentById(gcm.fixGridId);
+    					var grdObjID = this.scope_obj.getUserData("userData1");
+    					var pGrdComp  = $w.getComponentById(grdObjID);
+    					pGrdComp.setFixedColumn(0);
+    					var _tRow = _dlt.getTotalRow();
+    					for(var i=0;i<_tRow;i++){
+    						pGrdComp.setColumnVisible(i,true);
+    					}    					    					
+    					
+    					 ]]></script>
+    				</w2:anchor>
+    				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="" outerDiv="false" style="">
+    					<xf:label><![CDATA[취소]]></xf:label>
+    					<script ev:event="onclick" type="text/javascript"><![CDATA[
+    					/*취소버튼 클릭*/
+    					grp_fixBox.hide();
+    					 ]]></script>
+    				</w2:anchor>
+    			</xf:group>
+    			<w2:gridView autoFit="lastColumn" class="" dataList="dlt_fixInfo" fixedColumnWithHidden="true"
+    				focusMode="row" id="grd_Fix" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+    				rowStatusWidth="30" scrollByColumn="false" showSortableUseFilter="true" sortable="true" style="height: 257px;"
+    				useShiftKey="true" visibleRowNum="">
+    				<w2:header id="header1" style="">
+    					<w2:row id="row2" style="">
+    						<w2:column blockSelect="false" id="column21" inputType="text" style="" value="고정"
+    							width="40">
+    						</w2:column>
+    						<w2:column blockSelect="false" id="column19" inputType="checkbox" style="" value="체크박스"
+    							width="40">
+    						</w2:column>
+    						<w2:column blockSelect="false" id="column17" inputType="text" style="" value="Label"
+    							width="120">
+    						</w2:column>
+    					</w2:row>
+    				</w2:header>
+    				<w2:gBody id="gBody4" style="">
+    					<w2:row id="row5" style="">
+    						<w2:column blockSelect="false" id="radio" inputType="radio" style="height:24px;"
+    							textAlign="" value="" width="40">
+    						</w2:column>
+    						<w2:column blockSelect="false" class="" id="chk" inputType="checkbox"
+    							style="height:24px;" textAlign="" value="" width="40">
+    						</w2:column>
+    						<w2:column blockSelect="false" id="colName" inputType="text" style="height:24px;"
+    							textAlign="left" value="항목명" width="120">
+    						</w2:column>
+    					</w2:row>
+    				</w2:gBody>
+    			</w2:gridView>
+    		</xf:group>
+    	</xf:group>
+    </body>
+</html>

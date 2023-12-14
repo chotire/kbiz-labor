@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+							<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmNatnpPnsnHlthInsurGrdList"
+											saveRemovedData="true">
+											<w2:columnInfo>
+															<w2:column id="insurGbCd" name="보험구분코드" dataType="text"></w2:column>
+															<w2:column id="aplyYm" name="적용_연월" dataType="text"></w2:column>
+															<w2:column id="insurGrdLv" name="보험_등급_레벨" dataType="text"></w2:column>
+															<w2:column id="incmLwlmAmt" name="소득_하한_금액" dataType="text"></w2:column>
+															<w2:column id="incmUplmAmt" name="소득_상한_금액" dataType="text"></w2:column>
+															<w2:column id="stndIncmMmAmT" name="표준_소득_월_금액" dataType="text"></w2:column>
+															<w2:column id="ownBrdnAmt" name="본인_부담_금액" dataType="text"></w2:column>
+															<w2:column id="infeeTotAmt" name="보험료_총_금액" dataType="text"></w2:column>
+											</w2:columnInfo>
+											<w2:data use="false">
+											</w2:data>
+							</w2:dataList>
+							<w2:dataMap baseNode="map" id="dsSrchMap">
+											<w2:keyInfo>
+															<w2:key id="keyAplyYm" name="기준 일자" dataType="text"></w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+							<w2:dataList baseNode="list" repeatNode="map" id="dsTcmNatnpPnsnHlthInsurGrdAplyYmList"
+											saveRemovedData="true">
+											<w2:columnInfo>
+															<w2:column id="code" name="기준년월" dataType="text"></w2:column>
+															<w2:column id="codeNm" name="기준년월" dataType="text"></w2:column>
+											</w2:columnInfo>
+							</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/><script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM40000200U.xml
+ * Program Name : 상용직소득세조건표관리
+ * Author : tpyhyoj (tpyhyoj)
+ * Date : 2019.08.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ 
+    /************************************************************************************
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+    	//화면초기화
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        grdTcmNatnpPnsnHlthInsurGrd.initGrid(); //목록 초기화
+        
+        scwin.fnSelectInit();
+        
+        //UI팀용 함수 호출
+        scwin.commonUI();
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수
+     ************************************************************************************/
+    var svcId = "";
+
+    /************************************************************************************
+     *  [3] Event 함수
+     ************************************************************************************/
+
+    // 검색 버튼
+    scwin.btnFind_onclick = function() {
+        scwin.fnSearchList();
+    };
+
+    //엑셀다운 버튼
+    scwin.btnExcelDwn_onclick = function() {
+        if(dsTcmNatnpPnsnHlthInsurGrdList.getTotalRow() <= 0){
+            com.showMessage("CMW0042");     //다운로드할 내역이 존재하지 않습니다.
+            return;
+        }else{
+            var excelOpt = {};  						//excel download 옵션
+            excelOpt.fileName = "상용직소득세조건표관리.xlsx";    	//또는 xlsx 확장자 사용
+            grdTcmNatnpPnsnHlthInsurGrd.advancedExcelDownload( excelOpt );
+        }
+    };
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    // 결과 후처리
+    scwin.fnCallback = function(result, e) {
+        switch (svcId) {
+            case "selectInitTcmNatnpPnsnHlthInsurGrdList" :	//초기화면 조회
+                dsTcmNatnpPnsnHlthInsurGrdAplyYmList.setJSON(result.data.tcmNatnpPnsnHlthInsurGrdAplyYmList);
+                break;
+            case "selectTcmNatnpPnsnHlthInsurGrdList" :		//그리드 조회
+                dsTcmNatnpPnsnHlthInsurGrdList.setJSON(result.data);
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        switch (svcId) {
+            case "selectInitTcmNatnpPnsnHlthInsurGrdList" :   //초기화면 조회
+                console.log('조회오류: ' + e);
+                break;
+            case "selectTcmNatnpPnsnHlthInsurGrdList" :       //그리드 조회
+                console.log('조회오류: ' + e);
+                break;
+        }
+    };
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+    // 조회 List
+    scwin.fnSelectInit = function() {
+
+        svcId = "selectInitTcmNatnpPnsnHlthInsurGrdList";
+
+        ajaxLib.ajax("/cm/cm4000/CM40000200U/selectInitTcmNatnpPnsnHlthInsurGrdList", {
+            mode : "synchronous",
+            method : "POST",
+            requestData : dsSrchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+
+    };
+
+    // 조회 List
+    scwin.fnSearchList = function() {
+
+        if( keyErndGbCd.getValue().length == 0){
+            com.showMessage("CMW0025", "기준연도", "", "", keyErndGbCd.id);     //$1은(는) 필수입력사항입니다.
+            return ;
+        }
+
+        svcId = "selectTcmNatnpPnsnHlthInsurGrdList";
+
+        ajaxLib.ajax("/cm/cm4000/CM40000200U/selectTcmNatnpPnsnHlthInsurGrdList", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : dsSrchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+
+    };
+]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchCode.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcICnumber.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcYearcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>		<!-- 상용직 소득세 조건표 관리 -->
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:96.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기준연도" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="" direction="auto"
+											disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="keyErndGbCd"
+											optionOrder="false" ref="data:dsSrchMap.keyAplyYm" style="width:120px;" submenuSize="auto" class="req">
+											<xf:choices>
+															<xf:itemset
+																			nodeset="data:dsTcmNatnpPnsnHlthInsurGrdAplyYmList">
+																			<xf:label ref="codeNm"></xf:label>
+																			<xf:value ref="code"></xf:value>
+															</xf:itemset>
+											</xf:choices>
+							</xf:select1>
+						</xf:group>
+
+
+					</xf:group>
+				</xf:group>
+
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="상용직 소득세 조건표 관리" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="" id="" style="">
+						<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+							outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmNatnpPnsnHlthInsurGrdList" fixedColumnWithHidden="true"
+				focusMode="row" id="grdTcmNatnpPnsnHlthInsurGrd" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="false"
+				rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdTcmTaxrateList_oncellclick" editModeEvent="onclick" enterKeyMove="down" keyMoveEditMode="true" tooltipDisplay="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column49" inputType="text"
+										removeBorderStyle="false" style="" value="NO" width="40">
+						</w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" style="" value="기준일자"
+										width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" style="" value="과세표준금액 하한"
+										width="155">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" style="" value="과세표준금액 상한"
+										width="179">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" style="" value="소득세"
+										width="120">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="column50"
+										inputType="expression" removeBorderStyle="false" style="height:24px;" value="" width="40">
+						</w2:column>
+						<w2:column blockSelect="false" id="aplyYm" inputType="text" style="height:24px;"
+										textAlign="center" value="" width="100" viewType="icon" embeddedInput="true" dataType="text" readOnly="true"
+										class="req" dateValidCheck="true" calendarValueType="" applyFormat="" displayFormat="####-##">
+						</w2:column>
+						<w2:column blockSelect="false" class="req" id="incmLwlmAmt" inputType="text"
+										style="height:24px;" textAlign="right" value="" width="155" dataType="number" defaultValue="0"
+										displayFormat="#,###" maxLength="7" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="incmUplmAmt" inputType="text" style="height:24px;"
+										textAlign="right" value="" width="179" dataType="number" displayFormat="#,###" readOnly="true"
+										defaultValue="0">
+						</w2:column>
+						<w2:column blockSelect="false" id="stndIncmMmAmT" inputType="text" style="height:24px;"
+										textAlign="right" value="" width="120" displayFormat="#,###" dataType="number" readOnly="true"
+										defaultValue="0">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

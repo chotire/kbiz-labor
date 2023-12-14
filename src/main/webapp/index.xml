@@ -1,0 +1,1279 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			</w2:dataCollection>
+			<w2:workflowCollection>
+			</w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/iscroll.js" type="javascript" lazy="false" />
+		<script type="text/javascript" lazy="false"><![CDATA[
+         
+    scwin.onpageload = function() {
+	 gcm._container = windowContainer1;
+	 //첫페이지 로딩
+	 windowContainer1.createWindow( "메인" , null , "/ux/Coding_List.xml" , "" , "" , null , "main" , null );
+	 //windowContainer1.createWindow( "출력" , null , "/publish/guide/Input.xml" , "" , "" , null , "null" , null );
+	 //메뉴셋팅
+	 scwin.setMenu();		
+	};
+	
+	scwin.onpageunload = function() {
+		
+	};
+	var status = "MDI";
+	var myScroll1;
+	var myScroll2;
+	
+	//메뉴 열림
+	scwin.setMenu = function(){
+	
+		//lnb 스크롤 디자인 적용
+		myScroll1 = new IScroll('.l1 .sub_wrap .sub', {
+		    scrollbars: true,
+		    click: true ,
+		    mouseWheel:true
+		}); 
+		myScroll2 = new IScroll('.l2 .sub_wrap .sub', {
+		    scrollbars: true,
+		    click: true ,
+		    mouseWheel:true
+		}); 
+	
+		//lnb 토글
+		var _seledted = null
+		$('.left .navi > ul > li .link_wrap').click(function(){
+			var _select = $(this).parent()
+			if(_select.hasClass('on')){//선택된 메뉴 클릭시
+				var _delay = 300
+				if(!_select.find('.sub_wrap').length) _delay = 0
+				setTimeout(function() { _select.removeClass('on'); }, _delay)
+				$('.wrap').removeClass('lnb_on');
+			}else{//선택안된 메뉴 클릭시
+				if(_seledted) _seledted.removeClass('on')
+				_select.addClass('on');
+				if(_select.find('.sub_wrap').length) $('.wrap').addClass('lnb_on');
+				else $('.wrap').removeClass('lnb_on')
+			}
+			_seledted = _select
+			myScroll1.refresh();
+			myScroll2.refresh();
+		});
+		
+		//lnb 아코디언 처리 및 링크
+		$('.left .navi .sub_wrap ul > li a').click(function(){
+			$(this).parent().parent().find(' > li').removeClass('on');
+			$(this).parent().addClass('on');
+			if($(this).parent().find(' > ul').length){
+				
+			}else{
+				//링크
+				$('.left').removeClass('on');
+				$('.left .navi > ul > li.l1 > a.on').removeClass('on');
+				$('.left .navi .sub_wrap > li.l1 > a').removeClass('on');
+				$(this).parent().parent().find(' ul li').removeClass('on');
+				//windowContainer1.createWindow( "일반 업무화면" , null , "/src/main/webapp/ux/ui/01_List_detail_V.xml" , "" , "" , null , "" , null );
+			}
+			myScroll1.refresh();
+			myScroll2.refresh();
+		});
+		
+		//lnb 닫힘(logo 왼쪽 버튼)
+		$('.top .btn_lnb_close').click(function(){
+			$('.wrap').removeClass('lnb_on');
+			
+		})
+		
+		//알림 푸쉬 토글
+		$('.top .util > li.l3 > a').click(function(){
+			$(this).toggleClass('on')
+			$('.wrap').toggleClass('push_on');
+		})
+		$('.push .head_wrap .btn_close').click(function(){
+			$('.top .util > li.l3 > a').removeClass('on')
+			$('.wrap').removeClass('push_on');
+		})
+		
+		
+		//퀵메뉴 토글
+		$('.footer .btn_quick').click(function(){
+			$(this).toggleClass('on')
+			$('.footer').toggleClass('on');
+		})
+		
+		
+		
+		
+	};
+	]]></script>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group class="wrap" id="" style=""><!-- lnb_on push_on -->
+			<xf:group adaptiveThreshold="" class="top" id="" style="">
+						<w2:textbox id="" label="" tagname="h1" class="logo"></w2:textbox><w2:anchor id="" outerDiv="false" class="btn_lnb_close"><xf:label></xf:label></w2:anchor><xf:group adaptive="" class="search_wrap" id="" style="">
+							<xf:group adaptive="" class="inner" id="" style="">
+
+								<xf:select1 allOption="" appearance="minimal" chooseOption="" direction="auto"
+									disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="" submenuSize="auto" ref="">
+									<xf:choices>
+										<xf:item>
+											<xf:label><![CDATA[사용자 검색]]></xf:label>
+											<xf:value><![CDATA[]]></xf:value>
+										</xf:item>
+									</xf:choices>
+								</xf:select1>
+								<xf:input adjustMaxLength="false" id="" placeholder="" style="" />
+								<w2:anchor id="" outerDiv="false" style="">
+									<xf:label><![CDATA[검색]]></xf:label>
+								</w2:anchor>
+							</xf:group>
+						</xf:group>
+					<xf:group style="" id="" class="right_wrap"><xf:group class="info" id=""><xf:group class="img" id=""><xf:image id="" src="/resources/images/layout/img_profile.png"></xf:image></xf:group><w2:span id="" label="김소노" class="name"></w2:span><w2:span id="" label="님" class="txt"></w2:span><w2:span id="" label="즐거운 하루 되세요!!" class="msg"></w2:span><w2:anchor id="" outerDiv="false" class="btn_attendCheck"><xf:label><![CDATA[출근체크]]></xf:label></w2:anchor></xf:group><xf:group adaptive="" tagname="ul" style="" id="" class="util">
+							<xf:group adaptive="" tagname="li" style="" id="" class="l1">
+							<xf:group class="" id="" tagname="a"></xf:group></xf:group>
+							<xf:group adaptive="" tagname="li" style="" id="" class="l2">
+								<xf:group class="" id="" tagname="a" style=""></xf:group>
+							</xf:group>
+							<xf:group adaptive="" tagname="li" style="" id="" class="l3">
+								<xf:group class="" id="" tagname="a" style=""><w2:span id="" label="4" class="badge"></w2:span></xf:group>
+							</xf:group>
+							<xf:group adaptive="" tagname="li" style="" id="" class="l4">
+								<xf:group class="" id="" tagname="a" style=""></xf:group>
+							</xf:group>
+</xf:group></xf:group></xf:group>
+			<!-- left -->
+
+			<xf:group adaptive="" class="container" id="" style="">
+				<xf:group adaptive="" class="inner" id="" style="">
+					
+
+					<xf:group adaptive="" class="left" id="" style="" adaptiveThreshold="">
+				
+
+				<xf:group style="" id="" class="navi" adaptive="">
+
+					<xf:group style="" id="" class="" adaptive="" tagname="ul">
+						<xf:group style="" id="" class="l1" adaptive="" tagname="li"
+							ev:onclick="">
+							<xf:group class="link_wrap" id="" style="">
+								<w2:textbox id="" label="마이메뉴" style="" tagname="p"></w2:textbox>
+							</xf:group>
+							<xf:group adaptive="" class="sub_wrap" id="" style="" tagname="">
+								<w2:anchor id="" outerDiv="false" class="btn_lnb_folder">
+								<xf:label><![CDATA[그룹만들기]]></xf:label>
+							</w2:anchor><xf:group adaptive="" class="sub" id="" style="" tagname="">
+									<xf:group adaptive="" class="" id="" style="" tagname="ul">
+										<xf:group adaptive="" class="" id="" style="" tagname="li">
+											<w2:anchor id="" outerDiv="false" style="">
+												<xf:label><![CDATA[My Menu #Group 01]]></xf:label>
+											</w2:anchor>
+											<xf:group adaptive="" class="sub1" id="" style="" tagname="ul">
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[텔레피아5 자료실]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[감사대상선별 Monitoring]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[매출원가계획집계-사업영역]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[운영손익계획집계-손익]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[손익목표예산조회]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+											</xf:group>
+										</xf:group>
+										<xf:group adaptive="" class="" id="" style="" tagname="li">
+											<w2:anchor id="" outerDiv="false" style="">
+												<xf:label><![CDATA[My Menu #Group 02]]></xf:label>
+											</w2:anchor>
+											<xf:group adaptive="" class="sub1" id="" style="" tagname="ul">
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[텔레피아5 자료실]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[감사대상선별 Monitoring]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[매출원가계획집계-사업영역]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[운영손익계획집계-손익]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[손익목표예산조회]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+											</xf:group>
+										</xf:group>
+										<xf:group adaptive="" class="" id="" style="" tagname="li">
+											<w2:anchor id="" outerDiv="false" style="" class="">
+												<xf:label><![CDATA[My Menu #Group 03]]></xf:label>
+											</w2:anchor>
+											<xf:group adaptive="" class="sub1" id="" style="" tagname="ul">
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[텔레피아5 자료실]]></xf:label>
+													</w2:anchor><xf:group style="" id="" class="edit_wrap"><w2:anchor outerDiv="false" id="" class="btn_edit"><xf:label><![CDATA[버튼편집]]></xf:label></w2:anchor><xf:group style="" id="" class="pop_wrap"><xf:group style="" id="" class="pop"><w2:anchor outerDiv="false" id="" class="btn_modify"><xf:label><![CDATA[메뉴명수정]]></xf:label></w2:anchor><w2:anchor outerDiv="false" id="" class="btn_del"><xf:label><![CDATA[삭제]]></xf:label></w2:anchor></xf:group></xf:group></xf:group></xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[감사대상선별 Monitoring]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[매출원가계획집계-사업영역]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[운영손익계획집계-손익]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[손익목표예산조회]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+											</xf:group></xf:group>
+										<xf:group adaptive="" class="" id="" style="" tagname="li">
+											<w2:anchor id="" outerDiv="false" style="">
+												<xf:label><![CDATA[My Menu #Group 04]]></xf:label>
+											</w2:anchor>
+											<xf:group adaptive="" class="sub1" id="" style="" tagname="ul">
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[텔레피아5 자료실]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[감사대상선별 Monitoring]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[매출원가계획집계-사업영역]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[운영손익계획집계-손익]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[손익목표예산조회]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+											</xf:group>
+										</xf:group>
+										<xf:group adaptive="" class="" id="" style="" tagname="li">
+											<w2:anchor id="" outerDiv="false" style="">
+												<xf:label><![CDATA[My Menu #Group 05]]></xf:label>
+											</w2:anchor>
+											<xf:group adaptive="" class="sub1" id="" style="" tagname="ul">
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[텔레피아5 자료실]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[감사대상선별 Monitoring]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[매출원가계획집계-사업영역]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[운영손익계획집계-손익]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[손익목표예산조회]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+											</xf:group>
+										</xf:group>
+										<xf:group adaptive="" class="" id="" style="" tagname="li">
+											<w2:anchor id="" outerDiv="false" style="">
+												<xf:label><![CDATA[My Menu #Group 06]]></xf:label>
+											</w2:anchor>
+											<xf:group adaptive="" class="sub1" id="" style="" tagname="ul">
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[텔레피아5 자료실]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[감사대상선별 Monitoring]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[매출원가계획집계-사업영역]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[운영손익계획집계-손익]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[손익목표예산조회]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+											</xf:group>
+										</xf:group>
+										<xf:group adaptive="" class="" id="" style="" tagname="li">
+											<w2:anchor id="" outerDiv="false" style="">
+												<xf:label><![CDATA[My Menu #Group 07]]></xf:label>
+											</w2:anchor>
+
+											<xf:group adaptive="" class="sub1" id="" style="" tagname="ul">
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[텔레피아5 자료실]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[감사대상선별 Monitoring]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[매출원가계획집계-사업영역]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[운영손익계획집계-손익]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+												<xf:group adaptive="" class="" id="" style="" tagname="li">
+													<w2:anchor id="" outerDiv="false" style="">
+														<xf:label><![CDATA[손익목표예산조회]]></xf:label>
+													</w2:anchor>
+													<xf:group class="edit_wrap" id="" style="">
+														<w2:anchor class="btn_edit" id="" outerDiv="false">
+															<xf:label><![CDATA[버튼편집]]></xf:label>
+														</w2:anchor>
+														<xf:group class="pop_wrap" id="" style="">
+															<xf:group class="pop" id="" style="">
+																<w2:anchor class="btn_modify" id="" outerDiv="false">
+																	<xf:label><![CDATA[메뉴명수정]]></xf:label>
+																</w2:anchor>
+																<w2:anchor class="btn_del" id="" outerDiv="false">
+																	<xf:label><![CDATA[삭제]]></xf:label>
+																</w2:anchor>
+															</xf:group>
+														</xf:group>
+													</xf:group>
+												</xf:group>
+											</xf:group>
+										</xf:group>
+									</xf:group>
+								</xf:group>
+							<xf:group class="history_wrap" id=""><w2:textbox id="" label="HISTORY" tagname="strong"></w2:textbox>
+								<xf:group class="" id="" tagname="ul">
+									<xf:group class="" id="" tagname="li">
+										<w2:anchor id="" outerDiv="false" class="btn_favor on">
+											<xf:label><![CDATA[즐겨찾기]]></xf:label>
+										</w2:anchor>
+										<w2:anchor id="" outerDiv="false" class="btn_txt">
+											<xf:label><![CDATA[목표예산관리]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+									<xf:group class="" id="" tagname="li" style="">
+										<w2:anchor class="btn_favor" id="" outerDiv="false">
+											<xf:label><![CDATA[즐겨찾기]]></xf:label>
+										</w2:anchor>
+										<w2:anchor class="btn_txt" id="" outerDiv="false">
+											<xf:label><![CDATA[표준공종관리]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+									<xf:group class="" id="" tagname="li" style="">
+										<w2:anchor class="btn_favor" id="" outerDiv="false">
+											<xf:label><![CDATA[즐겨찾기]]></xf:label>
+										</w2:anchor>
+										<w2:anchor class="btn_txt" id="" outerDiv="false">
+											<xf:label><![CDATA[관리구분등록]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+									<xf:group class="" id="" tagname="li" style="">
+										<w2:anchor class="btn_favor" id="" outerDiv="false">
+											<xf:label><![CDATA[즐겨찾기]]></xf:label>
+										</w2:anchor>
+										<w2:anchor class="btn_txt" id="" outerDiv="false">
+											<xf:label><![CDATA[목표예산조회]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+									<xf:group class="" id="" tagname="li" style="">
+										<w2:anchor class="btn_favor" id="" outerDiv="false">
+											<xf:label><![CDATA[즐겨찾기]]></xf:label>
+										</w2:anchor>
+										<w2:anchor class="btn_txt" id="" outerDiv="false">
+											<xf:label><![CDATA[손익목표예산조회]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+								</xf:group></xf:group></xf:group>
+							
+						</xf:group>
+						<xf:group style="" id="" class="l2" adaptive="" tagname="li" ev:onclick="scwin.lnb1_onclick">
+						<xf:group style="" id="" class="link_wrap"><w2:textbox tagname="p" style="" id="" label="메뉴"></w2:textbox></xf:group><xf:group style="" id="" class="sub_wrap" adaptive="" tagname="">
+					<xf:group class="search_wrap" id=""><xf:input adjustMaxLength="false" id="" class="input" placeholder="메뉴검색"></xf:input><w2:anchor id="" outerDiv="false" class="btn"><xf:label><![CDATA[메뉴검색]]></xf:label></w2:anchor></xf:group><xf:group adaptive="" tagname="" style="" id="" class="sub">
+							<xf:group adaptive="" tagname="ul" style="" id="" class="">
+								<xf:group adaptive="" tagname="li" style="" id="" class="">
+									<w2:anchor outerDiv="false" style="" id="">
+										<xf:label><![CDATA[경영전략]]></xf:label>
+									</w2:anchor>
+								</xf:group>
+								<xf:group adaptive="" tagname="li" style="" id="" class="">
+									<w2:anchor outerDiv="false" style="" id="">
+										<xf:label><![CDATA[경영관리]]></xf:label>
+									</w2:anchor>
+								</xf:group>
+								<xf:group adaptive="" tagname="li" style="" id="" class="">
+									<w2:anchor outerDiv="false" style="" id="">
+										<xf:label><![CDATA[경영지원]]></xf:label>
+									</w2:anchor>
+								</xf:group>
+								<xf:group adaptive="" tagname="li" style="" id="" class="">
+									<w2:anchor outerDiv="false" style="" id="">
+										<xf:label><![CDATA[영업관리]]></xf:label>
+									</w2:anchor>
+								</xf:group>
+								<xf:group adaptive="" tagname="li" style="" id="" class="">
+									<w2:anchor outerDiv="false" style="" id="">
+										<xf:label><![CDATA[분양관리]]></xf:label>
+									</w2:anchor>
+								</xf:group>
+								<xf:group adaptive="" tagname="li" style="" id="" class="">
+									<w2:anchor outerDiv="false" style="" id="">
+										<xf:label><![CDATA[견적관리]]></xf:label>
+									</w2:anchor>
+								</xf:group>
+								<xf:group adaptive="" tagname="li" style="" id="" class="">
+									<w2:anchor outerDiv="false" style="" id="">
+										<xf:label><![CDATA[공사계획  1depth]]></xf:label>
+									</w2:anchor>
+
+									<xf:group adaptive="" tagname="ul" style="" id="" class="sub1">
+										<xf:group adaptive="" tagname="li" style="" id="" class="">
+											<w2:anchor outerDiv="false" style="" id="">
+												<xf:label><![CDATA[현장준비/개설]]></xf:label>
+											</w2:anchor>
+										</xf:group>
+										<xf:group adaptive="" tagname="li" style="" id="" class="">
+											<w2:anchor outerDiv="false" style="" id="">
+												<xf:label><![CDATA[목표예산관리 2depth]]></xf:label>
+											</w2:anchor>
+
+											<xf:group adaptive="" tagname="ul" style="" id="" class="sub2">
+												<xf:group adaptive="" tagname="li" style="" id="" class="">
+													<w2:anchor outerDiv="false" style="" id="">
+														<xf:label><![CDATA[현목표예산확정]]></xf:label>
+													</w2:anchor>
+												</xf:group>
+
+
+												<xf:group adaptive="" tagname="li" style="" id="" class="">
+													<w2:anchor outerDiv="false" style="" id="">
+														<xf:label><![CDATA[목표예산관리 3depth]]></xf:label>
+													</w2:anchor>
+
+													<xf:group adaptive="" tagname="ul" style="" id="" class="sub3">
+														<xf:group adaptive="" tagname="li" style="" id="" class="">
+															<w2:anchor outerDiv="false" style="" id="">
+																<xf:label><![CDATA[발주처공종관리 4depth]]></xf:label>
+															</w2:anchor>
+														</xf:group>
+														<xf:group adaptive="" tagname="li" style="" id="" class="">
+															<w2:anchor outerDiv="false" style="" id="">
+																<xf:label><![CDATA[표준공종관리]]></xf:label>
+															</w2:anchor>
+														</xf:group>
+														<xf:group adaptive="" tagname="li" style="" id="" class="">
+															<w2:anchor outerDiv="false" style="" id="">
+																<xf:label><![CDATA[관리구분등록]]></xf:label>
+															</w2:anchor>
+														</xf:group>
+														<xf:group adaptive="" tagname="li" style="" id="" class="">
+															<w2:anchor outerDiv="false" style="" id="">
+																<xf:label><![CDATA[K-PAD 작업공종관리]]></xf:label>
+															</w2:anchor>
+														</xf:group>
+														<xf:group adaptive="" tagname="li" style="" id="" class="">
+															<w2:anchor outerDiv="false" style="" id="">
+																<xf:label><![CDATA[목표예산관리(K-PAD)]]></xf:label>
+															</w2:anchor>
+														</xf:group>
+													</xf:group>
+
+												</xf:group>
+
+												<xf:group adaptive="" tagname="li" style="" id="" class="">
+													<w2:anchor outerDiv="false" style="" id="">
+														<xf:label><![CDATA[현목표예산확정]]></xf:label>
+													</w2:anchor>
+												</xf:group>
+												<xf:group adaptive="" tagname="li" style="" id="" class="">
+													<w2:anchor outerDiv="false" style="" id="">
+														<xf:label><![CDATA[현목표예산확정]]></xf:label>
+													</w2:anchor>
+												</xf:group>
+
+											</xf:group>
+
+										</xf:group>
+
+										<xf:group adaptive="" tagname="li" style="" id="" class="">
+											<w2:anchor outerDiv="false" style="" id="">
+												<xf:label><![CDATA[현장준비/개설]]></xf:label>
+											</w2:anchor>
+										</xf:group>
+										<xf:group adaptive="" tagname="li" style="" id="" class="">
+											<w2:anchor outerDiv="false" style="" id="">
+												<xf:label><![CDATA[현장준비/개설]]></xf:label>
+											</w2:anchor>
+										</xf:group>
+
+									</xf:group>
+
+								</xf:group>
+
+								<xf:group adaptive="" tagname="li" style="" id="" class="">
+									<w2:anchor outerDiv="false" style="" id="">
+										<xf:label><![CDATA[견적관리]]></xf:label>
+									</w2:anchor>
+								</xf:group>
+
+							</xf:group>
+						</xf:group></xf:group></xf:group>
+						<xf:group style="" id="" class="l3" adaptive="" tagname="li">
+						<xf:group style="" id="" class="link_wrap"><w2:textbox tagname="p" style="" id="" label="게시판"></w2:textbox></xf:group><xf:group class="sub_wrap" id=""><w2:textbox id="" label="게시판 서브"></w2:textbox></xf:group></xf:group>
+						<xf:group style="" id="" class="l4" adaptive="" tagname="li">
+							<xf:group style="" id="" class="link_wrap">
+								<w2:textbox tagname="p" style="" id="" label="메일"></w2:textbox>
+								<w2:span style="" id="" label="4" class="badge"></w2:span>
+							</xf:group>
+						</xf:group>
+						<xf:group style="" id="" class="l5" adaptive="" tagname="li">
+							<xf:group style="" id="" class="link_wrap">
+								<w2:textbox tagname="p" style="" id="" label="결재"></w2:textbox>
+								<w2:span style="" id="" label="4" class="badge"></w2:span>
+							</xf:group>
+						</xf:group>
+						<xf:group style="" id="" class="l6" adaptive="" tagname="li">
+							<xf:group style="" id="" class="link_wrap">
+								<w2:textbox tagname="p" style="" id="" label="To-do"></w2:textbox>
+								<w2:span style="" id="" label="9+" class="badge"></w2:span>
+							</xf:group>
+						</xf:group>
+						<xf:group style="" id="" class="l7" adaptive="" tagname="li">
+							<xf:group style="" id="" class="link_wrap">
+								<w2:textbox tagname="p" style="" id="" label="일정" class=""></w2:textbox>
+								<w2:span style="" id="" label="4" class="badge"></w2:span>
+							</xf:group>
+						</xf:group>
+					</xf:group>
+
+					
+
+				</xf:group>
+				<!-- navi -->
+
+			</xf:group><xf:group adaptiveThreshold="" class="contents" id="" style="">
+						<xf:group adaptive="" class="inner" id="" style="">
+							<!-- <xf:group style="" id="" class="main" adaptive=""></xf:group>
+								<xf:group style="" id="" class="bottom" adaptiveThreshold=""></xf:group> -->
+							<w2:windowContainer class="main" fixArrangeFullScreen="false" hideTitleOnMaximize="true"
+								horizontalArrangeNum="2" id="windowContainer1" sequentialArrangeColNum="2" sequentialArrangeRowNum="2"
+								spaInitCount="0" stopToggleOnLast="false" style="" toolbarPosition="top" tooltipDisplay="true"
+								tooltipGroupClass="false" useCloseButton="true" useControlIconTitle="false" useCustomMsg="false"
+								useFixButton="false" useStatusMsg="false" verticalArrangeNum="2" windowAutoResize="false" windowMaxNum="10"
+								windowMaximizeAll="false" windowTooltipDisplay="true" spaAuto="" frameMode="wframe">
+								<w2:windowToolbar>
+									<w2:nameLayer />
+									<w2:controlIconLayer>
+										<w2:controlIcon />
+										<w2:controlIcon />
+										<w2:controlIcon />
+										<w2:controlIcon />
+										<w2:controlIcon />
+									</w2:controlIconLayer>
+									<w2:selectedNameLayer />
+								</w2:windowToolbar>
+							</w2:windowContainer>
+						</xf:group>
+					</xf:group>
+					<xf:group class="push" id=""><xf:group class="inner" id="">
+	<xf:group class="head_wrap" id="">
+		<w2:textbox id="" label="2018.12.21" class="" tagname="span"></w2:textbox>
+		<w2:textbox class="" id="" label="Today" tagname="span" style=""></w2:textbox><w2:anchor id="" outerDiv="false" class="btn_close">
+			<xf:label></xf:label>
+		</w2:anchor>
+		
+	</xf:group>
+	<xf:group class="unit_wrap" id="">
+	<xf:group class="" id="" tagname="ul">
+		<xf:group class="type_appr" id="" tagname="li">
+		<xf:group style="height:51px;" id="" tagname="a"><w2:textbox tagname="strong" id="" label="결재"></w2:textbox><w2:textbox tagname="span" id="" label="2018.12.13 11:40 AM"></w2:textbox><w2:textbox tagname="p" id="" label="자재정보 결재승인 요청"></w2:textbox></xf:group><w2:span id="" label="아이콘" class="icon"></w2:span><w2:anchor outerDiv="false" id="" class="btn_close">
+				<xf:label><![CDATA[닫기]]></xf:label>
+			</w2:anchor></xf:group>
+		<xf:group class="type_sch" id="" tagname="li" style="">
+			<xf:group style="" id="" tagname="a">
+				<w2:textbox tagname="strong" id="" label="결재"></w2:textbox>
+				<w2:textbox tagname="span" id="" label="2018.12.13 11:40 AM"></w2:textbox>
+				<w2:textbox tagname="p" id="" label="자재정보 결재승인 요청"></w2:textbox>
+				
+			</xf:group>
+			<w2:span id="" label="아이콘" class="icon"></w2:span><w2:anchor class="btn_close" id="" outerDiv="false" style="">
+				<xf:label><![CDATA[닫기]]></xf:label>
+			</w2:anchor>
+		</xf:group>
+		<xf:group class="type_todo" id="" tagname="li" style="">
+			<xf:group style="" id="" class="" tagname="a">
+				<w2:textbox tagname="strong" id="" label="결재"></w2:textbox>
+				<w2:textbox tagname="span" id="" label="2018.12.13 11:40 AM"></w2:textbox>
+				<w2:textbox tagname="p" id="" label="자재정보 결재승인 요청"></w2:textbox>
+				
+			</xf:group>
+			<w2:span id="" label="아이콘" class="icon"></w2:span><w2:anchor class="btn_close" id="" outerDiv="false" style="">
+				<xf:label><![CDATA[닫기]]></xf:label>
+			</w2:anchor>
+		</xf:group>
+		<xf:group class="type_mail" id="" tagname="li" style="">
+			<xf:group style="" id="" tagname="a">
+				<w2:textbox tagname="strong" id="" label="결재"></w2:textbox>
+				<w2:textbox tagname="span" id="" label="2018.12.13 11:40 AM"></w2:textbox>
+				<w2:textbox tagname="p" id="" label="자재정보 결재승인 요청"></w2:textbox>
+				
+			</xf:group>
+			<w2:span id="" label="아이콘" class="icon"></w2:span><w2:anchor class="btn_close" id="" outerDiv="false" style="">
+				<xf:label><![CDATA[닫기]]></xf:label>
+			</w2:anchor>
+		</xf:group>
+	</xf:group></xf:group></xf:group></xf:group>
+				</xf:group>
+			</xf:group>
+			<!-- container -->
+
+		<xf:group class="footer" id=""><xf:group class="btn_wrap" id="">
+	<xf:group class="" id="" tagname="ul">
+		<xf:group class="" id="" tagname="li"><w2:anchor id="" outerDiv="false" class="btn_quick"><xf:label><![CDATA[퀵메뉴]]></xf:label></w2:anchor></xf:group>
+		<xf:group class="" id="" tagname="li" style=""><xf:group class="link_wrap" id=""><w2:anchor id="" outerDiv="false" class="btn_link"><xf:label><![CDATA[관련링크]]></xf:label></w2:anchor>
+	<xf:group class="" id="" tagname="ul">
+		<xf:group class="" id="" tagname="li">
+			<w2:anchor id="" outerDiv="false">
+				<xf:label><![CDATA[다울]]></xf:label>
+			</w2:anchor>
+		</xf:group>
+		<xf:group class="" id="" tagname="li" style="">
+			<w2:anchor id="" outerDiv="false">
+				<xf:label><![CDATA[회계포탈]]></xf:label>
+			</w2:anchor>
+		</xf:group>
+		<xf:group class="" id="" tagname="li" style="">
+			<w2:anchor id="" outerDiv="false">
+				<xf:label><![CDATA[Telapia포탈]]></xf:label>
+			</w2:anchor>
+		</xf:group>
+	</xf:group></xf:group></xf:group>
+	</xf:group></xf:group><xf:group class="quick_wrap" id=""><xf:group style="" id="" class="inner"><xf:group tagname="ul" id="" class="">
+		<xf:group tagname="li" id="" class="">
+		<xf:group tagname="a" style="" id="" class="btn_quick_item a1"><w2:span id="" label="아이콘"></w2:span><w2:textbox tagname="p" id="" label="우편"></w2:textbox></xf:group></xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item a2">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="결재"></w2:textbox>
+			</xf:group>
+		</xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item a3">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="출근체크"></w2:textbox>
+			</xf:group>
+		</xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item a4">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="메일"></w2:textbox>
+			</xf:group>
+		</xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item a5">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="결재"></w2:textbox>
+			</xf:group>
+		</xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item a6">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="영업관리"></w2:textbox>
+			</xf:group>
+		</xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item a7">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="우편"></w2:textbox>
+			</xf:group>
+		</xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item a8">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="결재"></w2:textbox>
+			</xf:group>
+		</xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item a9">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="출근체크"></w2:textbox>
+			</xf:group>
+		</xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item a10">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="메일"></w2:textbox>
+			</xf:group>
+		</xf:group>
+		<xf:group tagname="li" style="" id="" class="">
+			<xf:group tagname="a" style="" id="" class="btn_quick_item more">
+				<w2:span id="" label="아이콘"></w2:span>
+				<w2:textbox tagname="p" id="" label="더보기"></w2:textbox>
+			</xf:group>
+		</xf:group>
+	</xf:group></xf:group></xf:group></xf:group></xf:group>
+	</body>
+</html>

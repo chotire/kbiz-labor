@@ -1,0 +1,747 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" ev:oncelldatachange="scwin.dsActbgtConfmList_oncelldatachange"
+			        id="dsTcmActbgtConfmTotalList" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="rowStatus" name="상태값"></w2:column>
+			            <w2:column dataType="text" id="siteCd" name="현장코드"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiCd" name="예산내역코드"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiNm" name="품명"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiLv" name="예산_내역_레벨"></w2:column>
+			            <w2:column dataType="text" id="upperBgtItemiCd" name="상위공종코드"></w2:column>
+			            <w2:column dataType="text" id="itemiYn" name="내역_여부"></w2:column>
+			            <w2:column dataType="number" id="chgbfContAmt" name="변경전_도급_금액"></w2:column>
+			            <w2:column dataType="number" id="chgbfActbgtAmt" name="변경전_실행예산_금액"></w2:column>
+			            <w2:column dataType="number" id="contAmt" name="도급_금액"></w2:column>
+			            <w2:column dataType="number" id="actbgtAmt" name="실행예산_금액"></w2:column>
+			            <w2:column dataType="number" id="incContAmt" name="증감_도급"></w2:column>
+			            <w2:column dataType="number" id="incActbgtAmt" name="증감_실행"></w2:column>
+			            <w2:column dataType="number" id="chgbfActbgtRt" name="변경전 실행원가율"></w2:column>
+			            <w2:column dataType="number" id="actbgtRt" name="실행원가율"></w2:column>
+			            <w2:column dataType="number" id="sortOdr" name="정렬_순서"></w2:column>
+			            <w2:column dataType="number" id="lowCnt" name="하위레벨건수"></w2:column>
+			            <w2:column dataType="text" id="diff" name="금액차이여부"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="list" id="dsTcmActbgtConfmDetailMap" repeatNode="map" saveRemovedData="true"
+			        style="">
+			        <w2:keyInfo>
+			            <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+			            <w2:key id="siteNm" name="현장명" dataType="text"></w2:key>
+			            <w2:key id="actbgtPrgsYn" name="실행예산_진행_여부" dataType="text"></w2:key>
+			            <w2:key id="tContAmt" name="가실행예산_도급금액" dataType="text"></w2:key>
+			            <w2:key id="tActbgtAmt" name="가실행예산_실행예산" dataType="text"></w2:key>
+			            <w2:key id="tActbgtRt" name="가실행예산_실행원가율" dataType="text"></w2:key>
+			            <w2:key id="tPlAmt" name="가실행예산_손익" dataType="text"></w2:key>
+			            <w2:key id="contAmt" name="실행예산_도급금액" dataType="text"></w2:key>
+			            <w2:key id="actbgtAmt" name="실행예산_실행예산" dataType="text"></w2:key>
+			            <w2:key id="actbgtRt" name="실행예산_실행원가율" dataType="text"></w2:key>
+			            <w2:key id="plAmt" name="실행예산_손익" dataType="text"></w2:key>
+			            <w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+			            <w2:key id="aflId" name="첨부파일ID" dataType="text"></w2:key>
+			            <w2:key id="actbgtConfmStusCd" name="실행예산확정상태코드[CM004004]" dataType="text"></w2:key>
+			            <w2:key id="aprvStusCd" name="결재상태코드[CF004]" dataType="text"></w2:key>
+			            <w2:key id="confmActbgtAgreeReqDt" name="실행예산(off) 요청일" dataType="text"></w2:key>
+			            <w2:key id="confmActbgtAgreeDt" name="실행예산(off) 합의일" dataType="text"></w2:key>
+			            <w2:key id="drawConfmDt" name="도면확정일" dataType="date"></w2:key>
+			            <w2:key id="rmkCn" name="비고" dataType="text"></w2:key>
+			            <w2:key id="spcmtCn" name="특기사항" dataType="text"></w2:key>
+			            <w2:key id="pjtNm" name="프로젝트명 공사명" dataType="text"></w2:key>
+			            <w2:key id="cntrtDgr" name="계약_차수" dataType="text"></w2:key>
+			            <w2:key id="chgSeq" name="변경_순번" dataType="text"></w2:key>
+			            <w2:key id="cntrtDt" name="계약_일자" dataType="text"></w2:key>
+			            <w2:key id="stwkDt" name="착공_일자" dataType="text"></w2:key>
+			            <w2:key id="complDt" name="준공_일자" dataType="text"></w2:key>
+			            <w2:key id="constPrdMcnt" name="공사_기간_월수" dataType="text"></w2:key>
+			            <w2:key id="scdlDt" name="입찰일" dataType="text"></w2:key>
+			            <w2:key id="dmndVendrNm" name="수요처" dataType="text"></w2:key>
+			            <w2:key id="ordVendrNm" name="발주처" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			        <w2:data>
+
+			        </w2:data>
+			    </w2:dataMap>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key dataType="text" id="actbgtPrgsYn" name="실행예산_진행_여부"></w2:key>
+			            <w2:key dataType="text" id="firstPrgsYn" name="최초작업여부"></w2:key>
+			            <w2:key id="delYn" name="삭제포함여부" dataType="text" defaultValue="N"></w2:key>
+			            <w2:key id="siteNm" name="현장명" dataType="text"></w2:key>
+			            <w2:key id="publCvlGbCd" name="공사구분" dataType="text"></w2:key>
+			            <w2:key id="actbgtConfmStusCd" name="진행상태" dataType="text"></w2:key>
+			            <w2:key id="bzpjGbCd" name="사업구분코드" dataType="text"></w2:key>
+			            <w2:key id="listSearchYn" name="리스트화면조회여부" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			    <w2:dataMap baseNode="map" id="dsSrch" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+			            <w2:key dataType="text" id="actbgtPrgsYn" name="실행예산_진행_여부"></w2:key>
+			            <w2:key dataType="text" id="firstPrgsYn" name="최초작업여부"></w2:key>
+			            <w2:key dataType="text" defaultValue="N" id="delYn" name="삭제포함여부"></w2:key>
+			            <w2:key dataType="text" id="siteNm" name="현장명"></w2:key>
+			            <w2:key dataType="text" id="publCvlGbCd" name="공사구분"></w2:key>
+			            <w2:key dataType="text" id="actbgtConfmStusCd" name="진행상태"></w2:key>
+			            <w2:key dataType="text" id="bzpjGbCd" name="사업구분코드"></w2:key>
+			            <w2:key dataType="text" id="listSearchYn" name="리스트화면조회여부"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/************************************************************************************
+ *  [1] onpageload
+************************************************************************************/
+	scwin.onpageload = function() {
+
+	   scwin.fnInitial();
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+        //초기화
+        grpTcmActbgtConfmOpin.init();
+        grpgrpTcmActbgtConfm.init();
+        grpTcfAfl.init();
+
+        //파라미터 셋팅
+        if (com.isEmpty(gcm.tab_main)) {
+            dsSearchMap.setJSON(JSON.parse($w.getPopupParam()).data);
+        } else {
+            dsSearchMap.setJSON(com.getAllParam());
+        }
+
+        scwin.fnSearch();
+
+        // 첨부파일 처리
+        // 팝업입력 버튼 활성화 : 결재진행 시 비활성화로 변경해야 함 : 현재 활성화
+        com.getUdcComp("udcAflId", "btnAddFile").removeClass("hide");
+        com.getUdcComp("udcAflId", "btnAddFile").addClass("show");
+        com.getUdcComp("udcAflId", "gen_aflList").addClass("col3");                     // 첨부파일 LIST 3개씩 : UDC.xml 참조
+
+        com.setUdcValue( "udcAflId", "jobGbCd", "CM");
+        com.setUdcValue( "udcAflId", "menuId", "CM15000505U");
+        //com.setUdcValue( "udcAflId", "aflId", dsTcmActbgtConfmDetailMap.get("aflId"));  // 첨부파일ID
+        com.setUdcValue( "udcAflId", "fileExt", "*.*");
+        com.setUdcValue( "udcAflId", "usage", "INS");                                   // 버튼숨기기처리 : 필수값
+        com.setUdcValue( "udcAflId", "fileSize", "INS");                                // 용량표시안함(표시함:INS) : 필수값
+
+        com.commonUI();
+    };
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /************************************************************************************
+     *  [2] 사용자 정의함수 함수
+     ************************************************************************************/
+
+    //조회
+    scwin.fnSearch = function() {
+        ajaxLib.ajax("/cm/cm1500/CM15000505U/selectActbgtConfmDetail", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e){
+                dsTcmActbgtConfmDetailMap.setJSON(result.data.selectActbgtConfmDetail);
+                dsTcmActbgtConfmTotalList.setJSON(result.data.selectTcmActbgtConfmTotalList);
+                com.setUdcValue("dsTcmActbgtConfmTotalListCount", "udcListCount", dsTcmActbgtConfmTotalList.getTotalRow());
+
+                //결재상태코드가 부결, 기안중, 최종승인인 경우 결재상신 disable
+                var sAprvStusCd = dsTcmActbgtConfmDetailMap.get("aprvStusCd");
+                var nAprvNo = dsTcmActbgtConfmDetailMap.get("aprvNo");
+                var sActbgtConfmStusCd = dsTcmActbgtConfmDetailMap.get("actbgtConfmStusCd");
+                var sActbgtPrgsYn = dsTcmActbgtConfmDetailMap.get("actbgtPrgsYn");
+
+                debugger;
+                //결재, 저장 버튼 disable (결재중, 완료된 현장, 결재번호 있으면서 부결된 건이 아닌 현장
+                if (sActbgtPrgsYn == "Y") {
+                    btnApprReq.setDisabled(true);
+                    btnSave.setDisabled(true);
+                } else if ((["CM00400404","CM00400405"].indexOf(sActbgtConfmStusCd) > -1) || (nAprvNo != "") && (sAprvStusCd != "CF004999")) {
+                    btnApprReq.setDisabled(true);
+                    btnSave.setDisabled(true);
+                } else {
+                    btnApprReq.setDisabled(false);
+                    btnSave.setDisabled(false);
+                }
+
+                com.setUdcValue( "udcAflId", "aflId", dsTcmActbgtConfmDetailMap.get("aflId"));  // 첨부파일ID
+                for (var i=0; i < dsActbgtConfmTotalList.getTotalRow(); i++ ){
+                    //diff
+                    if (dsActbgtConfmTotalList.getCellData( i , "diff" ) == "F") {
+                        grdActbgtConjfmTotalList.setRowColor( i , "red" );
+                    }
+                }
+
+            },
+            errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+    };
+
+    /************************************************************************************
+     *  [3] Event 함수
+     ************************************************************************************/
+
+    //저장 버튼 클릭
+    scwin.btnSave_onclick = function() {
+        if (confirm("저장 하시겠습니까?")) {
+            ajaxLib.ajax("/cm/cm1500/CM15000505U/updateTcmActbgtConfmOpin", {
+                method: "post",
+                requestData: {
+                    siteCd: dsSearchMap.get("siteCd"),
+                    confmActbgtAgreeReqDt: dsTcmActbgtConfmDetailMap.get("confmActbgtAgreeReqDt"),
+                    confmActbgtAgreeDt: dsTcmActbgtConfmDetailMap.get("confmActbgtAgreeDt"),
+                    drawConfmDt: dsTcmActbgtConfmDetailMap.get("drawConfmDt"),
+                    spcmtCn: dsTcmActbgtConfmDetailMap.get("spcmtCn"),
+                    aflId: com.getUdcValue("udcAflId", "aflId")
+                },
+                callback: function(result, e){
+                    if (result.data == true){
+                        com.showMessage("CFA0012"); //저장되었습니다.
+                    }
+                },
+                errCallback: function(result, e) {
+                    com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+                }
+            });
+        }
+    };
+
+    //결재상신
+    scwin.btnApprReq_onclick = function() {
+        dsSrch.setJSON(dsSearchMap.getJSON());
+
+        var paramObj = {
+            jobGbCd: "CM",                                         // 업무구분코드
+            importUrl: "/ux/cm/cm5500/CM55000005E.xml",            // 결재본문페이지
+            aprvTtl: dsTcmActbgtConfmDetailMap.get("siteNm") + " 현장의 실행예산보고서",  // 결재제목
+            rvwrEmpno: "",                                   		// 검토자_사번
+            fnlAprprEmpno: "",                               		// 최종승인자_사번
+            aprvPrcgNm: "",                                        // 후처리결재처리명
+            aprvPrcgEventNm: "/cm/cmif/CMIfTelepiaPostProcess/notifyAprvPcmSetActbgtDgrStatus",                                   // 후처리결재처리 이벤트명
+            aprvDocModiPsblYn: "Y",                                // 결재문서 수정불가기능 Y/N
+            aprlnModiPsblYn: "N",                                  // 결재선 수정불가기능 Y/N
+            aprvAtchModiPsblYn: "Y",                               // 결재첨부 수정불가기능 Y/N
+            aprvAflId: com.getUdcValue("udcAflId", "aflId"),       //  본문링크용 첨부파일 id (콤머로 구분해서 보내준다)
+            popWidth: "900",
+            anchorUrl: "/ux/cm/cm5500/CM55000005E.xml&siteCd="+dsSearchMap.get("siteCd")+"&delYn=N&ListShowYn=Y",
+            anchorUrlMsg: "내역서다운로드"                          // 링크에 붙는 메시지
+        };
+
+        com.aprvSend(paramObj);
+    };
+
+    //결재상신 창에서 결재상신 버튼 클릭 후 결재번호 리턴
+    scwin.aprvPublicAction = function() {
+        debugger;
+        if (com.getAprvNo() > 0){
+            btnApprReq.setDisabled(true);
+            btnSave.setDisabled(true);
+            ajaxLib.ajax("/cm/cm1500/CM15000505U/approveTcmActbgtConfm", {
+                method: "post",
+                requestData: {
+                    siteCd: dsSearchMap.get("siteCd"),
+                    confmActbgtAgreeReqDt: dsTcmActbgtConfmDetailMap.get("confmActbgtAgreeReqDt"),
+                    confmActbgtAgreeDt: dsTcmActbgtConfmDetailMap.get("confmActbgtAgreeDt"),
+                    drawConfmDt: dsTcmActbgtConfmDetailMap.get("drawConfmDt"),
+                    spcmtCn: dsTcmActbgtConfmDetailMap.get("spcmtCn"),
+                    actbgtChgTypeCd: "CM0040019",
+                    aprvNo: com.getAprvNo()
+                },
+                callback: function(result, e){
+                    if (result.data == true){
+
+                    }
+                },
+                errCallback: function(result, e) {
+                    com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+                }
+            });
+        }
+    };
+
+    //내역서다운로드
+    scwin.btnExcelDwn_onclick = function() {
+        grdActbgtConjfmTotalList.advancedExcelDownload({fileName: "실행예산확정.xlsx"});
+    };
+
+    //목록 버튼 클릭
+    scwin.btnList_onclick = function() {
+        dsSearchMap.set("listSearchYn", "Y");
+        com.detailOpen("실행예산확정", "CM15000500", "/ux/cm/cm1500/CM15000500U.xml", "1", dsSearchMap.getJSON());
+    };
+
+    //첨부파일 클릭
+    scwin.ins_aflId_onclick = function(e) {
+        com.getUdcComp("udcAflId", "btnAddFile").removeClass("hide");
+        com.getUdcComp("udcAflId", "btnAddFile").addClass("show");
+
+        var sJobGbCd = "CM";
+        var sMenuId  = "CM15000505U";
+        var sAflId   = dsTcmSitedRptsMap.get("aflId");
+        var sFileExt = "*.*";
+
+        com.setUdcValue("udcAflId", "jobGbCd", sJobGbCd);
+        com.setUdcValue("udcAflId", "menuId", sMenuId);
+        com.setUdcValue("udcAflId", "aflId", sAflId);
+        com.setUdcValue("udcAflId", "fileExt", sFileExt);
+        com.setUdcValue("udcAflId", "usage", "INS"); // 버튼숨기기처리 : 필수값
+        com.setUdcValue("udcAflId", "fileSize", "INS"); // 용량표시안함(표시함:INS) : 필수값
+    };
+
+    // 멀티업로드 파일첨부 팝업입력불가
+    scwin.ins_aflIdNot_onclick = function(e) {
+        console.log(">>ins_aflIdNot_onclick");
+    };
+
+    // 결재현황 클릭
+	scwin.btnApprCon_onclick = function() {
+        com.aprvViewPopup(dsTcmActbgtConfmDetailMap.get("aprvNo"));
+	};
+	]]></script>
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+        <!-- 결재이벤트 페이지 임포트 -->
+        <xf:group>
+            <w2:wframe style="display:none" id="importAprvMain" src="/ux/cf/CF00350500U.xml"></w2:wframe>
+        </xf:group>
+        <!-- #결재이벤트 페이지 임포트 -->
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="품의서" style="" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+					    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnApprCon" outerDiv="false"
+					        style="" ev:onclick="scwin.btnApprCon_onclick">
+					        <xf:label><![CDATA[결재현황]]></xf:label>
+					    </w2:anchor>
+					    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnApprReq" outerDiv="false"
+					        style="" ev:onclick="scwin.btnApprReq_onclick">
+					        <xf:label><![CDATA[결재상신]]></xf:label>
+					    </w2:anchor>
+					    <w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnSave" outerDiv="false" style=""
+					        ev:onclick="scwin.btnSave_onclick">
+					        <xf:label><![CDATA[저장]]></xf:label>
+					    </w2:anchor>
+
+					    <w2:anchor class="btn_gcm" clickEventElement="" id="btnList" outerDiv="false" style="" ev:onclick="scwin.btnList_onclick">
+					        <xf:label><![CDATA[목록]]></xf:label>
+					    </w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpTcmActbgtConfmOpin" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>품의서 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width: 165px;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+					<xf:group style="width:165px;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+					<xf:group style="width:110px;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="현장" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:attributes>
+							<w2:colspan>3</w2:colspan>
+						</w2:attributes>
+						<w2:span class="txt_unit" id="spnSiteNm" label="은평뉴타운2지구" style="" ref="data:dsTcmActbgtConfmDetailMap.siteNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes></w2:attributes>
+						<w2:span id="" label="입찰일" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td ac" tagname="td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" id="" label="2006-03-15" style="" ref="data:dsTcmActbgtConfmDetailMap.scdlDt" displayFormatter="" displayFormat="####-##-##"></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="공사명" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" tagname="td">
+						<w2:attributes>
+							<w2:colspan>3</w2:colspan>
+						</w2:attributes>
+						<w2:span class="txt_unit" id="" label="서울시 은평구 은평뉴타운 일대" style="" ref="data:dsTcmActbgtConfmDetailMap.pjtNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="발주처" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" tagname="td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" id="" label="SH공사" style="" ref="data:dsTcmActbgtConfmDetailMap.ordVendrNm"></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group tagname="th" class="w2tb_th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="실행예산(off) 요청일" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:inputCalendar calendarClass="" calendarValueType="" focusOnDateSelect="false"
+							footerDiv="false" id="calConfmActbgtAgreeReqDt" renderDiv="true" renderType="component" rightAlign="false" style="width: 100px;"
+							weekStartsOn="0" ref="data:dsTcmActbgtConfmDetailMap.confmActbgtAgreeReqDt">
+						</w2:inputCalendar>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th ">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="실행예산(off) 합의일" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:inputCalendar calendarClass="" calendarValueType="" focusOnDateSelect="false"
+							footerDiv="false" id="calConfmActbgtAgreeDt" renderDiv="true" renderType="component" rightAlign="false" style="width: 100px;"
+							weekStartsOn="0" ref="data:dsTcmActbgtConfmDetailMap.confmActbgtAgreeDt">
+						</w2:inputCalendar>
+					</xf:group>
+					<xf:group tagname="th" class="w2tb_th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="도면확정일" style=""></w2:span>
+					</xf:group>
+					<xf:group tagname="td" class="w2tb_td">
+						<w2:attributes></w2:attributes>
+						<w2:inputCalendar calendarClass="" calendarValueType="" focusOnDateSelect="false"
+							footerDiv="false" id="calDrawConfmDt" renderDiv="true" renderType="component" rightAlign="false" style="width: 100px;"
+							weekStartsOn="0" ref="data:dsTcmActbgtConfmDetailMap.drawConfmDt">
+						</w2:inputCalendar>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr" style="">
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="공사기간" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" tagname="td">
+					    <w2:attributes>
+					        <w2:colspan>3</w2:colspan>
+					    </w2:attributes>
+					    <w2:span class="txt_unit" id="" label="2011-01-01 ~ 2020-12-01 (34 개월)" style="" ref="data:dsTcmActbgtConfmDetailMap.constPrdMcnt"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="수요처" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" tagname="td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" id="" label="SH공사" style="" ref="data:dsTcmActbgtConfmDetailMap.dmndVendrNm"></w2:span>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpgrpTcmActbgtConfm" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>품의서 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:164px;" tagname="col"></xf:group>
+					<xf:group style="width:auto" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+					<xf:group style="width:auto;" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="공사금액" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th ac" tagname="th">
+						<w2:attributes>
+							<w2:colspan>1</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>
+						<w2:span id="" label="도급금액" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th ac" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="실행예산" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th ac" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="실행원가율(%)" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th ac" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="손익" style=""></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="가실행예산" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td ar" tagname="td">
+						<w2:attributes>
+							<w2:colspan>1</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>
+						<w2:span class="txt_unit" dataType="number" displayFormat="#,##0" id="" label="154086843732"
+							style="" ref="data:dsTcmActbgtConfmDetailMap.tContAmt">
+						</w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td ar" tagname="td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" dataType="number" displayFormat="#,##0" id="" label="138095785919"
+							style="" ref="data:dsTcmActbgtConfmDetailMap.tActbgtAmt">
+						</w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th ac" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span class="txt_unit" dataType="number" displayFormat="#,##0.00%" id="" label="89.62" style="" ref="data:dsTcmActbgtConfmDetailMap.tActbgtRt"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td ar" tagname="td">
+						<w2:attributes></w2:attributes>
+						<w2:span class="txt_unit" dataType="number" displayFormat="#,##0" id="" label="15991057813"
+							style="" ref="data:dsTcmActbgtConfmDetailMap.tPlAmt">
+						</w2:span>
+					</xf:group>
+				</xf:group>
+			<xf:group tagname="tr">
+				<xf:group tagname="th" class="w2tb_th">
+					<w2:attributes>
+						<w2:scope>row</w2:scope>
+					</w2:attributes>
+					<w2:span id="" label="실행예산" style=""></w2:span>
+				</xf:group>
+				<xf:group tagname="td" class="w2tb_td ar">
+					<w2:attributes></w2:attributes>
+					<w2:span class="txt_unit" dataType="number" displayFormat="#,##0" id="" label="154086843732"
+						style="" ref="data:dsTcmActbgtConfmDetailMap.contAmt">
+					</w2:span>
+				</xf:group>
+				<xf:group tagname="td" class="w2tb_td ar">
+					<w2:attributes></w2:attributes>
+					<w2:span class="txt_unit" dataType="number" displayFormat="#,##0" id="" label="138095785919"
+						style="" ref="data:dsTcmActbgtConfmDetailMap.actbgtAmt">
+					</w2:span>
+				</xf:group>
+				<xf:group tagname="th" class="w2tb_th ac">
+					<w2:attributes></w2:attributes>
+					<w2:span class="txt_unit" dataType="number" displayFormat="#,##0.00%" id="" label="89.62" style="" ref="data:dsTcmActbgtConfmDetailMap.actbgtRt"></w2:span>
+				</xf:group>
+				<xf:group tagname="td" class="w2tb_td ar">
+					<w2:attributes></w2:attributes>
+					<w2:span class="txt_unit" dataType="number" displayFormat="#,##0" id="" label="15991057813"
+						style="" ref="data:dsTcmActbgtConfmDetailMap.plAmt">
+					</w2:span>
+				</xf:group></xf:group></xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="품의내역" style="" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTcmActbgtConfmTotalListCount" style=""></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnExcelDwn" outerDiv="false" style="" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[내역서다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="" dataList="data:dsTcmActbgtConfmTotalList" fixedColumnWithHidden="true"
+				focusMode="row" id="grdActbgtConjfmTotalList" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+				rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" showSortableUseFilter="true" sortable="true"
+				style="height: 452px;" useShiftKey="true" visibleRowNum="" overflowX="">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" colSpan="" id="column21" inputType="text" rowSpan="2" style="height:34px;"
+							value="공종명" width="200">
+						</w2:column>
+						<w2:column blockSelect="false" colSpan="2" displayMode="label" id="column67" inputType="text"
+							removeBorderStyle="false" rowSpan="" style="height:34px;" value="변경 전" width="180">
+						</w2:column>
+						<w2:column hidden="false" removeBorderStyle="false" width="180" inputType="text"
+							style="height:34px;" id="column80" value="변경 후" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="180" inputType="text" style="height:34px;"
+							id="column87" value="증감" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:34px;"
+							id="column107" value="원가율" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+						</w2:column>
+					</w2:row>
+					<w2:row id="row8" style="">
+						<w2:column hidden="false" removeBorderStyle="false" width="180" inputType="text" style=""
+							id="column79" value="도급예산" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column78" inputType="text"
+							removeBorderStyle="false" style="" value="실행예산" width="180">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column77" inputType="text"
+							removeBorderStyle="false" style="" value="도급예산" width="180">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column76" inputType="text"
+							removeBorderStyle="false" style="" value="실행예산" width="180">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="180" inputType="text" style="" id="column88"
+							value="도급예산" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="180" inputType="text" style="" id="column103"
+							value="실행예산" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column108"
+							value="변경 전" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column98"
+							value="변경후" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" id="bgtItemiNm" inputType="drilldown" style="height:24px;"
+						    textAlign="left" value="" width="200" showDepth="2" depthColumn="bgtItemiLv" depthType="div">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="chgbfContAmt" inputType="text"
+							removeBorderStyle="false" style="height:24px;" value="" width="180" displayFormat="#,##0" dataType="number" textAlign="right" displayFormatter="">
+						</w2:column>
+						<w2:column blockSelect="false" class="" dataType="number" displayFormat="#,##0" id="chgbfActbgtAmt"
+							inputType="text" style="height:24px;" textAlign="right" value="" width="180" displayFormatter="">
+						</w2:column>
+						<w2:column blockSelect="false" dataType="number" displayFormat="#,##0" id="contAmt"
+							inputType="text" style="height:24px;" textAlign="right" value="" width="180" displayFormatter="">
+						</w2:column>
+						<w2:column blockSelect="false" id="actbgtAmt" inputType="text" style="height:24px;" textAlign="right"
+							value="" width="180" displayFormat="#,##0" dataType="number" displayFormatter="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="180" inputType="text" style="height:24px;"
+							id="incContAmt" value="" blockSelect="false" displayMode="label" textAlign="right" displayFormatter="" displayFormat="#,##0">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="180" inputType="text" style="height:24px;"
+							id="incActbgtAmt" value="" blockSelect="false" displayMode="label" textAlign="right" displayFormatter="" displayFormat="#,##0">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:24px;"
+							id="chgbfActbgtRt" value="100.00%" blockSelect="false" displayMode="label" displayFormatter="" displayFormat="#,##0.00%">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:24px;"
+							id="actbgtRt" value="100.00%" blockSelect="false" displayMode="label" displayFormatter="" displayFormat="#,##0.00%">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+				<w2:footer id="footer1" style="">
+					<w2:row id="row7" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column66" inputType="text"
+							removeBorderStyle="false" style="" value="" width="200">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" expression="sum('column68')" id="column70"
+							inputType="expression" removeBorderStyle="false" style="" value="" width="180">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column65" inputType="text"
+							removeBorderStyle="false" style="" value="" width="180">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column64" inputType="text"
+							removeBorderStyle="false" style="" value="" width="180">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column63" inputType="text"
+							removeBorderStyle="false" style="" value="" width="180">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="180" inputType="text" style="" id="column91"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="180" inputType="text" style="" id="column106"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column111"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column101"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:footer>
+			</w2:gridView>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpTcfAfl" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>특기사항, 첨부파일 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:120.00px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="특기사항" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<xf:textarea id="" style="" ref="data:dsTcmActbgtConfmDetailMap.spcmtCn" minByteLength="" maxByteLength="4000"></xf:textarea>
+					</xf:group>
+				</xf:group>
+				<xf:group tagname="tr">
+					<xf:group class="w2tb_th" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="첨부파일" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" tagname="td">
+                        <w2:attributes>
+                            <w2:rowspan>2</w2:rowspan>
+                        </w2:attributes>
+                        <w2:udc_file_list id="udcAflId" style=""></w2:udc_file_list>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

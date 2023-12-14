@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmTxfreTaxnRtList" saveRemovedData="true" ev:oncelldatachange="scwin.dsTcmTxfreTaxnRtList_oncelldatachange">
+					<w2:columnInfo>
+						<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+						<w2:column id="siteNm" name="현장명" dataType="text"></w2:column>
+						<w2:column id="sitePrgsStusCd" name="현장진행상태코드" dataType="text"></w2:column>
+						<w2:column id="sitePrgsStusNm" name="현장진행상태" dataType="text"></w2:column>
+						<w2:column id="vatGbVal" name="부가세구분값" dataType="text"></w2:column>
+						<w2:column id="txfreRt" name="면세율" dataType="text"></w2:column>
+						<w2:column id="taxnRt" name="과세율" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true"></w2:data>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchMap" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="siteNm" name="현장명"></w2:key>
+						<w2:key id="siteStusCd" name="현장상태" dataType="text"></w2:key>
+						<w2:key id="taxnYn" name="등록여부" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM05050010U.xml
+ * Program Name : 과면세율관리
+ * Author : sychoi (tpcsy)
+ * Date : 2022.05.16
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ * TO-DO
+ **************************************************************************/
+ /**************************************************************************
+ * DataCollection description
+ *
+ *	dsSearchMap : 검색조건 Map
+ **************************************************************************/
+
+ /**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+    var svcId = "";
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    };
+
+    scwin.onpageload = function() {
+
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+		// 과면세율 LIST 조회
+		scwin.fnTcmTxfreTaxnRtList();
+
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+/**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnTcmTxfreTaxnRtList
+	 * 기 능: 과면세율 LIST SELECT
+	 **************************************************************************/
+     scwin.fnTcmTxfreTaxnRtList = function() {
+		svcId = "selectTcmTxfreTaxnRtList";
+        ajaxLib.ajax("/cm/cm0505/CM05050010U/selectTcmTxfreTaxnRtList", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"
+        });
+    };
+
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnSave
+	 * 기 능: 과면세율관리 저장
+	 **************************************************************************/
+     scwin.fnSave = function() {
+		console.log("fnSave Call");
+		if (dsTcmTxfreTaxnRtList.getModifiedJSON(true).length  == 0) {
+			com.showMessage("CSA0003");	//저장(변경)할 내용이 없습니다.
+			return false;
+		}
+
+		var modifiedRow = dsTcmTxfreTaxnRtList.getModifiedIndex( );	//수정된 행 인덱스
+		var taxnRt = 0;
+		var txfreRt = 0;
+
+		//console.log("modifiedRow : " + modifiedRow);
+
+
+		for (var i = 0; i < modifiedRow.length; i++) {
+			console.log("taxnRt1 : " + taxnRt);
+			taxnRt = Number(dsTcmTxfreTaxnRtList.getCellData( modifiedRow[i] , "taxnRt" ));
+			txfreRt = Number(dsTcmTxfreTaxnRtList.getCellData( modifiedRow[i] , "txfreRt" ));
+
+			//console.log("taxnRt : " + taxnRt);
+			//console.log("txfreRt : " + txfreRt);
+
+		
+			if (taxnRt == 0 && txfreRt == 0) { 		
+				com.showMessage("SAA0043", "과세율 및 면세율", "", "", grdSiteRtList.id, modifiedRow[i] , "taxnRt");//$1은(는) 필수입력사항입니다
+                return false;
+            }
+		
+            if (grdSiteRtList.getCellData( modifiedRow[i] , "vatGbVal" ) == ""){
+                com.showMessage("CFW0007", "부가세구분", "", "", grdSiteRtList.id, modifiedRow[i], "vatGbVal");	//$1을(를) 입력하십시오.
+                return false;
+            }
+            
+		}
+
+    	if (!confirm("저장 하시겠습니까?")) return;
+
+		svcId = "saveTcmTxfreTaxnRtList";
+        ajaxLib.ajax("/cm/cm0505/CM05050010U/saveTcmTxfreTaxnRtList", {
+            mode : "synchronous",
+            method : "POST",
+            requestData : {
+            		tcmTxfreTaxnRtList : dsTcmTxfreTaxnRtList.getModifiedJSON()
+            	},
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"
+        });
+    };
+
+
+/**************************************************************************
+ * [4] Callback
+ **************************************************************************/
+   scwin.fnCallback = function(result, e) {
+        switch(svcId) {
+            case "selectTcmTxfreTaxnRtList" :
+                dsTcmTxfreTaxnRtList.setJSON(result.data.tcmTxfreTaxnRtList);
+                com.setUdcValue("dsTcmSiteStafListCount", "udcListCount", dsTcmTxfreTaxnRtList.getRowCount());
+                
+	   			for( i = 0 ; i < result.data.tcmTxfreTaxnRtList.length; i++){
+	   				if(result.data.tcmTxfreTaxnRtList[i].vatGbVal == "4"){	// 부가세구분=공통인 경우에만 과세율 활성화
+   						grdSiteRtList.setCellReadOnly( i , "taxnRt" , false ); // 과세율
+	   				}
+	   			}
+                
+                break;
+            case "saveTcmTxfreTaxnRtList" :
+	        	com.showMessage("CFA0012");// 저장되었습니다.
+				scwin.fnTcmTxfreTaxnRtList();
+            	break;
+        }
+    }
+
+    scwin.fnErrCallback = function(result, e) {
+       console.log(result);
+    }
+
+/************************************************************************************
+ *  [5] Event 함수
+ ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.WFrameSiteInfo_change_callback
+     * 기 능: 현장코드 변경 이벤트
+     **************************************************************************/
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+	};
+
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 조회 버튼 Click 이벤트
+     **************************************************************************/
+	scwin.btnFind_onclick = function() {
+		scwin.fnTcmTxfreTaxnRtList();
+	};
+
+    /**************************************************************************
+     * Event: scwin.btnSave_onclick
+     * 기 능: 저장 버튼 Click 이벤트
+     **************************************************************************/
+	scwin.btnSave_onclick = function() {
+		scwin.fnSave();
+	};
+
+    /**************************************************************************
+     * Event: scwin.btnExcelDwn_onclick
+     * 기 능: 엑셀다운로드 버튼 Click 이벤트
+     **************************************************************************/
+	scwin.btnExcelDwn_onclick = function() {
+        if(dsTcmTxfreTaxnRtList.getTotalRow() == 0){
+            com.showMessage("CMW0020", "다운로드할");// $1 자료가 존재하지 않습니다.
+            return;
+        }
+	
+        grdSiteRtList.advancedExcelDownload({
+            fileName:"TxfreTaxnRtList.xlsx",
+            removeColumns:"0",
+            useSubTotal : true,             // Sub-Total 표시 
+            headerFontColor : "#FFFFFF",    // Header Font Color
+            headerColor : "#D9D9D9",        // Header Back Color
+            subTotalColor : "#FCE4D6",      // SubTotal Back Color
+            footerColor : "#BDD7EE"         // Footer Color
+        });
+	};
+	
+    /**************************************************************************
+     * Event: scwin.dsTcmTxfreTaxnRtList_oncelldatachange
+     * 기 능: 현장목록 dataset 이벤트
+     **************************************************************************/
+	scwin.dsTcmTxfreTaxnRtList_oncelldatachange = function(info) {
+		// 부가세구분
+		if(info.colID == "vatGbVal"){
+			if(info.newValue == "1"){	// 과세
+				dsTcmTxfreTaxnRtList.setCellData(info.rowIndex , "taxnRt" , 100);
+				dsTcmTxfreTaxnRtList.setCellData(info.rowIndex , "txfreRt" , 0);
+			} else if (info.newValue == "2"){	// 면세
+				dsTcmTxfreTaxnRtList.setCellData(info.rowIndex , "taxnRt" , 0);
+				dsTcmTxfreTaxnRtList.setCellData(info.rowIndex , "txfreRt" , 100);
+			} else if (info.newValue == "3"){	// 불공제
+				dsTcmTxfreTaxnRtList.setCellData(info.rowIndex , "taxnRt" , 100);
+				dsTcmTxfreTaxnRtList.setCellData(info.rowIndex , "txfreRt" , 0);
+			} else if (info.newValue == "4"){	// 공통
+				dsTcmTxfreTaxnRtList.setCellData(info.rowIndex , "taxnRt" , 100);
+				dsTcmTxfreTaxnRtList.setCellData(info.rowIndex , "txfreRt" , 0);
+			}				
+		}
+		// 과세울
+		if(info.colID == "taxnRt"){
+			dsTcmTxfreTaxnRtList.setCellData(info.rowIndex , "txfreRt" , 100 - Number(dsTcmTxfreTaxnRtList.getCellData(info.rowIndex , "taxnRt")));
+		}
+		 		
+	};
+	
+	// 그리드 이벤트
+	scwin.grdSiteRtList_onafteredit = function(row,col,value) {
+		var ColumnID = grdSiteRtList.getColumnID(col);
+		var vatGbVal = "";
+		
+		if (ColumnID = "vatGbVal") {
+			vatGbVal = dsTcmTxfreTaxnRtList.getCellData( row , "vatGbVal" );
+			if (vatGbVal == "4") {
+				grdSiteRtList.setCellReadOnly( row , "taxnRt" , false ); // 과세율
+			} else {
+				grdSiteRtList.setCellReadOnly( row , "taxnRt" , true ); // 과세율
+			}
+		}
+		
+	};
+	]]></script>
+
+	<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<xf:group class="navigator" id="" style="">
+					<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input adjustMaxLength="true" ev:onblur="scwin.sbxSiteNm_onblur"
+								ev:onkeydown="scwin.sbxSiteNm_onkeydown" ev:onkeyup="scwin.sbxSiteNm_onkeyup" id="siteNm" maxlength="50"
+								ref="data:dsSearchMap.siteNm" style="width:246px;">
+							</xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="상태" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto" disabled="false"
+								disabledClass="w2selectbox_disabled" displayMode="label" id="sbxSiteStusCd" ref="data:dsSearchMap.siteStusCd" style="width:120px;"
+								submenuSize="auto" textAlign="left" chooseOptionLabel="전체">
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[진행]]></xf:label>
+										<xf:value><![CDATA[CM1000052]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[종료]]></xf:label>
+										<xf:value><![CDATA[CM1000053]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[정산]]></xf:label>
+										<xf:value><![CDATA[CM1000056]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[실행예산정산]]></xf:label>
+										<xf:value><![CDATA[CM1000057]]></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="등록여부" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto" disabled="false"
+								disabledClass="w2selectbox_disabled" displayMode="label" id="sbxTaxnYn" ref="data:dsSearchMap.taxnYn" style="width:120px;"
+								submenuSize="auto" textAlign="left" chooseOptionLabel="전체">
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[등록]]></xf:label>
+										<xf:value><![CDATA[Y]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[미등록]]></xf:label>
+										<xf:value><![CDATA[N]]></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="현장목록" style="" tagname="h3"></w2:textbox><w2:udc_list_count id="dsTcmSiteStafListCount" style=""></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="descbox" id="" style="">
+						<w2:textbox class="" id="iblConstDt" label="" tagname=""></w2:textbox>
+					</xf:group>
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnSave" outerDiv="false" style=""
+							ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm excel_down" clickEventElement=""
+							ev:onclick="scwin.btnExcelDwn_onclick" id="btnExcelDwn" localeRef="" outerDiv="false" style=""
+							toolTip="엑셀다운로드">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+
+				</xf:group>
+
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmTxfreTaxnRtList" fixedColumnWithHidden="" focusMode="row"
+				id="grdSiteRtList" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+				rowStatusWidth="30" scrollByColumn="false" style="height: 295px;" useShiftKey="true" visibleRowNum="" checkReadOnlyOnCut="true"
+				checkReadOnlyOnPaste="true" ev:onafteredit="scwin.grdSiteRtList_onafteredit">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column29" inputType="text" removeBorderStyle="false" style=""
+							value="No." width="60">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column37" value="상태"
+							blockSelect="false" displayMode="label" sortable="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column27" inputType="text" removeBorderStyle="false" style=""
+							value="코드" width="100" sortable="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="230" inputType="text" style="" id="column39" value="현장명"
+							blockSelect="false" displayMode="label" sortable="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column33" inputType="text" removeBorderStyle="false" style=""
+							value="부가세구분" width="120" class="" sortable="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column36" value="과세율"
+							blockSelect="false" displayMode="label" sortable="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column40" value="면세율" blockSelect="false"
+							displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column24" inputType="expression" removeBorderStyle="false"
+							style="" textAlign="" value="" width="60" expression=" rowindex()+1">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="sitePrgsStusNm" value="" blockSelect="false"
+							displayMode="label" textAlign="center">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="siteCd" inputType="text" removeBorderStyle="false" style=""
+							value="" width="100" textAlign="center">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="230" inputType="text" style="" id="siteNm" value=""
+							blockSelect="false" displayMode="label" textAlign="left">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="vatGbVal" inputType="select" removeBorderStyle="false"
+							style="" value="" width="120" textAlign="left" viewType="icon" readOnly="false" allOption="" chooseOption="true" chooseOptionLabel=""
+							ref="">
+							<w2:choices>
+								<w2:item>
+									<w2:label><![CDATA[과세]]></w2:label>
+									<w2:value><![CDATA[1]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[면세]]></w2:label>
+									<w2:value><![CDATA[2]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[불공제]]></w2:label>
+									<w2:value><![CDATA[3]]></w2:value>
+								</w2:item>
+								<w2:item>
+									<w2:label><![CDATA[공통]]></w2:label>
+									<w2:value><![CDATA[4]]></w2:value>
+								</w2:item>
+							</w2:choices>
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="taxnRt" value="" blockSelect="false"
+							displayMode="label" textAlign="right" dataType="number" displayFormat="###.##" readOnly="true" allowChar="0-9-." applyFormat="all" defaultValue="0" maxLength="5">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="txfreRt" value="" blockSelect="false"
+							displayMode="label" textAlign="right" displayFormat="###.##" dataType="number" readOnly="true" allowChar="0-9-." applyFormat="all" defaultValue="0" maxLength="5">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+
+
+	</body>
+</html>

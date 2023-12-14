@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="errorMap">
+					<w2:keyInfo>
+						<w2:key id="msgCd" name="에러코드" dataType="text"></w2:key>
+						<w2:key id="msgCn" name="에러내용" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+    /************************************************************************************
+     *  [1] 초기화 
+     ************************************************************************************/      
+    scwin.onpageload = function() { 
+        btnCancel.hide();
+        
+        var errorData = JSON.parse($p.getPopupParam()).data;
+
+        // invalid session 500 error
+        if( errorData.msgCn.indexOf("invalid session") >= 0 ) {
+            scwin.errorMsgCd = "99";
+            errorData.msgCn = "로그인이 필요합니다.";
+        }
+
+        errorMap.setJSON(errorData);
+     //   imgIcon.addClass( 'type3' );
+     // by shryu1 2020-07-27  중복로그인으로 세션만료된경우  로그인 페이지로 이동
+     // padding 조정하고  cursor 추가 (content.css  )
+     
+		if(scwin.errorMsgCd == "99") { 
+		     imgIcon.addClass( 'type5' );
+		} else {
+		     imgIcon.addClass( 'type3' );
+		}
+        
+        // X버튼의 원 이벤트 삭제하고 닫기 버튼의 이벤트 대신 입력
+        var frameIds = $p.getPopupId()+"_close";
+        $("#"+frameIds).on("click", function() {
+            scwin.btnConfirm_onclick();
+        });
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수 
+     ************************************************************************************/
+    scwin.errorMsgCd = "00";
+    
+    /************************************************************************************
+     *  [3] Event 함수 
+     ************************************************************************************/	
+	// 확인 버튼
+	scwin.btnConfirm_onclick = function() {
+		if (errorMap.get( "msgCd" ) == "CFA0000" || errorMap.get( "msgCd" ) == "CFA0004" || errorMap.get( "msgCd" ) == "CFA0005") {
+			com.logOut();
+			//$w.url("/ux/cf/CF00050000U.xml",{"forceReload" : true, "replaceHistory":true});
+        } else if (scwin.errorMsgCd == "99") {
+            window.location.replace("/");
+		} else {
+			com.popup_close("");
+		}
+	};
+	
+	// 취소 버튼
+	scwin.btnCancel_onclick = function() {
+		com.popup_close("");
+	};
+	]]></script>
+
+
+	</head>
+	<body ev:onpageload="scwin.onpageload">
+		<xf:group style="" id="" class="content_body popup">
+			
+			<!-- 
+			아이콘 타입 클래스
+			type1 : 컨펌/알림, 확인, 조회시 타임아웃
+			type2 : 삭제여부 확인, 다음단계 진행여부
+			type3 : 오류
+			 -->
+			<xf:group class="img_icon type3" id="imgIcon" ev:onclick="scwin.btnConfirm_onclick"></xf:group>
+			<!-- 
+			메세지는 기본 가운데 정렬입니다.
+			좌측정렬로 메세지를 보여주고 싶다면 al클래스를 textbox에 추가하시면 됩니다.
+			 -->
+			<w2:textbox id="tbxErrMsg" label="삭제하시겠습니까?" class="txt_msg al" ref="data:errorMap.msgCn"></w2:textbox>
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancel_onclick">
+					<xf:label><![CDATA[취소]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>	
+	</body>
+</html>

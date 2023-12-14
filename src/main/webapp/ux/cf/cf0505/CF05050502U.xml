@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcfOaOaeqListTree" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="oaItemCd" name="OA아이템 코드" dataType="text"></w2:column>
+						<w2:column id="oaItemNm" name="OA아이템 명" dataType="text"></w2:column>
+						<w2:column id="oaItemCdLv" name="레벨" dataType="number"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfOaOaeqList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="oaItemCd" name="OA품목코드" dataType="text"></w2:column>
+						<w2:column id="oaItemNm" name="OA 품목명" dataType="text"></w2:column>
+						<w2:column id="upperOaItemCd" name="상위 OA품목코드" dataType="text"></w2:column>
+						<w2:column id="oaItemCdLv" name="OA품목코드 레벨" dataType="number"></w2:column>
+						<w2:column id="sortOdr" name="정렬 순서" dataType="number"></w2:column>
+						<w2:column id="useYn" name="사용 여부" dataType="text"></w2:column>
+						<w2:column id="itemCnt" name="하위 Item 갯수" dataType="number"></w2:column>
+						
+					</w2:columnInfo>
+					<w2:data use="true"></w2:data>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSchParamMap">
+					<w2:keyInfo>
+						<w2:key id="upperOaItemCd" name="상위 OA품목코드" dataType="text"></w2:key>
+						<w2:key id="upperCdLv" name="상위OA품목 레벨" dataType="number"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+ /***************************************************************************
+ * Program ID :  CF05050502U.xml
+ * Program Name : OA신청 품목관리
+ * Author       : 류상휴 (ryush)
+ * Date         : 2019.07.11
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    var svcId; //callback 처리용 서비스ID
+	var oaItemCdLv = 1;
+	var upperOaItemCd = "";
+    /************************************************************************************
+     *  [2] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+
+        //화면초기화
+        scwin.fnInitial();
+        
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        grdTcfOaOaeqList.initGrid(); // OA Item 상세 목록 초기화
+        
+        // 트리 조회
+        scwin.fnTcfOaOaeqListTree();
+    //    treeTcfOaOaeqList.options.showTreeDepth = 1; //트리 레벨        
+    };
+
+
+    /************************************************************************************
+     *  [3] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallback = function(result, e) {
+        console.log(e);
+        switch (svcId) {
+            case "selectTcfOaOaeqTreeList" :
+                console.log('OA Item 코드 조회 오류!');
+                break;
+
+            case "selectTcfOaOaeqList" :
+                console.log('OA Item 목록 조회 오류!!');
+                break;
+        }
+    };
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function(result, e) {
+        switch (svcId) {
+            case "selectTcfOaOaeqListTree" :
+                //서버에서 넘겨주는 값 세팅
+             //   alert(result.data.tcfOaOaeqListTree);
+                dsTcfOaOaeqListTree.setJSON(result.data.tcfOaOaeqListTree);
+                break;
+            case "selectTcfOaOaeqList" : 
+                //서버에서 넘겨주는 값 세팅
+                dsTcfOaOaeqList.setJSON(result.data.tcfOaOaeqList);
+                // 데이터 로드시 체크박스 체크
+      //          scwin.fnCheckBoxChecked();
+                break;
+            default :
+                break;
+        }
+    };
+
+    /************************************************************************************
+     *  [4] Event 함수
+     ************************************************************************************/
+
+    /**************************************************************************
+     * Event: scwin.treeTcfOaOaeqList_onlabelclick
+     * 기 능: 트리 선택 부서 사용자목록 조회
+     **************************************************************************/    
+    scwin.treeTcfOaOaeqList_onlabelclick = function(value, nodeElement, index) {
+	    oaItemCdLv = parseInt(dsTcfOaOaeqListTree.getCellData(index - 1, "oaItemCdLv")) + 1;
+	    upperOaItemCd = value; 
+	 //   alert("oaItemCdLv="+oaItemCdLv+"//upperOaItemCd="+upperOaItemCd+"//value="+value+"//nodeElement="+nodeElement+"//index="+index);
+        scwin.fnTcfOaOaeqList(upperOaItemCd);
+    };
+    
+    /**************************************************************************
+     * Event: scwin.btnSave_onclick
+     * 기 능: OA Item 저장
+     **************************************************************************/
+    scwin.btnSave_onclick = function() {
+	    if (!scwin.fnValid()) {
+	        return;
+	    }
+	    scwin.fnSave();
+    };
+    /**************************************************************************
+     * Event: scwin.btnAddRow_onclick
+     * 기 능: OA Item  추가
+     **************************************************************************/
+    scwin.btnAddRow_onclick = function() {
+        scwin.fnAdd();
+    };
+
+    /**************************************************************************
+     * Event: scwin.btnDelRow_onclick
+     * 기 능: OA Item  삭제
+     **************************************************************************/
+    scwin.btnDelRow_onclick = function() {
+        scwin.fnDel();
+    };
+
+    
+ 
+    /************************************************************************************
+     *  [5] 사용자 정의함수 함수
+     ************************************************************************************/
+    /** 부서목록 조회 **/
+    scwin.fnTcfOaOaeqListTree = function() {
+    	
+        //callback 처리용 서비스ID 부여
+        svcId = "selectTcfOaOaeqListTree";
+
+        //서비스 호출
+        ajaxLib.ajax("/cf/CF05050000U/selectTcfOaOaeqListTree", {
+            mode : "asynchronous",
+            method : "Post",
+            requestData : "",
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"
+        });
+
+    };
+
+    /** 트리 선택 OA Item 목록 조회 **/
+    scwin.fnTcfOaOaeqList = function(upperCd) {
+
+    	dsSchParamMap.set("upperOaItemCd", upperCd );
+    	
+        //callback 처리용 서비스ID 부여
+        svcId = "selectTcfOaOaeqList";
+ 
+        //서비스 호출
+        ajaxLib.ajax("/cf/CF05050000U/selectTcfOaOaeqList", {
+            mode : "asynchronous",
+            method : "Post",
+            requestData : dsSchParamMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"
+        });
+
+    };
+
+ 	 
+	/**************************************************************************
+	 * Event: scwin.fnDel
+	 * 기 능: OA Item 삭제
+	 **************************************************************************/
+	scwin.fnDel = function () {
+
+	    var rowIndex = 0;
+	    var itemCnt  =0 ;
+	    if (grdTcfOaOaeqList.getFocusedRowIndex() == -1) {
+	        com.showMessage("CFW0004", "삭제할 행");	// $1을(를) 선택하십시오.
+	        return;
+	    } else {
+	   		rowIndex = grdTcfOaOaeqList.getFocusedRowIndex();
+	        itemCnt = dsTcfOaOaeqList.getCellData( rowIndex , "itemCnt" );
+	        if(itemCnt > 0){ 
+	        	com.showMessage('CFW0010','하위 Item이 있어서 삭제 불가능합니다.');
+	        		return ;
+	        }else{
+	           if(confirm("삭제 하시겠습니까?")){	
+	//           alert("rowIndex="+dsTcfOaOaeqList.getCellData( rowIndex , "oaItemNm" ));       
+	        		dsTcfOaOaeqList.removeRow(rowIndex);
+	        	}else{ 
+	        	  return ;
+	        	}
+	        }
+	    }     
+	};	
+	/**************************************************************************
+	 * Event: scwin.fnAdd
+	 * 기 능: OA Item 추가
+	 **************************************************************************/
+	scwin.fnAdd = function () {
+	    var rowIndex = 0;
+	    
+	    if(upperOaItemCd==""){
+	       com.showMessage('CFW0010','조회된 아이템이 없습니다.');
+	       return false;
+	    }
+	    
+	    if (grdTcfOaOaeqList.getFocusedRowIndex() == -1) {
+	        rowIndex = dsTcfOaOaeqList.insertRow();
+	    } else {
+	        rowIndex = grdTcfOaOaeqList.getFocusedRowIndex() + 1;
+	        dsTcfOaOaeqList.insertRow(rowIndex);
+	    }
+	    if (scwin.oaItemCdLv == 1) {
+	        dsTcfOaOaeqList.setCellData(rowIndex, "upperOaItemCd", "*");
+	    } else {
+	        dsTcfOaOaeqList.setCellData(rowIndex, "upperOaItemCd", upperOaItemCd);
+	    }
+	    grdTcfOaOaeqList.setReadOnly("cell", rowIndex, "oaItemCd", false);
+	    grdTcfOaOaeqList.setReadOnly("cell", rowIndex, "oaItemNm", false);
+	    
+	    dsTcfOaOaeqList.setCellData(rowIndex, "oaItemCd", upperOaItemCd);
+	    dsTcfOaOaeqList.setCellData(rowIndex, "oaItemCdLv", oaItemCdLv);
+	    dsTcfOaOaeqList.setCellData(rowIndex, "useYn", "Y");
+		dsTcfOaOaeqList.setCellData(rowIndex, "itemCnt", 0);	    
+	    
+	};
+		
+	scwin.fnSave = function () {
+
+		    scwin.svcId = "deleteTcfOaOaeqList";
+	    ajaxLib.ajax("/cf/CF05050000U/deleteTcfOaOaeqList", {
+	        mode: "asynchronous",
+	        method: "POST",
+	        requestData: {
+	            param: dsSchParamMap.getJSON(),
+	            oaOaeqList: grdTcfOaOaeqList.getModifiedJSON()
+	        },
+	        callback: "fnCallback",
+	        errCallback: "fnErrCallBack"
+	    });	
+   };
+   
+/**************************************************************************
+	 * Event: scwin.fnValid
+	 * 기 능: Valid 검사
+	 **************************************************************************/
+	scwin.fnValid = function () {
+	    var cnt = 0;
+	    var _idxArr = grdTcfOaOaeqList.getModifiedIndex();
+
+	    //1. 변경된 데이터 validation [status : C,U 만해당]
+	    for (var i = 0; i < _idxArr.length; i++) {
+	        var _row = _idxArr[i];
+	        var obj = grdTcfOaOaeqList.getRowJSON(_row);
+	        if (obj.rowStatus == "C" || obj.rowStatus == "U") {
+	            if (strLib.isEmpty(obj.cd, false)) {
+	                com.showMessage("CFW0007", (_row + 1) + "번째행 [OA Item  코드] ", "", "", grdTcfOaOaeqList.id, _row, 0);		// $1을(를) 입력하십시오.
+	                return false;
+	            }
+	            if (strLib.isEmpty(obj.cdNm, false)) {
+	                com.showMessage("CFW0007", (_row + 1) + "번째행 [OA Item 코드명] ", "", "", grdTcfOaOaeqList.id, _row, 1);	// $1을(를) 입력하십시오.
+	                return false;
+	            }
+
+			    //중복코드값 체크
+				var matchedEa = grdTcfOaOaeqList.getMatchedColumnData("cd" , obj.cd).length;
+				if (matchedEa > 1){
+	                com.showMessage("CMW0001", "[코드] ", "", "", grdTcfOaOaeqList.id, _row, 0);		// 중복 된 $1가(이) 존재합니다..
+	                return false;
+				}
+	        }
+	    }
+
+	    //2. 변경된 데이터 건수 체크				
+	    var jsn = grdTcfOaOaeqList.getModifiedJSON();
+	    cnt = jsn.length;
+	    if (cnt == 0) {
+	        com.showMessage("CMW0024");	//	저장(변경)할 내용이 없습니다.
+	        return false;
+	    }
+	    
+	    return true;
+	};   
+    /**************************************************************************
+     * Event: scwin.ibxKeyUserNm_onkeyup
+     * 기 능: 성명 입력후 Enter시 처리
+     **************************************************************************/
+    scwin.ibxKeyUserNm_onkeyup = function(e) {
+        if (e.keyCode == '13') {
+            scwin.btnFind_onclick();
+        }
+    };
+    /**************************************************************************
+     * Event: scwin.btnExcelDown_onclick
+     * 기 능: 엑셀 다운로드 버튼 클릭 이벤트
+    **************************************************************************/        
+	scwin.btnExcelDwn_onclick = function() {
+        var infoArr = {};
+        var fileNm = "OA Item_"+com.transDateType("now")+".xlsx";
+        var options = { fileName : fileNm };
+        com.gridDataDownLoad(grdTcfOaOaeqList, options, infoArr);		
+	};
+	]]></script>
+		
+		
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+		 
+			<xf:group style="" id="" class="lybox_wrap fix_300">
+				<xf:group style="" id="" class="lybox">
+					<xf:group style="" id="" class="lycolumn ">
+						<xf:group style="" id="" class="lyinner">
+						
+							<w2:treeview tooltipGroupClass="false" dataType="listed" lineShow="" style="height:300px"
+								id="treeTcfOaOaeqList" useDrag="" class="autoHeight" ev:onlabelclick="scwin.treeTcfOaOaeqList_onlabelclick"
+								showTreeDepth="2">
+								<w2:itemset nodeset="data:dsTcfOaOaeqListTree">
+									<w2:label ref="oaItemNm"></w2:label>
+									<w2:value ref="oaItemCd"></w2:value>
+									<w2:depth ref="oaItemCdLv"></w2:depth>
+									<w2:folder ref=""></w2:folder>
+									<w2:checkbox ref=""></w2:checkbox>
+									<w2:checkboxDisabled ref=""></w2:checkboxDisabled>
+									<w2:image ref=""></w2:image>
+									<w2:iconImage ref=""></w2:iconImage>
+									<w2:selectedImage ref=""></w2:selectedImage>
+									<w2:expandedImage ref=""></w2:expandedImage>
+									<w2:leafImage ref=""></w2:leafImage>
+								</w2:itemset>
+							</w2:treeview>
+						</xf:group>
+					</xf:group>
+					<xf:group style="" id="" class="lycolumn">
+
+
+						<xf:group style="" id="" class="lyinner">
+							<xf:group style="" id="" class="defaultbox">
+								<xf:group style="" id="" class="right_wrap">
+									<xf:group style="" id="">
+									 <!-- 
+										<w2:anchor outerDiv="false" clickEventElement="" style="" id="btnAddRow"
+											class="btn_gcm" ev:onclick="scwin.btnAddRow_onclick">
+											<xf:label><![CDATA[추가]]></xf:label>
+										</w2:anchor>								
+										<w2:anchor class="btn_gcm" clickEventElement="" id="btnDelRow" outerDiv="false"
+											style=""  ev:onclick="scwin.btnDelRow_onclick">
+											<xf:label><![CDATA[삭제]]></xf:label>
+										</w2:anchor>
+										<w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false"
+											style="" ev:onclick="scwin.btnSave_onclick">
+											<xf:label><![CDATA[저장]]></xf:label>
+										</w2:anchor>
+										 -->
+										<w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn"
+											localeRef="" outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+											<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+							<w2:gridView readOnly="true" rowNumVisible="" rowStatusWidth="30" useShiftKey="true"
+								rowNumHeaderValue="No" scrollByColumn="false" rowStatusHeaderValue="" focusMode="row" rowStatusVisible=""
+								fixedColumnWithHidden="" dataList="data:dsTcfOaOaeqList" style="height: 300px;" autoFit="allColumn" id="grdTcfOaOaeqList" visibleRowNum=""
+								class="autoHeight">
+								<w2:header style="" id="header1">
+									<w2:row style="" id="row2">
+										<w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column33" value="No." blockSelect="false" displayMode="label"></w2:column>
+										<w2:column width="120" inputType="text" style="" id="column23"	value="OA 품목코드" blockSelect="false"></w2:column>
+										<w2:column width="200" inputType="text" style="" id="column21"	value="OA 품목명" blockSelect="false"></w2:column>
+										<w2:column width="120" inputType="text" style="" id="column19"	value="상위코드" blockSelect="false"></w2:column>
+										<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column29" value="레벨" blockSelect="false" displayMode="label"></w2:column>
+									</w2:row>
+								</w2:header>
+								<w2:gBody style="" id="gBody4">
+									<w2:row style="" id="row5">
+										<w2:column removeBorderStyle="false" width="70" inputType="expression" style=""	id="column34" value="" blockSelect="false" displayMode="label" expression="rowindex()+1"></w2:column>
+										<w2:column textAlign="" width="120" inputType="text" style="" id="oaItemCd"	value="" blockSelect="false"  ></w2:column>
+										<w2:column textAlign="" width="200" inputType="text" style="" id="oaItemNm"	value="" blockSelect="false" displayMode="label"  ></w2:column>
+										<w2:column textAlign="" width="120" inputType="text" style="" id="upperOaItemCd" class="" value="" blockSelect="false"></w2:column>
+										<w2:column removeBorderStyle="false" width="100" inputType="text" style=""	id="oaItemCdLv" value="" blockSelect="false" displayMode="label"></w2:column>
+									</w2:row>
+								</w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+
+
+	</body>
+</html>

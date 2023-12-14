@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>UDC</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">				
+            </w2:dataCollection>
+        </xf:model>
+        <script type="javascript"><![CDATA[
+		]]></script>
+    </head>
+    <body>
+    	<!--/** WEBSQUARE UDC */
+    		{
+    		"componentName": "udc_deptpopup",
+    		"pluginName": "udc_deptpopup",
+    		"company": "",
+    		"developer": "",
+    		"category": "Basic",
+    		"notSupportBrowser": "",
+    		"version": "",
+    		"htmlRender": "",
+    		"icon": "",
+    		"disableIcon": "",
+    		"description": "",
+    		"width": "",
+    		"height": "",
+    		"properties": [
+    		{
+    		"name": "id",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "Y",
+    		"hidden": "N",
+    		"description": "udc 아이디"
+    		},
+    		{
+    		"name": "date",
+    		"default": "",
+    		"type": "number",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 초기 값"
+    		},
+    		{
+    		"name": "ref",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 Ref"
+    		},
+    		{
+    		"name": "class",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "udc 클래스"
+    		},
+    		{
+    		"name": "disabled",
+    		"default": "",
+    		"type": "combobox",
+    		"option": "[true,false]",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "desc"
+    		}
+    		],
+    		"events": [],
+    		"apis": [
+    		{
+    		"name": "getDate",
+    		"description": "desc",
+    		"params": [],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		},
+    		{
+    		"name": "setDate",
+    		"description": "desc",
+    		"params": [{
+    		"type": "Number",
+    		"name": "strDate",
+    		"description": "desc"
+    		}],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		}
+    		]
+    		}
+    		}
+    	-->
+    	<xf:group class="udc_wrap udc_deptpopup" id="" style="" pluginName="udc_deptpopup">
+    		<xf:input adjustMaxLength="false" id="deptNm" style="width:100px" class="req" mandatory="true" >
+    			<script ev:event="onkeydown(e)" type="text/javascript"><![CDATA[
+	    			if ( e.keyCode == 13 ){
+		   			    if ( btnSrch.getDisabled() ){
+	  				        return;
+		   			    } else {
+		    			    deptCd.setValue("");
+		    			    if ( deptCd.getValue() == "" && deptNm.getValue() == "" ){
+		    			        com.udcPopup("DeptPopup",{comp:[deptNm,deptCd]}, deptCd.getValue(), deptNm.getValue(), cond.getValue());
+		    			    }else{
+			    			    com.udcSelNm("DeptSelNm",{comp:[deptNm,deptCd]}, deptCd.getValue(), deptNm.getValue(), cond.getValue());
+		    			    }
+		   			    }
+	    			}
+    			 ]]></script>
+    			<script ev:event="onchange" type="text/javascript"><![CDATA[
+    				if ( deptNm.getValue() == "" ){
+    					this.getParent().setUserData("pageData","");
+    				    deptCd.setValue("");
+    				}
+    			 ]]></script>
+    		</xf:input>
+
+    		<w2:anchor class="btn_gcm_ic src" id="btnSrch" outerDiv="false" style="">
+    			<xf:label><![CDATA[조회]]></xf:label>
+    			<script ev:event="onclick" type="text/javascript"><![CDATA[
+    			    // url:'/ux/cf/CF00051001P.xml'
+    			    deptCd.setValue("");
+   			        com.udcPopup("DeptPopup",{comp:[deptNm,deptCd]}, deptCd.getValue(), deptNm.getValue(), cond.getValue());
+    			 ]]></script>
+    		</w2:anchor>
+    		<xf:input adjustMaxLength="false" id="deptCd" style="width:80px" disabled="" class="" mandatory="" readOnly="true">
+    		</xf:input>
+    		<xf:input adjustMaxLength="false" id="cond" style="width:30px; display:none;" disabled="true" class="" mandatory="">
+    		</xf:input>
+
+    	</xf:group>
+    </body>
+</html>

@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTypeCdList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="stndItemiCd" name="표준내역코드" dataType="text"></w2:column>
+						<w2:column id="stndItemiNm" name="표준_내역_명" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcmStndJobtypCdTypeList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="stndItemiCd" name="표준내역코드" dataType="text"></w2:column>
+						<w2:column id="stndItemiNm" name="표준_내역_명" dataType="text"></w2:column>
+
+
+						<w2:column id="stndItemiUnit" name="표준_내역_단위" dataType="text"></w2:column>
+						<w2:column id="itexpGb" name="비목구분" dataType="text"></w2:column>
+						<w2:column id="ctrlTypeCd" name="통제유형코드" dataType="text"></w2:column>
+
+
+
+
+						<w2:column id="bgtNewAddYn" name="예산_신규_추가_여부" dataType="text"></w2:column>
+						<w2:column id="bgtItemiJnlzYn" name="예산_내역_분개_여부" dataType="text"></w2:column>
+						<w2:column id="bgtItexpChgYn" name="예산_비목_변경_여부" dataType="text"></w2:column>
+						<w2:column id="bgtAmtVrtnYn" name="예산_금액_증감_여부" dataType="text"></w2:column>
+						<w2:column id="bgtMinusWrtYn" name="예산_마이너스_작성_여부" dataType="text"></w2:column>
+						<w2:column id="pcostInjtYn" name="원가_투입_여부" dataType="text"></w2:column>
+						<w2:column id="acctCtrlYn" name="계정_통제_여부" dataType="text"></w2:column>
+						<w2:column id="bgtCtrlYn" name="예산_통제_여부" dataType="text"></w2:column>
+						<w2:column id="autoCrtYn" name="자동_생성_여부" dataType="text"></w2:column>
+						<w2:column id="stndItemiLv" name="표준_내역_레벨" dataType="text"></w2:column>
+						<w2:column id="upperStndItemiCd" name="상위_표준내역코드" dataType="text"></w2:column>
+						<w2:column id="sortOdr" name="정렬_순서" dataType="text"></w2:column>
+						<w2:column id="itemiYn" name="내역_여부" dataType="text"></w2:column>
+
+
+
+						<w2:column id="useYn" name="사용_여부" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchParamMap">
+					<w2:keyInfo>
+						<w2:key id="stndItemiCd" name="표준내역코드" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM00150020U.xml
+ * Program Name : 현장관리비기준정보조회
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+	/************************************************************************************
+		DataCollection description
+
+		dsTypeCdList: 유형선택 SELECT BOX
+		dsTcmStndJobtypCdTypeList: 현장관리비 표준내역
+		dsSearchParamMap: 검색조건 parameter
+	 ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+	var svcId;		//callback 처리용 서비스ID
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+	scwin.onpageload = function() {
+	    //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+		//SelectBox 코드값 맵핑
+		com.selCdListVrbl( "grdTcmStndJobtypCdList:itexpGb", {"upperCd": "CM004100","setCd": "charValN1", "setNm" : "cdNm"});//비목
+		com.selCdList( "grdTcmStndJobtypCdList:ctrlTypeCd", "CM004101", "Y", "Y");//통제유형
+
+		//유형선택 조회
+		scwin.fnTypeCdList();
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        grpSearch.init();					//검색조건 초기화
+        grdTcmStndJobtypCdList.initGrid();	//현장관리비 표준내역 GRID 초기화
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+    //유형선택 조회
+    scwin.fnTypeCdList = function(){
+		svcId = "selectTypeCdList";
+        ajaxLib.ajax("/cm/cm0015/CM00150020U/selectTypeCdList", {
+        	mode : "asynchronous"
+        	, method : "POST"
+            , requestData : dsSearchParamMap.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+	};
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+	/** 오류시 처리 **/
+	scwin.fnErrCallBack = function(result, e) {
+
+	};
+
+    /** 정상시 후처리 **/
+    scwin.fnCallback = function(result, e) {
+    	switch(svcId) {
+    		//유형선택 조회
+    		case "selectTypeCdList" :
+    			dsTypeCdList.setJSON(result.data.dsTypeCdList);
+    			break;
+    		//표준공종 TAB - 표준공종 상세정보 조회
+    		case "selectTcmStndJobtypCdTypeList" :
+    			dsTcmStndJobtypCdTypeList.setJSON(result.data.dsTcmStndJobtypCdTypeList);
+
+    			//레벨별 공종ROW에 background 색상 처리 MAX로 4레벨까지 처리함.
+    			for(var i=0; i<grdTcmStndJobtypCdList.getTotalRow(); i++){
+    				var stndItemiLv = dsTcmStndJobtypCdTypeList.getCellData( i , "stndItemiLv" );//표준_내역_레벨
+    				var itemiYn = dsTcmStndJobtypCdTypeList.getCellData( i , "itemiYn" );//내역여부
+    				if(stndItemiLv == "2" && itemiYn == "N"){
+    					grdTcmStndJobtypCdList.setRowBackgroundColor( i , "#F0E9F4" );
+    				}else if(stndItemiLv == "3" && itemiYn == "N"){
+    					grdTcmStndJobtypCdList.setRowBackgroundColor( i , "#F6F3F0" );
+    				}else if(stndItemiLv == "4" && itemiYn == "N"){
+    					grdTcmStndJobtypCdList.setRowBackgroundColor( i , "#CEFBC9" );
+    				}
+    			}
+
+    			break;
+			default :
+				break;
+    	}
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//조회 버튼 클릭 이벤트
+	scwin.btnFind_onclick = function() {
+		dsSearchParamMap.set( "stndItemiCd" , sbxTypeCd.getValue() );
+		svcId = "selectTcmStndJobtypCdTypeList";
+        ajaxLib.ajax("/cm/cm0015/CM00150020U/selectTcmStndJobtypCdTypeList", {
+        	mode : "asynchronous"
+        	, method : "POST"
+            , requestData : dsSearchParamMap.getJSON()
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+	};
+
+	//엑셀 다운로드 이벤트
+	scwin.btnExcelDwn_onclick = function() {
+		if(grdTcmStndJobtypCdList.getTotalRow() <= 0){
+			com.showMessage("SAI0001");//다운로드할 내역이 존재하지 않습니다.
+			return;
+		}else{
+			var excelOpt = {};  //excel download 옵션
+			excelOpt.fileName = "CM00150020U.xlsx";    //또는 xlsx 확장자 사용
+			grdTcmStndJobtypCdList.advancedExcelDownload( excelOpt );
+		}
+	};
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+			<xf:group class="tbl_search" id="grpSearch" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:129px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="유형선택" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="true" appearance="minimal" chooseOption="" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxTypeCd" ref="" style="width:147px;"
+								submenuSize="auto" textAlign="left">
+								<xf:choices>
+									<xf:itemset nodeset="data:dsTypeCdList">
+										<xf:label ref="stndItemiNm"></xf:label>
+										<xf:value ref="stndItemiCd"></xf:value>
+									</xf:itemset>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="현장관리비 표준내역" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id=""></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="" id="" style="">
+						<w2:anchor class="btn_gcm excel_down" toolTip="엑셀다운로드" clickEventElement="outerDiv" id="btnExcelDwn" outerDiv="false"
+							style="" ev:onclick="scwin.btnExcelDwn_onclick">
+							<xf:label><![CDATA[엑셀다운]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+
+			</xf:group>
+
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmStndJobtypCdTypeList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdTcmStndJobtypCdList" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue=""
+				rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height:300px;" useShiftKey="true"
+				visibleRowNum="" sortable="true" showSortableUseFilter="true" checkReadOnlyOnPaste="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column19" inputType="text" style="" value="표준내역코드"
+							width="100" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" style="" value="표준_내역_명"
+							width="200" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" style="" value="표준_내역_단위"
+							width="100" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" style="" value="비목구분" width="100" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column35" inputType="text"
+							removeBorderStyle="false" style="" value="통제유형코드" width="100" colSpan="" rowSpan="2">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column41" inputType="text"
+							removeBorderStyle="false" style="height:34px;" value="예산_신규_추가_여부" width="300" colSpan="8" rowSpan="">
+						</w2:column>
+					</w2:row>
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column51"
+							value="신규추가" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column50"
+							value="내역분개" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column49"
+							value="비목변경" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column64"
+							value="금액증감" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column61"
+							value="(-)내역편성" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column58"
+							value="원가투입여부" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column67"
+							value="계정통제여부" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column70"
+							value="예산통제여부" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" class="" id="stndItemiCd" inputType="text" style="height:24px;"
+							textAlign="left" value="A" width="100" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="stndItemiNm" inputType="text" style="height:24px;"
+							textAlign="left" value="현장관리비" width="200" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="stndItemiUnit" inputType="text" style="height:24px;"
+							textAlign="" value="" width="100" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="itexpGb" inputType="select"
+							removeBorderStyle="false" style="height:24px;" textAlign="" value="" width="100" readOnly="true">
+							<w2:choices></w2:choices>
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="ctrlTypeCd" inputType="select"
+							removeBorderStyle="false" style="height:24px;" textAlign="" value="" width="100" readOnly="true">
+							<w2:choices></w2:choices>
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="bgtNewAddYn" inputType="text"
+							removeBorderStyle="false" style="height:24px;" textAlign="" value="" width="100" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="bgtItemiJnlzYn" inputType="text"
+							removeBorderStyle="false" style="height:24px;" value="" width="100" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="bgtItexpChgYn" inputType="text"
+							removeBorderStyle="false" style="height:24px;" value="" width="100" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;"
+							id="bgtAmtVrtnYn" value="" blockSelect="false" displayMode="label" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;"
+							id="bgtMinusWrtYn" value="" blockSelect="false" displayMode="label" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;"
+							id="pcostInjtYn" value="" blockSelect="false" displayMode="label" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;"
+							id="acctCtrlYn" value="" blockSelect="false" displayMode="label" readOnly="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="bgtCtrlYn"
+							value="" blockSelect="false" displayMode="label" readOnly="true">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

@@ -1,0 +1,19 @@
+pluginManagement {
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.toString() == 'sdcit.prunus') {
+                useModule("sdcit.prunus:prunus-gradle-plugin:${prunusVersion}")
+            }
+        }
+    }
+    repositories {
+        maven {
+            url 'http://nexus.sdcit.co.kr/nexus/content/groups/public/'
+            allowInsecureProtocol true
+
+        }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'kbiz-labor'

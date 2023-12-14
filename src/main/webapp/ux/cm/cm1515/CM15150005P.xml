@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" id="dsAprvReqList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="aprvNo" name="결재번호" dataType="text"></w2:column>
+						<w2:column id="aprvSeq" name="결재순번" dataType="text"></w2:column>
+						<w2:column id="aprvStusCd" name="결재상태코드" dataType="text"></w2:column>
+						<w2:column id="aprvStusNm" name="결재상태명" dataType="text"></w2:column>
+						<w2:column id="apprEmpno" name="승인자_사번" dataType="text"></w2:column>
+						<w2:column id="aprprNm" name="승인자_명" dataType="text"></w2:column>
+						<w2:column id="aproDtm" name="결재일시" dataType="text"></w2:column>
+						<w2:column id="aprvCmtryCn" name="결재의견" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsAprvAproList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="aprvNo" name="결재번호" dataType="text"></w2:column>
+						<w2:column id="aprvSeq" name="결재순번" dataType="text"></w2:column>
+						<w2:column id="aprvStusCd" name="결재상태코드" dataType="text"></w2:column>
+						<w2:column id="aprvStusNm" name="결재상태명" dataType="text"></w2:column>
+						<w2:column id="apprEmpno" name="승인자_사번" dataType="text"></w2:column>
+						<w2:column id="aprprNm" name="승인자_명" dataType="text"></w2:column>
+						<w2:column id="aproDtm" name="결재일시" dataType="text"></w2:column>
+						<w2:column id="aprvCmtryCn" name="결재의견" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="exeYy" name="실행_년도" dataType="text"></w2:key>
+						<w2:key id="chgDgr" name="변경_차수" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsSiteMngctChgMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="exeYy" name="실행_년도" dataType="text"></w2:key>
+						<w2:key id="chgDgr" name="변경_차수" dataType="text"></w2:key>
+						<w2:key id="aprvNo" name="결재번호" dataType="text"></w2:key>
+						<w2:key id="dirmgExctAproCd" name="직영집행승인코드[CM004013]" dataType="text"></w2:key>
+						<w2:key id="dirmgExctAproCdNm" name="직영집행승인코드명" dataType="text"></w2:key>
+						<w2:key id="aprvOpinCn" name="결재_의견_내용" dataType="text"></w2:key>
+						<w2:key id="aflId" name="첨부파일ID" dataType="text"></w2:key>
+						<w2:key id="pbsvTeamAprvNo" name="공무_팀_결재번호" dataType="text"></w2:key>
+						<w2:key id="pbsvTeamAprvOpinCn" name="공무_팀_결재_의견_내용" dataType="text"></w2:key>
+						<w2:key id="pbsvTeamAflId" name="공무_팀_첨부파일ID" dataType="text"></w2:key>
+						<w2:key id="pbsvTeamRtnprEmpno" name="공무_팀_반송자_사번" dataType="text"></w2:key>
+						<w2:key id="ctrdAllBgtAmt" name="통제성_전체_예산_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdLtyrPfmcAmt" name="통제성_작년_실적_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdBfQtrBgtAmt" name="통제성_이전_분기_예산_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdBfQtrPfmcAmt" name="통제성_이전_분기_실적_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdThfqCnsltBfBgtAmt" name="통제성_금회_품의_이전_예산_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdThfqVrtnAmt" name="통제성_금회_증감_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdChgbfAmt" name="통제성_변경전_금액" dataType="text"></w2:key>
+						<w2:key id="ctrdChgafAmt" name="통제성_변경후_금액" dataType="text"></w2:key>
+						<w2:key id="dataYn" name="조회 데이터 존재 유/무" dataType="text"></w2:key>
+						<w2:key id="pbsvTeamRtnprNm" name="공무_팀_반송자_명" dataType="text"></w2:key>
+						<w2:key id="fstRegprEmpno" name="최초_등록자_사번" dataType="text"></w2:key>
+						<w2:key id="fstRegDtm" name="최초_등록_일시" dataType="text"></w2:key>
+						<w2:key id="fnlModprEmpno" name="최종_수정자_사번" dataType="text"></w2:key>
+						<w2:key id="fnlModiDtm" name="최종_수정_일시" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM15150005P.xml
+ * Program Name : 현장관리비 - 결재현황
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+	/************************************************************************************
+		DataCollection description
+
+		dsAprvReqList: 현장관리비요청서
+		dsAprvAproList: 현장관리비승인서
+		dsSearchMap: 검색조건 parameter
+		dsSiteMngctChgMap : 현장_관리비_변경 정보
+	 ************************************************************************************/
+
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+	scwin.onpageload = function() {
+        //UI팀용 함수 호출
+        com.commonUI();
+
+		dsSearchMap.set( "siteCd" , JSON.parse($p.getPopupParam()).data.paramKeySiteCd );//현장코드
+		dsSearchMap.set( "exeYy" , JSON.parse($p.getPopupParam()).data.paramKeyExeYy );//실행_년도
+		dsSearchMap.set( "chgDgr" , JSON.parse($p.getPopupParam()).data.paramKeyChgDgr );//변경_차수
+
+        ajaxLib.ajax("/cm/cm1515/CM15150005P/selectAprvInfoList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : //"fnCallback",
+                function(result, e){
+
+					dsSiteMngctChgMap.setJSON( result.data.dsSiteMngctChgMap );//현장_관리비_변경 정보
+					dsAprvReqList.setJSON( result.data.dsAprvReqList );//현장관리비요청서
+					dsAprvAproList.setJSON( result.data.dsAprvAproList );//현장관리비승인서
+
+					//현장관리비요청서
+					for(var i=0; i<dsAprvReqList.getRowCount(); i++){
+						var gen1Idx = generator1.insertChild();
+						generator1.getChild( gen1Idx , "spnReqAprvStusNm" ).setValue( dsAprvReqList.getCellData( i , "aprvStusNm" ) );//결재상태
+						generator1.getChild( gen1Idx , "spnReqAprprNm" ).setValue( dsAprvReqList.getCellData( i , "aprprNm" ) );//결재자
+						generator1.getChild( gen1Idx , "spnReqAprvCmtryCn" ).setValue( dsAprvReqList.getCellData( i , "aprvCmtryCn" ) );//결재의견
+						generator1.getChild( gen1Idx , "spnReqAproDt" ).setValue( dsAprvReqList.getCellData( i , "aproDtm" ) );//결재일시
+					}
+
+					if(dsSiteMngctChgMap.get( "dirmgExctAproCd" ) == "CM00401305"){//반송
+						var gen2Idx = generator2.insertChild();
+						generator2.getChild( gen2Idx , "spnAprvStusNm" ).setValue( "반송" );//결재상태
+						generator2.getChild( gen2Idx , "spnAprprNm" ).setValue( dsSiteMngctChgMap.get( "pbsvTeamRtnprNm" ) );//결재자
+						generator2.getChild( gen2Idx , "spnAprvCmtryCn" ).setValue( dsSiteMngctChgMap.get( "pbsvTeamAprvOpinCn" ) );//결재의견
+						generator2.getChild( gen2Idx , "spnAproDt" ).setValue( dsSiteMngctChgMap.get( "fnlModiDtm" ) );//결재일시
+					}else{
+						//현장관리비승인서
+						for(var i=0; i<dsAprvAproList.getRowCount(); i++){
+							var gen2Idx = generator2.insertChild();
+							generator2.getChild( gen2Idx , "spnAprvStusNm" ).setValue( dsAprvAproList.getCellData( i , "aprvStusNm" ) );//결재상태
+							generator2.getChild( gen2Idx , "spnAprprNm" ).setValue( dsAprvAproList.getCellData( i , "aprprNm" ) );//결재자
+							generator2.getChild( gen2Idx , "spnAprvCmtryCn" ).setValue( dsAprvAproList.getCellData( i , "aprvCmtryCn" ) );//결재의견
+							generator2.getChild( gen2Idx , "spnAproDt" ).setValue( dsAprvAproList.getCellData( i , "aproDtm" ) );//결재일시
+						}
+					}
+
+					//첨부파일
+					scwin.getAprvAflIdFile();
+
+            	},
+            errCallback : "fnErrCallBack"
+        })
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+    //첨부파일
+    scwin.getAprvAflIdFile = function() {
+    	if(dsSiteMngctChgMap.get( "aflId" ) != ""){
+	        var aprvAflId = dsSiteMngctChgMap.get( "aflId" ).split(",");
+	        for (var i = 0; i < aprvAflId.length; i++) {
+	            var rtnArr = com.udcAflList(aprvAflId[i]) || [];
+
+	            $.each(rtnArr, function(key,data){
+	                var idx = gen_aflList.insertChild();
+	                var gen_Obj = gen_aflList.getChild(idx,"gen_generator");
+	                var t = gen_Obj.insertChild();
+	                var btn_obj = gen_Obj.getChild(t,"btn_addFile");
+	                var dFileSizeInit = "<span style='display:none;'>"+data.aflNm+"("+data.fileSize+"byte)</span>";
+	                var dFileSize = "("+data.fileSize+"byte)";
+	                btn_obj.setValue(data.aflNm + dFileSize + dFileSizeInit);
+	                btn_obj.setUserData("userData",data);
+	                var href = "/cf/CF00350000P/downloadMAV?aflp="+data.aflp;
+	                $("#"+btn_obj.getID()).off("click").on("click", function() {
+	                    $.fileDownload(href);
+	                    return;
+	                });
+	            });
+	        }
+    	}
+    };
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };	]]></script>
+
+	<w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="tab_body">
+			<xf:group class="lybox_wrap fix_300" id="" style="">
+				<xf:group class="defaultbox" id="" style="">
+					<w2:textbox class="df_tt" id="" label="현장관리비요청서" style="" tagname="h3"></w2:textbox>
+				</xf:group>
+				<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpMngctReq" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>표준내역 상세정보 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:127.00px;" tagname="col"></xf:group>
+						<xf:group style="" tagname="col"></xf:group>
+						<xf:group style="width:789px;" tagname="col"></xf:group>
+						<xf:group style="" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span id="" label="결재상태" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:span id="" label="결재자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span id="" label="결재의견" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="td">
+							<w2:attributes></w2:attributes>
+							<w2:span id="" label="결재일시" style=""></w2:span>
+						</xf:group>
+					</xf:group>
+					<w2:generator id="generator1" style="position: relative;width: 100%;height: 100px;" tagname="tbody">
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span id="spnReqAprvStusNm" label="" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:span id="spnReqAprprNm" label="" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td" style="">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span id="spnReqAprvCmtryCn" label="" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<w2:span id="spnReqAproDt" label="" style=""></w2:span>
+						</xf:group>
+					</xf:group>
+					</w2:generator>
+					<xf:group tagname="tr">
+						<xf:group tagname="th" class="w2tb_th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span id="" label="첨부파일" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes>
+								<w2:colspan>3</w2:colspan>
+								<w2:rowspan>1</w2:rowspan>
+							</w2:attributes>
+							<w2:generator class="databox" id="gen_aflList" style="" tagname="ul">
+								<w2:generator id="gen_generator" tagname="li">
+									<w2:anchor id="btn_addFile" outerDiv="false">
+										<xf:label></xf:label>
+									</w2:anchor>
+								</w2:generator>
+							</w2:generator>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="defaultbox" id="" style="">
+					<w2:textbox class="df_tt" id="" label="현장관리비승인서" style="" tagname="h3"></w2:textbox>
+				</xf:group>
+				<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpMngctApro" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>표준내역 상세정보 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:127.00px;" tagname="col"></xf:group>
+						<xf:group style="" tagname="col"></xf:group>
+						<xf:group style="width:799px;" tagname="col"></xf:group>
+						<xf:group style="" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span id="" label="결재상태" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="td">
+							<w2:span id="" label="결재자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span id="" label="결재의견" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="td">
+							<w2:attributes></w2:attributes>
+							<w2:span id="" label="결재일시" style=""></w2:span>
+						</xf:group>
+					</xf:group>
+					<w2:generator id="generator2" style="position: relative;width: 100%;height: 100px;" tagname="tbody">
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span id="spnAprvStusNm" label="" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:span id="spnAprprNm" label="" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="th" style="text-align: left;">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span id="spnAprvCmtryCn" label="" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<w2:span id="spnAproDt" label="" style=""></w2:span>
+						</xf:group>
+					</xf:group>
+					</w2:generator>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

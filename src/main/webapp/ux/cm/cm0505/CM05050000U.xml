@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmSiteStafList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+						<w2:column id="stafEmpno" name="직원_사번" dataType="text"></w2:column>
+						<w2:column id="nm" name="성명" dataType="text"></w2:column>
+						<w2:column id="jbclNm" name="직급" dataType="text"></w2:column>
+						<w2:column id="siteStafGbCd" name="현장직원구분코드[CM100004]" dataType="text"></w2:column>
+						<w2:column id="siteStafGbNm" name="현장직원구분명" dataType="text"></w2:column>
+						<w2:column id="telNo" name="전화번호" dataType="text"></w2:column>
+						<w2:column id="siteDtyGbCd" name="현장직무구분코드[CM100001]" dataType="text"></w2:column>
+						<w2:column id="apntDt" name="발령_일자" dataType="text"></w2:column>
+						<w2:column id="dtyEndDt" name="직무_종료_일자" dataType="text"></w2:column>
+						<w2:column id="wthdPrDt" name="철수_예정_일자" dataType="text"></w2:column>
+						<w2:column id="wthdDt" name="철수_일자" dataType="text"></w2:column>
+						<w2:column id="siteAssign" name="현장등록" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true"></w2:data>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSearchMap" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+						<w2:key dataType="text" id="siteNm" name="현장명"></w2:key>
+						<w2:key id="rtirCd" name="퇴직여부" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsTcmSiteConstMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="stwkDt" name="공사기간_시작일" dataType="text"></w2:key>
+						<w2:key id="complDt" name="공사기간_종료일" dataType="text"></w2:key>
+						<w2:key id="month" name="개월" dataType="text"></w2:key>
+
+						<w2:key id="resDt" name="종료일+6개월" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM05050000U.xml
+ * Program Name : 현장직원관리
+ * Author : sychoi (tpcsy)
+ * Date : 2019.04.04
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ * TO-DO
+ * 1. 발령일자 항목 없음 : TCF_USER_INFO
+ **************************************************************************/
+ /**************************************************************************
+ * DataCollection description
+ *
+ *	dsSearchMap : 검색조건 Map
+ **************************************************************************/
+
+ /**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+    var svcId = "";
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.initScreen = function() {
+    };
+
+    scwin.onpageload = function() {
+
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+		// 그리드 - 직무구분(공통코드)
+		com.selCdListVrbl( "grdSiteStafList:siteDtyGbCd", {"upperCd": "CM100001","setCd": "cd", "setNm" : "cdNm"});
+
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+
+		// 최초 현장직원 LIST 조회
+		scwin.fnTcmSiteStafList();
+
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+/**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnTcmSiteStafList
+	 * 기 능: 공사기간 & 현장직원 LIST SELECT
+	 **************************************************************************/
+     scwin.fnTcmSiteStafList = function() {
+		svcId = "selectTcmSiteStafList";
+        ajaxLib.ajax("/cm/cm0505/CM05050000U/selectTcmSiteStafList", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"
+        });
+    };
+
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnSelectAfter
+	 * 기 능: 공사기간 SELECT 후처리
+	 **************************************************************************/
+     scwin.fnSelectAfter = function() {
+     	// 공사기간 : 2017-06-30 ~ 2019-09-27(27개월)
+     	var sConstDt;
+
+	     sConstDt = "공사기간 : ";
+	     if (dsTcmSiteConstMap.get("stwkDt").length > 0) {
+	     	sConstDt = sConstDt + dsTcmSiteConstMap.get("stwkDt");
+	     }
+	     sConstDt = sConstDt + " ~ ";
+	     if (dsTcmSiteConstMap.get("complDt").length > 0) {
+	     	sConstDt = sConstDt + dsTcmSiteConstMap.get("complDt");
+	     }
+	     if (dsTcmSiteConstMap.get("month").length > 0) {
+	     	sConstDt = sConstDt + " (" + dsTcmSiteConstMap.get("month") + " 개월)";
+		}
+
+		// 공사기간 Label Set
+		iblConstDt.setValue( sConstDt );
+    };
+
+
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnSave
+	 * 기 능: 현장직원관리 저장
+	 **************************************************************************/
+     scwin.fnSave = function() {
+		var dayRegExp = /^(19|20)\d{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[0-1])$/;
+
+		if (dsTcmSiteStafList.getModifiedJSON(true).length  == 0) {
+			com.showMessage("CSA0003");	//저장(변경)할 내용이 없습니다.
+			return false;
+		}
+
+		var modifiedRow = dsTcmSiteStafList.getModifiedIndex( );	//수정된 행 인덱스
+
+		for (var i = 0; i < modifiedRow.length; i++) {
+            if (grdSiteStafList.getCellData( modifiedRow[i] , "siteDtyGbCd" ) == ""){
+                com.showMessage("CFW0007", "직무", "", "", grdSiteStafList.id, modifiedRow[i], "siteDtyGbCd");	//$1을(를) 입력하십시오.
+                return false;
+            }
+            if (grdSiteStafList.getCellData( modifiedRow[i] , "apntDt" ) == ""){
+                com.showMessage("CFW0007", "발령일자", "", "", grdSiteStafList.id, modifiedRow[i], "apntDt");	//$1을(를) 입력하십시오.
+                return false;
+            }
+            // 발령일자 Valid Check
+            if (!dayRegExp.test(grdSiteStafList.getCellData( modifiedRow[i] , "apntDt" ))) {
+                com.showMessage("CSW0008", "발령일자", "", "", grdSiteStafList.id, modifiedRow[i], "apntDt");	//$1 입력이 잘못 되었습니다.
+                return false;
+            }
+            if (grdSiteStafList.getCellData( modifiedRow[i] , "wthdPrDt" ) == ""){
+                com.showMessage("CFW0007", "철수예정일", "", "", grdSiteStafList.id, modifiedRow[i], "wthdPrDt");	//$1을(를) 입력하십시오.
+                return false;
+            }
+            // 철수예정일자 Valid Check
+            if (!dayRegExp.test(grdSiteStafList.getCellData( modifiedRow[i] , "wthdPrDt" ))) {
+                com.showMessage("CSW0008", "철수예정일", "", "", grdSiteStafList.id, modifiedRow[i], "wthdPrDt");	//$1 입력이 잘못 되었습니다.
+                return false;
+            }
+            if (grdSiteStafList.getCellData( modifiedRow[i] , "wthdDt" ) != ""){
+            	// 철수일자 Valid Check
+	            if (!dayRegExp.test(grdSiteStafList.getCellData( modifiedRow[i] , "wthdDt" ))) {
+	                com.showMessage("CSW0008", "철수일자", "", "", grdSiteStafList.id, modifiedRow[i], "wthdDt");	//$1 입력이 잘못 되었습니다.
+	                return false;
+	            }
+            }
+           	//console.log("resDt length >> " + dsTcmSiteConstMap.get( "resDt" ).length);
+            if (dsTcmSiteConstMap.get( "resDt" ).length != 0) {
+            	//console.log("resDt >> " + dsTcmSiteConstMap.get( "resDt" ));
+            	// 철수예정일자 - 공사종료일자+6개월 Check
+	            if (dsTcmSiteConstMap.get( "resDt" ) < grdSiteStafList.getCellData( modifiedRow[i] , "wthdPrDt" )){
+	                com.showMessage("CFW0005", "철수예정일자", "공사종료 6개월보다", "작거나 같아야", grdSiteStafList.id, modifiedRow[i], "wthdPrDt");	//$1은(는) $2 보다 $3 합니다.
+	                return false;
+	            }
+            	// 철수일자 - 공사종료일자+6개월 Check
+            	if (grdSiteStafList.getCellData( modifiedRow[i] , "wthdDt" ) != ""){
+		            if (dsTcmSiteConstMap.get( "resDt" ) < grdSiteStafList.getCellData( modifiedRow[i] , "wthdDt" )){
+		                com.showMessage("CFW0005", "철수일자", "공사종료 6개월보다", "작거나 같아야", grdSiteStafList.id, modifiedRow[i], "wthdDt");	//$1은(는) $2 보다 $3 합니다.
+		                return false;
+		            }
+	            }
+			}
+		}
+
+    	if (!confirm("저장 하시겠습니까?")) return;
+
+		svcId = "saveTcmSiteStafList";
+        ajaxLib.ajax("/cm/cm0505/CM05050000U/saveTcmSiteStafList", {
+            mode : "synchronous",
+            method : "POST",
+            requestData : {
+            		tcmSiteStafList : dsTcmSiteStafList.getModifiedJSON()
+            	},
+            callback : "fnCallback",
+            errCallback : "fnErrCallback"
+        });
+    };
+
+
+/**************************************************************************
+ * [4] Callback
+ **************************************************************************/
+   scwin.fnCallback = function(result, e) {
+        switch(svcId) {
+            case "selectTcmSiteStafList" :
+                dsTcmSiteStafList.setJSON(result.data.tcmSiteStafList);
+                com.setUdcValue("dsTcmSiteStafListCount", "udcListCount", dsTcmSiteStafList.getRowCount());
+                dsTcmSiteConstMap.setJSON(result.data.tcmSiteConst);
+                scwin.fnSelectAfter();
+                break;
+            case "saveTcmSiteStafList" :
+	        	com.showMessage("CFA0012");// 저장되었습니다.
+				scwin.fnTcmSiteStafList();
+            	break;
+        }
+    }
+
+    scwin.fnErrCallback = function(result, e) {
+       console.log(result);
+    }
+
+/************************************************************************************
+ *  [5] Event 함수
+ ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.WFrameSiteInfo_change_callback
+     * 기 능: 현장코드 변경 이벤트
+     **************************************************************************/
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+	};
+
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 조회 버튼 Click 이벤트
+     **************************************************************************/
+	scwin.btnFind_onclick = function() {
+	    if ( dsSearchMap.get("siteCd").length == 0){
+	        com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+	        return false;
+	    }
+
+		scwin.fnTcmSiteStafList();
+	};
+
+    /**************************************************************************
+     * Event: scwin.btnSave_onclick
+     * 기 능: 저장 버튼 Click 이벤트
+     **************************************************************************/
+	scwin.btnSave_onclick = function() {
+	    if ( dsSearchMap.get("siteCd").length == 0){
+	        com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+	        return false;
+	    }
+
+		// 검색영역의 현장코드와 비교
+		if ( dsSearchMap.get("siteCd") != dsTcmSiteConstMap.get("siteCd")) {
+	        com.showMessage("EMW0004", "검색항목에 변경된 현장");// $1을(를) 조회 하십시오.
+	        return false;
+		}
+
+		scwin.fnSave();
+	};
+
+    /**************************************************************************
+     * Event: scwin.btnExcelDwn_onclick
+     * 기 능: 엑셀다운로드 버튼 Click 이벤트
+     **************************************************************************/
+	scwin.btnExcelDwn_onclick = function() {
+        if(dsTcmSiteStafList.getTotalRow() == 0){
+            com.showMessage("CMW0020", "다운로드할");// $1 자료가 존재하지 않습니다.
+            return;
+        }
+	
+        grdSiteStafList.advancedExcelDownload({
+            fileName:"현장직원관리.xlsx",
+            removeColumns:"0",
+            useSubTotal : true,             // Sub-Total 표시 
+            headerFontColor : "#FFFFFF",    // Header Font Color
+            headerColor : "#D9D9D9",        // Header Back Color
+            subTotalColor : "#FCE4D6",      // SubTotal Back Color
+            footerColor : "#BDD7EE"         // Footer Color
+        });
+	};
+	]]></script>
+
+	<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<xf:group class="navigator" id="" style="">
+					<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장" style=""></w2:span>
+						</xf:group>
+
+						<xf:group class="w2tb_td" style="" tagname="td"><w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe></xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="퇴직여부" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxRtirCd" ref="data:dsSearchMap.rtirCd"
+								style="width:120px;" submenuSize="auto" textAlign="left" chooseOptionLabel="전체">
+								<xf:choices>
+									<xf:item>
+										<xf:label><![CDATA[재직]]></xf:label>
+										<xf:value><![CDATA[1]]></xf:value>
+									</xf:item>
+									<xf:item>
+										<xf:label><![CDATA[퇴직]]></xf:label>
+										<xf:value><![CDATA[2]]></xf:value>
+									</xf:item>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="현장직원목록" style="" tagname="h3"></w2:textbox><w2:udc_list_count id="dsTcmSiteStafListCount" style=""></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="descbox" id="" style="">
+						<w2:textbox class="" id="iblConstDt" label="" tagname=""></w2:textbox>
+					</xf:group>
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnSave" outerDiv="false" style=""
+							ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm excel_down" clickEventElement=""
+							ev:onclick="scwin.btnExcelDwn_onclick" id="btnExcelDwn" localeRef="" outerDiv="false" style=""
+							toolTip="엑셀다운로드">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+
+				</xf:group>
+
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmSiteStafList"
+				fixedColumnWithHidden="" focusMode="row" id="grdSiteStafList" readOnly="true" rowNumHeaderValue="No"
+				rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false"
+				style="height: 295px;" useShiftKey="true" visibleRowNum="" checkReadOnlyOnCut="true" checkReadOnlyOnPaste="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column29" inputType="text"
+							removeBorderStyle="false" style="" value="No." width="60">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column37"
+							value="성명" blockSelect="false" displayMode="label" sortable="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column27" inputType="text"
+							removeBorderStyle="false" style="" value="호칭" width="100" sortable="true">
+						</w2:column>
+						<!-- w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column39"
+							value="구분" blockSelect="false" displayMode="label" sortable="true">
+						</w2:column-->
+						<w2:column blockSelect="false" displayMode="label" id="column33" inputType="text"
+							removeBorderStyle="false" style="" value="직무" width="120" class="req" sortable="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column36"
+							value="휴대폰번호" blockSelect="false" displayMode="label" sortable="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="115" inputType="text" style="" id="column46" value="발령일자"
+							blockSelect="false" displayMode="label" class="req">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="115" inputType="text" style="" id="column41"
+							value="철수예정일" blockSelect="false" displayMode="label" class="req" sortable="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="115" inputType="text" style="" id="column43"
+							value="철수일자" blockSelect="false" displayMode="label" sortable="true">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column45"
+							value="현장등록" blockSelect="false" displayMode="label" sortable="true">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column24" inputType="expression"
+							removeBorderStyle="false" style="" textAlign="" value="" width="60" expression=" rowindex()+1">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="nm" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="jbclNm" inputType="text"
+							removeBorderStyle="false" style="" value="" width="100" textAlign="">
+						</w2:column>
+						<!--  w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="siteStafGbNm"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column-->
+						<w2:column blockSelect="false" displayMode="label" id="siteDtyGbCd" inputType="select"
+							removeBorderStyle="false" style="" value="" width="120" textAlign="left" viewType="icon" readOnly="false">
+							<w2:choices></w2:choices>
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="telNo" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="115" inputType="calendar" style="" id="apntDt"
+							value="" blockSelect="false" displayMode="label" readOnly="false" viewType="icon">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="115" inputType="calendar" style="" id="wthdPrDt"
+							value="" blockSelect="false" displayMode="label" viewType="icon" readOnly="false">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="115" inputType="calendar" style="" id="wthdDt"
+							value="" blockSelect="false" displayMode="label" viewType="icon" readOnly="false">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="siteAssign"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+		</xf:group>
+
+
+	</body>
+</html>

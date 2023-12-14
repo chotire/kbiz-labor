@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfOaOffrPayList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="rowNum" name="순번" dataType="number"></w2:column>
+						<w2:column id="oaItemNm" name="신청기기" dataType="text"></w2:column>
+						<w2:column id="offrDeptNm" name="신청팀" dataType="text"></w2:column>						
+						<w2:column id="ruserNm" name="실사용자명" dataType="text"></w2:column>
+						<w2:column id="ruserJbclNm" name="실사용자 직급" dataType="text"></w2:column>
+						<w2:column id="intdRsnCn" name="신청사유" dataType="text"></w2:column>
+						<w2:column id="oaeqPayMtdNm" name="OA기기 지급 방법" dataType="text"></w2:column>
+						<w2:column id="oaeqPayTypeNm" name="OA기기 지급 유형" dataType="text"></w2:column>
+						<w2:column id="chrgrRvwOpinCn" name="담당자_검토_의견_내용" dataType="text"></w2:column>
+					</w2:columnInfo>
+					<w2:data use="true"></w2:data>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsSrchParamList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="oaeqReqNo" name="OA신청 번호" dataType="number"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript" lazy="false"><![CDATA[
+ /***************************************************************************
+     * Program ID   : CF05050501E.xml
+     * Program Name : OA신청 지급처리 결재 화면
+     * Author       : 류상휴 (ryush)
+     * Date         : 2019.07.17
+     *
+     * History
+     * ========================================
+     * 변경일자     수정자   내 용
+     * ========================================
+     * 2019.07.30   류상휴   최초작성
+     **************************************************************************/	
+     	
+    /*** [1] 전역변수  ***/
+    
+    scwin.svcId = "";
+    
+    /***  [2] onpageload(초기화포함) ***/
+         	
+	scwin.onpageload = function() { 
+	    // 화면초기화
+        scwin.initScreen();
+        scwin.fnGrdOaOffrPaySearch();
+	    
+	};
+	
+	scwin.onpageunload = function() {
+		
+	};
+		
+    // 화면 초기화(필수)
+    scwin.initScreen = function() { 
+   
+           // 페이지목록 초기화
+        grdTcfOaOffrPayList.initGrid();
+        
+    	var dsSrch = com.getAprvParam("dsKeyTcfOaOffrPayList"); //부모창의 데이터맵을 읽어온다.
+
+    	dsSrchParamList.setJSON(dsSrch.getAllJSON());
+
+    };		
+    
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnGrdCourtDocSearch
+     * 기 능: OA신청 조회
+     **************************************************************************/
+    scwin.fnGrdOaOffrPaySearch = function(){ 
+
+//        console.log("fnGrdOaOffrPaySearch =={}",dsSrchParamList.getAllJSON() );
+        scwin.svcId = "selectTcfOaOffrPayDtlList";
+        ajaxLib.ajax("/cf/CF05050000U/selectTcfOaOffrPayDtlList", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData :{ oaOffrList : dsSrchParamList.getAllJSON() }
+            , callback    : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        });
+    };
+        
+	scwin.btnFind_onclick = function() {
+	    rowIdx = 0;
+		scwin.pageMove(1);
+	};
+ 
+     
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    /* 결과 후처리*/
+    scwin.fnCallback = function(result, e) {
+        console.log(e);
+
+        switch(scwin.svcId) {
+            case "selectTcfOaOffrPayDtlList" :
+
+                //페이지 조회목록
+                dsTcfOaOffrPayList.setJSON(result.data.tcfOaOffrPayList);
+                
+          //      $("#"+grdTcfOaOffrPayList.id).find("th").attr('style','border: 1px solid #c4c4c4;');
+				$("#"+grdTcfOaOffrPayList.id).find("td").attr('style','border: 1px solid #c4c4c4;');
+                break;
+
+       }
+    };
+
+    /* 에러 후처리 */
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+
+        switch(scwin.svcId) {
+            case "selectTcfOaOffrPayList" :
+                console.log('search Error!!!!!!!!!!!');
+                break;
+       }
+    };
+    // 미리보기, 확인 버튼 클릭했을 경우 업무페이지에서 별도로 함수를 실행
+    scwin.fnStartImportMainScript = function() {
+        console.log("TEST");
+    };
+    	
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+		]]></script>
+
+		
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="elec_body">
+				<!-- <w2:wframe id="wfm_title" src="/publish/common/navigator.xml" style=""></w2:wframe> -->
+				<xf:group class="defaultbox" id="" style="">
+						<w2:textbox class="df_tt" id="" label="OA 지급내역" style="" tagname="h3"></w2:textbox>
+				</xf:group>
+				<w2:gridView autoFit="allColumn" class="" dataList="data:dsTcfOaOffrPayList" fixedColumnWithHidden="true" focusMode="row" id="grdTcfOaOffrPayList" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="width:1530px;height:68px;" useShiftKey="true" visibleRowNum="all">
+						<w2:header id="header1" style="">
+								<w2:row id="row2" style="">
+										<w2:column blockSelect="false" id="column21" inputType="text" value="순번" width="50" style="border: 1px solid #c4c4c4;"></w2:column>
+										<w2:column blockSelect="false" id="column17" inputType="text" value="신청품목" width="250" style="border: 1px solid #c4c4c4;"></w2:column>
+										<w2:column blockSelect="false" id="column15" inputType="text" value="신청팀" width="200" style="border: 1px solid #c4c4c4;"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text" removeBorderStyle="false" value="실사용자" width="120" style="border: 1px solid #c4c4c4;"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column35" inputType="text" removeBorderStyle="false" value="직위" width="110" style="border: 1px solid #c4c4c4;"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column41" inputType="text" removeBorderStyle="false" value="신청사유" width="400" style="border: 1px solid #c4c4c4;"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column39" inputType="text" removeBorderStyle="false" value="지급방법" width="150" style="background-color:rgb(249,247,174);border: 1px solid #c4c4c4;"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="column47" inputType="text" removeBorderStyle="false" value="지급유형" width="140" style="background-color:rgb(249,247,174);border: 1px solid #c4c4c4;"></w2:column>
+										<w2:column removeBorderStyle="false" width="450" inputType="text" style="background-color:rgb(249,247,174);border: 1px solid #c4c4c4;" id="column49" value="지급검토의견" blockSelect="false" displayMode="label"></w2:column>
+								</w2:row>
+						</w2:header>
+						<w2:gBody id="gBody4" style="">
+								<w2:row id="row5" style="">
+										<w2:column blockSelect="false" id="column24" inputType="expression" width="50" expression="rowindex()+1" style=""></w2:column>
+										<w2:column blockSelect="false" id="oaItemNm" inputType="text" value="" width="250" textAlign="left" style=""></w2:column>
+										<w2:column blockSelect="false" id="offrDeptNm" inputType="text" value="" width="200" style=""></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="ruserNm" inputType="text" removeBorderStyle="false" value="" width="120" style=""></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="ruserJbclNm" inputType="text" removeBorderStyle="false" value="" width="110" style=""></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="intdRsnCn" inputType="textarea" removeBorderStyle="false" textAlign="left" value="" width="400" style="" displayType="all" readOnly=""></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="oaeqPayMtdNm" inputType="text" removeBorderStyle="false" value="" width="150" style="" textAlign="left"></w2:column>
+										<w2:column blockSelect="false" displayMode="label" id="oaeqPayTypeNm" inputType="text" removeBorderStyle="false" value="" width="140" style="" textAlign="left"></w2:column>
+										<w2:column removeBorderStyle="false" width="450" inputType="textarea" style="" id="chrgrRvwOpinCn" value="" blockSelect="false" displayMode="label" displayType="all"  textAlign="left" readOnly=""></w2:column>
+								</w2:row>
+						</w2:gBody>
+				</w2:gridView>
+				<xf:group class="descbox" id="" style="">
+						<w2:textbox class="" id="" label="위와 같이 OA기기 지급코자 하오니 승인하여 주시기 바랍니다.&lt;br/&gt;&lt;br/&gt;끝." style="" tagname=""></w2:textbox>
+				</xf:group>
+		</xf:group>
+	</body>
+</html>

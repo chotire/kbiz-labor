@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+                <w2:dataList baseNode="list" id="dsTcfCloseInfo" repeatNode="map" saveRemovedData="true" style="">
+                	<w2:columnInfo>
+                		<w2:column id="siteCd" name="현장_코드" dataType="text"></w2:column>
+                		<w2:column id="closeYm" name="마감_연월" dataType="text"></w2:column>
+                		<w2:column id="closeTypeCd" name="마감유형코드" dataType="text"></w2:column>
+                		<w2:column id="closeJobCd" name="마감업무코드" dataType="text"></w2:column>
+                		<w2:column id="pCloseYn" name="현장손익마감_상태" dataType="text"></w2:column>
+                		<w2:column id="pCloseDt" name="현장손익마감_작업일시" dataType="text"></w2:column>
+                		<w2:column id="pCloseEmpnm" name="현장손익마감_작업자" dataType="text"></w2:column>
+                		<w2:column id="release" name="현장손익마감_해제" dataType="text"></w2:column>
+                	</w2:columnInfo>
+                	<w2:data use="false"></w2:data>
+                </w2:dataList>
+                <w2:dataList baseNode="list" id="dsTcfCloseInfoHist" repeatNode="map" saveRemovedData="true" style="">
+                    <w2:columnInfo>
+                        <w2:column id="closeYm" name="마감연월" dataType="text"></w2:column>
+                        <w2:column id="pCloseYn" name="프로젝트손익마감여부" dataType="text"></w2:column>
+                        <w2:column id="pCloseDt" name="프로젝트손익작업일시" dataType="text"></w2:column>
+                        <w2:column id="pCloseEmpnm" name="프로젝트손익작업자" dataType="text"></w2:column>
+                    </w2:columnInfo>
+                    <w2:data use="false"></w2:data>
+                </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/
+
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {
+
+        com.commonUI();
+
+        com.setUdcValue( "udcCloseYm" , "calYear" , WebSquare.date.getCurrentServerDate( "yyyy" ) );
+
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+    };
+
+
+/************************************************************************************
+ *  [3] 사용자 정의함수 함수
+ ************************************************************************************/
+
+    /**************************************************************************
+     * 함 수 명: scwin.fnSiteValidate
+     * 기 능: 현장 검색조건 관련 Validate
+     **************************************************************************/
+    scwin.fnSiteValidate = function() {
+
+        if (dsTcfCloseInfo.getTotalRow() == 0) return true;
+
+        var siteCd1 = wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue();
+        var siteCd2 = dsTcfCloseInfo.getCellData( 0 , "siteCd" );
+
+        if ( siteCd1.length == 0){
+            com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+            return false;
+        }
+
+        // 검색영역의 현장코드와 비교
+        if (siteCd1 != siteCd2) {
+            com.showMessage("EMW0004", "검색항목에 변경된 현장");// $1을(를) 조회 하십시오.
+            return false;
+        }
+
+        return true;
+
+    };
+
+/************************************************************************************
+ *  [4] Callback 함수
+ ************************************************************************************/
+
+/************************************************************************************
+ *  [5] Event 함수
+ ************************************************************************************/
+
+    /**************************************************************************
+     * 함 수 명: scwin.btnFind_onclick
+     * 기 능: 조회버튼 클릭
+     **************************************************************************/
+    scwin.btnFind_onclick = function() {
+
+        var siteCd = wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue();
+        var closeYm = com.getUdcValue( "udcCloseYm" , "calYear" );
+
+        if (siteCd == "") {
+            com.showMessage("CFW0004", "현장");// $1을(를) 선택하십시오.
+            return;
+        }
+
+        if (closeYm == "") {
+            com.showMessage("CFW0004", "조회연월");// $1을(를) 선택하십시오.
+            return;
+        }
+
+        ajaxLib.ajax("/cm/cm3010/CM30100010U/selectCM30100010ULeftList", {
+            method : "POST",
+            requestData : {
+                siteCd : siteCd,
+                closeYm : closeYm
+            },
+            callback : function(result, e){
+                dsTcfCloseInfoHist.removeAll();
+                dsTcfCloseInfo.setJSON( result.data );
+                for (var i = 0; i < dsTcfCloseInfo.getTotalRow(); i++) {
+                    if (dsTcfCloseInfo.getCellData( i , "pCloseYn" ) == "Y") {
+                        grdTcfCloseInfo.setCellInputType( i , "release" , {inputType:"button"} );
+                        dsTcfCloseInfo.setCellData( i , "release" , "마감해제" );
+                    }else{
+                        grdTcfCloseInfo.setCellInputType( i , "release" , {inputType:"text"} );
+                        dsTcfCloseInfo.setCellData( i , "release" , "" );
+                    }
+                }
+            },
+            errCallback : ""
+        });
+
+    };
+
+    /**************************************************************************
+     * 함 수 명: scwin.grdTcfCloseInfo_oncellclick
+     * 기 능: 월별 마감현황 그리드 클릭
+     **************************************************************************/
+    scwin.grdTcfCloseInfo_oncellclick = function(row,col) {
+
+        if(!scwin.fnSiteValidate()) return;
+
+        var colId = grdTcfCloseInfo.getColumnID( col );
+        var value = dsTcfCloseInfo.getCellData( row , colId );
+
+        var siteCd = dsTcfCloseInfo.getCellData( row , "siteCd" );
+        var closeYm = dsTcfCloseInfo.getCellData( row , "closeYm" );
+        var closeTypeCd = dsTcfCloseInfo.getCellData( row , "closeTypeCd" );
+        var closeJobCd = dsTcfCloseInfo.getCellData( row , "closeJobCd" );
+
+        //마감해제처리
+        if (colId == "release") {
+            if (value == "마감해제"){
+            	if (confirm("마감해제하시겠습니까?")) {
+			        ajaxLib.ajax("/cm/cm3010/CM30100010U/saveTcfCloseInfo", {
+			            method : "POST",
+			            mode : "synchronous",
+			            requestData : {
+							closeDeptCd : siteCd,
+							closeTypeCd : closeTypeCd,
+							closeYm     : closeYm,
+							closeJobCd  : closeJobCd,
+							closeYn     : "N"
+			            },
+			            callback : function(result, e){
+			            	com.showMessage("PON0001");
+			                scwin.btnFind_onclick();
+			            },
+			            errCallback: function(result, e) {
+
+			                console.log(result);
+
+			            }
+			        });
+				}
+            }
+            return;
+        }
+
+        ajaxLib.ajax("/cm/cm3010/CM30100010U/selectCM30100010URightList", {
+            method : "POST",
+            mode : "synchronous",
+            requestData : {
+                siteCd : siteCd,
+                closeYm : closeYm
+            },
+            callback : function(result, e){
+                dsTcfCloseInfoHist.setJSON( result.data );
+            },
+            errCallback: function(result, e) {
+
+                console.log(result);
+
+            }
+        });
+
+    };
+
+    ]]></script>
+        <w2:require src="/ux/common/udc/udcYearcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+	    <xf:group style="" id="" class="content_body">
+	        <xf:group class="navigator_wrap" id="" style="">
+	            <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+	        </xf:group>
+	        <xf:group class="tbl_search" id="" style="">
+	            <xf:group class="tb_list" id="" style="" tagname="table">
+	                <w2:attributes>
+	                    <w2:summary>조회조건 테이블 입니다.</w2:summary>
+	                </w2:attributes>
+	                <xf:group tagname="colgroup">
+	                    <xf:group style="width:67px;" tagname="col"></xf:group>
+	                    <xf:group style="width:auto;" tagname="col"></xf:group>
+	                    <xf:group style="width:94px;" tagname="col"></xf:group>
+	                    <xf:group style="width:auto;" tagname="col"></xf:group>
+	                    <xf:group style="width:67px;" tagname="col"></xf:group>
+	                    <xf:group style="width:auto;" tagname="col"></xf:group>
+	                </xf:group>
+	                <xf:group style="" tagname="tr">
+	                    <xf:group class="w2tb_th req" style="" tagname="th">
+	                        <w2:attributes>
+	                            <w2:scope>row</w2:scope>
+	                        </w2:attributes>
+	                        <w2:span class="" id="" label="현장" style=""></w2:span>
+	                    </xf:group>
+	                    <xf:group class="w2tb_td" style="" tagname="td">
+	                        <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+	                    </xf:group>
+	                    <xf:group class="w2tb_th req" style="" tagname="th">
+	                        <w2:attributes>
+	                            <w2:scope>row</w2:scope>
+	                        </w2:attributes>
+	                        <w2:span class="" id="" label="조회연도" style=""></w2:span>
+	                    </xf:group>
+	                    <xf:group class="w2tb_td" style="" tagname="td">
+	                        <w2:attributes><w2:colspan>3</w2:colspan><w2:rowspan>1</w2:rowspan></w2:attributes><w2:udc_yearcalendar id="udcCloseYm" style=""></w2:udc_yearcalendar>
+	                    </xf:group>
+	                </xf:group>
+	            </xf:group>
+	            <xf:group class="btn_tbl_search" style="" tagname="">
+	                <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style=""
+	                    ev:onclick="scwin.btnFind_onclick">
+	                    <xf:label><![CDATA[조회]]></xf:label>
+	                </w2:anchor>
+	            </xf:group>
+	        </xf:group>
+	        <xf:group class="lybox_wrap" id="" style="">
+	            <xf:group class="lybox" id="" style="">
+	                <xf:group class="lycolumn" id="" style="">
+	                    <xf:group class="lyinner" id="" style="">
+	                        <xf:group class="defaultbox" id="" style="">
+	                            <w2:textbox class="df_tt" id="" label="월별 손익 마감현황" style="" tagname="h3"></w2:textbox>
+	                            <xf:group class="right_wrap" id="" style="">
+	                                <xf:group id="" style=""></xf:group>
+	                            </xf:group>
+	                        </xf:group>
+	                        <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcfCloseInfo"
+	                            fixedColumnWithHidden="true" focusMode="row" id="grdTcfCloseInfo" readOnly="true"
+	                            rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+	                            rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true"
+	                            visibleRowNum="" ev:oncellclick="scwin.grdTcfCloseInfo_oncellclick"
+	                            setCellInputTypeCustom="true" autoFitMinWidth="470" checkReadOnlyOnCut="true" checkReadOnlyOnPaste="true">
+	                            <w2:caption style="" id="caption1" value="this is a grid caption."></w2:caption>
+	                            <w2:header style="" id="header1">
+	                                <w2:row style="" id="row3">
+	                                    <w2:column removeBorderStyle="false" width="90" inputType="text"
+	                                        style="height:34px;" id="column17" value="마감연월" blockSelect="false"
+	                                        displayMode="label" colSpan="" rowSpan="2">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="90" inputType="text"
+	                                        style="height:34px;" id="column16" value="현장손익마감" blockSelect="false"
+	                                        displayMode="label" colSpan="4" rowSpan="">
+	                                    </w2:column>
+	                                </w2:row>
+	                                <w2:row style="" id="row1">
+	                                    <w2:column removeBorderStyle="false" width="50" inputType="text" style=""
+	                                        id="column7" value="상태" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="160" inputType="text" style=""
+	                                        id="column5" value="작업일시" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="80" inputType="text" style=""
+	                                        id="column3" value="작업자" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="90" inputType="text" style=""
+	                                        id="column1" value="해제" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                </w2:row>
+	                            </w2:header>
+	                            <w2:gBody style="" id="gBody1">
+	                                <w2:row style="" id="row2">
+	                                    <w2:column removeBorderStyle="false" width="90" inputType="text" style=""
+	                                        id="closeYm" value="" blockSelect="false" displayMode="label" displayFormat="####-##">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="50" inputType="text" style=""
+	                                        id="pCloseYn" value="" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="160" inputType="text" style=""
+	                                        id="pCloseDt" value="" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="80" inputType="text" style=""
+	                                        id="pCloseEmpnm" value="" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="90" inputType="custom" style=""
+	                                        id="release" value="" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                </w2:row>
+	                            </w2:gBody>
+	                        </w2:gridView>
+	                        <xf:group class="defaultbox" id="" style="">
+	                            <w2:textbox class="df_tt" id="" label="유의사항" style="" tagname="h3"></w2:textbox>
+	                        </xf:group>
+	                        <xf:group class="defaultbox" id="" style="">
+	                            <w2:textbox class="fc_red_bold ml10" id="" label=" - 현장실적 마감을 해제 후 에는 해당 현장의 실적을 조정 후 공사현황을 재승인 받아야 합니다.&lt;br/&gt; - 해당 사업부 마감이 이루어진 경우에는 마감해제를 할 수 없습니다." style="font-weight: normal;" tagname="h5"></w2:textbox>
+	                        </xf:group>
+	                    </xf:group>
+	                </xf:group>
+	                <xf:group class="lycolumn" id="" style="">
+	                    <xf:group class="lyinner" id="" style="">
+	                        <xf:group class="defaultbox" id="" style="">
+	                            <w2:textbox class="df_tt" id="" label="손익마감 이력현황" style="" tagname="h3"></w2:textbox>
+	                            <xf:group class="right_wrap" id="" style="">
+	                                <xf:group id="" style="">
+	                                </xf:group>
+	                            </xf:group>
+	                        </xf:group>
+	                        <w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcfCloseInfoHist"
+	                            fixedColumnWithHidden="true" focusMode="row" id="grdTcfCloseInfoHist" readOnly="true"
+	                            rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+	                            rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true"
+	                            visibleRowNum="" autoFitMinWidth="380"
+	                            ev:oncellclick="scwin.grdCM25000000UDn2_oncellclick"
+	                            ev:onafteredit="scwin.grdCM25000000UDn2_onafteredit" checkReadOnlyOnCut="true" checkReadOnlyOnPaste="true">
+	                            <w2:caption style="" id="caption1" value="this is a grid caption."></w2:caption>
+	                            <w2:header style="" id="header1">
+	                                <w2:row style="" id="row3">
+	                                    <w2:column removeBorderStyle="false" width="90" inputType="text"
+	                                        style="height:34px;" id="column12" value="마감연월" blockSelect="false"
+	                                        displayMode="label" colSpan="" rowSpan="2">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="50" inputType="text"
+	                                        style="height:34px;" id="column11" value="현장손익마감 이력현황" blockSelect="false"
+	                                        displayMode="label" colSpan="3" rowSpan="">
+	                                    </w2:column>
+	                                </w2:row>
+	                                <w2:row style="" id="row1">
+	                                    <w2:column removeBorderStyle="false" width="50" inputType="text" style=""
+	                                        id="column5" value="상태" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="160" inputType="text" style=""
+	                                        id="column3" value="작업일시" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="80" inputType="text" style=""
+	                                        id="column1" value="작업자" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                </w2:row>
+	                            </w2:header>
+	                            <w2:gBody style="" id="gBody1">
+	                                <w2:row style="" id="row2">
+	                                    <w2:column removeBorderStyle="false" width="90" inputType="text" style=""
+	                                        id="closeYm" value="" blockSelect="false" displayMode="label" displayFormat="####-##">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="50" inputType="text" style=""
+	                                        id="pCloseYn" value="" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="160" inputType="text" style=""
+	                                        id="pCloseDt" value="" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                    <w2:column removeBorderStyle="false" width="80" inputType="text" style=""
+	                                        id="pCloseEmpnm" value="" blockSelect="false" displayMode="label">
+	                                    </w2:column>
+	                                </w2:row>
+	                            </w2:gBody>
+	                        </w2:gridView>
+	                    </xf:group>
+	                </xf:group>
+	            </xf:group>
+	        </xf:group>
+	    </xf:group>
+	</body>
+</html>

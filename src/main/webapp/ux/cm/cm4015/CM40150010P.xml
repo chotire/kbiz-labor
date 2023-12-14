@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/><script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM40150010P.xml
+ * Program Name : 퇴직소득원천징수영수증 팝업
+ * Author : tpyhyoj (tpyhyoj)
+ * Date : 2019.08.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ 
+    /************************************************************************************
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+
+        scwin.fnInitial();
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        rdoPrintGb.setValue( "a" );
+        //UI팀용 함수 호출
+        scwin.commonUI();
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수
+     ************************************************************************************/
+    var svcId = "";
+    /************************************************************************************
+     *  [3] Event 함수
+     ************************************************************************************/
+
+    /** 확인 버튼 클릭 : 선택한 정보 리턴 **/
+    scwin.btnConfirm_onclick = function() {
+
+       var oJSON = {
+            "printGb": rdoPrintGb.getValue()
+        };
+
+        com.popup_close(oJSON);
+    };
+
+    /** 취소 버튼 클릭 : 팝업 창 닫기 **/
+    scwin.btnCancel_onclick = function() {
+        com.popup_close("");
+    };
+
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcICnumber.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+
+	        <xf:group class="" id="grdCheck" style="">
+	            <xf:group class="defaultbox" id="" style="">
+	                <w2:textbox class="df_tt" id="" label="퇴직소득원천징수영수증" style="" tagname="h3"></w2:textbox>
+	            </xf:group>
+	            <xf:select1 appearance="full" cols="" id="rdoPrintGb" rows="1" selectedIndex="" style="" ref=""
+	            				renderType="radiogroup">
+	            				<xf:choices>
+	            								<xf:item>
+	            												<xf:label><![CDATA[발행자 보고용]]></xf:label>
+	            												<xf:value><![CDATA[a]]></xf:value>
+	            								</xf:item>
+	            								<xf:item>
+	            												<xf:label><![CDATA[발행자 보관용]]></xf:label>
+	            												<xf:value><![CDATA[b]]></xf:value>
+	            								</xf:item>
+	            								<xf:item>
+	            												<xf:label><![CDATA[소득자 보관용]]></xf:label>
+	            												<xf:value><![CDATA[c]]></xf:value>
+	            								</xf:item>
+	            				</xf:choices>
+	            </xf:select1>
+	        </xf:group>
+
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancel_onclick">
+					<xf:label><![CDATA[취소]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

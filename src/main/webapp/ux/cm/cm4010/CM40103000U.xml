@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+							<w2:dataMap baseNode="map" id="dsSrchMap" style="">
+								<w2:keyInfo>
+									<w2:key dataType="text" id="keySiteCd" name="현장코드"></w2:key>
+									<w2:key id="keyResnoEnc" name="주민번호" dataType="text"></w2:key>
+									<w2:key id="keyPrintGb" name="인쇄구분" dataType="text"></w2:key>
+									<w2:key dataType="text" id="keyQtr" name="분기"></w2:key>
+									<w2:key dataType="text" id="keyPayYear" name="귀속년도"></w2:key>
+									<w2:key id="wkrNo" name="근로자번호" dataType="text"></w2:key>
+									<w2:key id="domainUrl" name="도메인" dataType="text"></w2:key>
+									<w2:key id="laborGbn" name="원천세 구분" dataType="text"></w2:key>
+								</w2:keyInfo>
+							</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/><script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM40103000U.xml
+ * Program Name : 일용근로자 지급조서
+ * Author : tpyhyoj (tpyhyoj)
+ * Date : 2019.08.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+ 
+    /************************************************************************************
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+    
+		var sFrameId = "";
+		if ( gcm.tab_main == undefined  ) {		//팝업인경우 
+			var winPopParam = JSON.parse(sessionStorage.winpopParam);
+			var parentId    = winPopParam.dataObj.data.pframeId;
+			
+			if(parentId != undefined && parentId != "") {
+           		var parentObj = opener.frames[parentId].getWindow().com;
+           		
+		        //원천세 여부
+           		//cmn_CM.js 에 있는 함수 호출 
+           		if (typeof(parentObj["getLaborGbn"]) == "function"){
+           			sLaborGbn = parentObj["getLaborGbn"](parentId,"MNU_LV_307080");
+           		}else{
+           			sLaborGbn   = cmCom.getLaborGbn(parentId, "MNU_LV_307080");
+           		}
+           		
+           		if (typeof(parentObj["getSiteDeptNm"]) == "function"){
+           			sSiteDeptNm = parentObj["getSiteDeptNm"](sLaborGbn);
+           		}else{
+           			sSiteDeptNm = cmCom.getSiteDeptNm(sLaborGbn);
+           		}
+           		
+           		if (typeof(parentObj["getLaborGbn"]) == "function"){
+           			objSiteDept = parentObj["setSiteOrDept"](sLaborGbn, wfmKeySiteInfo, wfmKeyDeptInfo, spnSiteDept);
+           		}else{
+           			objSiteDept = cmCom.setSiteOrDept(sLaborGbn, wfmKeySiteInfo, wfmKeyDeptInfo, spnSiteDept);
+           		}
+			}
+		} else {								//팝업이 아닌경우
+			sFrameId = com.getFrameId() ;
+			
+	        //원천세 여부
+			sLaborGbn   = cmCom.getLaborGbn(sFrameId, "MNU_LV_307080");
+	        sSiteDeptNm = cmCom.getSiteDeptNm(sLaborGbn);
+	        objSiteDept = cmCom.setSiteOrDept(sLaborGbn, wfmKeySiteInfo, wfmKeyDeptInfo, spnSiteDept);
+		}
+		
+      	dsSrchMap.set("laborGbn", sLaborGbn);   //원천세 구분
+
+        //초기값 설정
+        keyPrintGb.setValue( "1" ); //인쇄구분
+        keyQtr.setValue( "1" );     //분기
+
+        var nMm = eval($p.getCurrentServerDate( "MM" ));
+        if( nMm >= 1 && nMm <= 3){
+            keyQtr.setValue( "1" );     //1분기
+        }else if( nMm >= 4 && nMm <= 6){
+            keyQtr.setValue( "2" );     //2분기
+        }else if( nMm >= 7 && nMm <= 9){
+            keyQtr.setValue( "3" );     //3분기
+        }else if( nMm >= 10 && nMm <= 12){
+            keyQtr.setValue( "4" );     //4분기
+        }
+
+        com.setUdcValue("udcPayYear", "calYear", $p.getCurrentServerDate( "yyyy" ));  //귀속년도
+        //UI팀용 함수 호출
+        scwin.commonUI();
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수
+     ************************************************************************************/
+    var svcId = "";
+    var sLaborGbn = "";
+    var sSiteDeptNm = "현장";
+    var objSiteDept = null;
+    /************************************************************************************
+     *  [3] Event 함수
+     ************************************************************************************/
+
+    //조회 버튼
+    scwin.btnFind_onclick = function() {
+         scwin.fnSearch();
+    };
+
+    //인쇄 버튼
+	scwin.btnPrint_onclick = function() {
+		var sSiteCd		= dsSrchMap.get( "keySiteCd" );		//현장코드
+		var sWkrNo		= dsSrchMap.get( "wkrNo" ); 		//근로자번호
+		var sPayYear	= dsSrchMap.get( "keyPayYear" );	//귀속년도
+		var sQtr		= dsSrchMap.get( "keyQtr" );		//분기
+		var sPrintGb	= dsSrchMap.get( "keyPrintGb" );	//인쇄구분
+    	var sPayYmFr	= sPayYear + "01";					//시작 년월
+    	var sPayYmTo	= sPayYear + "03";					//종료 년월
+
+        if( sWkrNo.length == 0  ){
+            com.showMessage("CMW0069");	// 근로자가 존재하지 않습니다.
+            return ;
+        }
+
+        if( sQtr == 1){					//1/4분기(1월~3월)
+            sPayYmFr	= sPayYear + "01";
+    		sPayYmTo	= sPayYear + "03";
+        }else if( sQtr == 2){			//2/4분기(4월~6월)
+            sPayYmFr	= sPayYear + "04";
+    		sPayYmTo	= sPayYear + "06";
+        }else if( sQtr == 3){			//3/4분기(7월~9월)
+            sPayYmFr	= sPayYear + "07";
+    		sPayYmTo	= sPayYear + "09";
+        }else if( sQtr == 4){			//4/4분기(10월~12월)
+            sPayYmFr	= sPayYear + "10";
+    		sPayYmTo	= sPayYear + "12";
+        }
+    	    	
+    	var param = { SITE_CD  : sSiteCd
+                    , WKR_NO   : sWkrNo
+                    , PAY_YM_FR : sPayYmFr
+                    , PAY_YM_TO : sPayYmTo
+                    , PAY_YEAR : sPayYear
+                    , PRINT_GB : sPrintGb
+                    , QTR : sQtr
+                    };
+        
+        com.ubiReportPopup("CM40103000R.jrf", param, "CM", "");
+        
+	};
+
+	//검색 조건 주민번호
+    scwin.keyResnoEnc_onkeydown = function(e) {
+        if (e.keyCode == 13){
+            scwin.fnSearch();
+        }
+	};
+
+	//주민번호 변경 이벤트
+	scwin.keyResnoEnc_onviewchange = function(info) {
+
+		if (!com.isEmpty( keyResnoEnc.getValue() )) {
+			if ( !com.chkIcNo(keyResnoEnc.getValue()) ){
+	            com.showMessage("CFW0003", "주민등록번호", "", "", keyResnoEnc.id);  //$1 항목을 확인하십시오.
+	            keyResnoEnc.setValue("");
+	            return ;
+		    }
+	    }
+	};
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    // 결과 후처리
+    scwin.fnCallback = function(result, e) {
+    
+        switch (svcId) {
+            case "selectTcmWkrMstr" :	//조회
+
+            if (com.isEmpty( result.data.wkrNo )) {
+                com.showMessage("CMW0055");     //근로자가 존재하지 않습니다.
+
+                return ;
+            }else{
+                dsSrchMap.set("wkrNo", result.data.wkrNo);			//근로자 번호
+
+				var sSiteCd		= dsSrchMap.get( "keySiteCd" );		//현장코드
+				var sWkrNo		= result.data.wkrNo;				//근로자번호
+				var sPayYear	= dsSrchMap.get( "keyPayYear" );	//귀속년도
+				var sQtr		= dsSrchMap.get( "keyQtr" );		//분기
+				var sPrintGb	= dsSrchMap.get( "keyPrintGb" );	//인쇄구분
+		    	var sPayYmFr	= sPayYear + "01";					//시작 년월
+		    	var sPayYmTo	= sPayYear + "03";					//종료 년월
+
+		        if( sQtr == 1){					//1/4분기(1월~3월)
+		            sPayYmFr	= sPayYear + "01";
+		    		sPayYmTo	= sPayYear + "03";
+		        }else if( sQtr == 2){			//2/4분기(4월~6월)
+		            sPayYmFr	= sPayYear + "04";
+		    		sPayYmTo	= sPayYear + "06";
+		        }else if( sQtr == 3){			//3/4분기(7월~9월)
+		            sPayYmFr	= sPayYear + "07";
+		    		sPayYmTo	= sPayYear + "09";
+		        }else if( sQtr == 4){			//4/4분기(10월~12월)
+		            sPayYmFr	= sPayYear + "10";
+		    		sPayYmTo	= sPayYear + "12";
+		        }
+                
+		    	var param = { SITE_CD  : sSiteCd
+		                    , WKR_NO   : sWkrNo
+		                    , PAY_YM_FR : sPayYmFr
+		                    , PAY_YM_TO : sPayYmTo
+		                    , PAY_YEAR : sPayYear
+		                    , PRINT_GB : sPrintGb
+		                    , QTR : sQtr
+		                    };
+                
+                var jrfId = "CM40103000R.jrf";
+                var jobGbCd = "CM";
+                var data = "";
+    			for(var key in param) data += key + "#" + param[key] + "#";
+    			data += "USER_NM" + "#" + sessionStorage.getItem("userNm") + "#" // 사용자
+			    // 콜백 URL처리
+			    var sonourl = "";
+    			var url = UBI_HTML_URL; // UBI리포트 HTML페이지 변수 개발서버
+
+				url += "?";
+		    	url += "jrf="	+ jrfId;
+		    	url += "&arg="	+  encodeURIComponent(data);	// # -> %23
+		    	url += "&resid="	+ 'UBIHTML_'+jobGbCd.toUpperCase();
+		    	url += "&sonourl="	;
+		    	
+	     		ifmDywkWkrPayrpt.setSrc( url );
+	     
+            }
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        switch (svcId) {
+            case "selectTcmWkrMstr" :             //조회
+                console.log('조회오류: ' + e);
+                break;
+        }
+    };
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+    // 조회
+    scwin.fnSearch = function() {
+
+        //DS 매핑
+        if( dsSrchMap.get("laborGbn") == "TX") {
+        	dsSrchMap.set("keySiteCd"   , wfmKeyDeptInfo.getWindow().ibxKeySiteCd.getValue() );  //부서 코드
+        }else{
+	        dsSrchMap.set("keySiteCd"   , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );  //현장 코드
+        }
+        dsSrchMap.set("keyPayYear",     com.getUdcValue("udcPayYear", "calYear"));   //주민번호
+
+        if( dsSrchMap.get("keySiteCd").length == 0  ){
+            if( dsSrchMap.get("laborGbn") == "TX") {
+	            var focusId = wfmKeyDeptInfo.getWindow().ibxKeySiteNm.id;
+	            com.showMessage("CMW0025", "부서", "", "", focusId);     //$1은(는) 필수입력사항입니다.
+            }else{
+	            var focusId = wfmKeySiteInfo.getWindow().ibxKeySiteNm.id;
+	            com.showMessage("CMW0025", "현장", "", "", focusId);     //$1은(는) 필수입력사항입니다.
+            }
+            return ;
+        }
+
+        if( dsSrchMap.get("keyResnoEnc").length == 0  ){
+            com.showMessage("CMW0025", "주민등록번호", "", "", keyResnoEnc.id); //$1은(는) 필수입력사항입니다.
+
+            return ;
+        }
+
+        if( dsSrchMap.get("keyPayYear").length == 0  ){
+            var focusId = com.getUdcComp("udcPayYear", "calYear").id;
+            com.showMessage("CMW0025", "귀속년도", "", "", focusId); //$1은(는) 필수입력사항입니다.
+
+            return ;
+        }
+
+        svcId = "selectTcmWkrMstr";
+
+        ajaxLib.ajax("/cm/cm4010/CM40103000U/selectTcmWkrMstr", {
+            mode : "asynchronous",
+            method : "POST",
+            requestData : dsSrchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+
+    };
+	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcYearcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:81.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group tagname="col" style="width:94.00px;"></xf:group>
+						<xf:group tagname="col" style=""></xf:group>
+						<xf:group style="width:80.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="spnSiteDept" label="현장명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+                            <w2:wframe id="wfmKeyDeptInfo" src="/WEB-INF/ux/cm/cmcomm/schDeptInfo.xml" style="display: none;"></w2:wframe>
+						</xf:group>
+						<xf:group tagname="th" class="w2tb_th req">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="주민번호" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+														<w2:scope>row</w2:scope>
+										</w2:attributes>
+										 <xf:input allowChar="0-9-" displayFormat="######-#######" id="keyResnoEnc"  placeholder="______-_______"
+														initValue="" maxlength="14" minlength="" ref="data:dsSrchMap.keyResnoEnc" style="width:120px;" ev:onviewchange="scwin.keyResnoEnc_onviewchange">
+										</xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="인쇄구분" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+										<xf:select1 appearance="full" class="" cols="2" id="keyPrintGb" ref="data:dsSrchMap.keyPrintGb"
+														renderType="radiogroup" rows="" selectedIndex="-1" style="">
+														<xf:choices>
+																		<xf:item>
+																						<xf:label>소득자 보관용</xf:label>
+																						<xf:value><![CDATA[1]]></xf:value>
+																		</xf:item>
+																		<xf:item>
+																						<xf:label>지급자 보관용</xf:label>
+																						<xf:value><![CDATA[2]]></xf:value>
+																		</xf:item>
+														</xf:choices>
+										</xf:select1>
+						</xf:group>
+					</xf:group>
+					<xf:group tagname="tr">
+						<xf:group tagname="th" class="w2tb_th req">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="분기" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:select1 appearance="full" class="" cols="4" id="keyQtr" ref="data:dsSrchMap.keyQtr"
+														renderType="radiogroup" rows="" selectedIndex="-1" style="">
+														<xf:choices>
+																		<xf:item>
+																						<xf:label>
+																										1/4분기(1월~3월)
+																						</xf:label>
+																						<xf:value><![CDATA[1]]></xf:value>
+																		</xf:item>
+																		<xf:item>
+																						<xf:label>
+																										2/4분기(4월~6월)
+																						</xf:label>
+																						<xf:value><![CDATA[2]]></xf:value>
+																		</xf:item>
+																		<xf:item>
+																						<xf:label><![CDATA[3/4분기(7월~9월)]]></xf:label>
+																						<xf:value><![CDATA[3]]></xf:value>
+																		</xf:item>
+																		<xf:item>
+																						<xf:label><![CDATA[4/4분기(10월~12월)]]></xf:label>
+																						<xf:value><![CDATA[4]]></xf:value>
+																		</xf:item>
+														</xf:choices>
+										</xf:select1>
+						</xf:group>
+						<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+														<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span class="" id="" label="귀속년도" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes></w2:attributes>
+							<w2:udc_yearcalendar id="udcPayYear" style=""></w2:udc_yearcalendar>
+						</xf:group>
+						<xf:group tagname="" class="w2tb_th">
+										<w2:attributes>
+														<w2:scope>row</w2:scope>
+										</w2:attributes>
+
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes></w2:attributes>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+					<!-- <w2:anchor class="btn_cm" id="anchor44" outerDiv="false" style="">
+						<xf:label><![CDATA[상세조회]]></xf:label>
+						</w2:anchor> -->
+				</xf:group>
+
+			</xf:group>
+
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="일용근로자 지급조서" style="" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group class="descbox" id="" style=""></xf:group>
+					<xf:group id="" style="height:27px;">
+						<w2:anchor class="btn_gcm new" clickEventElement="" id="btnPrint" outerDiv="false" style="" ev:onclick="scwin.btnPrint_onclick">
+							<xf:label><![CDATA[인쇄]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:iframe src="" style="position: absolute;width: 98%;height: 400px;" id="ifmDywkWkrPayrpt" class="autoHeight">
+						
+			</w2:iframe>
+		</xf:group>
+	</body>
+</html>

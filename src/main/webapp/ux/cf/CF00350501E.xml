@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" id="dsAprvList" repeatNode="map" saveRemovedData="true" style="">
+					<w2:columnInfo>
+						<w2:column id="rowNum" name="페이지 글번호" dataType="text"></w2:column>
+						<w2:column dataType="text" id="aprvNo" name="결재번호"></w2:column>
+						<w2:column dataType="text" id="aprvTtl" name="제목"></w2:column>
+						<w2:column dataType="text" id="aprvStusNm" name="결재상태"></w2:column>
+						<w2:column dataType="text" id="jobGbNm" name="업무구분"></w2:column>
+						<w2:column dataType="text" id="fstRegDtm" name="신청일"></w2:column>
+						<w2:column dataType="text" id="regprEmpNm" name="신청자"></w2:column>
+						<w2:column dataType="text" id="rvwrEmpNm" name="검토자"></w2:column>
+						<w2:column dataType="text" id="fnlAprprEmpNm" name="최종결재자"></w2:column>
+						<w2:column dataType="text" id="menuNm" name="메뉴명"></w2:column>
+
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsSrch" style="">
+					<w2:keyInfo>
+						<w2:key dataType="text" id="frDate" name="시작신청일자"></w2:key>
+						<w2:key dataType="text" id="toDate" name="종료신청일자"></w2:key>
+						<w2:key dataType="text" id="aprvTtl" name="제목명"></w2:key>
+						<w2:key dataType="text" id="aprvStusCd" name="결재상태"></w2:key>
+                        <w2:key dataType="text" id="aprvNo" name="결재번호"></w2:key>
+                        <w2:key dataType="text" id="fstRegprEmpno" name="기안자"></w2:key>
+                        <w2:key dataType="text" id="pageRowStart" name="페이지 시작행번호"></w2:key>
+                        <w2:key dataType="text" id="pageRowCount" name="페이지 요청건수"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script type="javascript"><![CDATA[
+/***************************************************************************
+ * Program ID : CF00350501E.xml 
+ * Program Name : 결재현황 
+ * Author : 송준영 (tpsongjy)
+ * Date : 2019.05.10
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ * 2019.05.10   송준영   최초작성
+ *     
+ **************************************************************************/ 
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/
+	var svcId = "";        
+	
+    /************************************************************************************ 
+     *  [2] onpageload
+     ************************************************************************************/   
+    scwin.onpageload = function() { 
+        scwin.fnSearchList();            
+        //$p.getFrame().getParentFrame().getObj("scwin").aprvData;
+    };
+
+	// 화면 초기화(필수)
+	scwin.initScreen = function() {
+
+	}; 
+	
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/
+	/**************************************************************************
+	 * 함 수 명: scwin.fnSearchList
+	 * 기 능: 결재현황 정보를 리스트 조회
+	 **************************************************************************/
+    scwin.fnSearchList = function() {
+        var dsSrch = com.getAprvParam("dsSrch"); // 부모창의 데이터맵을 읽어온다.
+        var dsSrchJson = {};
+        if( dsSrch != undefined ) {
+            dsSrchJson = dsSrch.getJSON();
+        } else {
+            // 테스트용
+            dsSrchJson = {frDate:"20160101",toDate:"20190527",pageRowCount:"10",pageRowStart:0};        
+        }
+
+        svcId = "selectTcfAprvPageList";
+        ajaxLib.ajax("/cf/CF00350501U/selectTcfAprvPageList", {
+        	mode : "asynchronous"
+        	, method : "POST"
+            , requestData : dsSrchJson
+            , callback : "fnCallback"
+            , errCallback : "fnErrCallBack"
+        }); 
+    };
+
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/
+	/** 오류시 처리 **/
+    scwin.fnErrCallBack = function(e) {
+        console.log(e);
+    }
+	
+	 /** 정상시 후처리 **/
+	scwin.fnCallback = function(result, e) {
+	
+	   	switch(svcId) {
+	   		case "selectTcfAprvPageList" :	   			
+				//페이지 조회결과 표시
+				dsAprvList.setJSON(result.data.dsTcfAprvList);
+				break;
+
+			default :
+				break;
+		}
+	};
+    
+    // 미리보기, 확인 버튼 클릭했을 경우 업무페이지에서 별도로 함수를 실행
+    scwin.fnStartImportMainScript = function() {
+        console.log("TEST");
+    };
+]]></script>
+
+	</head>
+
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="">
+			<xf:group class="tbl_search" id="" style="display:none;">
+
+
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:82px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:69px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:82px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="신청일자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:udc_periodcalendar style="" id="udcCalendarSrch" class="req"></w2:udc_periodcalendar>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="제목명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxAprvTtl" style="width: 220px;" ref="data:dsSrch.aprvTtl" ev:onkeypress=""
+								ev:onkeyup="scwin.ibxAprvTtl_onkeyup"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="결재상태" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" tagname="td">
+							<w2:attributes></w2:attributes>
+							<xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="전체" class=""
+								direction="auto" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxAprvStusCd"
+								mandatory="true" ref="data:dsSrch.aprvStusCd" style="width:140px;" submenuSize="auto" textAlign="left">
+								<w2:attributes>
+									<w2:msg>조회조건 테이블 입니다.</w2:msg>
+								</w2:attributes>
+								<xf:choices></xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="결재번호" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:input id="ibxAprvNo" style="width: 122px" ref="data:dsSrch.aprvNo" ev:onkeypress=""
+								ev:onkeyup="scwin.ibxAprvNo_onkeyup"></xf:input>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기안자" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:attributes>
+								<w2:colspan>3</w2:colspan>
+								<w2:rowspan>1</w2:rowspan>
+							</w2:attributes>
+							<w2:udc_userpopup id="udcUserSrch"></w2:udc_userpopup>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnSearch" outerDiv="false" style="" ev:onclick="scwin.btnSearch_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+
+				</xf:group>
+
+			</xf:group>
+
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="결재본문" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+				<!-- <xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+					<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="" outerDiv="false" style="">
+					<xf:label><![CDATA[저장]]></xf:label>
+					</w2:anchor>
+					</xf:group>
+					</xf:group> -->
+			</xf:group>
+			<w2:gridView autoFit="allColumn" dataList="data:dsAprvList" fixedColumnWithHidden="true" id="grdAprvList"
+				scrollByColumn="false" style="" useShiftKey="true" visibleRowNum="all" rowNumVisible=""
+				rowStatusVisible="" rowStatusWidth="30" rowNumHeaderValue="No" rowStatusHeaderValue="" focusMode="row"
+				class="" readOnly="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" id="column23" inputType="text" value="NO" width="40"></w2:column>
+						<w2:column blockSelect="false" id="column21" inputType="text" value="결재번호" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="column19" inputType="text" value="제목" width="250">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" value="결재상태" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" value="업무구분" width="80">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" id="column37" value="신청일"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" id="column35" value="신청자"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" id="column41" value="검토자"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" id="column39" value="최종결재자"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" id="column43" value="메뉴명"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" id="rowNum" inputType="text" style="height:24px;" width="40">
+						</w2:column>
+						<w2:column blockSelect="false" id="aprvNo" inputType="text" style="height:24px;" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" id="aprvTtl" inputType="text" style="height:24px;" width="250"
+							textAlign="left">
+						</w2:column>
+						<w2:column blockSelect="false" id="aprvStusNm" inputType="text" style="height:24px;" width="80">
+						</w2:column>
+						<w2:column blockSelect="false" id="jobGbNm" inputType="text" style="height:24px;" width="80">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="height:24px;" id="fstRegDtm"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="regprEmpNm"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="rvwrEmpNm"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="80" inputType="text" style="height:24px;" id="fnlAprprEmpNm"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="height:24px;" id="menuNm"
+							blockSelect="false" displayMode="label" textAlign="left">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+			</w2:gridView>
+			<xf:group style="display:none" id="" class="pagination">
+				<w2:pageList displayButtonType="display" displayFormat="#" pageSize="10" pagingType="0" style=""
+					id="pctPageNavi" displaySelectedIndex="true" ev:onviewchange="scwin.pctPageNavi_onviewchange"
+					ev:oninputblur="scwin.pctPageNavi_oninputblur" userData1="selectTcfAprvPageList" userData2="scwin.pageMove">
+				</w2:pageList>
+				<xf:select1 allOption="" appearance="minimal" chooseOption="" class="page_slt" direction="auto"
+					selectedData="true" disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbx_SelectCount"
+					optionOrder="false" ref="" style="width:90px;" submenuSize="auto"
+					ev:onviewchange="scwin.sbx_SelectCount_onviewchange">
+					<xf:choices>
+						<xf:item>
+							<xf:label><![CDATA[10건씩 조회]]></xf:label>
+							<xf:value><![CDATA[10]]></xf:value>
+						</xf:item>
+						<xf:item>
+							<xf:label><![CDATA[20건씩 조회]]></xf:label>
+							<xf:value><![CDATA[20]]></xf:value>
+						</xf:item>
+						<xf:item>
+							<xf:label><![CDATA[30건씩 조회]]></xf:label>
+							<xf:value><![CDATA[30]]></xf:value>
+						</xf:item>
+						<xf:item>
+							<xf:label><![CDATA[40건씩 조회]]></xf:label>
+							<xf:value><![CDATA[40]]></xf:value>
+						</xf:item>
+						<xf:item>
+							<xf:label><![CDATA[50건씩 조회]]></xf:label>
+							<xf:value><![CDATA[50]]></xf:value>
+						</xf:item>
+					</xf:choices>
+				</xf:select1>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

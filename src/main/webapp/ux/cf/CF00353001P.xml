@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsZipMap">
+					<w2:keyInfo>
+						<w2:key id="keyword" name="검색어" dataType="text"></w2:key>
+                        <w2:key id="currentPage" name="페이지시작행번호" dataType="text"></w2:key>
+                        <w2:key id="countPerPage" name="페이지요청건수" dataType="text"></w2:key>
+					</w2:keyInfo>					
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsZipList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="zipNo" name="우편번호" dataType="text"></w2:column>
+						<w2:column id="jibunAddr" name="지번주소" dataType="text"></w2:column>
+						<w2:column id="roadAddr" name="도로명주소" dataType="text"></w2:column>
+					</w2:columnInfo>
+				    <w2:data use="false"></w2:data>
+                </w2:dataList>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script type="javascript" lazy="false"><![CDATA[
+	/***************************************************************************
+	 * Program ID : CF00353001P.xml 
+	 * Program Name : 주소검색 팝업(API)
+	 * Author : 김환섭 (tpkhs1)
+	 * Date : 2019.04.29
+	 * 
+	 * History 
+	 * ======================================== 
+	 * 변경일자     수정자   내 용 
+	 * ======================================== 
+	 * 2019.04.29   김환섭	최초작성
+     * 2019.06.12   jysong  수정
+	 *     
+	 **************************************************************************/
+    
+	/************************************************************************************ 
+	 *  [1] onpageload
+	 ************************************************************************************/
+	scwin.onpageload = function() {
+
+		scwin.fnInitial();
+
+        // 페이지리스트 초기화
+        com.pageListObj.init();
+	};
+
+	/** 화면초기화 **/
+	scwin.fnInitial = function() {
+		grpSearch.init();      // 조회그룹 초기화
+		grdZipList.initGrid(); // 주소목록 초기화
+        com.setUdcValue("dsListCount", "udcListCount", "0");
+	};
+
+	/************************************************************************************ 
+	 *  [2] 전역변수  
+	 ************************************************************************************/
+    scwin.svcId = "";
+    var ingStatus = "";
+    var zipAddr = "";
+
+	/************************************************************************************ 
+	 *  [3] Callback 함수  
+	 ************************************************************************************/
+	/** 오류시 처리 **/
+	scwin.fnErrCallback = function(result, e) {
+		alert("fnErrCallback result:" + result);
+		console.log(e);
+	};
+
+	/** 정상시 후처리 **/
+	scwin.fnCallback = function(result, e) {
+
+		switch (scwin.svcId) {
+			case "selectZipList" :
+
+                if( result.data.errorCode != "0" ) {
+                    com.showMessage("CFE0727", result.data.errorCode, result.data.errorMessage);
+                    return;
+                }
+
+                //전체 조회건수
+                var pageTotalCount = result.data.totalCount;
+
+                //페이지 네비게이션 값 설정
+                var pageNaviCount = Math.ceil(pageTotalCount / 10);
+
+                //전체 조회 건수
+                com.setUdcValue("dsListCount", "udcListCount", pageTotalCount);
+
+                //페이지 조회목록
+                dsZipList.setJSON(result.data.dsZipList);
+
+                //페이지 네비게이션
+                var paramObj = {
+                       max:pageNaviCount // 페이지의 총 Count를 입력
+                     , svcId:scwin.svcId       // 해당서비스 id 고정
+                };
+                com.pageListObj.max(paramObj);
+			default :
+				break;
+		}
+	};
+
+	/************************************************************************************ 
+	 *  [4] Event 함수  -->
+	 ************************************************************************************/
+	/** 조회버튼 **/
+	scwin.btnFind_onclick = function() {
+
+        if( ibxKeyword.getValue() == "" ) {
+            com.showMessage("CFW0009","주소", "", "", ibxKeyword.id);
+            return;
+        }
+
+		if (scwin.fnCheckWord(ibxKeyword.getValue())) {			
+			scwin.fnSelectZipList();
+		}
+	};
+
+    /**************************************************************************
+     * 함 수 명: scwin.pageMove
+     * 기 능: 조회 시작값, 가져올 행수 지정후 리스트 조회
+     **************************************************************************/
+    scwin.pageMove = function(current){
+        dsZipMap.set( "currentPage" , current+"" );
+        dsZipMap.set( "countPerPage" , "10" );
+        scwin.btnFind_onclick();
+    };
+
+	/************************************************************************************
+	 *  [5] 사용자 정의함수 함수 
+	 ************************************************************************************/
+	scwin.fnSelectZipList = function() {
+		scwin.svcId = "selectZipList";
+        
+        if( dsZipMap.get("currentPage") == "" )  dsZipMap.set("currentPage","1");
+        if( dsZipMap.get("countPerPage") == "" ) dsZipMap.set("countPerPage","10");
+        
+		ajaxLib.ajax("/cf/CFCommon/selectZipList", {
+			mode : "asynchronous",
+			method : "POST",
+			requestData : dsZipMap.getJSON(),
+			callback : "fnCallback",
+			errCallback : "fnErrCallback"
+		});
+
+	};
+
+	// 확인 버튼 클릭
+	scwin.btnConfirm_onclick = function() {
+        //결과값 확인 후 팝업창 닫기
+        var addObj = {
+            zipNo: tbxZipNo.getValue(),
+            addrBasic: tbxAddrBasic.getValue(),
+            addrDetail: ibxAddrDetail.getValue()
+        };
+
+        com.popup_close(addObj);
+	};
+
+    // 취소 버튼 클릭
+	scwin.btnCancelOnClick = function() {
+		com.popup_close("");
+	};
+
+	// 그리드 클릭
+	scwin.grdZipList_oncellclick = function(row, col) {
+		scwin.fnSelectData();
+	};
+
+	// 데이터 선택 후 처리
+	scwin.fnSelectData = function() {
+		var pRowIndex   = grdZipList.getFocusedRowIndex();
+		var pZipNo 	    = JSON.stringify(dsZipList.getRowJSON(pRowIndex).zipNo).replaceAll("\"","");
+		var pAddrBasic  = JSON.stringify(dsZipList.getRowJSON(pRowIndex).roadAddr).replaceAll("\"","");
+		var pAddrJibun  = JSON.stringify(dsZipList.getRowJSON(pRowIndex).jibunAddr).replaceAll("\"","");
+        var pAddrDetail = ibxAddrDetail.getValue().replaceAll("\"","");
+
+        tbxZipNo.setValue(pZipNo);
+		tbxAddrBasic.setValue(pAddrBasic);
+		tbxAddrJibun.setValue(pAddrJibun);
+        ibxAddrDetail.setValue(pAddrDetail);
+
+        console.log("tbxZipNo ==> " + tbxZipNo.getValue());
+        console.log("tbxAddrBasic ==> " + tbxAddrBasic.getValue());
+        console.log("tbxAddrJibun ==> " + tbxAddrJibun.getValue());
+        console.log("ibxAddrDetail ==> " + ibxAddrDetail.getValue());
+	};
+
+	/**************************************************************************
+	 * Event: scwin.ibxKeyAddrNm_onkeyup
+	 * 기 능: 검색어 입력후 Enter시 처리
+	 **************************************************************************/
+	scwin.ibxKeyword_onkeyup = function(e) {
+		if (e.keyCode == '13') {
+			scwin.btnFind_onclick();
+		}
+	};
+
+	/**************************************************************************
+	 * Event: scwin.checkSearchedWord
+	 * 기 능: 특수문자, 특정문자열(sql예약어의 앞뒤공백포함) 제거
+	 **************************************************************************/	
+	scwin.fnCheckWord = function(obj) {
+
+		if (obj.length > 0) {
+        
+			//특수문자 제거
+			var expText = /[%=><]/;
+			if (expText.test(obj.value) == true) {
+				alert("특수문자를 입력 할수 없습니다.");
+				obj.value = obj.value.split(expText).join("");
+				return false;
+			}
+
+			//특정문자열(sql예약어의 앞뒤공백포함) 제거
+			var sqlArray = new Array(
+			//sql 예약어
+			"OR", "SELECT", "INSERT", "DELETE", "UPDATE", "CREATE", "DROP",
+					"EXEC", "UNION", "FETCH", "DECLARE", "TRUNCATE");
+
+			var regex;
+			var regex_plus;
+			for (var i = 0; i < sqlArray.length; i++) {
+				regex = new RegExp("\\s" + sqlArray[i] + "\\s", "gi");
+				if (regex.test(obj.value)) {
+					alert("\"" + sqlArray[i] + "\"와(과) 같은 특정문자로 검색할 수 없습니다.");
+					obj.value = obj.value.replace(regex, "");
+					return false;
+				}
+
+				regex_plus = new RegExp("\\+" + sqlArray[i] + "\\+", "gi");
+				if (regex_plus.test(obj.value)) {
+					alert("\"" + sqlArray[i] + "\"와(과) 같은 특정문자로 검색할 수 없습니다.");
+					obj.value = obj.value.replace(regex_plus, "");
+					return false;
+				}
+			}
+		}
+		return true;
+	};
+]]></script>
+
+	<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+
+	</head>	
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+			<xf:group class="content_body popup" id="" style="">
+					<xf:group class="grp_search_wrap" id="" style="">
+							<xf:group class="grp_search" id="grpSearch" style="">
+									<xf:input class="ipt_srch" ev:onkeyup="scwin.ibxKeyword_onkeyup" id="ibxKeyword" placeholder="도로명주소, 건물명 또는 지번입력" ref="data:dsZipMap.keyword" style="width: 410px;"></xf:input>
+									<w2:anchor class="btn_grp_search" ev:onclick="scwin.btnFind_onclick" id="btnFind" outerDiv="false" style="">
+											<xf:label><![CDATA[조회]]></xf:label>
+									</w2:anchor>
+									<w2:textbox class="grp_txt" id="" label="검색어 : 도로명(반포대로 58), 건물명(독립기념관), 지번(삼성동 25)" style="" tagname=""></w2:textbox>
+							</xf:group>
+					</xf:group>
+					<xf:group class="" id="" style=""></xf:group>
+					<xf:group class="defaultbox" id="" style="">
+							<w2:textbox class="df_tt" id="" label="도로명주소 검색 결과" style="" tagname="h3"></w2:textbox>
+							<w2:udc_list_count id="dsListCount"></w2:udc_list_count>
+					</xf:group>
+					<w2:gridView autoFit="allColumn" class="search_grid" dataList="data:dsZipList" ev:oncellclick="scwin.grdZipList_oncellclick" fixedColumnWithHidden="true" focusMode="row" hideHeader="true" id="grdZipList" readOnly="true" rowNumHeaderValue="No" rowStatusWidth="30" scrollByColumn="false" style="height:344px;" useShiftKey="true">
+							<w2:header id="header1" style="">
+									<w2:row id="row2" style="">
+											<w2:column blockSelect="false" id="column21" inputType="text" value="주소" width="400"></w2:column>
+											<w2:column blockSelect="false" id="column17" inputType="text" value="우편번호" width="100"></w2:column>
+									</w2:row>
+							</w2:header>
+							<w2:gBody id="gBody4" style="">
+									<w2:row id="row5" style="">
+											<w2:column blockSelect="false" class="doro" id="roadAddr" inputType="text" style="" textAlign="left" width="400"></w2:column>
+											<w2:column blockSelect="false" colSpan="" id="zipNo" inputType="text" rowSpan="2" style="border-left:0;" width="100"></w2:column>
+									</w2:row>
+									<w2:row>
+											<w2:column blockSelect="false" class="jibun" id="jibunAddr" inputType="text" style="" textAlign="left"></w2:column>
+									</w2:row>
+							</w2:gBody>
+					</w2:gridView>
+					<xf:group class="pagination" id="" style="">
+							<w2:pageList displayButtonType="display" displayFormat="#" displaySelectedIndex="true" ev:oninputblur="scwin.pageNavi_oninputblur" ev:onviewchange="scwin.pageNavi_onviewchange" id="pageNavi" pageSize="10" pagingType="0" style="" userData1="selectZipList" userData2="scwin.pageMove"></w2:pageList>
+					</xf:group>
+					<xf:group class="defaultbox" id="" style="">
+							<w2:textbox class="df_tt" id="" label="상세주소 입력" style="" tagname="h3"></w2:textbox>
+					</xf:group>
+					<xf:group class="search_list" id="" style="" tagname="table">
+							<w2:attributes>
+									<w2:summary>상세주소 검색박스 입니다.</w2:summary>
+							</w2:attributes>
+							<xf:group tagname="colgroup">
+									<xf:group style="width:100px;" tagname="col"></xf:group>
+									<xf:group style="width:400px;" tagname="col"></xf:group>
+							</xf:group>
+							<xf:group style="" tagname="tr">
+									<xf:group class="w2tb_th" style="" tagname="th">
+											<w2:attributes>
+													<w2:scope>row</w2:scope>
+											</w2:attributes>
+											<w2:span class="" id="" label="우편번호" style=""></w2:span>
+									</xf:group>
+									<xf:group class="w2tb_td" style="" tagname="td">
+											<w2:textbox class="df_tt" id="tbxZipNo" label="" style="" tagname="h3"></w2:textbox>
+									</xf:group>
+							</xf:group>
+							<xf:group style="" tagname="tr">
+									<xf:group class="w2tb_th" style="" tagname="th">
+											<w2:attributes>
+													<w2:rowspan>1</w2:rowspan>
+											<w2:colspan>1</w2:colspan></w2:attributes>
+											<w2:span class="" id="" label="도로명주소" style=""></w2:span>
+									</xf:group>
+									<xf:group class="w2tb_td" style="" tagname="td">
+											<w2:textbox class="" id="tbxAddrBasic" label="" style="" tagname=""></w2:textbox><w2:textbox class="mt10" id="tbxAddrJibun" label="" style="" tagname=""></w2:textbox>
+									</xf:group>
+							</xf:group>
+							<xf:group style="" tagname="tr">
+									<xf:group class="w2tb_th" style="" tagname="th">
+											<w2:attributes>
+													<w2:scope>row</w2:scope>
+											</w2:attributes>
+											<w2:span class="" id="" label="상세주소입력" style=""></w2:span>
+									</xf:group>
+									<xf:group class="w2tb_td" style="" tagname="td">
+											<xf:input id="ibxAddrDetail" style="width:100%;"></xf:input>
+									</xf:group>
+							</xf:group>
+					</xf:group>
+					<xf:group class="bottombox" id="" style="">
+							<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnConfirm_onclick" id="btnConfirm" outerDiv="false">
+									<xf:label><![CDATA[확인]]></xf:label>
+							</w2:anchor>
+							<w2:anchor class="btn_gcm" clickEventElement="outerDiv" ev:onclick="scwin.btnCancelOnClick" id="btnCancel" outerDiv="false">
+									<xf:label><![CDATA[취소]]></xf:label>
+							</w2:anchor>
+					</xf:group>
+			</xf:group>
+	</body>
+</html>

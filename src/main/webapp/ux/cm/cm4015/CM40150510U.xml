@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+							<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcmErndIncmMdtAdjList"
+											saveRemovedData="true">
+											<w2:columnInfo>
+															<w2:column id="chk" name="선택" dataType="text"></w2:column>
+															<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+															<w2:column id="wkrNo" name="근로자번호" dataType="text"></w2:column>
+															<w2:column id="erndSeq" name="근로_순번" dataType="text"></w2:column>
+															<w2:column id="wkrNm" name="근로자_명" dataType="text"></w2:column>
+															<w2:column id="resnoEnc" name="주민등록번호_암호화"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="rvtStrtYm" name="지급_연월/귀속_시작_연월귀속연월FORM"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="rvtEndYm" name="지급_연월/귀속_종료_연월귀속연월TO"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="rsdnNrsdYn" name="거주_비거주_여부"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="ntvFrgnYn" name="내국인_외국인_여부"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="adjYn" name="정산_여부" dataType="text"></w2:column>
+															<w2:column id="slipYn" name="전표발행여부" dataType="text"></w2:column>
+															<w2:column id="aprvCharN2Val" name="결재_문자_2_값"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="aprvMappId" name="결재매핑ID" dataType="text"></w2:column>
+															<w2:column id="aprvPgmId" name="결재프로그램ID" dataType="text"></w2:column>
+															<w2:column id="aprvNo" name="결재번호" dataType="text"></w2:column>
+															<w2:column id="aproId" name="승인ID" dataType="text"></w2:column>
+															<w2:column id="apprEmpno" name="승인자" dataType="text"></w2:column>
+															<w2:column id="intAprvStusCd" name="내부결재상태코드[CF041]"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="totSalAmt" name="총_급여_금액" dataType="text"></w2:column>
+															<w2:column id="natnpPnsnAmt" name="국민연금정산금액"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="eplmtInfeeAmt" name="고용보험료금액"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="hlthInfeeAmt" name="건강보험정산금액"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="ictxAmt" name="소득세금액" dataType="text"></w2:column>
+															<w2:column id="rstxAmt" name="주민세금액" dataType="text"></w2:column>
+															<w2:column id="zipCd" name="우편번호" dataType="text"></w2:column>
+															<w2:column id="baseAddr" name="기본_주소" dataType="text"></w2:column>
+															<w2:column id="dtlAddr" name="상세_주소_암호화"
+																			dataType="text">
+															</w2:column>
+															<w2:column id="payYear" name="정산연도" dataType="text"></w2:column>
+															<w2:column id="entDt" name="입사일자" dataType="text"></w2:column>
+															<w2:column id="rtirDt" name="퇴사일자" dataType="text"></w2:column>
+															<w2:column id="hrIfYn" name="인사_인터페이스_여부" dataType="text"></w2:column>
+															<w2:column id="adjStus" name="전표발행" dataType="text"></w2:column>
+											</w2:columnInfo>
+											<w2:data use="false"></w2:data>
+							</w2:dataList>
+							<w2:dataMap baseNode="map" id="dsSrchMap" style="">
+											<w2:keyInfo>
+															<w2:key dataType="text" id="keySiteCd" name="현장코드"></w2:key>
+															<w2:key id="keyResnoEnc" name="주민등록번호" dataType="text"></w2:key>
+															<w2:key id="keyRsdnNrsdYn" name="거주_비거주_여부"
+																			dataType="text">
+															</w2:key>
+															<w2:key id="keyNtvFrgnYn" name="내국인_외국인_여부"
+																			dataType="text">
+															</w2:key>
+															<w2:key dataType="text" id="keyPvtYear" name="귀속년도">
+															</w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+							<w2:dataMap baseNode="map" id="dsTcmSiteStaf" style="">
+											<w2:keyInfo>
+															<w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+															<w2:key dataType="text" id="stafEmpno" name="직원_사번"></w2:key>
+															<w2:key dataType="text" id="userNm" name="성명"></w2:key>
+															<w2:key dataType="text" id="siteDtyGbCd"
+																			name="현장직무구분코드[CM100001]">
+															</w2:key>
+															<w2:key dataType="text" id="siteStafGbCd"
+																			name="현장직원구분코드[CM100004]">
+															</w2:key>
+															<w2:key dataType="text" id="apntDt" name="발령_일자"></w2:key>
+															<w2:key dataType="text" id="dtyEndDt" name="직무_종료_일자"></w2:key>
+															<w2:key dataType="text" id="wthdPrDt" name="철수_예정_일자"></w2:key>
+															<w2:key dataType="text" id="wthdDt" name="철수_일자"></w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+							<w2:dataMap baseNode="map" id="dsTcmAprv" style="">
+											<w2:keyInfo>
+															<w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+															<w2:key dataType="text" id="aprvMappId" name="결재매핑ID"></w2:key>
+															<w2:key dataType="text" id="aprvPgmId" name="결재프로그램ID"></w2:key>
+															<w2:key dataType="text" id="aprvNo" name="결재번호"></w2:key>
+															<w2:key dataType="text" id="aproId" name="승인ID"></w2:key>
+															<w2:key dataType="text" id="aprvCharN1Val"
+																			name="결재_문자_1_값">
+															</w2:key>
+															<w2:key dataType="text" id="aprvCharN2Val"
+																			name="결재_문자_2_값">
+															</w2:key>
+															<w2:key dataType="text" id="aprvCharN3Val"
+																			name="결재_문자_3_값">
+															</w2:key>
+															<w2:key dataType="text" id="pcostTypeVal" name="원가_유형_값"></w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+							<w2:dataMap baseNode="map" id="dsSelMap" style="">
+											<w2:keyInfo>
+															<w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+															<w2:key dataType="text" id="aprvMappId" name="[결재]결재매핑ID"></w2:key>
+															<w2:key dataType="text" id="aproId" name="[결재]결재번호"></w2:key>
+															<w2:key dataType="number" id="row" name="진행하는 행번호"></w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/><script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM40150510U.xml
+ * Program Name : 근로소득 중도정산관리(연계)(삭제)
+ * Author : tpyhyoj (tpyhyoj)
+ * Date : 2019.08.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *				tpyhyoj	화면 삭제
+ **************************************************************************/
+ 
+    /************************************************************************************
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+
+        scwin.fnInitial();
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+
+		var sFrameId = "";
+		if ( gcm.tab_main == undefined  ) {		//팝업인경우 
+			var winPopParam = JSON.parse(sessionStorage.winpopParam);
+			var parentId    = winPopParam.dataObj.data.pframeId;
+			
+			if(parentId != undefined && parentId != "") {
+           		var parentObj = opener.frames[parentId].getWindow().com;
+           		
+		        //원천세 여부
+           		//cmn_CM.js 에 있는 함수 호출 
+           		if (typeof(parentObj["getLaborGbn"]) == "function"){
+           			sLaborGbn = parentObj["getLaborGbn"](parentId,"MNU_LV_307120");
+           		}else{
+           			sLaborGbn   = cmCom.getLaborGbn(parentId, "MNU_LV_307120");
+           		}
+           		
+           		if (typeof(parentObj["getSiteDeptNm"]) == "function"){
+           			sSiteDeptNm = parentObj["getSiteDeptNm"](sLaborGbn);
+           		}else{
+           			sSiteDeptNm = cmCom.getSiteDeptNm(sLaborGbn);
+           		}
+           		
+           		if (typeof(parentObj["getLaborGbn"]) == "function"){
+           			objSiteDept = parentObj["setSiteOrDept"](sLaborGbn, wfmKeySiteInfo, wfmKeyDeptInfo, spnSiteDept);
+           		}else{
+           			objSiteDept = cmCom.setSiteOrDept(sLaborGbn, wfmKeySiteInfo, wfmKeyDeptInfo, spnSiteDept);
+           		}
+			}
+		} else {								//팝업이 아닌경우
+			sFrameId = com.getFrameId() ;
+			
+	        //원천세 여부
+			sLaborGbn   = cmCom.getLaborGbn(sFrameId, "MNU_LV_307120");
+	        sSiteDeptNm = cmCom.getSiteDeptNm(sLaborGbn);
+	        objSiteDept = cmCom.setSiteOrDept(sLaborGbn, wfmKeySiteInfo, wfmKeyDeptInfo, spnSiteDept);
+		}
+		
+
+        dsSrchMap.set( "keySiteCd"   , $w.getParameter("keySiteCd")  );            //현장코드
+
+
+        if ( !com.isEmpty($w.getParameter("keyRsdnNrsdYn"))  ) {
+            dsSrchMap.set( "keyRsdnNrsdYn"   , $w.getParameter("keyRsdnNrsdYn")  );     //거주_비거주_여부
+        }else{
+            dsSrchMap.set("keyRsdnNrsdYn",  "Y");                                       //거주_비거주_여부
+        }
+
+        if ( !com.isEmpty($w.getParameter("keyNtvFrgnYn"))  ) {
+            dsSrchMap.set( "keyNtvFrgnYn"   , $w.getParameter("keyNtvFrgnYn")  );       //내국인_외국인_여부
+        }else{
+            dsSrchMap.set("keyNtvFrgnYn",   "Y");                                       //내국인_외국인_여부
+        }
+
+        if ( !com.isEmpty($w.getParameter("keyPvtYear"))  ) {
+            dsSrchMap.set( "keyPvtYear"   , $w.getParameter("keyPvtYear")  );           //귀속년도
+        }else{
+            dsSrchMap.set("keyPvtYear",     $p.getCurrentServerDate( "yyyy" ));         //귀속연도
+        }
+
+        scwin.fnBtnDisabled(-1);
+        //UI팀용 함수 호출
+        scwin.commonUI();
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수
+     ************************************************************************************/
+    var svcId = "";
+    var sLaborGbn = "";
+    var sSiteDeptNm = "현장";
+    var objSiteDept = null;
+
+    /************************************************************************************
+     *  [3] Event 함수
+     ************************************************************************************/
+
+    // 검색 버튼
+    scwin.btnFind_onclick = function() {
+        scwin.fnSearchList();
+    };
+
+    //정산 버튼
+    scwin.btnAdj_onclick = function() {
+        scwin.fnAdjustment();
+    };
+
+    //정산취소 버튼
+    scwin.btnNadj_onclick = function() {
+        scwin.fnAdjustmentRetire();
+    };
+
+    //인사연동 버튼
+    scwin.btnHrCnnt_onclick = function() {
+        scwin.fnHrCnnt();
+    };
+
+   	//검색 조건 주민번호
+    scwin.keyResnoEnc_onkeydown = function(e) {
+        if (e.keyCode == 13){
+            scwin.fnSearchList();
+        }
+	};
+
+    //검색 조건 주민번호 변경 이벤트
+	scwin.keyResnoEnc_onviewchange = function(info) {
+
+		if (!com.isEmpty( keyResnoEnc.getValue() )) {
+			if ( !com.chkIcNo(keyResnoEnc.getValue()) ){
+	            com.showMessage("CFW0003", "주민등록번호", "", "", keyResnoEnc.id);  //$1 항목을 확인하십시오.
+	            keyResnoEnc.setValue("");
+	            return ;
+		    }
+	    }
+	};
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    // 결과 후처리
+    scwin.fnCallback = function(result, e) {
+        switch (svcId) {
+            case "selectTcmErndIncmMdtAdjList" :
+                dsTcmErndIncmMdtAdjList.setJSON(result.data.tcmErndIncmMdtAdjList);     //그리드 검색 결과
+
+                //화면 제어
+                for( var nRow = 0 ; nRow < dsTcmErndIncmMdtAdjList.getRowCount() ; nRow++){
+                   var sHrIfYn = dsTcmErndIncmMdtAdjList.getCellData( nRow , "hrIfYn" );   //상태
+                   var sSlipYn = dsTcmErndIncmMdtAdjList.getCellData( nRow , "slipYn" );   //상태
+
+                    if( sHrIfYn == "Y" || sSlipYn == "Y" ){       //그리드 미정산이 아닌경우
+                        dsTcmErndIncmMdtAdjList.setCellReadOnly( nRow , 'chk' , true );             //선택 수정불가
+                    } else {
+                        dsTcmErndIncmMdtAdjList.setCellReadOnly( nRow , 'chk' , false );            //선택 수정가능
+                    }
+                }
+
+                break;
+            case "saveYtaitEmpUploadCalc" :
+                alert('정산되었습니다.');
+                scwin.fnSearchList();
+                break;
+            case "saveYtaitEmpUploadCalcRetire" :
+                alert('정산취소되었습니다.');
+                scwin.fnSearchList();
+                break;
+            case "saveTcmErndIncmMdtAdjHrCnnt" :
+                alert('인사연동 적용이 완료 되었습니다.');
+                scwin.fnSearchList();
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        switch (svcId) {
+            case "selectTcmErndIncmMdtAdjList" :
+                console.log('조회오류: ' + e);
+                break;
+            case "saveYtaitEmpUploadCalc" :
+                console.log('정산오류: ' + e);
+                break;
+            case "saveYtaitEmpUploadCalcRetire" :
+                console.log('정산취소오류: ' + e);
+                break;
+            case "saveTcmErndIncmMdtAdjHrCnnt" :
+                console.log('인사연동오류: ' + e);
+                break;
+        }
+    }
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+
+    // 조회 List
+    scwin.fnSearchList = function() {
+
+        //DS 매핑
+		if( dsSrchMap.get("laborGbn") == "TX") {
+        	dsSrchMap.set("keySiteCd"   , wfmKeyDeptInfo.getWindow().ibxKeySiteCd.getValue() );  //부서 코드
+        }else{
+	        dsSrchMap.set("keySiteCd"   , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );  //현장 코드
+        }
+
+        if( dsSrchMap.get("keySiteCd").length == 0  ){
+            alert("현장코드 항목을 확인하십시오.");
+            objSiteDept.getWindow().ibxKeySiteNm.focus();
+            return ;
+        }
+
+        if( dsSrchMap.get("keyPvtYear").length == 0  ){
+//            com.showMessage("CFW0003", "출연기간");
+            alert("출연기간 항목을 확인하십시오.");
+            return ;
+        }
+
+        svcId = "selectTcmErndIncmMdtAdjList";
+
+        ajaxLib.ajax("/cm/cm4015/CM40150500U/selectTcmErndIncmMdtAdjList", {
+            mode : "synchronous",
+            method : "POST",
+            requestData : dsSrchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+
+    };
+
+	// 정산
+    scwin.fnAdjustment = function() {
+
+       svcId = "saveYtaitEmpUploadCalc";
+
+       var nChkCnt = 0;
+       for( var nRow = 0 ; nRow < dsTcmErndIncmMdtAdjList.getRowCount() ; nRow++){
+            var sHrIfYn = dsTcmErndIncmMdtAdjList.getCellData( nRow , "hrIfYn" );   //상태
+            var sChk    = dsTcmErndIncmMdtAdjList.getCellData( nRow , "chk" );       //체크박스
+
+            if( sChk == "Y" ){             //그리드 선택항목 선택된 경우
+               if( sHrIfYn == "Y"){       //그리드 정산상태 미정산인 경우
+                   alert('미정산 항목만 선택해주세요.');
+                   dsTcmErndIncmMdtAdjList.setFocusedCell( nRow , "chk", true );
+                   return ;
+               }
+               nChkCnt++;
+            }
+        }
+
+        if( nChkCnt == 0 ){
+//            com.showMessage("CFW0003", "기준연도");
+            alert("선택된 항목이 존재하지 않습니다.");
+           return ;
+        }
+
+        if (confirm("정산 하시겠습니까?")) {
+
+            ajaxLib.ajax("/cm/cm4015/CM40150000U/saveYtaitEmpUploadCalc", {
+                mode : "asynchronous",
+                method : "POST",
+                requestData : {
+                                param : dsSrchMap.getJSON()
+                             , tcmErndIncmMdtAdjList : dsTcmErndIncmMdtAdjList.getModifiedJSON()
+                              },
+                callback : "fnCallback",
+                errCallback : "fnErrCallBack"
+            });
+        }
+    };
+
+    // 정산 취소
+    scwin.fnAdjustmentRetire = function() {
+
+        svcId = "saveYtaitEmpUploadCalcRetire";
+
+        if( dsTcmErndIncmMdtAdjList.getModifiedJSON().length == 0 ){
+//            com.showMessage("CFW0003", "기준연도");
+//            alert("수정된 내용이 존재하지 않습니다.");
+            com.showMessage("CMW0024"); //저장(변경)할 내용이 없습니다.
+            return ;
+        }
+
+       var nChkCnt = 0;
+       for( var nRow = 0 ; nRow < dsTcmErndIncmMdtAdjList.getRowCount() ; nRow++){
+            var sHrIfYn = dsTcmErndIncmMdtAdjList.getCellData( nRow , "hrIfYn" );   //상태
+            var sChk     = dsTcmErndIncmMdtAdjList.getCellData( nRow , "chk" );       //체크박스
+
+            if( sChk == "Y" ){             //그리드 선택항목 선택된 경우
+               if( sHrIfYn != "Y"){       //그리드 정산상태 정산인 경우
+                   alert('정산취소 항목만 선택해주세요.');
+                   dsTcmErndIncmMdtAdjList.setFocusedCell( nRow , "chk", true );
+                   return ;
+               }
+               nChkCnt++;
+            }
+        }
+
+        if( nChkCnt == 0 ){
+            com.showMessage("CFW0003", "기준연도");
+            alert("선택된 항목이 존재하지 않습니다.");
+           return ;
+        }
+
+        if (confirm("저장 하시겠습니까?")) {
+
+            ajaxLib.ajax("/cm/cm4015/CM40150000U/saveYtaitEmpUploadCalcRetire", {
+                mode : "asynchronous",
+                method : "POST",
+                requestData : { param : dsSrchMap.getJSON()
+                              , tcmErndIncmMdtAdjList : dsTcmErndIncmMdtAdjList.getModifiedJSON()
+                              },
+                callback : "fnCallback",
+                errCallback : "fnErrCallBack"
+            });
+        }
+    };
+
+	// 정산 취소
+    scwin.fnHrCnnt = function() {
+
+//DS 매핑
+        dsSrchMap.set("keySiteCd"   , objSiteDept.getWindow().ibxKeySiteCd.getValue() );  //현장 코드
+//        dsSrchMap.set("keyResnoEnc",     com.getUdcValue("udcResno", "icNumber"));   //주민등록번호
+
+        if( dsSrchMap.get("keySiteCd").length == 0  ){
+//            com.showMessage("CFW0003", "현장코드");
+            alert("현장코드 항목을 확인하십시오.");
+            objSiteDept.getWindow().ibxKeySiteNm.focus();
+            return ;
+        }
+
+        if( dsSrchMap.get("keyPvtYear").length == 0  ){
+//            com.showMessage("CFW0003", "출연기간");
+            alert("출연기간 항목을 확인하십시오.");
+            return ;
+        }
+
+        svcId = "saveTcmErndIncmMdtAdjHrCnnt";
+
+        if (confirm("저장 하시겠습니까?")) {
+
+            ajaxLib.ajax("/cm/cm4015/CM40150000U/saveTcmErndIncmMdtAdjHrCnnt", {
+                mode : "asynchronous",
+                method : "POST",
+                requestData : dsSrchMap.getJSON(),
+                callback : "fnCallback",
+                errCallback : "fnErrCallBack"
+            });
+        }
+    };
+]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcSearchCode.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcICnumber.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcYearcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<!-- <xf:group class="navigator" id="" style="">
+					<w2:textbox class="tit" id="screenTitle" label="근로소득 중도정산관리" style="" tagname="h2" userData1=""></w2:textbox>
+				</xf:group> -->
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;
+
+" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:96px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="spnSiteDept" label="현장명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+                            <w2:wframe id="wfmKeyDeptInfo" src="/WEB-INF/ux/cm/cmcomm/schDeptInfo.xml" style="display: none;"></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="주민번호" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+<!--							<w2:udc_icnumber id="" style=""></w2:udc_icnumber>-->
+                            <!-- <xf:input class="" id="keyResnoEnc" style="width:150px;" displayFormat="######-#######" allowChar="0-9" maxlength="13" ref="data:dsSrchMap.keyResnoEnc">
+                                <w2:attributes>
+                                    <w2:value></w2:value>
+                                </w2:attributes>
+                            </xf:input> -->
+<!--                            <w2:udc_icnumber id="udcResno" style=""></w2:udc_icnumber>-->
+                            <xf:input allowChar="0-9-" displayFormat="######-#######" id="keyResnoEnc"  placeholder="______-_______"
+											initValue="" maxlength="14" minlength="" ref="data:dsSrchMap.keyResnoEnc" style="width:120px;" ev:onviewchange="scwin.keyResnoEnc_onviewchange" ev:onkeydown="scwin.keyResnoEnc_onkeydown">
+							</xf:input>
+						</xf:group>
+						<xf:group tagname="th" class="w2tb_th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="귀속구분" style=""></w2:span>
+						</xf:group>
+						<xf:group tagname="td" class="w2tb_td">
+							<w2:attributes></w2:attributes>
+							<xf:select1 appearance="full" cols="" id="" rows="1" selectedIndex="0" style="" ref="data:dsSrchMap.keyRsdnNrsdYn"
+											renderType="radiogroup">
+											<xf:choices>
+															<xf:item>
+																			<xf:label><![CDATA[거주자]]></xf:label>
+																			<xf:value><![CDATA[Y]]></xf:value>
+															</xf:item>
+															<xf:item>
+																			<xf:label><![CDATA[비거주자]]></xf:label>
+																			<xf:value><![CDATA[N]]></xf:value>
+															</xf:item>
+											</xf:choices>
+							</xf:select1>
+						</xf:group>
+
+
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" tagname="th" style="">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="내/외국인" style=""></w2:span>
+						</xf:group><xf:group class="w2tb_td" tagname="td" style="">
+							<w2:attributes></w2:attributes>
+							<xf:select1 appearance="full" cols="" id="keyNtvFrgnYn" rows="1" selectedIndex="0" style=""
+											ref="data:dsSrchMap.keyNtvFrgnYn" renderType="radiogroup">
+											<xf:choices>
+															<xf:item>
+																			<xf:label><![CDATA[내국인]]></xf:label>
+																			<xf:value><![CDATA[Y]]></xf:value>
+															</xf:item>
+															<xf:item>
+																			<xf:label><![CDATA[외국인]]></xf:label>
+																			<xf:value><![CDATA[N]]></xf:value>
+															</xf:item>
+											</xf:choices>
+							</xf:select1>
+</xf:group><xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="귀속연도" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:attributes>
+								<w2:colspan>3</w2:colspan>
+							</w2:attributes>
+							<w2:inputCalendar calendarClass="" calendarValueType="year" focusOnDateSelect="false"
+								footerDiv="false" id="keyPvtYear" renderDiv="true" renderType="component" rightAlign="false" style="width: 100px;"
+								weekStartsOn="0" ref="data:dsSrchMap.keyPvtYear">
+							</w2:inputCalendar>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<!-- <w2:anchor outerDiv="false" style="" id="" class="btn_swich">
+					<xf:label>검색열고닫기</xf:label>
+					</w2:anchor> -->
+
+
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="근로소득 중도정산관리(연계)" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+                <xf:group class="right_wrap" id="" style="">
+                    <xf:group class="descbox" id="" style="">
+                    </xf:group>
+                    <xf:group id="" style="height:27px;">
+                        <w2:anchor class="btn_gcm" id="btnAdj" outerDiv="false" style="" ev:onclick="scwin.btnAdj_onclick">
+                            <xf:label><![CDATA[정산]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="btn_gcm" id="btnNadj" outerDiv="false" style="" ev:onclick="scwin.btnNadj_onclick">
+                            <xf:label><![CDATA[정산취소]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="btn_gcm" id="btnHrCnnt" outerDiv="false" style="" ev:onclick="scwin.btnHrCnnt_onclick">
+                            <xf:label><![CDATA[인사 연동]]></xf:label>
+                        </w2:anchor>
+
+                       <!-- <w2:anchor class="btn_gcm new" clickEventElement="" id="btnApprRequest" outerDiv="false" style="" ev:onclick="scwin.btnApprRequest_onclick">
+                            <xf:label><![CDATA[승인요청]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="btn_gcm new" clickEventElement="" id="btnApproval" outerDiv="false" style="" ev:onclick="scwin.btnApproval_onclick">
+                            <xf:label><![CDATA[승인]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="btn_gcm new" id="btnApprovalSitu" outerDiv="false" style="" ev:onclick="scwin.btnApprovalSitu_onclick">
+                            <xf:label><![CDATA[승인현황]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="btn_gcm new" id="" outerDiv="false" style="">
+                            <xf:label><![CDATA[증빙등록]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor outerDiv="false" style="" id="" class="btn_gcm new">
+                            <xf:label><![CDATA[증빙조회]]></xf:label>
+                        </w2:anchor>
+                        <w2:anchor class="btn_gcm new" clickEventElement="" id="btnPrint" outerDiv="false" style="">
+                            <xf:label><![CDATA[인쇄]]></xf:label>
+                        </w2:anchor>
+                         -->
+                    </xf:group>
+                </xf:group>
+
+			</xf:group>
+			<w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsTcmErndIncmMdtAdjList"
+							fixedColumnWithHidden="true" focusMode="row" id="grdTcmErndIncmMdtAdjList" rowNumHeaderValue="No"
+							rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false"
+							style="height: 300px;" useShiftKey="true" visibleRowNum=""
+							ev:oncellclick="scwin.grdTcmErndIncmMdtAdjList_oncellclick"
+							ev:oncellindexchange="scwin.grdTcmErndIncmMdtAdjList_oncellindexchange">
+							<w2:header id="header1" style="">
+											<w2:row id="row2" style="">
+															<w2:column removeBorderStyle="false" width="40"
+																			inputType="text" style="" id="column51" value="선택" blockSelect="false" displayMode="label">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column49" inputType="text" removeBorderStyle="false" style="" value="NO" width="40">
+															</w2:column>
+															<w2:column blockSelect="false" id="column21"
+																			inputType="text" style="" value="주민번호" width="200">
+															</w2:column>
+															<w2:column blockSelect="false" id="column19"
+																			inputType="text" style="" value="성명" width="120">
+															</w2:column>
+															<w2:column blockSelect="false" id="column17"
+																			inputType="text" style="" value="귀속연월 From" width="120">
+															</w2:column>
+															<w2:column blockSelect="false" id="column15"
+																			inputType="text" style="" value="귀속연월 To" width="120">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column37" inputType="text" removeBorderStyle="false" style="" value="내/외국인" width="120">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column35" inputType="text" removeBorderStyle="false" style="" value="거주구분" width="120">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column41" inputType="text" removeBorderStyle="false" style="" value="정산" width="120">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="column39" inputType="text" removeBorderStyle="false" style="" value="전표발행" width="120">
+															</w2:column>
+											</w2:row>
+							</w2:header>
+							<w2:gBody id="gBody4" style="">
+											<w2:row id="row5" style="">
+															<w2:column removeBorderStyle="false" width="40"
+																			inputType="checkbox" style="" id="chk" value="N" blockSelect="false" displayMode="label" trueValue="Y" falseValue="N" valueType="other" readOnly="false">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			expression="rowindex()+1" id="column50" inputType="expression" removeBorderStyle="false"
+																			style="height:24px;" value="" width="40">
+															</w2:column>
+															<w2:column blockSelect="false" id="resnoEnc"
+																			inputType="text" style="height:24px;" textAlign="" value="" width="200"
+																			displayFormat="######-#######">
+															</w2:column>
+															<w2:column blockSelect="false" class="" id="wkrNm"
+																			inputType="text" style="height:24px;" textAlign="" value="" width="120">
+															</w2:column>
+															<w2:column blockSelect="false" id="rvtStrtYm"
+																			inputType="text" style="height:24px;" textAlign="" value="" width="120" displayFormat="####-##">
+															</w2:column>
+															<w2:column blockSelect="false" id="rvtEndYm"
+																			inputType="text" style="height:24px;" textAlign="" value="" width="120" displayFormat="####-##">
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="ntvFrgnYn" inputType="select" removeBorderStyle="false" style="height:24px;" textAlign=""
+																			value="내국인" width="120" allOption="" chooseOption="" ref="">
+																			<w2:choices>
+																							<w2:item>
+																											<w2:label><![CDATA[내국인]]></w2:label>
+																											<w2:value><![CDATA[Y]]></w2:value>
+																							</w2:item>
+																							<w2:item>
+																											<w2:label><![CDATA[외국인]]></w2:label>
+																											<w2:value><![CDATA[N]]></w2:value>
+																							</w2:item>
+																			</w2:choices>
+															</w2:column>
+															<w2:column blockSelect="false" class="" dataType=""
+																			displayFormat="" displayMode="label" id="rsdnNrsdYn" inputType="select" removeBorderStyle="false"
+																			style="height:24px;" textAlign="" value="거주자" width="120" allOption="" chooseOption="" ref="">
+																			<w2:choices>
+																							<w2:item>
+																											<w2:label><![CDATA[거주자]]></w2:label>
+																											<w2:value><![CDATA[Y]]></w2:value>
+																							</w2:item>
+																							<w2:item>
+																											<w2:label><![CDATA[비거주자]]></w2:label>
+																											<w2:value><![CDATA[N]]></w2:value>
+																							</w2:item>
+																			</w2:choices>
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="adjYn" inputType="select" removeBorderStyle="false" style="height:24px;" value="Y" width="120"
+																			allOption="" chooseOption="" ref="">
+																			<w2:choices>
+																							<w2:item>
+																											<w2:label><![CDATA[정산(인사 미연동)]]></w2:label>
+																											<w2:value><![CDATA[Y]]></w2:value>
+																							</w2:item>
+																							<w2:item>
+																											<w2:label><![CDATA[미정산]]></w2:label>
+																											<w2:value><![CDATA[N]]></w2:value>
+																							</w2:item>
+																							<w2:item>
+																											<w2:label><![CDATA[정산(인사 연동)]]></w2:label>
+																											<w2:value><![CDATA[HR_Y]]></w2:value>
+																							</w2:item>
+																			</w2:choices>
+															</w2:column>
+															<w2:column blockSelect="false" displayMode="label"
+																			id="adjStus" inputType="text" removeBorderStyle="false" style="height:24px;" value="" width="120">
+															</w2:column>
+											</w2:row>
+							</w2:gBody>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

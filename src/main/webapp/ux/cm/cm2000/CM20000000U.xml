@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+						<w2:key id="possDgr" name="지분차수" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsPossInfoList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="no" name="No" dataType="text"></w2:column>
+						<w2:column id="tradeNm" name="공동도급사" dataType="text"></w2:column>
+						<w2:column id="cntrtAmt" name="계약금액" dataType="text"></w2:column>
+						<w2:column id="spvsGbNm" name="참여구분" dataType="text"></w2:column>
+						<w2:column id="slPossRt" name="영업지분율" dataType="text"></w2:column>
+						<w2:column id="mngPossRt" name="관리지분율" dataType="text"></w2:column>
+						<w2:column id="jvTrsltMthdCd" name="이행방식" dataType="text"></w2:column>
+						<w2:column id="possMediRsnCn" name="지분조정사유" dataType="text"></w2:column>
+						<w2:column id="rmkCn" name="비고" dataType="text"></w2:column>
+						<w2:column id="siteCd" name="현장코드" dataType="text"></w2:column>
+						<w2:column id="possDgr" name="지분차수" dataType="text"></w2:column>
+						<w2:column id="tradeCd" name="거래처코드" dataType="text"></w2:column>
+						<w2:column id="spvsGbCd" name="주관구분코드" dataType="text"></w2:column>
+
+						<w2:column id="chrgrNm" name="담당자명" dataType="text"></w2:column>
+						<w2:column id="chrgrEmail" name="담당자 이메일" dataType="text"></w2:column>
+						<w2:column id="tRate" name="이체지분율" dataType="text"></w2:column>
+						<w2:column id="newFlg" name="신규버튼 클릭여부" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsPossDgrList" saveRemovedData="true">
+					<w2:columnInfo>
+						<w2:column id="cd" name="코드" dataType="text"></w2:column>
+						<w2:column id="cdNm" name="코드명" dataType="text"></w2:column>
+					</w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsJvCheckMap">
+					<w2:keyInfo>
+						<w2:key id="trnmYn" name="공동도급_원가_이체 DATA 존재_유무" dataType="text"></w2:key>
+						<w2:key id="trnmWorkYn" name="공동도급_원가_이체 DATA 존재_유무(작업년월별)" dataType="text"></w2:key><w2:key id="trnmPyrqYn" name="공동도급_원가_이체_청구 DATA 존재_유무" dataType="text"></w2:key>
+						<w2:key id="intAprvStusCd" name="공동도급 결재진행상태" dataType="text"></w2:key>
+						<w2:key id="closeYn" name="마감여부" dataType="text"></w2:key>
+
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM20000000U.xml
+ * Program Name : 공동도급지분정보
+ * Author : jeong se jun (tplsj)
+ * Date : 2019.02.18
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *
+ **************************************************************************/
+
+     /************************************************************************************
+     1. 공동도급_원가_이체 테이블에 해당 차수의 정보가 존재할 경우 수정 불가, 차수생성만 가능
+     2. 최종 차수만 EDIT 가능하고 최종차수 이하는 EDIT 가능 불가능
+     3. 지분변경처리 버튼 클릭 시 - 영업시스템의 공동도급정보를 => 지분정보 테이블로 갱신 처리.
+        ※ 영업시스템의 공동도급사 변경에 따라 지분정보 테이블의 공동도급사가 변경될수 있다.
+          1차 공동도급사 3개
+          2차 공동도급사 2개 OR 4개
+          영업시스템에서 공동도급사를 추가 및 변경/삭제 했을경우.
+     4. 참여구분이 주간일 경우 - 이행방식 EDIT 불가능
+                   주간이 아닐경우 - 이행방식 EDIT 가능
+     5. 관리지분율의 총합은 100
+     ************************************************************************************/
+
+     /************************************************************************************
+        DataCollection description
+
+        dsPossDgrList: 조회조건 차수
+        dsPossInfoList: 공동도급지분 목록 GRID
+        dsSearchMap: 검색조건 parameter
+        dsJvCheckMap: 공동도급 체크 리스트
+     ************************************************************************************/
+
+    /************************************************************************************
+    *  [1] 전역변수
+    ************************************************************************************/
+    scwin.chgFlg = false;	//차수 select box change 이벤트와 차수 조회 callback 중복 방지
+
+    /************************************************************************************
+    *  [2] onpageload(초기화포함)
+    ************************************************************************************/
+	scwin.onpageload = function() {
+	
+	    //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+
+        //세션의 현장코드를 셋팅
+        cmCom.setSite(wfmKeySiteInfo.getWindow());
+
+		//SelectBox 코드값 맵핑
+		com.selCdList( "grdPossInfoList:jvTrsltMthdCd", "CM100006", "Y", "Y");//이행방식
+
+	};
+
+	scwin.onpageunload = function() {
+
+	};
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        grdPossInfoList.initGrid();	//현장관리비 내역 GRID 초기화
+     	btnNew.setDisabled( true );//신규 button
+        btnChgProc.setDisabled( true );//지분변경처리 button
+        btnSave.setDisabled( true );//저장 button
+        //UI팀용 함수 호출
+        com.commonUI();
+    };
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수
+     ************************************************************************************/
+    //차수 조회
+    scwin.fnPossDgrList = function() {
+    	scwin.chgFlg = false;
+        ajaxLib.ajax("/cm/cm2000/CM20000000U/selectPossDgrList", {
+            method : "POST",
+            requestData : dsSearchMap.getJSON(),
+            callback : function(result, e){
+				dsPossDgrList.setJSON(result.data);
+
+	            sbxPossDgr.setValue( dsPossDgrList.getCellData( dsPossDgrList.getTotalRow()-1 , "cd" ) );//최종차수
+
+	            scwin.fnPossDgrChg();//차수변경처리
+			},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+	//조회
+    scwin.fnSearch = function() {
+        ajaxLib.ajax("/cm/cm2000/CM20000000U/selectPossInfoList", {
+            method : "POST",
+            requestData : {
+            				param : dsSearchMap.getJSON()
+			},
+            callback : function(result, e){
+				dsPossInfoList.setJSON(result.data.dsPossInfoList);
+				com.setUdcValue("dsTotalCount","udcListCount",dsPossInfoList.getTotalRow());   //GRID ROW COUNT
+
+				//=============== 공동도급 체크 리스트 ===============
+				dsJvCheckMap.setJSON(result.data.dsJvCheckMap);//공동도급 체크 리스트
+
+                //주간부서의 이행방식 컬럼은 ReadOnly 처리
+                if(dsPossInfoList.getTotalRow() > 0){
+                	grdPossInfoList.setCellReadOnly( 0 , "jvTrsltMthdCd" , true );
+                }
+                
+                grdPossInfoList.setColumnReadOnly( "mngPossRt" , true );//관리지분율      
+		       	grdPossInfoList.setColumnReadOnly( "jvTrsltMthdCd" , true );//이행방식    
+		       	grdPossInfoList.setColumnReadOnly( "possMediRsnCn" , true );//지분조정사유
+		       	grdPossInfoList.setColumnReadOnly( "rmkCn" , true );//비고                
+       	
+           	},
+            errCallback : "fnErrCallBack"
+        });
+    }
+
+    //관리지분율 합계 체크
+    scwin.fnMngPossRtChk = function() {
+    	var result = true;
+       	var sumMngPossRt = 0;//관리지분율 합계
+       	for(var i=0; i<dsPossInfoList.getTotalRow(); i++){
+       		sumMngPossRt += parseFloat(dsPossInfoList.getCellData( i , "mngPossRt" ), 0);
+       	}
+       	if(parseInt(sumMngPossRt) != 100) {
+       		com.showMessage("CFW0008", "관리지분율 합계", "100", "", grdPossInfoList.id, 0, "mngPossRt");//$1은(는) $2 이어야 합니다.
+       		result = false;
+       	}
+       	return result;
+    }
+
+    //차수변경처리
+    scwin.fnPossDgrChg = function(){
+		if(dsSearchMap.get( "siteCd" ) != "" &&  dsPossDgrList.getTotalRow() <= 0){//차수가 없을 경우
+			btnNew.setDisabled( true );//신규 button
+	        btnChgProc.setDisabled( false );//지분변경처리 button
+	        btnSave.setDisabled( true );//저장 button
+	        dsPossInfoList.removeAll();//현장관리비 내역 GRID 초기화
+		}else if(sbxPossDgr.getValue() == dsPossDgrList.getCellData( dsPossDgrList.getTotalRow()-1 , "cd" )){//최종차수일 경우
+	        btnNew.setDisabled( false );//신규 button
+	        btnChgProc.setDisabled( false );//지분변경처리 button
+	        btnSave.setDisabled( false );//저장 button
+	        scwin.fnSearch();
+		}else{//최종차수미만일경우
+	        btnNew.setDisabled( true );//신규 button
+	        btnChgProc.setDisabled( true );//지분변경처리 button
+	        btnSave.setDisabled( true );//저장 button
+	        scwin.fnSearch();
+		}
+		scwin.chgFlg = true;
+    }
+
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /** 오류시 처리 **/
+    scwin.fnErrCallBack = function(result, e) {
+
+    };
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+	//조회 클릭 이벤트
+	scwin.btnFind_onclick = function() {
+		scwin.fnSearch();
+	};
+
+	/* 현장코드 변경 이벤트 */
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue() );
+		dsPossDgrList.removeAll();
+		//차수 조회
+        scwin.fnPossDgrList();
+	};
+
+	//신규
+	scwin.btnNew_onclick = function() {
+       	grdPossInfoList.setColumnReadOnly( "mngPossRt" , false );//관리지분율      
+       	grdPossInfoList.setColumnReadOnly( "jvTrsltMthdCd" , false );//이행방식    
+       	grdPossInfoList.setColumnReadOnly( "possMediRsnCn" , false );//지분조정사유
+       	grdPossInfoList.setColumnReadOnly( "rmkCn" , false );//비고                
+       	
+		for(var i=0; i<dsPossInfoList.getRowCount(); i++){
+			dsPossInfoList.setCellData( i , "newFlg" , "Y" );//신규버튼 클릭여부
+		}  
+	};
+	
+	//지분변경처리
+	scwin.btnChgProc_onclick = function() {
+		if(dsSearchMap.get( "siteCd" ) == "") {
+			com.showMessage("CFW0004", "현장", "", "", wfmKeySiteInfo.getWindow().ibxKeySiteNm.id);//$1을(를) 선택하십시오.
+			return;
+		}else if (confirm("지분변경처리 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm2000/CM20000000U/saveChgProc", {
+	            method : "POST",
+	            requestData : dsSearchMap.getJSON(),
+	            callback : function(result, e){
+					com.showMessage("SCN0001");//처리 되었습니다.
+					scwin.fnPossDgrList();
+				},
+	            errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+
+	//저장
+	scwin.btnSave_onclick = function() {
+
+		if(dsPossInfoList.getModifiedJSON() == ""){
+			com.showMessage("PRA0002", "");//저장할내역이 없습니다.
+			return;
+		}
+
+		var validInfo = [
+				{ id: "mngPossRt", mandatory: true }//관리지분율
+			];
+		//data유효성체크
+		if (!com.validateGridView(grdPossInfoList, validInfo)) {
+			return;
+		}
+
+		for(var i=0; i<dsPossInfoList.getRowCount(); i++){
+			if (dsPossInfoList.getCellData( i , "chrgrEmail" ) != "" && !com.checkEmail(dsPossInfoList.getCellData( i , "chrgrEmail" ))) {
+				com.showMessage("CSW0008", "담당자 이메일", "", "", grdPossInfoList.id, i, "chrgrEmail");	//$1 입력이 잘못 되었습니다.
+				return;
+			}
+		}
+
+		if (confirm("저장 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm2000/CM20000000U/savePossInfo", {
+	            method : "POST",
+	            requestData : {
+	            				 tcmPossInfoList : dsPossInfoList.getAllJSON()
+	            				,siteCd : dsPossInfoList.getCellData( 0 , "siteCd" )
+	            				,possDgr : dsPossInfoList.getCellData( 0 , "possDgr" )
+	            },
+	            callback : function(result, e){
+	            	com.showMessage("CFA0012");//저장되었습니다.
+	            	scwin.fnPossDgrList();//차수조회
+	            },
+	            errCallback : "fnErrCallBack"
+	        });
+		}
+	};
+
+	//차수 CHANGE 변경 이벤트
+	scwin.sbxPossDgr_onchange = function() {
+		if(scwin.chgFlg) {
+			scwin.fnPossDgrChg();
+		}
+	};
+	
+	//엑셀다운로드
+	scwin.btnExcelDwn_onclick = function() {
+		var result = [];
+		var totalCol = grdPossInfoList.getTotalCol();
+		for(var i = 0; i < totalCol; i++) {
+			if (!grdPossInfoList.getColumnVisible(i)) {
+				result.push(i);
+			}
+		}
+		var excelOpt = {
+			 fileName: "공동도급지분정보.xlsx"    //또는 xlsx 확장자 사용
+			,removeColumns: result.join(",")
+		    ,useSubTotal: true    			//colMerge된 컬럼을 Merge해서 출력 할 지 여부
+		    ,colMergeTextAlign: "center"    //colMerge된 컬럼의 textAlign설정 (bottom, center, top 설정)
+			,colMerge : true
+            ,headerFontColor : "#FFFFFF"    // Header Font Color
+            ,headerColor : "#D9D9D9"        // Header Back Color
+            ,subTotalColor : "#FCE4D6"      // SubTotal Back Color
+            ,footerColor : "#BDD7EE"         // Footer Color
+		};  //excel download 옵션
+		grdPossInfoList.advancedExcelDownload( excelOpt );		
+	};
+	]]></script>
+
+	<w2:require src="/WEB-INF/ux/common/udc/udcListCount.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			<xf:group class="btn_wrap" id="" style="" tagname="">
+					</xf:group></xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:40%;" tagname="col"></xf:group>
+						<xf:group style="width:67px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="차수" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<xf:select1 allOption="" appearance="minimal" chooseOption="" class="" direction="auto"
+								disabled="false" disabledClass="w2selectbox_disabled" displayMode="label" id="sbxPossDgr"
+								ref="data:dsSearchMap.possDgr" style="width:120px;" submenuSize="auto" textAlign="left" ev:onchange="scwin.sbxPossDgr_onchange">
+								<xf:choices>
+									<xf:itemset nodeset="data:dsPossDgrList">
+										<xf:label ref="cdNm"></xf:label>
+										<xf:value ref="cd"></xf:value>
+									</xf:itemset>
+								</xf:choices>
+							</xf:select1>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<!-- <w2:anchor outerDiv="false" style="" id="" class="btn_swich">
+					<xf:label>검색열고닫기</xf:label>
+					</w2:anchor> -->
+
+
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="공동도급지분 목록" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+				<w2:udc_list_count id="dsTotalCount" style=""></w2:udc_list_count>
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="">
+						<w2:anchor class="btn_gcm" id="btnNew" outerDiv="false" style=""
+							ev:onclick="scwin.btnNew_onclick">
+							<xf:label><![CDATA[신규]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" id="btnSave" outerDiv="false" style=""
+							ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" ev:onclick="scwin.btnChgProc_onclick" id="btnChgProc"
+							outerDiv="false" style="">
+							<xf:label><![CDATA[지분변경처리]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm excel_down" clickEventElement=""
+							ev:onclick="scwin.btnExcelDwn_onclick" id="btnExcelDwn" localeRef="" outerDiv="false" style=""
+							toolTip="엑셀다운로드">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+
+			</xf:group>
+			<w2:gridView readOnly="false" autoFit="allColumn" class="autoHeight" dataList="data:dsPossInfoList"
+				fixedColumnWithHidden="true" focusMode="row" id="grdPossInfoList" rowNumHeaderValue="No" rowNumVisible=""
+				rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;left:5px;top:0px;"
+				useShiftKey="true" visibleRowNum="" checkReadOnlyOnPaste="true"
+				enterKeyMove="down" keyMoveEditMode="true" preventAddRowOnPaste="true">
+				<w2:header id="header1" style="">
+					<w2:row id="row2" style="">
+						<w2:column blockSelect="false" displayMode="label" id="column49" inputType="text"
+							removeBorderStyle="false" style="" value="No" width="50">
+						</w2:column>
+						<w2:column blockSelect="false" id="column17" inputType="text" style="" value="공동도급사"
+							width="150">
+						</w2:column>
+						<w2:column blockSelect="false" id="column15" inputType="text" style="" value="계약금액"
+							width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column37" inputType="text"
+							removeBorderStyle="false" style="" value="참여구분" width="60">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column35" inputType="text"
+							removeBorderStyle="false" style="" value="영업지분율(%)" width="100">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="column41" inputType="text"
+							removeBorderStyle="false" style="" value="관리지분율(%)" width="100">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column95" value="이체지분율(%)"
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column79"
+							value="이행방식" blockSelect="false" displayMode="label" allowChar="">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column89"
+							value="담당자명" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column92"
+							value="담당자 이메일" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column77"
+							value="지분조정사유" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column75"
+							value="비고" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:header>
+				<w2:gBody id="gBody4" style="">
+					<w2:row id="row5" style="">
+						<w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="no"
+							inputType="expression" removeBorderStyle="false" style="" value="" width="50" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="tradeNm" inputType="text" style="" textAlign="left" value=""
+							width="150" class="" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" id="cntrtAmt" inputType="text" style="" textAlign="right"
+							value="" width="100" displayFormat="#,###.#" dataType="number" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="spvsGbNm" inputType="text"
+							removeBorderStyle="false" style="" textAlign="" value="" width="60" readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" class="" dataType="text" displayFormat="" displayMode="label"
+							id="slPossRt" inputType="text" removeBorderStyle="false" style="" textAlign="" value="" width="100"
+							readOnly="true">
+						</w2:column>
+						<w2:column blockSelect="false" displayMode="label" id="mngPossRt" inputType="text"
+							removeBorderStyle="false" style="" value="" width="100" displayFormat="#,##0.00" dataType="number" textAlign=""
+							readOnly="true" hideCustomFilter="" allowChar="0-9-." applyFormat="all" defaultValue="0.00">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="tRate" value=""
+							blockSelect="false" displayMode="label" readOnly="true" defaultValue="0.00" dataType="number" displayFormat="#,##0.00">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="select" style="" id="jvTrsltMthdCd"
+							value="" blockSelect="false" displayMode="label" readOnly="false" viewType="icon">
+							<w2:choices></w2:choices>
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="chrgrNm" value=""
+							blockSelect="false" displayMode="label" textAlign="left" readOnly="false">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="chrgrEmail"
+							value="" blockSelect="false" displayMode="label" allowChar="" readOnly="false" textAlign="left">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="possMediRsnCn"
+							value="" blockSelect="false" displayMode="label" readOnly="true" textAlign="left">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="rmkCn" value=""
+							blockSelect="false" displayMode="label" readOnly="true" textAlign="left">
+						</w2:column>
+					</w2:row>
+				</w2:gBody>
+				<w2:footer style="" id="footer1">
+					<w2:row style="" id="row6">
+						<w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column88" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="150" inputType="text" style="" id="column87"
+							value="합계" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column86"
+							value="" blockSelect="false" displayMode="label" displayFormat="#,##0" dataType="number"
+							expression="sum('cntrtAmt')">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="60" inputType="text" style="" id="column85" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column84"
+							value="" blockSelect="false" displayMode="label" dataType="number" displayFormat="#,##0.00"
+							expression="sum('slPossRt')">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column83"
+							value="" blockSelect="false" displayMode="label" dataType="number" displayFormat="#,##0.00"
+							expression="sum('mngPossRt')">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column97" value=""
+							blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column82"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column91"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column94"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column81"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+						<w2:column removeBorderStyle="false" width="200" inputType="text" style="" id="column80"
+							value="" blockSelect="false" displayMode="label">
+						</w2:column>
+					</w2:row>
+				</w2:footer>
+			</w2:gridView>
+
+		</xf:group>
+	</body>
+</html>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" id="dsTcmEqpmRunDlogList" repeatNode="map" saveRemovedData="true" style="">
+			        <w2:columnInfo>
+			            <w2:column dataType="text" id="runDt" name="일자"></w2:column>
+			            <w2:column dataType="text" id="eqpmStdrNm" name="장비명/규격"></w2:column>
+			            <w2:column dataType="text" id="bgtItemiNmNavi" name="실행공종명"></w2:column>
+			            <w2:column dataType="text" id="uctAplyMtdVal" name="적용"></w2:column>
+			            <w2:column dataType="number" id="workTm" name="R/T"></w2:column>
+			            <w2:column dataType="number" id="mediTm" name="조정"></w2:column>
+			            <w2:column dataType="number" id="levyTm" name="부과시간"></w2:column>
+			            <w2:column dataType="number" id="levyUct" name="단가"></w2:column>
+			            <w2:column dataType="number" id="levyAmt" name="사용료"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="false"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" style="">
+			        <w2:keyInfo>
+			            <w2:key dataType="text" id="siteCd" name="현장코드"></w2:key>
+                        <w2:key id="frmRunDt" name="운행_일자_from" dataType="text"></w2:key>
+                        <w2:key id="toRunDt" name="운행_일자_to" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+        <script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM70050010U.xml
+ * Program Name : 일자별 장비 운행일보
+ * Author : dslee 
+ * Date : 2022.06.15
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ * 2022.06.15   dslee    최초작성
+ **************************************************************************/
+/**************************************************************************
+ * [1] 전역변수 선언
+ **************************************************************************/ 
+/**************************************************************************
+ * [2] onpageload(초기화포함)
+ **************************************************************************/
+    scwin.onpageload = function() {
+        //운행기간 set
+        com.setUdcValue("udcStdDtm", "frDate", scwin.$w.getCurrentServerDate( "yyyyMMdd" ));    //운행일자 검색 시작일자(오늘)
+        com.setUdcValue("udcStdDtm", "toDate", scwin.$w.getCurrentServerDate( "yyyyMMdd" ));    //운행일자 검색 종료일자(오늘)
+        dsSearchMap.set("frmRunDt", com.getUdcValue("udcStdDtm", "frDate"));                    //검색 시작 날짜
+        dsSearchMap.set("toRunDt", com.getUdcValue("udcStdDtm", "toDate"));                     //검색 종료 날짜
+        
+        cmCom.setSite(wfmKeySiteInfo.getWindow()); //세션의 현장코드 set       
+        com.commonUI();
+    };
+/**************************************************************************
+ * [3] 사용자정의 함수
+ **************************************************************************/
+/**************************************************************************
+ * [4] Callback
+ **************************************************************************/
+/************************************************************************************
+ * [5] Event 함수
+ ************************************************************************************/
+    //현장코드 변경 이벤트
+    scwin.WFrameSiteInfo_change_callback = function(){
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드       
+        scwin.btnFind_onclick();
+    };
+    
+	//조회 클릭
+	scwin.btnFind_onclick = function() {
+        dsSearchMap.set("siteCd", wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());  //현장 코드
+        dsSearchMap.set("frmRunDt", com.getUdcValue("udcStdDtm", "frDate"));            //검색 시작 날짜
+        dsSearchMap.set("toRunDt", com.getUdcValue("udcStdDtm", "toDate"));             //검색 종료 날짜
+        
+        if (dsSearchMap.get("siteCd") == ""){
+            com.showMessage("SAA0031", "현장");     //을(를) 선택하십시오.
+            return false;
+        }else if (dsSearchMap.get("frmRunDt") == "" || dsSearchMap.get("toRunDt") == "") {
+            com.showMessage("SAA0031", "운행기간"); //을(를) 선택하십시오.
+            return false;
+        }
+        
+        ajaxLib.ajax("/cm/cm7005/CM70050010U/selectTcmEqpmRunDlogByRunDt", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result, e) {
+                        dsTcmEqpmRunDlogList.setJSON(result.data);
+                        com.setUdcValue("dsTotalCount","udcListCount",dsTcmEqpmRunDlogList.getTotalRow());                      
+            },
+            errCallback : function(result, e) {}
+        });      
+	};
+
+    //엑셀다운
+	scwin.btnExcelDwn_onclick = function() {
+        grdTcmEqpmRunDlog.advancedExcelDownload({
+            fileName: "일자별장비운행일보.xlsx",
+            useDataFormat : true,
+            useSubTotal : true,             // Sub-Total 표시 
+            headerFontColor : "#FFFFFF",    // Header Font Color
+            headerColor : "#D9D9D9",        // Header Back Color
+            subTotalColor : "#FCE4D6",      // SubTotal Back Color
+            footerColor : "#BDD7EE"         // Footer Color
+        });
+	};	]]></script>
+        <w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+        <w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+		    <xf:group class="navigator_wrap" id="" style="">
+		        <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+		    </xf:group>
+		    <xf:group class="tbl_search" id="" style="">
+		        <xf:group class="tb_list" id="" style="" tagname="table">
+		            <w2:attributes>
+		                <w2:summary>조회조건 테이블 입니다.</w2:summary>
+		            </w2:attributes>
+		            <xf:group tagname="colgroup">
+		                <xf:group style="width:96.00px;" tagname="col"></xf:group>
+		                <xf:group style="width:auto;" tagname="col"></xf:group>
+		                <xf:group tagname="col" style="width:99px;"></xf:group>
+		                <xf:group tagname="col" style="width:auto;"></xf:group>
+		                <xf:group style="width:67.00px;" tagname="col"></xf:group>
+		                <xf:group style="width:auto;" tagname="col"></xf:group>
+		            </xf:group>
+		            <xf:group style="" tagname="tr">
+		                <xf:group class="w2tb_th req" style="" tagname="th">
+		                    <w2:attributes>
+		                        <w2:scope>row</w2:scope>
+		                    </w2:attributes>
+		                    <w2:span class="" id="" label="현장명" style=""></w2:span>
+		                </xf:group>
+		                <xf:group class="w2tb_td" style="width:30%;" tagname="td">
+		                    <w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+		                </xf:group>
+                        <xf:group class="w2tb_th req" style="" tagname="th"><w2:attributes>
+                                <w2:scope>row</w2:scope>
+                            </w2:attributes><w2:span class="" id="" label="운행기간" style=""></w2:span></xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td">
+                            <w2:udc_periodcalendar class="req" id="udcStdDtm" style="" date=""></w2:udc_periodcalendar>
+                        </xf:group> 
+		            </xf:group>
+		        </xf:group>
+		        <xf:group class="btn_tbl_search" style="" tagname="">
+		            <w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+		                <xf:label><![CDATA[조회]]></xf:label>
+		            </w2:anchor>
+		        </xf:group>
+		    </xf:group>
+		    <xf:group class="defaultbox" id="" style="">
+		        <w2:textbox class="df_tt" id="" label="일자별 장비 운행일보" style="" tagname="h3"></w2:textbox>
+                <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+		        <xf:group class="right_wrap" id="" style="">
+		            <xf:group id="" style="">
+		                <w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+		                    outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+		                    <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+		                </w2:anchor>
+		            </xf:group>
+		        </xf:group>
+		    </xf:group>
+		    <w2:gridView readOnly="true" autoFit="allColumn" class="autoHeight" dataList="data:dsTcmEqpmRunDlogList"
+		        fixedColumnWithHidden="true" focusMode="row" id="grdTcmEqpmRunDlog" rowNumHeaderValue="No" rowNumVisible=""
+		        rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 300px;" useShiftKey="true"
+		        visibleRowNum="" checkReadOnlyOnPaste="true" enterKeyMove="down" keyMoveEditMode="true" preventAddRowOnPaste="true"
+		        ev:oncellclick="scwin.grdTcmEqpmCdList_oncellclick">
+		        <w2:header id="header1" style="">
+		            <w2:row id="row2" style="">
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column106" value="일자" blockSelect="false"
+		                    displayMode="label" style="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column111" value="장비명 / 규격"
+		                    blockSelect="false" displayMode="label" style="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="420" inputType="text" id="column107" value="실행 공종명" blockSelect="false"
+		                    displayMode="label" style="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="60" inputType="text" id="column66" value="적용" blockSelect="false"
+		                    displayMode="label" style="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="text" id="column114" value="R/T" blockSelect="false"
+		                    displayMode="label" style="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="text" id="column117" value="조정" blockSelect="false"
+		                    displayMode="label" style="">
+		                </w2:column>
+		                <w2:column blockSelect="false" displayMode="label" id="column41" inputType="text" removeBorderStyle="false"
+		                    value="부과시간" width="70" style="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column121" value="단가" blockSelect="false"
+		                    displayMode="label" style="">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column118" value="사용료" blockSelect="false"
+		                    displayMode="label" style="">
+		                </w2:column>
+		            </w2:row>
+		        </w2:header>
+		        <w2:gBody id="gBody4" style="">
+		            <w2:row id="row5" style="">
+		                <w2:column blockSelect="false" id="runDt" inputType="text" removeBorderStyle="false" textAlign="center" width="100"
+		                    displayMode="label" dataType="date" colMerge="true">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="eqpmStdrNm" textAlign="left"
+		                    blockSelect="false" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="420" inputType="text" id="bgtItemiNmNavi" blockSelect="false"
+		                    textAlign="left" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="60" inputType="text" id="uctAplyMtdVal" blockSelect="false"
+		                    textAlign="center" displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="text" id="workTm" blockSelect="false" displayMode="label"
+		                    textAlign="right">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="text" id="mediTm" blockSelect="false" displayMode="label"
+		                    textAlign="right">
+		                </w2:column>
+		                <w2:column blockSelect="false" id="levyTm" inputType="text" removeBorderStyle="false" textAlign="right" width="70"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="levyUct" blockSelect="false"
+		                    displayMode="label" textAlign="right" displayFormat="#,###,###,###">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="levyAmt" blockSelect="false"
+		                    displayMode="label" textAlign="right" displayFormat="#,###,###,###">
+		                </w2:column>
+		            </w2:row>
+		        </w2:gBody>
+		        <w2:subTotal targetColumnID="runDt" style="" id="subTotal1">
+		            <w2:row style="" id="row7">
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column139" blockSelect="false"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column138" value="합계" blockSelect="false"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="420" inputType="text" id="column137" blockSelect="false"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="60" inputType="text" id="column136" blockSelect="false"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="expression" id="column140" blockSelect="false"
+		                    expression="sum('workTm')" displayMode="label" textAlign="right">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="expression" id="column141" blockSelect="false"
+		                    expression="sum('mediTm')" displayMode="label" textAlign="right">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="expression" id="column142" blockSelect="false"
+		                    expression="sum('levyTm')" displayMode="label" textAlign="right">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="expression" id="column143" blockSelect="false"
+		                    expression="sum('levyUct')" displayMode="label" displayFormat="#,###,###,###,###,###" textAlign="right">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="expression" id="column144" blockSelect="false"
+		                    expression="sum('levyAmt')" displayMode="label" displayFormat="#,###,###,###,###,###" textAlign="right">
+		                </w2:column>
+		            </w2:row>
+		        </w2:subTotal>
+		        <w2:footer style="" id="footer1">
+		            <w2:row style="" id="row6">
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column130" blockSelect="false"
+		                    displayMode="label" value="총계">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="text" id="column129" blockSelect="false"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="420" inputType="text" id="column128" blockSelect="false"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="60" inputType="text" id="column127" blockSelect="false"
+		                    displayMode="label">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="expression" id="column140" blockSelect="false"
+		                    expression="sum('workTm')" displayMode="label" textAlign="right">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="expression" id="column141" blockSelect="false"
+		                    expression="sum('mediTm')" displayMode="label" textAlign="right">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="70" inputType="expression" id="column142" blockSelect="false"
+		                    expression="sum('levyTm')" displayMode="label" textAlign="right">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="expression" id="column143" blockSelect="false"
+		                    expression="sum('levyUct')" displayMode="label" displayFormat="#,###,###,###,###,###" textAlign="right">
+		                </w2:column>
+		                <w2:column removeBorderStyle="false" width="100" inputType="expression" id="column144" blockSelect="false"
+		                    expression="sum('levyAmt')" displayMode="label" displayFormat="#,###,###,###,###,###" textAlign="right">
+		                </w2:column>
+		            </w2:row>
+		        </w2:footer>
+		    </w2:gridView>
+		</xf:group>
+	</body>
+</html>

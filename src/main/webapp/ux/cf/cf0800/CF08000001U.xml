@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataList baseNode="list" repeatNode="map" style="" id="dsTcfNotiList" saveRemovedData="true">
+								<w2:columnInfo>
+												<w2:column id="notiSeq" name="공지_순번" dataType="text"></w2:column>
+												<w2:column id="notiGbVal" name="공지_구분_값" dataType="text"></w2:column>
+												<w2:column id="notiGbNm" name="공지_구분_명" dataType="text"></w2:column>
+												<w2:column id="notiDtm" name="게시_기간" dataType="text"></w2:column>
+												<w2:column id="notiStrtDt" name="공지_시작_일자" dataType="text"></w2:column>
+												<w2:column id="notiEndDt" name="공지_종료_일자" dataType="text"></w2:column>
+												<w2:column id="notiTtl" name="공지_제목" dataType="text"></w2:column>
+												<w2:column id="notiRmkCn" name="공지_비고_내용" dataType="text"></w2:column>
+												<w2:column id="notiCn" name="공지_내용" dataType="text"></w2:column>
+												<w2:column id="aflId" name="첨부파일ID" dataType="text"></w2:column>
+												<w2:column id="fstRegDtm" name="최초_등록_일시" dataType="text"></w2:column>
+												<w2:column id="fstRegprEmpno" name="최초_등록자_사번" dataType="text"></w2:column>
+												<w2:column id="fstRegprEmpNm" name="작성자명" dataType="text"></w2:column>
+												<w2:column id="fnlModprEmpno" name="최종_수정자_사번" dataType="text"></w2:column>
+												<w2:column id="fnlModiDtm" name="최종_수정_일시" dataType="text"></w2:column>
+												<w2:column id="aproGbVal" name="결재상태" dataType="text"></w2:column>
+												<w2:column id="aprvNo" name="결재번호" dataType="text"></w2:column>
+								</w2:columnInfo>
+								<w2:data use="false"></w2:data>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsTcfNotiMap">
+				    <w2:keyInfo>
+				        <w2:key id="notiSeq" name="공지_순번" dataType="text"></w2:key>
+				        <w2:key id="notiTtl" name="공지_제목" dataType="text"></w2:key>
+				        <w2:key id="notiStrtDt" name="공지_시작_일자" dataType="text"></w2:key>
+				        <w2:key id="notiEndDt" name="공지_종료_일자" dataType="text"></w2:key>
+				        <w2:key id="fstRegDtm" name="최초_등록_일자" dataType="text"></w2:key>
+				        <w2:key id="fstRegprEmpNm" name="최초_등록자_명" dataType="text"></w2:key>
+				        <w2:key id="notiRmkCn" name="공지_비고_내용" dataType="text"></w2:key>
+				        <w2:key id="notiGbVal" name="공지_구분_값" dataType="text"></w2:key>
+				        <w2:key id="notiCn" name="공지_내용" dataType="text"></w2:key>
+				        <w2:key id="aflId" name="첨부파일_ID" dataType="text"></w2:key>
+				        <w2:key id="rowStatus" name="상태" dataType="text"></w2:key>
+				    </w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+								<w2:keyInfo>
+												<w2:key id="notiTtl" name="공지_사항_제목" dataType="text"></w2:key>
+												<w2:key id="notiSeq" name="공지_사항_순번" dataType="text"></w2:key>
+								</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+        <script type="text/javascript" src="/resources/js/lib/util/jquery.blockUI.js"></script>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID   : CF08000001U
+ * Program Name : 공지사항
+ * Author       : dslee
+ * Date         : 2022.06.29
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ * 2022.06.29   dslee    최초작성    
+ **************************************************************************/ 
+	/***************************************************************************
+     *  [1] 전역변수 
+     ***************************************************************************/
+     
+    /***************************************************************************
+     *  [2] onpageload(초기화포함)
+     ***************************************************************************/   
+    scwin.onpageload = function() { 
+		scwin.fnInitial();
+    };
+
+    scwin.onpageunload = function() {};
+
+	// 화면 초기화(필수)
+	 scwin.fnInitial = function() {
+		grpSearchBox.init();
+		grpTcfNotiMap.init();
+		dsTcfNotiMap.setEmptyValue();
+		dsTcfNotiList.removeAll();
+        
+        scwin.btnFind_onclick();
+        
+        grpTcfNotiMap.setDisabled(true);
+        
+        // 첨부파일 처리
+        com.getUdcComp("udcAflId", "gen_aflList").addClass("col1");   // 첨부파일 LIST 1개씩 : UDC.xml 참조
+        com.setUdcValue( "udcAflId", "jobGbCd", "CF");
+        com.setUdcValue( "udcAflId", "menuId", "CF08000001U");
+        com.setUdcValue( "udcAflId", "fileExt", "*.*");
+        com.setUdcValue( "udcAflId", "usage", "INS");                 // 버튼숨기기처리 : 필수값
+        com.setUdcValue( "udcAflId", "fileSize", "INS");              // 용량표시안함(표시함:INS) : 필수값       
+	}; 
+    
+	/**************************************************************************
+	 *  [3] 사용자정의 함수
+	 **************************************************************************/	
+     /* 저장, 삭제후 후처리 */
+     scwin.fnSaveDelAfter = function() {
+        dsTcfNotiMap.setEmptyValue();
+        com.setUdcValue("udcPtupPeriodcalendar", "frDate", "");
+        com.setUdcValue("udcPtupPeriodcalendar", "toDate", "");
+              
+        grdTcfNotiList.initGrid();
+        dsTcfNotiList.removeAll();
+        grpTcfNotiMap.setDisabled(true);
+
+        scwin.btnFind_onclick();
+     }	
+     
+  // 결재상태에 따른 객체 Display Setting
+    scwin.itemDisplayControll =  function() {
+        let curRowIndex = dsTcfNotiList.getRowPosition();
+        let rowStatus = dsTcfNotiList.getRowStatus( curRowIndex );
+        
+		// 공지사항 readOnly
+		if (dsTcfNotiList.getCellData(curRowIndex,"aproGbVal") == '작성중') {
+            
+            // 등록자 본인인 경우에 한해 수정 및 삭제 가능
+        	if ( dsTcfNotiList.getCellData( curRowIndex , "fstRegprEmpno") == sessionStorage.userEmpno ) {
+            	btnAprv.setDisabled( false );
+            	btnDel.setDisabled( false );
+            	grpTcfNotiMap.setDisabled(false);
+            	grpTcfNotiMap.setReadOnly( false );
+            } else {
+            	btnAprv.setDisabled( true );
+            	btnDel.setDisabled( true );
+            	grpTcfNotiMap.setDisabled(true);
+            	grpTcfNotiMap.setReadOnly(true);
+            }
+            
+            btnSave.setDisabled( false );
+            btnStatus.setDisabled( true );
+            
+		} else {
+            btnAprv.setDisabled( true );
+            btnStatus.setDisabled( false );
+            btnSave.setDisabled( true );
+            btnDel.setDisabled( true );
+            grpTcfNotiMap.setReadOnly(true);
+            grpTcfNotiMap.setDisabled(true);
+		}
+
+        //  소노관리자인 경우 가능 저장, 삭제 가능하도록 
+        if (sessionStorage.getItem("sonoAdminYn") == "Y" && dsTcfNotiList.getCellData( curRowIndex , "fstRegprEmpno") != sessionStorage.userEmpno) {
+            btnDel.setDisabled( false );
+            btnSave.setDisabled( false );
+            grpTcfNotiMap.setDisabled(false);
+            grpTcfNotiMap.setReadOnly( false );
+        }
+        
+    };
+    
+	/**************************************************************************
+	 *  [4] Callback
+	 **************************************************************************/	
+     
+    /**************************************************************************
+     *  [5] Event 함수 
+     **************************************************************************/
+    /* 공지사항 조회 */
+	scwin.btnFind_onclick = function() {
+		ajaxLib.ajax("/cf/cf0800/CF08000001U/selectTcfNotiList", {
+             mode: "synchronous",
+             method: "POST",
+             requestData: dsSearchMap.getJSON(),
+             callback: function(result, e) {
+                           dsTcfNotiList.setJSON(result.data);                          
+                           com.setUdcValue( "udcAflId", "aflId", dsTcfNotiMap.get("aflId"));  // 첨부파일ID
+             },
+             errCallback: function(e) {console.log(e);}    
+        });
+	};
+	
+    /* 신규 버튼 클릭 */
+	scwin.btnNew_onclick = function() {
+		grpTcfNotiMap.setReadOnly( false );
+        grpTcfNotiMap.setDisabled(false);
+        notiGbVal.setDisabled( true );
+        btnSave.setDisabled( false );
+                
+		dsTcfNotiMap.setEmptyValue();
+        dsTcfNotiMap.set("notiGbVal", "1"); // 구분 : ERP 고정
+        com.setUdcValue("udcAflId", "aflId", ""); //첨부파일 udc 초기화
+        
+        dsTcfNotiMap.setJSON({
+            "rowStatus": "C",
+            "fstRegDtm": $w.getCurrentServerDate("yyyy-MM-dd"), //작성일 set
+            "fstRegprEmpNm": sessionStorage.getItem("userNm")   //작성자 set
+        })
+		
+		let today = $w.getCurrentServerDate("yyyyMMdd");
+		let fromdate = $w.dateAdd( today , 30 );
+		
+		//게시기간 오늘날짜로 set
+		com.setUdcValue("udcPtupPeriodcalendar", "frDate", today);
+        com.setUdcValue("udcPtupPeriodcalendar", "toDate", fromdate);
+	};
+	
+    /* 저장 버튼 클릭 */
+	scwin.btnSave_onclick = function() {
+		if(dsTcfNotiMap.get("notiSeq") == "") {
+	    	dsTcfNotiMap.set("rowStatus", "C");
+		}
+		
+    	if (dsTcfNotiMap.get("notiTtl") == "") {
+    		com.showMessage('CFW0010','제목은 필수입니다.'); //$
+    		return false;
+    	}	        
+        
+        //게시기간 udc 값 set
+        dsTcfNotiMap.set("notiStrtDt", com.getUdcValue("udcPtupPeriodcalendar", "frDate"));
+        dsTcfNotiMap.set("notiEndDt", com.getUdcValue("udcPtupPeriodcalendar", "toDate"));
+        
+        if(com.getUdcValue("udcPtupPeriodcalendar", "frDate") == "" || com.getUdcValue("udcPtupPeriodcalendar", "toDate") == "") {
+        	com.showMessage('CFW0010','게시기간은 필수입니다.'); //$
+        	
+            if(frDate == "") {
+        		com.getUdcComp("udcPtupPeriodcalendar", "frDate").focus();
+        	} else if(toDate == "") {
+        		com.getUdcComp("udcPtupPeriodcalendar", "toDate").focus();
+        	}
+        	return false;
+        }
+        
+        // 첨부파일 ID SET
+        dsTcfNotiMap.set( "aflId" , com.getUdcValue("udcAflId", "aflId") );
+    	
+    	if (!confirm("저장하시겠습니까?")) return;
+        ajaxLib.ajax("/cf/cf0800/CF08000001U/saveTcfNoti", {
+             mode: "synchronous",
+             method: "POST",
+             requestData: dsTcfNotiMap.getJSON(),
+             callback: function(result, e) {
+                         com.showMessage("SCN0002", "저장"); //$1 되었습니다.
+                         
+                         scwin.fnSaveDelAfter();
+             },
+             errCallback: function(e) {console.log(e);}    
+        });
+	};
+	
+    /* 삭제 버튼 클릭 */
+	scwin.btnDel_onclick = function() {
+		if (grdTcfNotiList.getFocusedRowIndex() == -1) {
+			com.showMessage('CFW0010','삭제할 공지사항을 선택해주세요.'); //$
+			return;
+		}
+        
+    	if (!confirm("삭제하시겠습니까?")) return;
+            ajaxLib.ajax("/cf/cf0800/CF08000001U/deleteTcfNoti", {
+                 mode: "synchronous",
+                 method: "POST",
+                 requestData: { 
+                               notiSeq : dsTcfNotiMap.get( "notiSeq" )
+                              },
+                 callback: function(result, e) {
+                             com.showMessage("SCN0002", "삭제"); //$1 되었습니다.
+                             
+                             scwin.fnSaveDelAfter();
+                 },
+                 errCallback: function(e) {console.log(e);}   
+        });
+	};
+	
+	/* 공지사항 리스트 그리드 클릭시 */
+	scwin.grdTcfNotiList_oncellclick = function(row,col) {
+		scwin.itemDisplayControll();
+	
+		//grpTcfNotiMap.setDisabled(false);
+        notiGbVal.setDisabled( true );
+        let rowObj = dsTcfNotiList.getRowJSON(row);
+
+		//공지관리 MAP에 SET
+		dsTcfNotiMap.setJSON(rowObj);
+		dsTcfNotiMap.set("rowStatus", "U");
+        
+		//개시기간 set
+		com.setUdcValue("udcPtupPeriodcalendar", "frDate", rowObj.notiStrtDt);
+        com.setUdcValue("udcPtupPeriodcalendar", "toDate", rowObj.notiEndDt);
+        com.setUdcValue( "udcAflId", "aflId", dsTcfNotiMap.get("aflId"));  // 첨부파일ID
+	};
+	
+	/* 제목 키보드 엔터시 */
+	scwin.ibxKeyNotiTtl_onkeydown = function(e) {
+		if ( e.keyCode == 13 ){
+			scwin.btnFind_onclick();
+	   	}
+	};
+
+    //파일첨부 버튼 클릭
+	scwin.ins_aflId_onclick = function() {
+        var curRowIndex = dsTcfNotiList.getRowPosition();
+        var sJobGbCd = "CF";
+		var sMenuId  = "CF08000001U";
+		var sAflId   = dsTcfNotiMap.get("aflId");
+		var sFileExt = "*.*";
+        var usageFlag = ""; // CUD 허용 여부, INS : 허용 
+        
+        if (dsTcfNotiList.getCellData(curRowIndex, "aproGbVal") != '작성중') {
+                usageFlag = "READ";
+        }else {
+                usageFlag = "INS";
+        }
+
+		com.setUdcValue("udcAflId", "jobGbCd", sJobGbCd);
+		com.setUdcValue("udcAflId", "menuId", sMenuId);
+		com.setUdcValue("udcAflId", "aflId", sAflId);
+		com.setUdcValue("udcAflId", "fileExt", sFileExt);
+        com.setUdcValue("udcAflId", "usage", usageFlag); // 버튼숨기기처리 : 필수값
+        com.setUdcValue("udcAflId", "fileSize", "INS"); // 용량표시안함(표시함:INS) : 필수값
+	};
+
+	//결재상신
+	scwin.btnAprvSbrq_onclick = function(aprvFlag) {
+		/* 1. 기본 파라미터 설정 */
+		let titleName;
+        let paramObj = new Object();
+        let curRowIndex = dsTcfNotiList.getRowPosition();
+        
+        /* 2. 결재 보고서 데이터 설정 */
+        titleName = dsTcfNotiList.getCellData( curRowIndex , "notiTtl" );
+        curNotiSeq = dsTcfNotiList.getCellData( curRowIndex , "notiSeq" );
+        dsSearchMap.set( "notiSeq" , curNotiSeq );
+
+        paramObj.jobGbCd = "CF";                                         // 업무구분코드
+        paramObj.importUrl = "/ux/cf/cf0800/CF08000001E.xml";            // 출력할 결재본문페이지
+        paramObj.aprvTtl = "[공지사항] " + titleName;  	        		 // 결재제목
+        paramObj.rvwrEmpno = "";                                         // 검토자_사번
+        paramObj.fnlAprprEmpno = "";                                     // 최종승인자_사번
+        paramObj.aprvPrcgNm = "";                                        // 후처리결재처리명
+        paramObj.aprvPrcgEventNm = "/cf/cf0800/CF08000001U/notifyTcfNoti"; // 후처리결재처리 이벤트명
+        paramObj.aprvDocModiPsblYn = "Y";                                // 결재문서 수정불가기능 Y/N
+        paramObj.aprlnModiPsblYn = "N";                                  // 결재선 수정불가기능 Y/N
+        paramObj.aprvAtchModiPsblYn = "N";                               // 결재첨부 수정불가기능 Y/N
+        paramObj.aprvAflId = dsTcfNotiList.getCellData(curRowIndex, "aflId");                  // 본문링크용 첨부파일 id (콤머로 구분해서 보내준다)
+//        paramObj.popupWidth = "1200";                                  // 미리보기 가로크기
+//        paramObj.popupHeight = "800";                                  // 미리보기 세로크기
+        
+        com.aprvSendEditor(paramObj); //의견달기호출		
+	};
+    
+    /** 전자결재 후처리 **/
+	scwin.aprvPublicAction = function() {
+	   let curRowIndex = dsTcfNotiList.getRowPosition();
+        
+	   //결재번호 update
+	   ajaxLib.ajax("/cf/cf0800/CF08000001U/updateTcfNotiAprv", {
+	       method      : "post",
+           requestData: {
+                    notiSeq: dsTcfNotiList.getCellData( curRowIndex , "notiSeq"),
+                    aprvNo: com.getAprvNo(),
+                    aproGbVal:"CF004110"
+           },
+	       callback: function(result, e) {
+	                   // 저장 후 조회
+	                   scwin.btnFind_onclick();
+	       },
+	       errCallback: function(result, e) {
+	                   com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+	       }
+	   });         
+    };
+    
+    // 결재현황 클릭
+	scwin.btnApprCon_onclick = function() {
+        let curRowIndex = dsTcfNotiList.getRowPosition();
+        com.aprvViewPopup(dsTcfNotiList.getCellData( curRowIndex , "aprvNo"));       
+	};]]></script>
+	<w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+    <w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="defaultbox" id="" style="">
+				<w2:textbox class="df_tt" id="" label="공지사항" style="" tagname="h3"></w2:textbox>
+				<xf:group class="right_wrap" id="" style="">
+                    <!-- 결재이벤트 페이지 임포트 -->
+                    <xf:group>
+                    	<w2:wframe style="display:none" id="importAprvMain" src="/ux/cf/CF00350500U.xml"></w2:wframe>
+                    </xf:group>
+					<xf:group id="" style="">
+                        <w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnAprvSbrq_onclick"
+                                            id="btnAprv" outerDiv="false" style="" disabled="false">
+                                            <xf:label><![CDATA[결재]]></xf:label>
+                        </w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" ev:onclick="scwin.btnApprCon_onclick"
+											id="btnStatus" outerDiv="false" style="" disabled="true">
+											<xf:label><![CDATA[결재현황]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+							<xf:label><![CDATA[조회]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnNew" outerDiv="false" style="" ev:onclick="scwin.btnNew_onclick">
+							<xf:label><![CDATA[신규]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+							<xf:label><![CDATA[저장]]></xf:label>
+						</w2:anchor>
+						<w2:anchor class="btn_gcm" clickEventElement="" id="btnDel" outerDiv="false" style="" ev:onclick="scwin.btnDel_onclick">
+							<xf:label><![CDATA[삭제]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpSearchBox" style="" tagname="table">
+			    <w2:attributes>
+			        <w2:summary>공지사항 관련 테이블 입니다.</w2:summary>
+			    </w2:attributes>
+			    <xf:group tagname="colgroup">
+			        <xf:group style="width:120.00px;" tagname="col"></xf:group>
+			        <xf:group style="" tagname="col"></xf:group>
+			    </xf:group>
+			    <xf:group class="" style="" tagname="tr">
+			        <xf:group class="w2tb_th" style="" tagname="th">
+			            <w2:attributes>
+			                <w2:scope>row</w2:scope>
+			            </w2:attributes>
+			            <w2:span id="" label="제 &amp;nbsp; &amp;nbsp;목" style=""></w2:span>
+			        </xf:group>
+			        <xf:group class="w2tb_td" style="" tagname="td">
+			            <xf:input class="" id="ibxKeyNotiTtl" style="width:30%;" ref="data:dsSearchMap.notiTtl"
+			                ev:onkeydown="scwin.ibxKeyNotiTtl_onkeydown">
+			                <w2:attributes>
+			                    <w2:value></w2:value>
+			                </w2:attributes>
+			            </xf:input>
+			        </xf:group>
+			    </xf:group>
+			</xf:group>
+			<w2:gridView autoFit="allColumn" class="" dataList="data:dsTcfNotiList" fixedColumnWithHidden="true" focusMode="row"
+			    id="grdTcfNotiList" readOnly="true" rowNumHeaderValue="No" rowNumVisible="" rowStatusHeaderValue="" rowStatusVisible=""
+			    rowStatusWidth="30" scrollByColumn="false" style="height: 200px;left:-6px;top:-16px;margin-top:25px;margin-left:5px;"
+			    useShiftKey="true" visibleRowNum="" ev:oncellclick="scwin.grdTcfNotiList_oncellclick">
+			    <w2:header id="header1" style="">
+			        <w2:row id="row2" style="">
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column64" value="No." blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="350" inputType="text" id="column62" value="제목" blockSelect="false"
+			                displayMode="label" style="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="column10" value="결재상태" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			            <w2:column blockSelect="false" id="column19" inputType="text" value="게시기간" width="200" style=""></w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" id="column43" value="작성일" blockSelect="false"
+			                displayMode="label" style="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="column66" value="작성자" blockSelect="false"
+			                displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="250" inputType="text" id="column50" value="비고" blockSelect="false"
+			                displayMode="label" style="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" id="column63" value="구분" blockSelect="false"
+			                displayMode="label" style="">
+			            </w2:column>
+			        </w2:row>
+			    </w2:header>
+			    <w2:gBody id="gBody4" style="">
+			        <w2:row id="row5" style="">
+			            <w2:column removeBorderStyle="false" width="70" inputType="expression" style="" id="column65" value=""
+			                blockSelect="false" displayMode="label" expression="rowindex()+1">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="350" inputType="text" id="notiTtl" value="" blockSelect="false"
+			                displayMode="label" style="" textAlign="left">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="70" inputType="text" style="" id="aproGbVal" value="" blockSelect="false"
+			                displayMode="label" textAlign="center">
+			            </w2:column>
+			            <w2:column blockSelect="false" id="notiDtm" inputType="text" value="" width="200" viewType="" style=""
+			                customFormatter="" textAlign="center" displayMode="label" removeBorderStyle="false">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" id="fstRegDtm" value="" blockSelect="false"
+			                displayMode="label" style="" textAlign="center">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="fstRegprEmpNm" value="" blockSelect="false"
+			                displayMode="label" textAlign="center">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="250" inputType="text" id="notiRmkCn" blockSelect="false"
+			                displayMode="label" style="" textAlign="left">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" id="notiGbNm" blockSelect="false"
+			                displayMode="label" style="" textAlign="center">
+			            </w2:column>
+			        </w2:row>
+			    </w2:gBody>
+			</w2:gridView>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpTcfNotiMap" style="" tagname="table">
+			    <w2:attributes>
+			        <w2:summary>공지사항 관련 테이블 입니다.</w2:summary>
+			    </w2:attributes>
+			    <xf:group tagname="colgroup">
+			        <xf:group style="width:120.00px;" tagname="col"></xf:group>
+			        <xf:group style="" tagname="col"></xf:group>
+			        <xf:group tagname="col" style="width:120px;"></xf:group>
+			        <xf:group tagname="col" style=""></xf:group>
+			    </xf:group>
+			    <xf:group style="" tagname="tr">
+			        <xf:group class="w2tb_th req" style="" tagname="th">
+			            <w2:attributes>
+			                <w2:scope>row</w2:scope>
+			            </w2:attributes>
+			            <w2:span id="" label="제목" style=""></w2:span>
+			        </xf:group>
+			        <xf:group class="w2tb_td" style="" tagname="td">
+			            <w2:attributes>
+			                <w2:colspan>1</w2:colspan>
+			                <w2:rowspan>1</w2:rowspan>
+			            </w2:attributes>
+			            <xf:input class="req" id="notiTtl" style="width:100%;margin-left:0px;" initValue="" mandatory="true"
+			                ref="data:dsTcfNotiMap.notiTtl">
+			                <w2:attributes>
+			                    <w2:value></w2:value>
+			                </w2:attributes>
+			            </xf:input>
+			        </xf:group>
+			        <xf:group tagname="th" class="w2tb_th req">
+			            <w2:attributes></w2:attributes>
+			            <w2:span id="" label="게시기간" style=""></w2:span>
+			        </xf:group>
+			        <xf:group tagname="td" class="w2tb_td">
+			            <w2:udc_periodcalendar id="udcPtupPeriodcalendar" style=""></w2:udc_periodcalendar>
+			        </xf:group>
+			    </xf:group>
+			    <xf:group tagname="tr">
+			        <xf:group tagname="th" class="w2tb_th">
+			            <w2:attributes>
+			                <w2:scope>row</w2:scope>
+			            </w2:attributes>
+			            <w2:span id="" label="작성일" style=""></w2:span>
+			        </xf:group>
+			        <xf:group tagname="td" class="w2tb_td">
+			            <w2:attributes></w2:attributes>
+			            <xf:output label="" style="width:100%;margin-left:0px;" id="fstRegDtm" ref="data:dsTcfNotiMap.fstRegDtm">
+			            </xf:output>
+			        </xf:group>
+			        <xf:group tagname="th" class="w2tb_th">
+			            <w2:attributes>
+			                <w2:scope>row</w2:scope>
+			            </w2:attributes>
+			            <w2:span id="" label="작성자" style=""></w2:span>
+			        </xf:group>
+			        <xf:group tagname="td" class="w2tb_td">
+			            <w2:attributes></w2:attributes>
+                        <xf:output label="" style="width:100%;margin-left:0px;" id="fstRegprEmpNm" ref="data:dsTcfNotiMap.fstRegprEmpNm">
+                        </xf:output>
+			        </xf:group>
+			    </xf:group>
+			    <xf:group style="" tagname="tr">
+			        <xf:group class="w2tb_th" style="" tagname="th">
+			            <w2:attributes>
+			                <w2:scope>row</w2:scope>
+			            </w2:attributes>
+			            <w2:span id="" label="비고" style=""></w2:span>
+			        </xf:group>
+			        <xf:group class="w2tb_td" style="" tagname="td">
+			            <xf:input class="" id="notiRmkCn" initValue="" mandatory="" ref="data:dsTcfNotiMap.notiRmkCn"
+			                style="width:100%;">
+			                <w2:attributes>
+			                    <w2:value></w2:value>
+			                </w2:attributes>
+			            </xf:input>
+			        </xf:group>
+			        <xf:group tagname="th" class="w2tb_th">
+			            <w2:attributes></w2:attributes>
+			            <w2:span id="" label="구분" style=""></w2:span>
+			        </xf:group>
+			        <xf:group tagname="td" class="w2tb_td">
+			            <w2:attributes></w2:attributes>
+			            <xf:select1 allOption="" appearance="minimal" chooseOption="" direction="auto" disabled="false"
+			                disabledClass="w2selectbox_disabled" displayMode="label" id="notiGbVal" optionOrder="" ref="data:dsTcfNotiMap.notiGbVal"
+			                style="width:140px;" submenuSize="auto" chooseOptionLabel="" class="" mandatory="">
+			                <xf:choices>
+			                    <xf:item>
+			                        <xf:label><![CDATA[ERP]]></xf:label>
+			                        <xf:value><![CDATA[1]]></xf:value>
+			                    </xf:item>
+			                    <xf:item>
+			                        <xf:label><![CDATA[B2B]]></xf:label>
+			                        <xf:value><![CDATA[2]]></xf:value>
+			                    </xf:item>
+			                </xf:choices>
+			            </xf:select1>
+			        </xf:group>
+			    </xf:group>
+			    <xf:group style="" tagname="tr">
+			        <xf:group class="w2tb_th" style="" tagname="th">
+			            <w2:attributes>
+			                <w2:scope>row</w2:scope>
+			            </w2:attributes>
+			            <w2:span id="" label="내용" style=""></w2:span>
+			        </xf:group>
+			        <xf:group class="w2tb_td" style="" tagname="td" id="">
+			            <w2:attributes>
+			                <w2:colspan>3</w2:colspan>
+			                <w2:rowspan>1</w2:rowspan>
+			            </w2:attributes>
+			            <xf:textarea id="notiCn" style="width: 100%;height:200px;" ref="data:dsTcfNotiMap.notiCn">
+                        </xf:textarea>
+			        </xf:group>
+			    </xf:group>
+			    <xf:group style="" tagname="tr">
+			        <xf:group class="w2tb_th" style="" tagname="th">
+			            <w2:attributes>
+			                <w2:scope>row</w2:scope>
+			            </w2:attributes>
+			            <w2:span id="" label="파일첨부" style=""></w2:span>
+			        </xf:group>
+			        <xf:group class="w2tb_td" style="" tagname="td" id="" ev:onclick="">
+			            <w2:attributes>
+			                <w2:colspan>3</w2:colspan>
+                            <w2:rowspan>1</w2:rowspan>
+			            </w2:attributes>
+                        <xf:group class="" id="" style="">
+                            <w2:udc_file_list id="udcAflId" style=""></w2:udc_file_list>
+                        </xf:group>
+			        </xf:group>
+			    </xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

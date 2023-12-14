@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+    	<w2:type>UDC</w2:type>
+        <w2:buildDate/>
+        <xf:model>
+            <xf:instance>
+                <data xmlns=""/>
+            </xf:instance>
+            <w2:dataCollection baseNode="map">
+            </w2:dataCollection>
+        </xf:model>
+        <script type="javascript"><![CDATA[
+		]]></script>
+    </head>
+    <body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+    	<!--/** WEBSQUARE UDC */
+    		{
+    		"componentName": "udc_address",
+    		"pluginName": "udc_address",
+    		"company": "",
+    		"developer": "",
+    		"category": "Basic",
+    		"notSupportBrowser": "",
+    		"version": "",
+    		"htmlRender": "",
+    		"icon": "",
+    		"disableIcon": "",
+    		"description": "",
+    		"width": "",
+    		"height": "",
+    		"properties": [
+    		{
+    		"name": "id",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "Y",
+    		"hidden": "N",
+    		"description": "udc 아이디"
+    		},
+    		{
+    		"name": "date",
+    		"default": "",
+    		"type": "number",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 초기 값"
+    		},
+    		{
+    		"name": "ref",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "시작년월 Ref"
+    		},
+    		{
+    		"name": "class",
+    		"default": "",
+    		"type": "string",
+    		"option": "",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "udc 클래스"
+    		},
+    		{
+    		"name": "disabled",
+    		"default": "",
+    		"type": "combobox",
+    		"option": "[true,false]",
+    		"necessary": "N",
+    		"hidden": "N",
+    		"description": "desc"
+    		}
+    		],
+    		"events": [],
+    		"apis": [
+    		{
+    		"name": "getDate",
+    		"description": "desc",
+    		"params": [],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		},
+    		{
+    		"name": "setDate",
+    		"description": "desc",
+    		"params": [{
+    		"type": "Number",
+    		"name": "strDate",
+    		"description": "desc"
+    		}],
+    		"return": [{
+    		"type": "String",
+    		"description": "desc"
+    		}]
+    		}
+    		]
+    		}
+    		}
+    	-->
+    	<xf:group class="udc_wrap udc_address" id="" style="" pluginName="udc_address">
+    		<xf:input adjustMaxLength="false" id="zipNo" style="width:70px" class="" mandatory="" maxlength="5" editType="select" dataType="number" readOnly="true">
+    			<script ev:event="onchange" type="text/javascript"><![CDATA[
+    				if ( zipNo.getValue() == "" ){
+    					this.getParent().setUserData("pageData","");
+    					addrBasic.setValue("");
+    					addrDetail.setValue("");
+    				}
+    			 ]]></script>
+    		</xf:input>
+			<w2:anchor class="btn_gcm_ic src" id="btnSrch" outerDiv="false" style="">    		
+    			<xf:label><![CDATA[주소찾기]]></xf:label>
+				<script ev:event="onclick" type="text/javascript"><![CDATA[    			    
+    			    //com.udcPopup("AddrPopup",{comp:[addrBasic,zipNo,addrDetail]});
+                    com.udcPopup("AddrPopupApi",{comp:[addrBasic,zipNo,addrDetail]});
+    			 ]]></script>    			
+    		</w2:anchor>
+    		<xf:input adjustMaxLength="false" id="addrBasic" style="width:189px;" disabled="" readOnly="true"></xf:input>
+    		<xf:input adjustMaxLength="false" id="addrDetail" style="width:126px;"></xf:input>
+    	</xf:group>
+
+    </body>
+</html>

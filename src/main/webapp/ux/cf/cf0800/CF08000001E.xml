@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+							<w2:dataMap baseNode="map" id="dsTcfNotiMap">
+											<w2:keyInfo>
+															<w2:key id="notiSeq" name="공지_순번" dataType="text"></w2:key>
+															<w2:key id="notiTtl" name="공지_제목" dataType="text"></w2:key>
+															<w2:key id="notiStrtDt" name="공지_시작_일자" dataType="text"></w2:key>
+															<w2:key id="notiEndDt" name="공지_종료_일자" dataType="text"></w2:key>
+															<w2:key id="fstRegDtm" name="최초_등록_일자" dataType="text"></w2:key>
+															<w2:key id="fstRegprEmpNm" name="최초_등록자_명" dataType="text"></w2:key>
+															<w2:key id="notiRmkCn" name="공지_비고_내용" dataType="text"></w2:key>
+															<w2:key id="notiGbVal" name="공지_구분_값" dataType="text"></w2:key>
+															<w2:key id="notiCn" name="공지_내용" dataType="text"></w2:key>
+															<w2:key id="aflId" name="첨부파일_ID" dataType="text"></w2:key>
+															<w2:key id="rowStatus" name="상태" dataType="text"></w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+							<w2:dataMap baseNode="map" id="dsSearchMap">
+											<w2:keyInfo>
+															<w2:key id="notiTtl" name="공지_사항_제목" dataType="text"></w2:key>
+															<w2:key id="notiSeq" name="공지_사항_순번" dataType="text"></w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+        <script type="text/javascript" src="/resources/js/lib/util/jquery.blockUI.js"></script>
+
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID   : CF08000001E
+ * Program Name : 공지사항 결재화면
+ * Author       : 표성빈(sbPyo)
+ * Date         : 2022.09.23
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ *     
+ **************************************************************************/ 
+
+    /************************************************************************************
+     *  [1] 전역변수 
+     ************************************************************************************/    
+	scwin.svcId;		//callback 처리용 서비스ID
+	var option = {progress_bar:true};
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/  
+    scwin.onpageload = function() {
+    
+    	com.commonUI();
+		scwin.fnInitial();
+        
+    };
+     
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {   
+  
+	   debugger;
+	   //UI팀용 함수 호출
+	   com.commonUI();
+        
+	   let dsSrch = com.getAprvParam("dsSearchMap"); // 부모창의 데이터맵을 읽어온다.
+        
+	   dsSearchMap.setJSON(dsSrch.getJSON());
+	   
+	   scwin.fnAprvNoti();
+         
+       
+    };        
+      
+
+    /************************************************************************************
+     *  [3] 사용자 정의함수 함수 
+     ************************************************************************************/
+	
+    /* 조회 */
+    scwin.fnAprvNoti = function() {
+    
+        ajaxLib.ajax("/cf/cf0800/CF08000001U/selectAprvNoti", {
+        	method : "POST"
+            , requestData : dsSearchMap.getJSON()
+            , callback: function(result, e) {
+               dsTcfNotiMap.setJSON(result.data.dsAprvDataMap);
+               
+			   //게시기간 오늘날짜로 set
+			   com.setUdcValue("udcPtupPeriodcalendar", "frDate", dsTcfNotiMap.get("notiStrtDt"));
+        	   com.setUdcValue("udcPtupPeriodcalendar", "toDate", dsTcfNotiMap.get("notiEndDt"));
+        	   
+        	   if (dsTcfNotiMap.get("notiGbVal") == '1') {
+					dsTcfNotiMap.set("notiGbVal", "ERP");
+        	   } else {
+        	   		dsTcfNotiMap.set("notiGbVal", "B2B");
+        	   }
+            }
+            , errCallback: function(result, e) {
+                com.showMessage("CFE0112"); //작업 중 에러가 발생하였습니다. 관리자에게 문의하십시오
+            }
+        });
+
+    };
+    
+    /************************************************************************************
+     *  [4] Callback 함수 
+     ************************************************************************************/
+      
+    /************************************************************************************
+     *  [5] Event 함수 
+     ************************************************************************************/      
+]]></script>
+	<w2:require src="/WEB-INF/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+    <w2:require src="/WEB-INF/ux/common/udc/udcFileList.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpTcfNotiMap" style="margin-bottom: 1em;" tagname="table">
+		    <w2:attributes>
+		        <w2:summary>공지사항 관련 테이블 입니다.</w2:summary>
+		    </w2:attributes>
+		    <xf:group tagname="colgroup">
+		        <xf:group style="width:120.00px;" tagname="col"></xf:group>
+		        <xf:group style="" tagname="col"></xf:group>
+		        <xf:group tagname="col" style="width:120px;"></xf:group>
+		        <xf:group tagname="col" style=""></xf:group>
+		    </xf:group>
+			<xf:group style="" tagname="tr">
+			    <xf:group class="w2tb_th req" style="" tagname="th">
+			        <w2:attributes>
+			            <w2:scope>row</w2:scope>
+			        </w2:attributes>
+			        <w2:span id="" label="제목" style=""></w2:span>
+			    </xf:group>
+			    <xf:group class="w2tb_td" style="" tagname="td">
+			        <w2:attributes>
+			            <w2:colspan>1</w2:colspan>
+			            <w2:rowspan>1</w2:rowspan>
+			        </w2:attributes>
+			        <xf:input class="req" id="notiTtl" style="width:100%;margin-left:0px;" initValue="" mandatory="true"
+			            ref="data:dsTcfNotiMap.notiTtl" readOnly="true">
+			            <w2:attributes>
+			                <w2:value></w2:value>
+			            </w2:attributes>
+			        </xf:input>
+			    </xf:group>
+			    <xf:group tagname="th" class="w2tb_th">
+			        <w2:attributes></w2:attributes>
+			        <w2:span id="" label="게시기간" style=""></w2:span>
+			    </xf:group>
+			    <xf:group tagname="td" class="w2tb_td">
+			        <w2:udc_periodcalendar id="udcPtupPeriodcalendar" style="" disabled="true" ></w2:udc_periodcalendar>
+			    </xf:group>
+			</xf:group>
+			<xf:group tagname="tr">
+			    <xf:group tagname="th" class="w2tb_th">
+			        <w2:attributes>
+			            <w2:scope>row</w2:scope>
+			        </w2:attributes>
+			        <w2:span id="" label="작성일" style=""></w2:span>
+			    </xf:group>
+			    <xf:group tagname="td" class="w2tb_td">
+			        <w2:attributes></w2:attributes>
+			        <xf:output label="" style="width:100%;margin-left:0px;" id="fstRegDtm" ref="data:dsTcfNotiMap.fstRegDtm">
+			        </xf:output>
+			    </xf:group>
+			    <xf:group tagname="th" class="w2tb_th">
+			        <w2:attributes>
+			            <w2:scope>row</w2:scope>
+			        </w2:attributes>
+			        <w2:span id="" label="작성자" style=""></w2:span>
+			    </xf:group>
+			    <xf:group tagname="td" class="w2tb_td">
+			        <w2:attributes></w2:attributes>
+                    <xf:output label="" style="width:100%;margin-left:0px;" id="fstRegprEmpNm" ref="data:dsTcfNotiMap.fstRegprEmpNm">
+                </xf:output>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" tagname="tr">
+			    <xf:group class="w2tb_th" style="" tagname="th">
+			        <w2:attributes>
+			            <w2:scope>row</w2:scope>
+			        </w2:attributes>
+			        <w2:span id="" label="비고" style=""></w2:span>
+			    </xf:group>
+			    <xf:group class="w2tb_td" style="" tagname="td">
+			        <xf:input class="" id="notiRmkCn" initValue="" mandatory="" ref="data:dsTcfNotiMap.notiRmkCn"
+			            style="width:100%;" readOnly="true">
+			            <w2:attributes>
+			                <w2:value></w2:value>
+			            </w2:attributes>
+			        </xf:input>
+			    </xf:group>
+			    <xf:group tagname="th" class="w2tb_th">
+			        <w2:attributes></w2:attributes>
+			        <w2:span id="" label="구분" style=""></w2:span>
+			    </xf:group>
+			    <xf:group tagname="td" class="w2tb_td">
+			        <w2:attributes></w2:attributes>
+					<xf:output label="" style="width:100%;margin-left:0px;" id="notiGbVal" ref="data:dsTcfNotiMap.notiGbVal"></xf:output>
+					<!--
+			        <xf:select1 allOption="" appearance="minimal" chooseOption="" direction="auto" disabled="false"
+			                disabledClass="w2selectbox_disabled" displayMode="label" id="notiGbVal" optionOrder="" ref="data:dsTcfNotiMap.notiGbVal"
+			                style="width:140px;" submenuSize="auto" chooseOptionLabel="" class="" mandatory="" readOnly="true">
+			            <xf:choices>
+			                <xf:item>
+			                    <xf:label><![CDATA[ERP]]></xf:label>
+			                    <xf:value><![CDATA[1]]></xf:value>
+			                </xf:item>
+			                <xf:item>
+			                    <xf:label><![CDATA[B2B]]></xf:label>
+			                    <xf:value><![CDATA[2]]></xf:value>
+			                </xf:item>
+			            </xf:choices>
+			        </xf:select1>
+			        -->
+			    </xf:group>
+			</xf:group>
+			<xf:group style="" tagname="tr">
+			    <xf:group class="w2tb_th" style="" tagname="th">
+			        <w2:attributes>
+			            <w2:scope>row</w2:scope>
+			        </w2:attributes>
+			        <w2:span id="" label="내용" style=""></w2:span>
+			    </xf:group>
+			    <xf:group class="w2tb_td" style="" tagname="td" id="">
+			        <w2:attributes>
+			            <w2:colspan>3</w2:colspan>
+			            <w2:rowspan>1</w2:rowspan>
+			        </w2:attributes>
+			        <xf:textarea id="notiCn" style="width: 100%;height:400px;" ref="data:dsTcfNotiMap.notiCn" readOnly="true">
+					</xf:textarea>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

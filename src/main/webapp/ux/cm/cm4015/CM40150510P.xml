@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+							<w2:dataList baseNode="list" repeatNode="map" style="" id="dsPcostTypeMap"
+											saveRemovedData="true">
+											<w2:columnInfo>
+															<w2:column id="pcostTypeVal" name="전도금 처리유형"
+																			dataType="text">
+															</w2:column>
+											</w2:columnInfo>
+											<w2:data use="false"></w2:data>
+							</w2:dataList>
+							<w2:dataMap baseNode="map" id="dsSrchMap">
+											<w2:keyInfo>
+															<w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+											</w2:keyInfo>
+							</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/><script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM40150510P.xml
+ * Program Name : 승인요청(삭제)
+ * Author : tpyhyoj (tpyhyoj)
+ * Date : 2019.08.28
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ *  			tpyhyoj	화면 삭제
+ **************************************************************************/
+ 
+    /************************************************************************************
+     *  [1] onpageload
+     ************************************************************************************/
+    scwin.onpageload = function() {
+
+        scwin.fnInitial();
+
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+        //파리미터
+        paramKeySiteCd      = JSON.parse($p.getPopupParam()).data.paramKeySiteCd;       //현장코드
+        paramKeyApprEmpno   = JSON.parse($p.getPopupParam()).data.paramKeyApprEmpno;    //승인자사번
+        paramKeyApprEmpNm   = JSON.parse($p.getPopupParam()).data.paramKeyApprEmpNm;    //승인자명
+        paramKeyYyyyMm      = JSON.parse($p.getPopupParam()).data.paramKeyYyyyMm;       //년월
+
+        dsSrchMap.set("siteCd",paramKeySiteCd);
+
+        spnYyyyMm.setLabel( paramKeyYyyyMm );
+        spnApprEmpNm.setLabel( paramKeyApprEmpNm );
+        //UI팀용 함수 호출
+        scwin.commonUI();
+    };
+
+    /************************************************************************************
+     *  [2] 전역변수
+     ************************************************************************************/
+    var svcId = "";
+    var paramKeySiteCd    ;     //현장코드
+    var paramKeyApprEmpno ;     //승인자사번
+    var paramKeyApprEmpNm ;     //승인자명
+    var paramKeyYyyyMm    ;     //년월
+    /************************************************************************************
+     *  [3] Event 함수
+     ************************************************************************************/
+
+    /** 확인 버튼 클릭 : 선택한 정보 리턴 **/
+    scwin.btnConfirm_onclick = function() {
+
+       var oJSON = {
+            "aprvYn": "Y"
+        };
+
+        com.popup_close(oJSON);
+    };
+
+    /** 취소 버튼 클릭 : 팝업 창 닫기 **/
+    scwin.btnCancel_onclick = function() {
+        com.popup_close("");
+    };
+
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    // 결과 후처리
+    scwin.fnCallback = function(result, e) {
+        switch (svcId) {
+            case "selectIntAprvConfirmPopupInit" : //초기 조회
+                //서버에서 넘겨주는 값 세팅
+                spnSiteNm.setLabel( result.data.siteNmMap.siteNm ); //현장면 조회
+                break;
+        }
+    };
+
+    // 에러 후처리
+    scwin.fnErrCallBack = function(e) {
+        switch (svcId) {
+            case "selectIntAprvConfirmPopupInit" :
+                console.log('조회오류: ' + e);
+                break;
+        }
+    }
+
+    /**************************************************************************
+     *  [5] 사용자정의 함수
+     **************************************************************************/
+    // 화면 초기조회
+    scwin.fnSearchInit = function() {
+        svcId = "selectIntAprvConfirmPopupInit";
+
+        ajaxLib.ajax("/cm/cm4015/CM40150510P/selectIntAprvConfirmPopupInit", {
+            mode : "synchronous",
+            method : "POST",
+            requestData : dsSrchMap.getJSON(),
+            callback : "fnCallback",
+            errCallback : "fnErrCallBack"
+        });
+    };
+    			 	]]></script>
+
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcICnumber.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body popup">
+
+			<xf:group style="" id="" class="defaultbox">
+				<w2:textbox label="승인요청(전환대상자 + 국민/건강보험 미등록자 조회)" style="" id="" class="df_tt" tagname="h3"></w2:textbox>
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>승인요청 입력 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:68px;" tagname="col"></xf:group>
+					<xf:group style="width: auto;" tagname="col"></xf:group>
+					<xf:group style="width:82px;" tagname="col"></xf:group>
+					<xf:group style="width: auto;" tagname="col"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="현장" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span id="spnSiteNm" label="경북대생활관" class="txt_unit"></w2:span>
+					</xf:group>
+
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="승인자" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span id="spnApprEmpNm" label="안종국" style="" class="txt_unit"></w2:span>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+
+			<xf:group class="bottombox" id="" style="">
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnConfirm" outerDiv="false" style="" ev:onclick="scwin.btnConfirm_onclick">
+					<xf:label><![CDATA[확인]]></xf:label>
+				</w2:anchor>
+				<w2:anchor class="btn_gcm" clickEventElement="outerDiv" id="btnCancel" outerDiv="false" style="" ev:onclick="scwin.btnCancel_onclick">
+					<xf:label><![CDATA[취소]]></xf:label>
+				</w2:anchor>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

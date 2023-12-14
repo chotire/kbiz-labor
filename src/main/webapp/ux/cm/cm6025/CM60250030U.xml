@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+			    <w2:dataList baseNode="list" repeatNode="map" style="" id="dsList" saveRemovedData="true"
+			        ev:oncelldatachange="scwin.dsList_oncelldatachange" ev:onrowpositionchange="scwin.dsList_onrowpositionchange"
+			        ev:onbeforerowpositionchange="scwin.dsList_onbeforerowpositionchange">
+			        <w2:columnInfo>
+			            <w2:column id="mskWkrNm" name="근로자명마스킹" dataType="text"></w2:column>
+			            <w2:column id="mskSecResno" name="주민번호마스킹" dataType="text"></w2:column>
+			            <w2:column id="lv" name="레벨" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot01" name="dailyworkTot01" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot02" name="dailyworkTot02" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot03" name="dailyworkTot03" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot04" name="dailyworkTot04" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot05" name="dailyworkTot05" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot06" name="dailyworkTot06" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot07" name="dailyworkTot07" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot08" name="dailyworkTot08" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot09" name="dailyworkTot09" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot10" name="dailyworkTot10" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot11" name="dailyworkTot11" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot12" name="dailyworkTot12" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot13" name="dailyworkTot13" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot14" name="dailyworkTot14" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot15" name="dailyworkTot15" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTot16" name="dailyworkTot16" dataType="text"></w2:column>
+			            <w2:column id="dailyworkTotal" name="근로공수" dataType="text"></w2:column>
+			            <w2:column id="dayCnt" name="근로일수" dataType="number"></w2:column>
+			            <w2:column id="payAmt" name="급여총계" dataType="number"></w2:column>
+			            <w2:column id="ictxAmt" name="소득세" dataType="number"></w2:column>
+			            <w2:column id="rstxAmt" name="주민세" dataType="number"></w2:column>
+			            <w2:column id="eplmtInfeeAmt" name="고용보험료" dataType="number"></w2:column>
+			            <w2:column id="hlthInfeeAmt" name="건강보험료" dataType="number"></w2:column>
+			            <w2:column id="natnpPnsnAmt" name="국민연금료" dataType="number"></w2:column>
+			            <w2:column id="gongTot" name="공제합계" dataType="number"></w2:column>
+			            <w2:column id="netpayAmt" name="지급금액" dataType="number"></w2:column>
+			            <w2:column id="wkrNm" name="근로자명" dataType="text"></w2:column>
+			        </w2:columnInfo>
+			        <w2:data use="true"></w2:data>
+			    </w2:dataList>
+			    <w2:dataMap baseNode="map" id="dsSearchMap" ev:onmodelchange="" ev:onsetdata="">
+			        <w2:keyInfo>
+			            <w2:key id="siteCd" name="현장코드" dataType="text"></w2:key>
+			            <w2:key id="siteNm" name="현장명" dataType="text"></w2:key>
+			            <w2:key id="lbatnDt" name="출역년월일" dataType="text"></w2:key>
+			            <w2:key id="workYm" name="출역년월" dataType="text"></w2:key>
+			        </w2:keyInfo>
+			    </w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/common/cmn_CM.js" type="javascript" lazy="false"/>
+		<script type="javascript" ><![CDATA[
+/***************************************************************************
+ * Program ID : CM60250030U.xml
+ * Program Name : 노무비지급대장
+ * Author : JHLEE
+ * Date : 2022.06.21
+ * 
+ * History 
+ * ======================================== 
+ * 변경일자     수정자   내 용 
+ * ======================================== 
+ *    
+ **************************************************************************/
+
+	/**************************************************************************
+	 * [1] 전역변수 선언
+	 **************************************************************************/
+ 
+	/**************************************************************************
+	 * [2] onpageload(초기화포함)
+	 **************************************************************************/
+    scwin.onpageload = function() {   
+        //추가 코드값 맵핑 호출
+        scwin.fnInitial();
+    };
+
+    /** 화면초기화 **/
+    scwin.fnInitial = function() {
+		cmCom.setSite(wfmKeySiteInfo.getWindow());	               //세션의 현장코드를 셋팅
+        dsSearchMap.set("workYm",$p.getCurrentServerDate( "yyyyMM" ));
+ 		grdList.initGrid();	                                       //전도금사용내역목록 GRID 초기화
+        com.commonUI();		                                       //UI팀용 함수 호출
+    };
+
+	/**************************************************************************
+	 * [3] 사용자정의 함수
+	 **************************************************************************/
+  	/**************************************************************************
+	 * 함 수 명: scwin.fnSearchList
+	 * 기 능: 노무비지급대장 정보 조회
+	 **************************************************************************/
+	scwin.fnSearchList = function() {   
+		ajaxLib.ajax("/cm/cm6025/CM60250000U/selectTcmLabrLbatnPaymentList",{
+			method : "POST",
+			requestData : dsSearchMap.getJSON(),
+			callback : function(result, e){      
+                dsList.setJSON(result.data.dsList); 
+                for(let si = 0; si < dsList.getRowCount(); si++)
+                {
+                    let sLbatnQty = dsList.getCellData( si ,  "dailyworkTotal");
+                    if(sLbatnQty.indexOf(".") == -1)
+                    {
+                        dsList.setCellData( si , "dailyworkTotal" , sLbatnQty + ".0");
+                    }
+                    
+                    for(let sj = 1; sj < 17; sj++)
+                    {
+                        let str    = "dailyworkTot";
+                        let arg    = "";
+                        
+                        if(sj<10)
+                        {
+                            arg    = "0" + sj;
+                        }
+                        else
+                        {
+                            arg    = sj;
+                        }
+                        
+                        let conVal = dsList.getCellData(si,str+arg);
+                        
+                        if(conVal.indexOf(".") == -1 && conVal != null && conVal != "")
+                        {
+                            dsList.setCellData( si , str+arg , conVal + ".0");
+                        } 
+                    }
+                     
+                }
+                grdList.setFocusedCell( 0 , 1 , false );			 
+			},
+			 errCallback: function(result, e) {
+                console.log(result);
+            }
+		});
+    };
+    
+	/**************************************************************************
+	 * [4] Callback
+	 **************************************************************************/
+
+
+	/************************************************************************************
+	 *  [5] Event 함수
+	 ************************************************************************************/
+    /**************************************************************************
+     * Event: scwin.WFrameSiteInfo_change_callback
+     * 기 능: 현장코드 변경 이벤트
+     **************************************************************************/
+	scwin.WFrameSiteInfo_change_callback = function() {
+		dsSearchMap.set( "siteCd" , wfmKeySiteInfo.getWindow().ibxKeySiteCd.getValue());
+		dsSearchMap.set( "siteNm" , wfmKeySiteInfo.getWindow().ibxKeySiteNm.getValue());
+        
+        if(!com.isEmpty(dsSearchMap.get("workYm")))
+        {
+            scwin.btnFind_onclick();    
+        }
+	};
+
+    /**************************************************************************
+     * Event: scwin.btnFind_onclick
+     * 기 능: 조회 버튼 Click 이벤트
+     **************************************************************************/
+	scwin.btnFind_onclick = function() {
+	    if (com.isEmpty(dsSearchMap.get("siteCd"))){
+	        com.showMessage("CMW0025", "현장");        //$1은(는) 필수입력입니다.
+	        return false;
+	    }
+	   
+	    if (com.isEmpty(dsSearchMap.get("workYm"))){
+	        com.showMessage("CMW0025", "출역년월");    //$1은(는) 필수입력입니다.
+	        return false;
+	    }
+        
+        dsSearchMap.set( "lbatnDt" , dsSearchMap.get("workYm") + "01"); //조회년월 세팅
+        
+		scwin.fnSearchList();
+	};
+	
+	/**************************************************************************
+     * 함 수 명: scwin.btnExcelDwn_onclick
+     * 기 능: 엑셀다운버튼 Click 이벤트
+     **************************************************************************/
+    scwin.btnExcelDwn_onclick = function() {
+        let result = [];
+        //result.push(1);//checkbox 제외
+        let totalCol = grdList.getTotalCol();
+       
+        for(let ex = 0; ex < totalCol; ex++) {
+            if (!grdList.getColumnVisible(ex)) {
+                result.push(ex);
+            }
+        }
+        
+        let excelOpt = {
+             fileName: "노무자지급대장.xlsx"    //또는 xlsx 확장자 사용
+            ,removeColumns: result.join(",")
+            ,useSubTotal: true                //colMerge된 컬럼을 Merge해서 출력 할 지 여부
+            ,colMergeTextAlign: "center"    //colMerge된 컬럼의 textAlign설정 (bottom, center, top 설정)
+            //,useStyle: "true"
+            ,indent: 1
+            ,useDataFormat : true
+            , headerFontColor : "#FFFFFF"    // Header Font Color
+            , headerColor : "#D9D9D9"        // Header Back Color
+            , subTotalColor : "#FCE4D6"      // SubTotal Back Color
+            , footerColor : "#BDD7EE"         // Footer Color
+            //,type:"1"
+        };  //excel download 옵션
+        
+        grdList.advancedExcelDownload( excelOpt );  
+    };
+
+	//년월 변경 시 이벤트
+	scwin.calYearMonth_onchange = function() {
+        scwin.btnFind_onclick();
+	};
+    
+    function convertVal(value)
+    {
+        if(value.indexOf(".") == -1 && (value != 0 || value != ""))
+        {
+            value = value + ".0";
+        }
+         
+           
+        return value;
+    }
+	]]></script>
+	<w2:require src="/ux/common/udc/udcPeriodcalendar.xml"></w2:require>
+	<w2:require src="/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+	<!-- <w2:require src="/sono-ep-web/src/main/webapp/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require>
+	<w2:require src="/src/main/webapp/WEB-INF/ux/common/udc/udcAddress.xml"></w2:require>
+	<w2:require src="/src/main/webapp/WEB-INF/ux/common/udc/udcYearMonthcalendar.xml"></w2:require> -->
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<xf:group class="navigator" id="" style="">
+					<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				</xf:group>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:194px;" tagname="col"></xf:group>
+						<xf:group style="width:94px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="현장명" style=""></w2:span>
+						</xf:group>
+						<xf:group class="w2tb_td" style="" tagname="td">
+							<w2:wframe id="wfmKeySiteInfo" src="/WEB-INF/ux/cm/cmcomm/schSiteInfo.xml" style=""></w2:wframe>
+						</xf:group>
+						<xf:group class="w2tb_th req" style="" tagname="th">
+							<w2:attributes>
+								<w2:scope>row</w2:scope>
+							</w2:attributes>
+							<w2:span class="" id="" label="기준년월" style=""></w2:span>
+						</xf:group>
+                        <xf:group class="w2tb_td" style="" tagname="td" ev:onblur="">
+							<w2:inputCalendar calendarValueType="yearMonth" class="req"
+								ev:onchange="scwin.calYearMonth_onchange" focusOnDateSelect="false" footerDiv="false" id="calYearMonth"
+								mandatory="" placeholder="____-__" ref="data:dsSearchMap.workYm" renderDiv="true" renderType="component"
+								rightAlign="false" style="width:120px">
+								<script ev:event="onchange" type="text/javascript"><![CDATA[
+			    				 ]]></script>
+							</w2:inputCalendar>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group style="" id="" class="defaultbox">
+				<xf:group class="right_wrap" id="" style="">
+					<xf:group id="" style="height:27px;">
+                        <w2:anchor class="btn_gcm excel_down" clickEventElement="" ev:onclick="scwin.btnExcelDwn_onclick" id="btnExcelDwn"
+							localeRef="" outerDiv="false" style="" toolTip="엑셀다운로드">
+							<xf:label><![CDATA[엑셀다운로드]]></xf:label>
+						</w2:anchor>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+			<w2:gridView autoFit="" class="autoHeight" id="grdList" dataList="data:dsList" editModeEvent="onclick"
+			    fixedColumnWithHidden="true" focusMode="row" keyMoveEditMode="true" readOnly="true" rowNumHeaderValue="No" rowNumVisible=""
+			    rowStatusHeaderValue="상태" rowStatusVisible="false" rowStatusWidth="40" scrollByColumn="false" style="height: 215px;"
+			    tooltipDisplay="true" useShiftKey="true" visibleRowNum="" ev:oncellindexchange="" ev:oncellclick="scwin.grdList_oncellclick"
+			    ev:onrowindexchange="" ev:onafteredit="scwin.grdList_onafteredit" groupbyFilterBox="" groupbyZone="" preventPaste="true">
+			    <w2:header id="header1" style="">
+			        <w2:row id="row2" style="">
+			            <w2:column removeBorderStyle="false" width="120" inputType="text" style="height:102px;" id="column259" value="성명"
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="3">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column255" value="출역현황"
+			                blockSelect="false" displayMode="label" colSpan="16" rowSpan="" class="" textAlign="center">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="80" inputType="text" style="height:34px;" id="column333"
+			                value="근로" blockSelect="false" displayMode="label" colSpan="2" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="130" inputType="text" style="" id="column379" value="소득사항"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="480" inputType="text" style="height:34px;" id="column374" value="공제사항"
+			                blockSelect="false" displayMode="label" colSpan="6" rowSpan="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:102px;" id="column401" value="지급금액"
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="3">
+			            </w2:column>
+			        </w2:row>
+			        <w2:row style="" id="row11">
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column326"
+			                value="1" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column327"
+			                value="2" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column328"
+			                value="3" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column302"
+			                value="4" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column304"
+			                value="5" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column305"
+			                value="6" blockSelect="false" displayMode="label" voidNull="">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column306"
+			                value="7" blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column280" value="8"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column335" value="9"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column365" value="10"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column360" value="11"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column355" value="12"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column350" value="13"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column345" value="14"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column340" value="15"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column279" value=""
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column308" value="일"
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="height:34px;" id="column385" value="공"
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="130" inputType="text" style="height:34px;" id="column380" value="급여총계"
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:34px;" id="column375" value="소득세"
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:34px;" id="column370" value="주민세"
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="100" inputType="text" style="height:34px;" id="column389"
+			                value="고용보험" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="100" inputType="text" style="height:34px;" id="column390"
+			                value="건강보험" blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:34px;" id="column392" value="국민연금"
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="height:34px;" id="column397" value="공제합계"
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="2">
+			            </w2:column>
+			        </w2:row>
+			        <w2:row style="" id="row12">
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column324" value="16"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column323" value="17"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column322" value="18"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column321" value="19"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column320" value="20"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column319" value="21"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column318" value="22"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column317" value="23"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column336" value="24"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column366" value="25"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column361" value="26"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column356" value="27"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column351" value="28"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column346" value="29"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column341" value="30"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="column316" value="31"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			        </w2:row>
+			    </w2:header>
+			    <w2:gBody id="gBody4" style="">
+			        <w2:row id="row5" style="">
+			            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="mskWkrNm" value="" blockSelect="false"
+			                displayMode="label" readOnly="true" textAlign="center">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot01" value="" blockSelect="false"
+			                displayMode="label" dataType="" textAlign="center" readOnly="true" viewType="" displayFormat="">
+			            </w2:column>
+			            <w2:column blockSelect="false" displayMode="label" id="dailyworkTot02" dataType="text" inputType="text" readOnly="true"
+			                removeBorderStyle="false" width="50" viewType="" textAlign="center" displayFormat="">
+			            </w2:column>
+			            <w2:column blockSelect="false" displayMode="label" id="dailyworkTot03" dataType="text" fixColumnWidth="" inputType="text"
+			                removeBorderStyle="false" width="50" textAlign="center" displayFormat="" readOnly="true" allowChar="0-9.">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot04" value="" blockSelect="false"
+			                displayMode="label" viewType="" textAlign="center" class="" imageSrc="" readOnly="true" dataType="text" allowChar="0-9"
+			                displayFormat="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot05" value="" blockSelect="false"
+			                displayMode="label" dataType="text" displayFormat="" textAlign="center" readOnly="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot06" value="" blockSelect="false"
+			                displayMode="label" dataType="text" displayFormat="" textAlign="center" readOnly="true" class="" imageSrc=""
+			                viewType="" voidNull="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot07" value=""
+			                blockSelect="false" displayMode="label" textAlign="center" dataType="text" displayFormat="" readOnly="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot08" value=""
+			                blockSelect="false" displayMode="label" viewType="" textAlign="center" imageSrc="" class="" readOnly="true"
+			                dataType="text" displayFormat="">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot09" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" readOnly="true" dataType="text">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot10" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" readOnly="true" dataType="text">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot11" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" readOnly="true" dataType="text">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot12" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" readOnly="true" dataType="text">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot13" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" readOnly="true" dataType="text">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot14" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" readOnly="true" dataType="text">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot15" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" readOnly="true" dataType="text">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTot16" value=""
+			                blockSelect="false" displayMode="label" textAlign="center" dataType="text" displayFormat="" readOnly="true" defaultValue="0.0">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dayCnt" value=""
+			                blockSelect="false" displayMode="label" textAlign="center" displayFormat="" readOnly="true" dataType="text">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="text" style="" id="dailyworkTotal" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" readOnly="true" dataType="text">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="130" inputType="text" style="" id="payAmt" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" readOnly="true" dataType="number">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="ictxAmt" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" readOnly="true" dataType="number">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="rstxAmt" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" readOnly="true" dataType="number">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="eplmtInfeeAmt" value=""
+			                blockSelect="false" displayMode="label" textAlign="right" displayType="" displayFormat="#,###" dataType="number"
+			                readOnly="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="hlthInfeeAmt" value=""
+			                blockSelect="false" displayMode="label" textAlign="right" displayType="" displayFormat="#,###" dataType="number"
+			                readOnly="true">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="natnpPnsnAmt" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" readOnly="true" dataType="number">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="gongTot" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" readOnly="true" dataType="number">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="text" style="" id="netpayAmt" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" readOnly="true" dataType="number">
+			            </w2:column>
+			        </w2:row>
+			    </w2:gBody>
+			    <w2:footer style="" id="footer2">
+			        <w2:row style="" id="row10">
+			            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column261" value="합 &amp;nbsp;계"
+			                blockSelect="false" displayMode="label">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="height:35px;" id="column258" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTot01')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="height:35px;" id="column253" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTot02')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="height:35px;" id="column250" value=""
+			                blockSelect="false" displayMode="label" expression="sum('dailyworkTot03')" dataType="text" displayFormat=""
+			                textAlign="center" colSpan="" rowSpan="" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="expression" style="height:35px"
+			                id="column300" value="" blockSelect="false" displayMode="label" textAlign="center" expression="sum('dailyworkTot04')"
+			                displayFormat="" dataType="text" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="height:35px;" id="column249" value=""
+			                blockSelect="false" displayMode="label" dataType="text" displayFormat="" textAlign="center"
+			                expression="sum('dailyworkTot05')" colSpan="" rowSpan="" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="expression" style="height:35px"
+			                id="column312" value="" blockSelect="false" displayMode="label" dataType="text" displayFormat="" textAlign="center"
+			                expression="sum('dailyworkTot06')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="height:35px;" id="column245" value=""
+			                blockSelect="false" displayMode="label" colSpan="" rowSpan="" expression="sum('dailyworkTot07')" displayFormat=""
+			                dataType="text" textAlign="center" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column hidden="false" removeBorderStyle="false" width="50" inputType="expression" style="height:35px"
+			                id="column301" value="" blockSelect="false" displayMode="label" dataType="text" displayFormat=""
+			                expression="sum('dailyworkTot08')" textAlign="center" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column338" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTot09')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column368" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTot10')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column363" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTot11')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column358" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTot12')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column353" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTot13')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column348" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTot14')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column343" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTot15')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column264" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" dataType="text" expression="sum('dailyworkTot16')"
+			                textAlign="center" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column310" value=""
+			                blockSelect="false" displayMode="label" dataType="text" displayFormat="" textAlign="center"
+			                expression="sum('dayCnt')" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="50" inputType="expression" style="" id="column388" value=""
+			                blockSelect="false" displayMode="label" displayFormat="" textAlign="center" dataType="text" expression="sum('dailyworkTotal')" displayFormatFunc="" displayFormatter="convertVal">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="130" inputType="expression" style="" id="column383" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" dataType="number" expression="sum('payAmt')">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column378" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" dataType="number" expression="sum('ictxAmt')">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column373" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" dataType="number" expression="sum('rstxAmt')">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column267" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" dataType="number" expression="sum('eplmtInfeeAmt')"
+			                textAlign="right">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="180" inputType="expression" style="" id="column270" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" dataType="number" expression="sum('hlthInfeeAmt')"
+			                textAlign="right">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column395" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" dataType="number" expression="sum('natnpPnsnAmt')">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column400" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" dataType="number" expression="sum('gongTot')">
+			            </w2:column>
+			            <w2:column removeBorderStyle="false" width="100" inputType="expression" style="" id="column405" value=""
+			                blockSelect="false" displayMode="label" displayFormat="#,###" textAlign="right" dataType="number" expression="sum('netpayAmt')">
+			            </w2:column>
+			        </w2:row>
+			    </w2:footer>
+			</w2:gridView>
+		</xf:group>
+	</body>
+</html>

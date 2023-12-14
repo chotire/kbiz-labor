@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <?xml-stylesheet href="/src/main/webapp/resources_ux/css/common.css" type="text/css"?>
+	<?xml-stylesheet href="/src/main/webapp/resources_ux/css/content.css" type="text/css"?> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events"
+	xmlns:w2="http://www.inswave.com/websquare" xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="list" repeatNode="map" style="" id="dsTcfOaOffrMap" saveRemovedData="true">
+					<w2:keyInfo>
+						<w2:key id="oaeqReqNo" name="OA신청번호" dataType="text"></w2:key>
+						<w2:key id="offrDt" name="신청일" dataType="text"></w2:key>
+						<w2:key id="offrTeamDeptCd" name="신청팀 부서코드" dataType="text"></w2:key>
+						<w2:key id="offrDeptNm" name="신청팀" dataType="text"></w2:key>
+						<w2:key id="incoTelNo" name="신청자 연락처" dataType="text"></w2:key>
+						<w2:key id="oaItemCd" name="신청기기 CD" dataType="text"></w2:key>
+						<w2:key id="oaItemNm" name="신청기기" dataType="text"></w2:key>
+						<w2:key id="aplntEmpno" name="신청자 사번" dataType="text"></w2:key>
+						<w2:key id="aplntNm" name="신청자 이름" dataType="text"></w2:key>
+						<w2:key id="dsgnNm" name="신청자 직급" dataType="text"></w2:key>
+						<w2:key id="tmpyReqDt" name="납기요청일" dataType="text"></w2:key>
+						<w2:key id="gdsRcpPlcNm" name="물품수령장소" dataType="text"></w2:key>
+						<w2:key id="ruserStafYn" name="실사용자 여부" dataType="text"></w2:key>
+						<w2:key id="oaeqStusGbCd" name="OA신청구분코드" dataType="text"></w2:key>
+						<w2:key id="oaeqGbCd" name="구분(단독,공동도급)" dataType="text"></w2:key>
+						<w2:key id="gwTeamAprvNo" name="팀 결재 번호" dataType="number"></w2:key>
+						<w2:key id="intdRsnCn" name="신청사유" dataType="text"></w2:key>
+						<w2:key id="ruserEmpno" name="실사용자사번" dataType="text"></w2:key>
+						<w2:key id="ruserNm" name="실사용자명" dataType="text"></w2:key>
+						<w2:key id="ruserJbclNm" name="실사용자 직급" dataType="text"></w2:key>
+						<w2:key id="oaeqStusGbNm" name="OA신청구분코드 명" dataType="text"></w2:key>
+						<w2:key id="oaeqGbNm" name="구분(단독,공동도급)" dataType="text"></w2:key>
+						<w2:key id="oaeqRentPrdCd" name="렌탈기간 코드" dataType="text"></w2:key>
+						<w2:key id="oaeqRentPrdNm" name="렌탈기간" dataType="text"></w2:key>
+						<w2:key id="complPrDt" name="현장 준공일" dataType="text"></w2:key>
+					</w2:keyInfo>
+					<w2:data></w2:data>
+				</w2:dataMap>
+				<w2:dataMap baseNode="map" id="dsKeyTcfOaOffrMap">
+					<w2:keyInfo>
+						<w2:key id="oaeqReqNo" name="OA신청번호" dataType="number"></w2:key>
+						<w2:key id="reqItemSeq" name="OA신청 품목번호" dataType="number"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+		</xf:model>		
+		<script type="javascript" lazy="false"><![CDATA[
+    /***************************************************************************
+     * Program ID   : CF05050002U.xml
+     * Program Name : OA 신청 상세 조회
+     * Author       : 류상휴 (ryush)
+     * Date         : 2019.07.19
+     *
+     * History
+     * ========================================
+     * 변경일자     수정자   내 용
+     * ========================================
+     *
+     **************************************************************************/
+    /************************************************************************************
+     *  [1] 전역변수
+     ************************************************************************************/
+    scwin.svcId = "";
+
+    /************************************************************************************
+     *  [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {
+        scwin.initScreen();
+    };
+
+    scwin.onpageunload = function() {
+    };          
+
+    // 화면 초기화(필수)
+    scwin.initScreen = function() {
+
+   
+        // 데이터가 있을 경우에만 조회    
+        var chgParams = com.getAllParam();
+
+        if( chgParams.oaOffrParam != undefined && chgParams.oaOffrParam != "" ) {
+            dsKeyTcfOaOffrMap.setJSON(JSON.parse(com.getAllParam().oaOffrParam));
+        }                    
+                     
+        //OA 신청 상세 조회
+        scwin.fnGrdOaOffrSearch();
+
+    };
+
+    /**************************************************************************
+     *  [3] 사용자정의 함수
+     **************************************************************************/
+    /**************************************************************************
+     * 함 수 명: scwin.fnGrdOaOffrSearch
+     * 기 능: OA 신청 상세 조회
+     **************************************************************************/
+    scwin.fnGrdOaOffrSearch = function(){
+ 
+    scwin.svcId = "selectTcfOaOffrDtl";
+        ajaxLib.ajax("/cf/CF05050000U/selectTcfOaOffrDtl", {
+              mode        : "asynchronous"
+            , method      : "POST"
+            , requestData : dsKeyTcfOaOffrMap.getJSON()
+            , callback    : "fnSearchCallback"
+            , errCallback : "fnSearchErrCallBack"
+        });
+
+    };
+    
+ 
+
+    /**************************************************************************
+     *  [4] Callback
+     **************************************************************************/
+
+    /* OA 신청 상세조회 결과 후처리*/
+    scwin.fnSearchCallback = function(result, e) {
+        // 조회데이터       
+//                console.log(result.data.tcfOaOffr);
+        dsTcfOaOffrMap.setJSON(result.data.tcfOaOffr);
+       var tmpOaeqStusGbCd =  result.data.tcfOaOffr.oaeqStusGbCd;
+
+    	if(tmpOaeqStusGbCd == "OA004003"){ // 렌탈인 경우 
+          $("#"+grpOaeqRentPrdCdTr.id).show();  	
+    	} else {
+          $("#"+grpOaeqRentPrdCdTr.id).hide();  	
+    	}
+	     	        
+    };
+
+    /* 검색 에러 후처리 */
+    scwin.fnSearchErrCallBack = function(e) {
+        console.log('search Error!!!!!!!!!!!');
+    }
+ 
+
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+
+    /* 목록으로 이동 */
+    scwin.btnList_onclick = function() { 
+        var scrnParam = com.getAllParam();
+        com.detailOpen("OA신청 목록 조회", "CF0505", "/ux/cf/cf0505/CF05050000U.xml", "1", scrnParam);
+    };
+       
+	 ]]></script>
+
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+			    <w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+				<xf:group class="navigator" id="" style="">
+					<w2:textbox class="tit" id="screenTitle" label="" style="" tagname="h2" userData1=""></w2:textbox>
+				</xf:group>
+				<xf:group class="btn_wrap" id="" style="" tagname="">
+					<w2:anchor class="btn_cmm gray" clickEventElement="outerDiv" id="btnList" outerDiv="false"
+						style=""  ev:onclick="scwin.btnList_onclick">
+						<xf:label><![CDATA[목록]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="" style="" tagname="table">
+				<w2:attributes>
+					<w2:summary>OA기기신청 상세등록 테이블 입니다.</w2:summary>
+				</w2:attributes>
+				<xf:group tagname="colgroup">
+					<xf:group style="width:138px;" tagname="col"></xf:group>
+					<xf:group style="" tagname="col"></xf:group>
+					<xf:group tagname="col" style="width:124px;"></xf:group>
+					<xf:group tagname="col" style="width:auto;"></xf:group>
+					<xf:group tagname="col" style="width:96px;"></xf:group>
+					<xf:group tagname="col" style="width:auto;"></xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청자" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span label="" style="" id="aplntNm" class="txt_unit" ref="data:dsTcfOaOffrMap.aplntNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="직위" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="dsgnNm" label="" style="" ref="data:dsTcfOaOffrMap.dsgnNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="사번" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="aplntEmpno" label="" style="" ref="data:dsTcfOaOffrMap.aplntEmpno"></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청일" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+					     <w2:span class="txt_unit" id="offrDt" label="" style="" ref="data:dsTcfOaOffrMap.offrDt"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청팀" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="offrDeptNm" label="" style="" ref="data:dsTcfOaOffrMap.offrDeptNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="전화번호" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="incoTelNo" label="" style="" ref="data:dsTcfOaOffrMap.incoTelNo"></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="납기요청일" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="tmpyReqDt" label="" style="" ref="data:dsTcfOaOffrMap.tmpyReqDt"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="수령장소" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:attributes>
+							<w2:colspan>3</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>					
+					    <w2:span class="txt_unit" id="gdsRcpPlcNm" label="" style="" ref="data:dsTcfOaOffrMap.gdsRcpPlcNm"></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청구분" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+					    <w2:span class="txt_unit" id="oaeqStusGbNm" label="" style="" ref="data:dsTcfOaOffrMap.oaeqStusGbNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청품목" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:attributes>
+							<w2:colspan>3</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>					
+						<w2:span class="txt_unit" id="oaItemNm" label="" style="" ref="data:dsTcfOaOffrMap.oaItemNm"></w2:span>
+					</xf:group>																	
+				</xf:group>
+				
+				
+				
+                <xf:group style="" tagname="tr"  id ="grpOaeqRentPrdCdTr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="준공예정일" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:span class="txt_unit" id="complPrDt" label="" style="" ref="data:dsTcfOaOffrMap.complPrDt"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="렌탈기간" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:attributes>
+							<w2:colspan>3</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>					
+					    <w2:span class="txt_unit" id="oaeqRentPrdNm" label="" style="" ref="data:dsTcfOaOffrMap.oaeqRentPrdNm"></w2:span>
+					</xf:group>
+										
+				</xf:group>
+				
+				
+				
+				
+								
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="직원구분" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+					    <w2:span class="txt_unit" id="ruserStafYn" label="" style="" ref="data:dsTcfOaOffrMap.ruserStafYn"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="실사용자" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+					    <w2:span class="txt_unit" id="ruserNm" label="" style="" ref="data:dsTcfOaOffrMap.ruserNm"></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="직위" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+					    <w2:span class="txt_unit" id="ruserJbclNm" label="" style="" ref="data:dsTcfOaOffrMap.ruserJbclNm"></w2:span>
+					</xf:group>
+				</xf:group>
+				<xf:group style="" tagname="tr">
+					<xf:group class="w2tb_th" style="" tagname="th">
+						<w2:attributes>
+							<w2:scope>row</w2:scope>
+						</w2:attributes>
+						<w2:span id="" label="신청사유" style=""></w2:span>
+					</xf:group>
+					<xf:group class="w2tb_td" style="" tagname="td">
+						<w2:attributes>
+							<w2:colspan>5</w2:colspan>
+							<w2:rowspan>1</w2:rowspan>
+						</w2:attributes>
+						<w2:span class="txt_unit" id="intdRsnCn" label="" style="" ref="data:dsTcfOaOffrMap.intdRsnCn"></w2:span>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>

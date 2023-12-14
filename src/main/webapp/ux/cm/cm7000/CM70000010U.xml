@@ -1,0 +1,1124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:w2="http://www.inswave.com/websquare"
+	xmlns:xf="http://www.w3.org/2002/xforms">
+	<head>
+		<w2:type>DEFAULT</w2:type>
+		<w2:buildDate />
+		<xf:model>
+			<xf:instance>
+				<data xmlns="" />
+			</xf:instance>
+			<w2:dataCollection baseNode="map">
+				<w2:dataMap baseNode="map" id="dsSearchMap">
+					<w2:keyInfo>
+						<w2:key id="hireTradeNm" name="임차_거래처_명" dataType="text"></w2:key>
+					</w2:keyInfo>
+				</w2:dataMap>
+				<w2:dataList baseNode="list" repeatNode="map" id="dsTcmEqpmHireVendrList" saveRemovedData="true">
+				    <w2:columnInfo>
+				        <w2:column id="tradeCd" name="거래처코드" dataType="text"></w2:column>
+				        <w2:column id="tradeGbVal" name="거래처_구분_값" dataType="text"></w2:column>
+				        <w2:column id="bzprRegNo" name="사업자번호" dataType="text"></w2:column>
+				        <w2:column id="secResNo" name="주민등록번호" dataType="text"></w2:column><w2:column id="mstoBzprRegNo" name="본점사업자번호" dataType="text"></w2:column>
+				        <w2:column id="hireTradeNm" name="임차_거래처_명" dataType="text"></w2:column>
+				        <w2:column id="reprNm" name="대표자_명" dataType="text"></w2:column>
+
+				        
+				    </w2:columnInfo>
+				</w2:dataList>
+				<w2:dataMap baseNode="map" id="dsTcmEqpmHireVendrMap">
+				    <w2:keyInfo>
+				        <w2:key id="tradeCd" name="거래처코드" dataType="text"></w2:key>
+				        <w2:key id="tradeGbVal" name="거래처_구분_값" dataType="text"></w2:key>
+				        <w2:key id="bzprRegNo" name="사업자번호" dataType="text"></w2:key>
+				        <w2:key id="mstoBzprRegNo" name="본점사업자번호" dataType="text"></w2:key>
+				        <w2:key id="secResNo" name="주민등록번호" dataType="text"></w2:key>
+				        <w2:key id="hireTradeNm" name="임차_거래처_명" dataType="text"></w2:key>
+				        <w2:key id="bankCd" name="은행코드[CF034]" dataType="text"></w2:key>
+				        <w2:key id="secBnactNo" name="계좌번호" dataType="text"></w2:key>
+				        <w2:key id="achdrNm" name="예금주_명" dataType="text"></w2:key>
+				        <w2:key id="reprNm" name="대표자_명" dataType="text"></w2:key>
+				        <w2:key id="telNo" name="전화번호" dataType="text"></w2:key>
+				        <w2:key id="secCrryTelNo" name="휴대_전화번호" dataType="text"></w2:key>
+				        <w2:key id="email" name="이메일" dataType="text"></w2:key>
+				        <w2:key id="zipCd" name="유편번호" dataType="text"></w2:key>
+				        <w2:key id="baseAddr" name="기본_주소" dataType="text"></w2:key>
+				        <w2:key id="dtlAddr" name="상세_주소" dataType="text"></w2:key>
+				        <w2:key id="corpRegNo" name="법인등록번호" dataType="text"></w2:key>
+				        <w2:key id="rmkCn" name="비고" dataType="text"></w2:key>
+				        <w2:key id="n1AflId" name="사업자등록증" dataType="text"></w2:key>
+				        <w2:key id="n2AflId" name="통장사본" dataType="text"></w2:key>
+				        <w2:key id="n3AflId" name="계약서" dataType="text"></w2:key>
+				        <w2:key id="n4AflId" name="일반첨부" dataType="text"></w2:key>
+				        <w2:key id="n1AflNm" name="사업자등록증 첨부파일명" dataType="text"></w2:key>
+				        <w2:key id="n2AflNm" name="통장사본 첨부파일명" dataType="text"></w2:key>
+				        <w2:key id="n3AflNm" name="계약서 첨부파일명" dataType="text"></w2:key>
+				        <w2:key id="n4AflNm" name="일반 첨부파일명" dataType="text"></w2:key>
+				    </w2:keyInfo>
+				</w2:dataMap>
+			</w2:dataCollection>
+			<w2:workflowCollection></w2:workflowCollection>
+		</xf:model>
+		<script src="/resources/js/common/cmn_SM.js" type="javascript" lazy="false"/>
+		<script type="javascript" lazy="false"><![CDATA[
+/***************************************************************************
+ * Program ID : CM700000010U.xml
+ * Program Name : 임차업체 등록
+ * Author : dslee 
+ * Date : 2022.06.07
+ *
+ * History
+ * ========================================
+ * 변경일자     수정자   내 용
+ * ========================================
+ * 2022.06.07   dslee    최초작성
+ **************************************************************************/
+	/**************************************************************************
+	 * [1] 전역변수 선언
+	 **************************************************************************/ 
+	/**************************************************************************
+	 * [2] onpageload(초기화포함)
+     ************************************************************************************/
+    scwin.onpageload = function() {       
+        scwin.btnFind_onclick();
+        
+        //화면초기화 호출
+        scwin.fnInitial();
+    };
+    
+    scwin.onpageunload = function() {};
+
+    /* 화면초기화 */
+    scwin.fnInitial = function() {
+    	
+    	//공통코드: 은행코드[CF034]
+		com.selCdList("bankCd", "CF034", "Y");
+        
+        //공통코드: 거래처구분값
+        com.selCdListVrbl("tradeGbVal", {
+            "upperCd": "CM100023",
+            "setCd": "charValN1",
+            }
+        );
+		
+		//UI팀용 함수 호출
+        scwin.commonUI();
+    };
+    
+    /************************************************************************************
+     *  [3] 사용자정의 함수
+     ************************************************************************************/
+    /* 중복체크 */
+    scwin.fnSelectDupChk = function(){
+        ajaxLib.ajax("/cm/cm7000/CM70000010U/selectDupChk", {
+            mode: "synchronous",
+            method: "Post",
+            requestData: {"bzprRegNo" : dsTcmEqpmHireVendrMap.get( "bzprRegNo" ),
+                          "secResno" : dsTcmEqpmHireVendrMap.get( "secResNo" )},
+            callback: function(result,e) {
+                           if(result.data == "new"){
+                               com.showMessage("SCA0061", "번호"); //사용가능한 $1입니다.
+                           }else{
+                               //조회
+                               scwin.selectHireVendr(result.data);
+                           }
+                           btnDupChkBzprRegNo.setDisabled( true );
+                           btnDupChkSecResNo.setDisabled( true );
+            }, 
+            errCallback: function(result,e) {}
+        });
+    };
+    
+    /* 임차업체 상세정보 조회 */
+    scwin.selectHireVendr = function(tradeCd){
+        let param = new Object();
+        param.tradeCd = tradeCd;
+        
+        ajaxLib.ajax("/cm/cm7000/CM70000010U/selectHireVendrDtl", {
+            method: "POST",
+            requestData: param,
+            callback: function(result,e) {
+                       dsTcmEqpmHireVendrMap.setJSON(result.data);
+                       
+                       //본점사업자번호 활성화, 비활성화
+                       if (dsTcmEqpmHireVendrMap.get("tradeGbVal") == "1") { //사업자구분이 사업자번호 
+                            mstoBzprRegNo.setDisabled(false);
+                            bzprRegNo.setDisabled(true);
+                            secResNo.setDisabled(true);
+                            tradeGbVal.setDisabled(true);
+                       }else if (dsTcmEqpmHireVendrMap.get("tradeGbVal") == "2") { //사업자구분이 주민번호
+                            mstoBzprRegNo.setDisabled(true);
+                            bzprRegNo.setDisabled(true);
+                            secResNo.setDisabled(true);
+                            tradeGbVal.setDisabled(true);
+                       }
+                
+                       com.setUdcValue("udcTelNo", "telNo", dsTcmEqpmHireVendrMap.get("telNo"));            //전화번호
+                       com.setUdcValue("udcAddress", "zipNo", dsTcmEqpmHireVendrMap.get("zipCd"));          //우편번호
+                       com.setUdcValue("udcAddress", "addrBasic", dsTcmEqpmHireVendrMap.get("baseAddr"));   //기본주소
+                       com.setUdcValue("udcAddress", "addrDetail", dsTcmEqpmHireVendrMap.get("dtlAddr"));   //상세주소
+                                        
+                       //사업자등록증 첨부파일
+                       cmCom.grawAfl(gen_n1AflList, {
+                           "udcAflList": com.udcAflList(dsTcmEqpmHireVendrMap.get("n1AflId")),
+                            "liIdNm": "gen_n1Generator",
+                            "liAnchorIdNm": "btn_n1AddFile"
+                       });
+                        
+                       //통장사본 첨부파일
+                       cmCom.grawAfl(gen_n2AflList, {
+                           "udcAflList": com.udcAflList(dsTcmEqpmHireVendrMap.get("n2AflId")),
+                           "liIdNm": "gen_n2Generator",
+                           "liAnchorIdNm": "btn_n2AddFile"
+                       });
+                        
+                       //계약서 첨부파일
+                       cmCom.grawAfl(gen_n3AflList, {
+                           "udcAflList": com.udcAflList(dsTcmEqpmHireVendrMap.get("n3AflId")),
+                           "liIdNm": "gen_n3Generator",
+                           "liAnchorIdNm": "btn_n3AddFile"
+                       });
+                        
+                       //일반 첨부파일
+                       cmCom.grawAfl(gen_n4AflList, {
+                           "udcAflList": com.udcAflList(dsTcmEqpmHireVendrMap.get("n4AflId")),
+                           "liIdNm": "gen_n4Generator",
+                           "liAnchorIdNm": "btn_n4AddFile"
+                       });
+                        
+                        //변경 내용 없을 때 저장할 내용 없음 표시(상세 조회후 row 상태 초기화)
+                        dsTcmEqpmHireVendrMap.initRowStatus(); 
+                        
+            },
+            errCallback : function(result,e) {}
+        });
+        
+    };
+     
+    /************************************************************************************
+     *  [4] Callback 함수
+     ************************************************************************************/
+    /* 사업자등록증 첨부파일 Callback 처리 */
+	scwin.popN1AflCallback = function(result){
+		dsTcmEqpmHireVendrMap.set("n1AflId",  result.aflId);
+		dsTcmEqpmHireVendrMap.set("n1AflNm",  result.aflNm);
+		
+		cmCom.grawAfl(gen_n1AflList, {
+			"udcAflList": com.udcAflList(dsTcmEqpmHireVendrMap.get("n1AflId")),
+			"liIdNm": "gen_n1Generator",
+			"liAnchorIdNm": "btn_n1AddFile"
+		});
+	};
+	
+	/* 통장사본 첨부파일 Callback 처리 */
+	scwin.popN2AflCallback = function(result){
+		dsTcmEqpmHireVendrMap.set("n2AflId",  result.aflId);
+		dsTcmEqpmHireVendrMap.set("n2AflNm",  result.aflNm);
+		
+		cmCom.grawAfl(gen_n2AflList, {
+			"udcAflList": com.udcAflList(dsTcmEqpmHireVendrMap.get("n2AflId")),
+			"liIdNm": "gen_n2Generator",
+			"liAnchorIdNm": "btn_n2AddFile"
+		});
+	};
+	
+	/* 계약서 첨부파일 Callback 처리 */
+	scwin.popN3AflCallback = function(result){
+		dsTcmEqpmHireVendrMap.set("n3AflId",  result.aflId);
+		dsTcmEqpmHireVendrMap.set("n3AflNm",  result.aflNm);
+		
+		cmCom.grawAfl(gen_n3AflList, {
+			"udcAflList": com.udcAflList(dsTcmEqpmHireVendrMap.get("n3AflId")),
+			"liIdNm": "gen_n3Generator",
+			"liAnchorIdNm": "btn_n3AddFile"
+		});
+	};
+	
+	/* 일반 첨부파일 Callback 처리 */
+	scwin.popN4AflCallback = function(result){
+		dsTcmEqpmHireVendrMap.set("n4AflId",  result.aflId);
+		dsTcmEqpmHireVendrMap.set("n4AflNm",  result.aflNm);
+		
+		cmCom.grawAfl(gen_n4AflList, {
+			"udcAflList": com.udcAflList(dsTcmEqpmHireVendrMap.get("n4AflId")),
+			"liIdNm": "gen_n4Generator",
+			"liAnchorIdNm": "btn_n4AddFile"
+		});
+	};
+	
+    /************************************************************************************
+     *  [5] Event 함수
+     ************************************************************************************/
+    /* 조회버튼 클릭 */
+    scwin.btnFind_onclick = function(){ 
+        ajaxLib.ajax("/cm/cm7000/CM70000010U/selectTcmEqpmHireVendrList", {
+            method: "POST",
+            requestData: dsSearchMap.getJSON(),
+            callback: function(result,e) {
+                        dsTcmEqpmHireVendrList.setJSON( result.data );
+                        com.setUdcValue("dsTotalCount","udcListCount",dsTcmEqpmHireVendrList.getTotalRow());
+                        
+                        tradeGbVal.setDisabled( true );
+                        bzprRegNo.setReadOnly( true );
+                        btnDupChkBzprRegNo.setDisabled( true );
+                        btnDupChkSecResNo.setDisabled( true );
+                        
+                        scwin.selectHireVendr(dsTcmEqpmHireVendrList.getCellData( 0 , "tradeCd" ));
+            },
+            errCallback: function(result,e) {}
+        });
+        
+    };
+    
+    /* 신규 */
+	scwin.btnNew_onclick = function() {
+		// map 초기화
+        dsTcmEqpmHireVendrMap.setEmptyValue();
+        
+        grpEqpmVendr.setDisabled( false );
+        bzprRegNo.setReadOnly( false );
+        btnDupChkSecResNo.setDisabled( true );
+        
+        com.setUdcValue("udcTelNo", "telNo", "");        //전화번호
+        com.setUdcValue("udcAddress", "zipNo", "");      //우편번호 
+        com.setUdcValue("udcAddress", "addrBasic", "");  //기본주소
+        com.setUdcValue("udcAddress", "addrDetail", ""); //상세주소
+        
+        //첨부파일 초기화
+        gen_n1AflList.removeAll(); //사업자등록증 
+        gen_n2AflList.removeAll(); //통장사본
+        gen_n3AflList.removeAll(); //계약서 
+        gen_n4AflList.removeAll(); //일반 
+	};
+    
+    /* 사업자구분 변경 이벤트 */
+    scwin.tradeGbVal_onchange = function() {
+        if (dsTcmEqpmHireVendrMap.get("tradeCd") == "") { //신규일 경우에만 실행
+            if (dsTcmEqpmHireVendrMap.get("tradeGbVal") == "1") { //사업자구분이 사업자번호일 경우
+                bzprRegNo.setReadOnly(false);
+                secResNo.setValue("");
+                secResNo.setReadOnly(true);
+                btnDupChkBzprRegNo.setDisabled(false);
+                btnDupChkSecResNo.setDisabled(true);
+                mstoBzprRegNo.setDisabled(false);
+            }else {                                               //사업자구분이 주민번호일 경우
+                bzprRegNo.setValue("");
+                bzprRegNo.setReadOnly(true);
+                secResNo.setReadOnly(false);
+                btnDupChkBzprRegNo.setDisabled(true);
+                btnDupChkSecResNo.setDisabled(false);
+                mstoBzprRegNo.setDisabled(true);
+            }
+        }
+    };
+	
+	/* 저장 */
+	scwin.btnSave_onclick = function() {       
+        //udc매핑
+        dsTcmEqpmHireVendrMap.setJSON({
+            "telNo": com.getUdcValue("udcTelNo", "telNo"),          //전화번호
+            "zipCd": com.getUdcValue("udcAddress", "zipNo"),        //우편번호
+            "baseAddr": com.getUdcValue("udcAddress", "addrBasic"), //기본 주소
+            "dtlAddr": com.getUdcValue("udcAddress", "addrDetail")  //상세 주소
+        });
+        
+        let nTradeGbVal = dsTcmEqpmHireVendrMap.get("tradeGbVal");  //거래처구분값
+
+        if (nTradeGbVal == "") {
+            com.showMessage("CMW0025", "사업자구분");    //$1은(는) 필수입력사항입니다.
+            return false;
+        }else {
+            if (nTradeGbVal == "1") {
+                if (dsTcmEqpmHireVendrMap.get("bzprRegNo") == "") {
+                    com.showMessage("CMW0025", "사업자번호");    //$1은(는) 필수입력사항입니다.
+                    return false;
+                }
+                //사업자구분이 사업자번호인 경우 법인등록번호 필수 체크
+//                if (strLib.isEmpty(dsTcmEqpmHireVendrMap.get("corpRegNo"))) {
+//                    com.showMessage("SAA0043", "법인사업자의 경우 법인등록번호", "", "", corpRegNo.id);  //$1은(는) 필수입력사항입니다.
+//                    return false;
+//                }
+            }else if (nTradeGbVal == "2") {
+                if (dsTcmEqpmHireVendrMap.get("secResNo") == "") {
+                    com.showMessage("CMW0025", "주민등록번호");    //$1은(는) 필수입력사항입니다.
+                    return false;
+                }    
+            }
+        }
+        
+        if (!btnDupChkBzprRegNo.getDisabled()) {
+            com.showMessage("SCA0084", "사업자번호"); //$1 중복체크를 진행해 주십시오.
+            return;
+        }else if (!btnDupChkSecResNo.getDisabled()) {
+            com.showMessage("SCA0084", "주민등록번호"); //$1 중복체크를 진행해 주십시오.
+            return;
+        }
+        
+        if (dsTcmEqpmHireVendrMap.get( "hireTradeNm" ) == "") {
+			com.showMessage("CMW0025", "회사명");	//$1은(는) 필수입력사항입니다.
+			return false;
+		}
+        if (dsTcmEqpmHireVendrMap.get( "bankCd" ) == "") {
+            com.showMessage("CMW0025", "은행명");  //$1은(는) 필수입력사항입니다.
+            return false;
+        }
+        if (dsTcmEqpmHireVendrMap.get( "secBnactNo" ) == "") {
+            com.showMessage("CMW0025", "계좌번호");  //$1은(는) 필수입력사항입니다.
+            return false;
+        }
+        if (dsTcmEqpmHireVendrMap.get( "achdrNm" ) == "") {
+            com.showMessage("CMW0025", "예금주");  //$1은(는) 필수입력사항입니다.
+            return false;
+        }
+        if (dsTcmEqpmHireVendrMap.get( "reprNm" ) == "") {
+            com.showMessage("CMW0025", "대표자");  //$1은(는) 필수입력사항입니다.
+            return false;
+        }
+        if (dsTcmEqpmHireVendrMap.get( "secCrryTelNo" ) == "") {
+            com.showMessage("CMW0025", "핸드폰번호");  //$1은(는) 필수입력사항입니다.
+            return false;
+        }
+        if (dsTcmEqpmHireVendrMap.get( "email" ) == "") {
+            com.showMessage("CMW0025", "이메일");  //$1은(는) 필수입력사항입니다.
+            return false;
+        }
+        
+        let reg_email = /^([0-9a-zA-Z_\.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/; //이메일 체크 정규식
+        
+        if (dsTcmEqpmHireVendrMap.get("email") != "") {
+            if (!reg_email.test(dsTcmEqpmHireVendrMap.get("email"))) { 
+                com.showMessage("CMW0171"); //메일 주소를 형식에 맞게 입력하십시오.                      
+                return false;         
+            }
+        }
+        
+		if (confirm("저장 하시겠습니까?")) {
+	        ajaxLib.ajax("/cm/cm7000/CM70000010U/saveTcmEqpmHireVendr", {
+	            mode: "synchronous",
+	            method: "POST",
+	            requestData: {
+                               "tcfTradeInfoVO": dsTcmEqpmHireVendrMap.getJSON(),
+                               "dsTcmEqpmHireVendrMap": dsTcmEqpmHireVendrMap.getJSON()
+                },
+	            callback: function(result,e) {
+                            com.showMessage("CFA0012"); //저장되었습니다.
+                            scwin.btnFind_onclick();
+                },
+	            errCallback: function(result,e) {}
+	        });
+	    }
+	};
+
+	/* 임차업체 목록 클릭(상세조회) */
+	scwin.grdTcmEqpmHireVendrList_oncellclick = function(row,col) {
+		if (dsTcmEqpmHireVendrList.getRowCount() > 0) {
+            let idxRow = grdTcmEqpmHireVendrList.getFocusedRowIndex();
+            var selTradeCd = dsTcmEqpmHireVendrList.getCellData(idxRow , "tradeCd");
+		    
+            tradeGbVal.setDisabled( true );
+            bzprRegNo.setReadOnly( true );
+            secResNo.setReadOnly( true );
+            btnDupChkBzprRegNo.setDisabled( true );
+            btnDupChkSecResNo.setDisabled( true );
+        }
+        scwin.selectHireVendr(selTradeCd);
+	};
+    
+    /* 엑셀다운 */
+    scwin.btnExcelDwn_onclick = function() {
+        grdTcmEqpmHireVendrList.advancedExcelDownload({
+            fileName: "임차업체목록.xlsx",
+            useSubTotal : true,             // Sub-Total 표시 
+            headerFontColor : "#FFFFFF",    // Header Font Color
+            headerColor : "#D9D9D9",        // Header Back Color
+            subTotalColor : "#FCE4D6",      // SubTotal Back Color
+            footerColor : "#BDD7EE"         // Footer Color
+        });
+    };
+
+	/* 사업자등록증 첨부파일 */
+	scwin.btnN1Afl_onclick = function() {
+		let sAflId = dsTcmEqpmHireVendrMap.get("n1AflId");	// 첨부파일ID
+		let sJobGbCd = "CM";								// 업무구분
+		let sMenuId = "CM70000010U";						// 매뉴ID
+		
+	 	let popOps = {
+        			   pid: "AflPopup"+"_" +new Date().getTime(),
+        		       url:"/ux/cf/CF00350000P.xml",
+        		       modal : true, //true || false
+        		       popup_name:"사업자등록증 첨부파일",
+        		       callbackFn: "scwin.popN1AflCallback",
+        		       widType: "M",
+        		       height: 540,
+        		       data: {
+        		               aflId: sAflId,
+        		               jobGbCd: sJobGbCd,
+        		               menuId: sMenuId,
+        		               fileExt: "*.*",
+        		               usage: "INS"
+        		             }
+                     };
+  		com.popup_open(popOps);
+	};
+	
+	
+	/* 통장사본 첨부파일 */
+	scwin.btnN2Afl_onclick = function() {
+		let sAflId = dsTcmEqpmHireVendrMap.get("n2AflId");	// 첨부파일ID
+		let sJobGbCd = "CM";							    // 업무구분
+		let sMenuId = "CM70000010U";						// 매뉴ID
+		
+	 	let popOps = {
+        			   pid: "AflPopup"+"_" +new Date().getTime(),
+        		       url:"/ux/cf/CF00350000P.xml",
+        		       modal: true, //true || false
+        		       popup_name:"통장사본 첨부파일",
+        		       callbackFn: "scwin.popN2AflCallback",
+        		       widType: "M",
+        		       height: 540,
+        		       data: {
+        		               aflId: sAflId,
+        		               jobGbCd: sJobGbCd,
+        		               menuId: sMenuId,
+        		               fileExt: "*.*",
+        		               usage: "INS"
+        		             }
+                     };
+  		com.popup_open(popOps);
+	};
+	
+	/* 계약서 첨부파일 */
+	scwin.btnN3Afl_onclick = function() {
+		let sAflId = dsTcmEqpmHireVendrMap.get("n3AflId");	// 첨부파일ID
+		let sJobGbCd = "CM";							    // 업무구분
+		let sMenuId = "CM70000010U";						// 매뉴ID
+		
+	 	let popOps = {
+        			   pid: "AflPopup"+"_" +new Date().getTime(),
+        		       url:"/ux/cf/CF00350000P.xml",
+        		       modal: true, //true || false
+        		       popup_name:"계약서 첨부파일",
+        		       callbackFn: "scwin.popN3AflCallback",
+        		       widType: "M",
+        		       height: 540,
+        		       data: {
+        		               aflId: sAflId,
+        		               jobGbCd: sJobGbCd,
+        		               menuId : sMenuId,
+        		               fileExt: "*.*",
+        		               usage: "INS"
+        		             }
+                     };
+  		com.popup_open(popOps);
+	};
+	
+	
+	/* 일반첨부 첨부파일 */
+	scwin.btnN4Afl_onclick = function() {
+		let sAflId = dsTcmEqpmHireVendrMap.get("n4AflId");	// 첨부파일ID
+		let sJobGbCd = "CM";								// 업무구분
+		let sMenuId = "CM70000010U";						// 매뉴ID
+		
+	 	let popOps = {
+        			   pid: "AflPopup"+"_" +new Date().getTime(),
+        		       url:"/ux/cf/CF00350000P.xml",
+        		       modal: true, //true || false
+        		       popup_name:"일반 첨부파일",
+        		       callbackFn: "scwin.popN4AflCallback",
+        		       widType: "M",
+        		       height: 540,
+        		       data: {
+        		               aflId: sAflId,
+        		               jobGbCd: sJobGbCd,
+        		               menuId: sMenuId,
+        		               fileExt: "*.*",
+        		               usage: "INS"
+        		             }
+                     };
+  		com.popup_open(popOps);
+	};
+         
+    
+	/* 사업자번호 입력시 본점사업자번호에 동시 입력 */
+	scwin.bzprRegNo_onchange = function() {
+        if (dsTcmEqpmHireVendrMap.get("tradeCd") == "") { //신규일 경우에만 동시입력, 조회시에는 x.
+            dsTcmEqpmHireVendrMap.set("mstoBzprRegNo" , dsTcmEqpmHireVendrMap.get( "bzprRegNo" ));
+        }
+	};
+	
+    /* 사업자번호 중복체크 */
+	scwin.btnDupChkBzprRegNo_onclick = function() {
+		let bzprRegNo = dsTcmEqpmHireVendrMap.get("bzprRegNo");
+        
+        bzprRegNo = bzprRegNo.trim();
+        
+        if (bzprRegNo == "") {
+            com.showMessage("CFA0017", "사업자번호"); //$1을(를) 입력하십시오.
+            return;
+        }else {
+            scwin.fnSelectDupChk();
+        }
+	};
+	
+    /* 주민등록번호 중복체크 */
+	scwin.btnDupChkSecResNo_onclick = function() {
+		let secResNo = dsTcmEqpmHireVendrMap.get( "secResNo" );
+        
+        secResNo = secResNo.trim();
+        
+        if (secResNo == "") {
+            com.showMessage("CFA0017", "주민등록번호"); //$1을(를) 입력하십시오.
+            return;
+        }else {
+            scwin.fnSelectDupChk();
+        }
+	};
+    
+    /* 주민등록번호 입력시 정상 여부 체크 */
+    scwin.secResNo_onviewchange = function(info) {
+        var chkResNo = /^(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1,2][0-9]|3[0,1]))-[1-8][0-9]{6}$/;
+
+        if(!chkResNo.test(secResNo.getValue())) {
+            com.showMessage("CFA0019", "주민등록번호", "", "", secResNo.id);  //$1을(를) 확인하십시오.
+            secResNo.setValue("");
+        }
+    };
+    
+    /* 회사명 엔터 이벤트 */
+	scwin.ibxKeyTradeNm_onkeydown = function(e) {
+		if (e.keyCode == 13){
+            dsSearchMap.set( "hireTradeNm" , ibxKeyTradeNm.getValue() );
+            scwin.btnFind_onclick();
+        }
+	};
+	
+    /* 사업자번호 입력시 정상 체크 */
+	scwin.bzprRegNo_onviewchange = function(info) {
+		if (!com.chkBizNo(bzprRegNo.getValue())){
+            com.showMessage("CFA0019", "사업자번호", "", "", bzprRegNo.id);  //$1을(를) 확인하십시오.
+            bzprRegNo.setValue("");
+        }
+	};
+	
+    /* 본점사업자번호 입력시 정상 체크 */
+	scwin.mstoBzprRegNo_onviewchange = function(info) {
+		if (!com.chkBizNo(mstoBzprRegNo.getValue())){
+            com.showMessage("CFA0019", "본점사업자번호", "", "", mstoBzprRegNo.id);  //$1을(를) 확인하십시오.
+            mstoBzprRegNo.setValue("");
+        }
+	};
+	
+    /* 법인등록번호 입력시 정상 체크 */
+	scwin.corpRegNo_onviewchange = function(info) {
+		if (!com.chkCorpNo(corpRegNo.getValue())){
+            com.showMessage("SCA0025", "등록번호가", "", "", corpRegNo.id); //$1 올바르지 않습니다.
+            corpRegNo.setValue("");
+        }
+	};
+	]]></script>
+
+		<w2:require src="/ux/common/udc/udcListCount.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcAddress.xml"></w2:require>
+		<w2:require src="/ux/common/udc/udcPhone.xml"></w2:require>
+	</head>
+	<body ev:onpageload="scwin.onpageload" ev:onpageunload="scwin.onpageunload">
+		<xf:group style="" id="" class="content_body">
+			<xf:group class="navigator_wrap" id="" style="">
+				<w2:wframe id="wfm_title" src="/ux/common/navigator.xml" style=""></w2:wframe>
+			</xf:group>
+			<xf:group class="tbl_search" id="" style="">
+				<xf:group class="tb_list" id="" style="" tagname="table">
+					<w2:attributes>
+						<w2:summary>조회조건 테이블 입니다.</w2:summary>
+					</w2:attributes>
+					<xf:group tagname="colgroup">
+						<xf:group style="width:120.00px;" tagname="col"></xf:group>
+						<xf:group style="width:auto;" tagname="col"></xf:group>
+					</xf:group>
+					<xf:group style="" tagname="tr">
+						<xf:group class="w2tb_th" style="" tagname="th">
+					        <w2:attributes>
+					            <w2:scope>row</w2:scope>
+					        </w2:attributes>
+					        <w2:span class="" id="" label="회사명" style=""></w2:span>
+					    </xf:group>
+					    <xf:group class="w2tb_td" style="" tagname="td">
+					        <xf:input allowChar="" class="" dataType="" disabled="" id="ibxKeyTradeNm" mandatory=""
+					            ref="data:dsSearchMap.hireTradeNm" style="width:250px;" ev:onkeydown="scwin.ibxKeyTradeNm_onkeydown">
+					            <w2:attributes>
+					                <w2:value></w2:value>
+					            </w2:attributes>
+					        </xf:input>
+					    </xf:group>
+					</xf:group>
+				</xf:group>
+				<xf:group class="btn_tbl_search" style="" tagname="">
+					<w2:anchor class="btn_sh" id="btnFind" outerDiv="false" style="" ev:onclick="scwin.btnFind_onclick">
+						<xf:label><![CDATA[조회]]></xf:label>
+					</w2:anchor>
+				</xf:group>
+			</xf:group>
+			<xf:group class="lybox_wrap" id="" style="">
+				<xf:group class="lybox" id="" style="">
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="">
+							<xf:group class="defaultbox" id="" style="">
+								<xf:group class="right_wrap" id="" style="">
+								</xf:group>
+								<w2:textbox class="df_tt" id="" label="임차업체 목록" style="" tagname="h3"></w2:textbox>
+                                <w2:udc_list_count id="dsTotalCount"></w2:udc_list_count>
+                                <xf:group class="right_wrap" id="" style="">
+                                    <xf:group id="" style="">
+                                        <w2:anchor class="btn_gcm excel_down" clickEventElement="" id="btnExcelDwn" localeRef=""
+                                            outerDiv="false" style="" toolTip="엑셀다운로드" ev:onclick="scwin.btnExcelDwn_onclick">
+                                            <xf:label><![CDATA[엑셀다운로드]]></xf:label>
+                                        </w2:anchor>
+                                    </xf:group>
+                                </xf:group>
+							</xf:group>
+							<w2:gridView autoFit="allColumn" class="autoHeight" dataList="data:dsTcmEqpmHireVendrList"
+							    fixedColumnWithHidden="true" focusMode="row" id="grdTcmEqpmHireVendrList" readOnly="true" rowNumHeaderValue="No" rowNumVisible=""
+							    rowStatusHeaderValue="" rowStatusVisible="" rowStatusWidth="30" scrollByColumn="false" style="height: 216px;" useShiftKey="true"
+							    visibleRowNum="" sortable="true" ev:onrowpositionchang="scwin.dsTcmEqpmHireVendrList_onrowpositionchange"
+							    ev:oncellclick="scwin.grdTcmEqpmHireVendrList_oncellclick">
+							    <w2:header id="header1" style="">
+							        <w2:row id="row2" style="">
+							            <w2:column blockSelect="false" displayMode="label" id="column49" inputType="text"
+							                removeBorderStyle="false" value="No" width="60" sortable="false" style="">
+							            </w2:column>
+							            <w2:column blockSelect="false" id="column19" inputType="text" value="사업자구분" width="100" style="">
+							            </w2:column>
+							            <w2:column blockSelect="false" id="column17" inputType="text" value="사업자번호" width="120" style="">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="column59" value="주민등록번호"
+							                blockSelect="false" displayMode="label">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" id="column56" value="본점사업자번호"
+							                blockSelect="false" displayMode="label" style="">
+							            </w2:column>
+							            <w2:column blockSelect="false" displayMode="label" id="column55" inputType="text"
+							                removeBorderStyle="false" value="회사명" width="150" style="">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="100" inputType="text" id="column58" value="대표자"
+							                blockSelect="false" displayMode="label" style="">
+							            </w2:column>
+							        </w2:row>
+							    </w2:header>
+							    <w2:gBody id="gBody4" style="">
+							        <w2:row id="row5" style="">
+							            <w2:column blockSelect="false" displayMode="label" expression="rowindex()+1" id="column24"
+							                inputType="expression" removeBorderStyle="false" width="60">
+							            </w2:column>
+							            <w2:column blockSelect="false" id="tradeGbVal" inputType="text" value="" width="100">
+                                        </w2:column>
+							            <w2:column blockSelect="false" id="bzprRegNo" inputType="text" displayFormat="###-##-#####" value="" width="120">
+                                        </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" style="" id="secResNo" value=""
+							                blockSelect="false" displayFormat="######-#######" displayMode="label">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="120" inputType="text" displayFormat="###-##-#####" id="mstoBzprRegNo" value=""
+							                blockSelect="false" displayMode="label">
+							            </w2:column>
+							            <w2:column blockSelect="false" displayMode="label" id="hireTradeNm" inputType="text"
+							                removeBorderStyle="false" value="" width="150" textAlign="left">
+							            </w2:column>
+							            <w2:column removeBorderStyle="false" width="100" inputType="text" id="reprNm" value=""
+							                blockSelect="false" displayMode="label">
+							            </w2:column>
+							        </w2:row>
+							    </w2:gBody>
+							</w2:gridView>
+						</xf:group>
+					</xf:group>
+					<xf:group class="lycolumn" id="" style="">
+						<xf:group class="lyinner" id="" style="">
+							<xf:group class="defaultbox" id="" style="">
+								<xf:group class="right_wrap" id="" style="">
+									<xf:group id="" style="">
+										<w2:anchor class="btn_gcm" clickEventElement="" id="btnNew" outerDiv="false" style="" ev:onclick="scwin.btnNew_onclick">
+											<xf:label><![CDATA[신규]]></xf:label>
+										</w2:anchor>
+										<w2:anchor class="btn_gcm" clickEventElement="" id="btnSave" outerDiv="false" style="" ev:onclick="scwin.btnSave_onclick">
+											<xf:label><![CDATA[저장]]></xf:label>
+										</w2:anchor>
+									</xf:group>
+								</xf:group>
+								<w2:textbox class="df_tt" id="" label="임차업체 상세정보" style="" tagname="h3"></w2:textbox>
+							</xf:group>
+							<xf:group adaptive="" adaptiveThreshold="" class="w2tb" id="grpEqpmVendr" style="" tagname="table">
+								<w2:attributes>
+									<w2:summary></w2:summary>
+								</w2:attributes>
+								<xf:group tagname="colgroup">
+									<xf:group style="width:120.00px;" tagname="col"></xf:group>
+									<xf:group style="" tagname="col"></xf:group>
+									<xf:group style="width:120.00px;" tagname="col"></xf:group>
+									<xf:group style="" tagname="col"></xf:group>
+								</xf:group>
+								<xf:group class="" style="" tagname="tr">
+									<xf:group class="w2tb_th req" style="" tagname="th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="사업자구분" style=""></w2:span>
+									</xf:group>
+									<xf:group class="w2tb_td" style="" tagname="td">
+										<w2:attributes><w2:colspan>1</w2:colspan><w2:rowspan>1</w2:rowspan></w2:attributes>
+										<xf:select1 allOption="" appearance="minimal" chooseOption="" chooseOptionLabel="선택" class=""
+										    direction="auto" disabled="true" disabledClass="w2selectbox_disabled" displayMode="label"
+										    ev:onviewchange="scwin.sbxDong_onviewchange" id="tradeGbVal" mandatory="true" ref="data:dsTcmEqpmHireVendrMap.tradeGbVal"
+										    style="width:120px;" submenuSize="auto" textAlign="left" visibleRowNum="10" ev:onchange="scwin.tradeGbVal_onchange">
+										    <xf:choices></xf:choices>
+										</xf:select1>
+									</xf:group>
+									<xf:group tagname="th" class="w2tb_th">
+									    <w2:attributes></w2:attributes>
+									    <w2:span id="" label="거래처코드" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <xf:span class="" dataType="" id="tradeCd" initValue="" mandatory="" maxlength="" readOnly="true"
+									        ref="data:dsTcmEqpmHireVendrMap.tradeCd" style="width:100%;">
+									    </xf:span>
+									</xf:group></xf:group>
+								<xf:group style="" tagname="tr">
+									<xf:group class="w2tb_th" style="" tagname="th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="사업자번호" style=""></w2:span>
+									</xf:group>
+									<xf:group class="w2tb_td" style="" tagname="td">
+                                        <xf:group style="float:left;" >
+    										<xf:input class="" dataType="" allowChar="0-9-" displayFormat="###-##-#####"  id="bzprRegNo" initValue="" 
+                                                mandatory="" readOnly="true" maxlength="10" minlength="" ref="data:dsTcmEqpmHireVendrMap.bzprRegNo" 
+                                                style="margin-left:0px;" ev:onkeydown="scwin.bzprRegNo_onkeydown" ev:onchange="scwin.bzprRegNo_onchange" placeholder="___-__-_____" ev:onviewchange="scwin.bzprRegNo_onviewchange">
+    										</xf:input>
+                                        </xf:group>
+                                        <xf:group style="float:right;" >
+                                            <w2:anchor class="btn_tcm" ev:onclick="scwin.btnDupChkBzprRegNo_onclick" id="btnDupChkBzprRegNo"
+                                                outerDiv="false" style="" disabled="true">
+                                                <xf:label><![CDATA[중복체크]]></xf:label>
+                                            </w2:anchor>
+                                        </xf:group>
+									</xf:group>
+									<xf:group class="w2tb_th" tagname="th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="주민등록번호" style=""></w2:span>
+									</xf:group>
+									<xf:group class="w2tb_td" tagname="td">
+										<xf:group style="float:left;" >
+                                            <xf:input class="" dataType="" id="secResNo" initValue="" mandatory="" maxlength="13" readOnly="true" allowChar="0-9"
+                                                displayFormat="######-#######" ref="data:dsTcmEqpmHireVendrMap.secResNo" style="width:100%;" 
+                                                ev:onchange="scwin.secResNo_onchange" placeholder="______-_______" ev:onviewchange="scwin.secResNo_onviewchange">
+                                            </xf:input>
+                                        </xf:group>
+                                        <xf:group style="float:right;" >
+                                            <w2:anchor class="btn_tcm" ev:onclick="scwin.btnDupChkSecResNo_onclick" id="btnDupChkSecResNo"
+                                                outerDiv="false" style="" disabled="true">
+                                                <xf:label><![CDATA[중복체크]]></xf:label>
+                                            </w2:anchor>
+                                        </xf:group>
+									</xf:group>
+								</xf:group>
+                                <xf:group style="" tagname="tr">
+                                    <xf:group class="w2tb_th" style="" tagname="th">
+                                        <w2:attributes>
+                                            <w2:scope>row</w2:scope>
+                                        </w2:attributes>
+                                        <w2:span id="" label="본점사업자번호" style=""></w2:span>
+                                    </xf:group>
+                                    <xf:group class="w2tb_td" style="" tagname="td">
+                                        <w2:attributes>
+                                            <w2:colspan>3</w2:colspan>
+                                            <w2:rowspan>1</w2:rowspan>
+                                        </w2:attributes>
+                                        <xf:input class="" dataType="" allowChar="0-9-" displayFormat="###-##-#####"  id="mstoBzprRegNo" initValue="" 
+                                            mandatory="" readOnly="" maxlength="10" minlength="" ref="data:dsTcmEqpmHireVendrMap.mstoBzprRegNo" 
+                                            style="width:177px;" placeholder="___-__-_____" ev:onviewchange="scwin.mstoBzprRegNo_onviewchange">
+                                        </xf:input>
+                                    </xf:group>
+                                </xf:group>
+								<xf:group tagname="tr" style="">
+									<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="회사명" style="" class=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+											<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										<xf:input class="" dataType="" id="hireTradeNm" initValue="" maxlength=""
+											readOnly="" style="width:100%;" ref="data:dsTcmEqpmHireVendrMap.hireTradeNm">
+										</xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="은행명" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+											<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										<xf:select1 allOption="" appearance="minimal" chooseOption="true" chooseOptionLabel="선택" class=""
+										    direction="auto" disabled="" disabledClass="w2selectbox_disabled" displayMode="label"
+										    ev:onviewchange="scwin.sbxDong_onviewchange" id="bankCd" mandatory="" ref="data:dsTcmEqpmHireVendrMap.bankCd"
+										    style="width:120px;" submenuSize="auto" textAlign="left" visibleRowNum="10">
+										    <xf:choices></xf:choices>
+										</xf:select1>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="계좌번호" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:input class="" dataType="" id="secBnactNo" adjustMaxLength="false" initValue="" mandatory="" maxlength="" 
+                                            readOnly="" allowChar="0-9,-" ref="data:dsTcmEqpmHireVendrMap.secBnactNo" style="width:100%;">
+										</xf:input>
+									</xf:group>
+									<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="예금주" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:input class="" dataType="" id="achdrNm" initValue="" mandatory="" maxlength="" readOnly=""
+											ref="data:dsTcmEqpmHireVendrMap.achdrNm" style="width:100%;">
+										</xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="대표자" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<xf:input class="" dataType="" id="reprNm" initValue="" mandatory="" maxlength="" readOnly=""
+											ref="data:dsTcmEqpmHireVendrMap.reprNm" style="width:100%;">
+										</xf:input>
+									</xf:group>
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="전화번호" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes></w2:attributes>
+										<w2:udc_phone id="udcTelNo" style=""></w2:udc_phone>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="핸드폰번호" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+									    <w2:attributes></w2:attributes>
+									    <xf:input class="" dataType="" id="secCrryTelNo" initValue="" mandatory="" maxlength="11" readOnly=""
+									        displayFormat="###-####-####" allowChar="0-9" ref="data:dsTcmEqpmHireVendrMap.secCrryTelNo" style="width:100%;">
+									    </xf:input>
+									</xf:group>
+									<xf:group tagname="th" class="w2tb_th req">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="이메일" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td" style="">
+									    <w2:attributes></w2:attributes>
+									    <xf:input class="" dataType="" id="email" initValue="" mandatory="" maxlength="" readOnly=""
+									        ref="data:dsTcmEqpmHireVendrMap.email" style="width:100%;">
+									    </xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="주소" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+											<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										 <w2:udc_address id="udcAddress" style=""></w2:udc_address>
+									</xf:group>
+								</xf:group>
+									<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="등록번호" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+											<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										<xf:input class="" dataType="" id="corpRegNo" initValue="" maxlength="13" readOnly=""
+											style="width:18%;" ref="data:dsTcmEqpmHireVendrMap.corpRegNo" displayFormat="######-#######" placeholder="______-_______" allowChar="0-9" ev:onviewchange="scwin.corpRegNo_onviewchange">
+										</xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="비고" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+											<w2:rowspan>1</w2:rowspan>
+										</w2:attributes>
+										<xf:input class="" dataType="" id="rmkCn" initValue="" maxlength="" readOnly=""
+											style="width:100%;" ref="data:dsTcmEqpmHireVendrMap.rmkCn">
+										</xf:input>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="사업자등록증" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+										</w2:attributes>
+										<xf:group style="float:left;width:80%;display:inline-block" >
+											<w2:generator class="databox" id="gen_n1AflList" tagname="ul" >
+												<w2:generator id="gen_n1Generator" tagname="li">
+													<w2:anchor id="btn_n1AddFile" outerDiv="false">
+														<xf:label></xf:label>
+													</w2:anchor>
+												</w2:generator>
+											</w2:generator>
+										</xf:group>
+										<xf:group style="float:right;display:inline-block" >
+											<w2:anchor class="btn_tcm fr" style="" clickEventElement="" ev:onclick="scwin.btnN1Afl_onclick"
+												id="btnN1Afl" outerDiv="false" >
+												<xf:label><![CDATA[첨부]]></xf:label>
+											</w2:anchor>
+										</xf:group>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="통장사본" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+										</w2:attributes>
+										<xf:group style="float:left;width:80%;display:inline-block" >
+											<w2:generator class="databox" id="gen_n2AflList" tagname="ul" >
+												<w2:generator id="gen_n2Generator" tagname="li">
+													<w2:anchor id="btn_n2AddFile" outerDiv="false">
+														<xf:label></xf:label>
+													</w2:anchor>
+												</w2:generator>
+											</w2:generator>
+										</xf:group>
+										<xf:group style="float:right;display:inline-block" >
+											<w2:anchor class="btn_tcm fr" style="" clickEventElement="" ev:onclick="scwin.btnN2Afl_onclick"
+												id="btnN2Afl" outerDiv="false" >
+												<xf:label><![CDATA[첨부]]></xf:label>
+											</w2:anchor>
+										</xf:group>
+									</xf:group>
+								</xf:group>
+								<xf:group tagname="tr">
+									<xf:group tagname="th" class="w2tb_th">
+										<w2:attributes>
+											<w2:scope>row</w2:scope>
+										</w2:attributes>
+										<w2:span id="" label="계약서" style=""></w2:span>
+									</xf:group>
+									<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+										</w2:attributes>
+										<xf:group style="float:left;width:80%;display:inline-block" >
+											<w2:generator class="databox" id="gen_n3AflList" tagname="ul" >
+												<w2:generator id="gen_n3Generator" tagname="li">
+													<w2:anchor id="btn_n3AddFile" outerDiv="false">
+														<xf:label></xf:label>
+													</w2:anchor>
+												</w2:generator>
+											</w2:generator>
+										</xf:group>
+										<xf:group style="float:right;display:inline-block" >
+											<w2:anchor class="btn_tcm fr" style="" clickEventElement="" ev:onclick="scwin.btnN3Afl_onclick"
+												id="btnN3Afl" outerDiv="false" >
+												<xf:label><![CDATA[첨부]]></xf:label>
+											</w2:anchor>
+										</xf:group>
+									</xf:group>
+									</xf:group><xf:group tagname="tr">
+										<xf:group tagname="th" class="w2tb_th">
+											<w2:attributes>
+												<w2:scope>row</w2:scope>
+											</w2:attributes>
+											<w2:span id="" label="일반첨부" style=""></w2:span>
+										</xf:group>
+										<xf:group tagname="td" class="w2tb_td">
+										<w2:attributes>
+											<w2:colspan>3</w2:colspan>
+										</w2:attributes>
+										<xf:group style="float:left;width:80%;display:inline-block" >
+											<w2:generator class="databox" id="gen_n4AflList" tagname="ul" >
+												<w2:generator id="gen_n4Generator" tagname="li">
+													<w2:anchor id="btn_n4AddFile" outerDiv="false">
+														<xf:label></xf:label>
+													</w2:anchor>
+												</w2:generator>
+											</w2:generator>
+										</xf:group>
+										<xf:group style="float:right;display:inline-block" >
+											<w2:anchor class="btn_tcm fr" style="" clickEventElement="" ev:onclick="scwin.btnN4Afl_onclick"
+												id="btnN4Afl" outerDiv="false" >
+												<xf:label><![CDATA[첨부]]></xf:label>
+											</w2:anchor>
+										</xf:group>
+									</xf:group>
+								</xf:group>
+							</xf:group>
+						</xf:group>
+					</xf:group>
+				</xf:group>
+			</xf:group>
+		</xf:group>
+	</body>
+</html>
