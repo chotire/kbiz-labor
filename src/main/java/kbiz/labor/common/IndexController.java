@@ -17,4 +17,8 @@ public class IndexController {
     public String i18n() {
         return "I18N";
     }
+
+    public String ex() {
+        throw new RuntimeException("xxxxx");
+    }
 }

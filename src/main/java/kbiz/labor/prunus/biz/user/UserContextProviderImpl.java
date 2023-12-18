@@ -1,4 +1,4 @@
-package kbiz.labor.prunus.biz;
+package kbiz.labor.prunus.biz.user;
 
 import org.springframework.stereotype.Component;
 import prunus.biz.core.user.UserContext;
