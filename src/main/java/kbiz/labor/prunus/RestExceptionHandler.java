@@ -3,6 +3,9 @@ package kbiz.labor.prunus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -79,5 +82,62 @@ public class RestExceptionHandler {
         body.put("message", message);
         log.error(e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    /**
+     * 비인증 사용자의 해당 리소스 접근 거부 예외
+     * @param e AccessDeniedException
+     * @return ResponseEntity
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+        ErrorCode errorCode = errorCodeAnalyzer.fromException(e);
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", new Date());
+        body.put("status", HttpStatus.FORBIDDEN);
+        body.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        body.put("exception", e.getClass().getName());
+        body.put("message", e.getMessage());
+        body.put("code", errorCode.getCode());
+        body.put("path", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+    }
+
+    /**
+     * 인증 예외
+     * @param e AuthenticationException
+     * @return ResponseEntity
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException e, HttpServletRequest request) {
+        ErrorCode errorCode = errorCodeAnalyzer.fromException(e);
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", new Date());
+        body.put("status", HttpStatus.FORBIDDEN);
+        body.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        body.put("exception", e.getClass().getName());
+        body.put("message", e.getMessage());
+        body.put("code", errorCode.getCode());
+        body.put("path", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+    }
+
+    /**
+     * 인증된 사용자 (anonymous user 포함) 의 해당 리소스 접근의 불충분한 권한 예외
+     * @param e InsufficientAuthenticationException
+     * @return ResponseEntity
+     */
+    @ExceptionHandler(InsufficientAuthenticationException.class)
+    public ResponseEntity<Map<String, Object>> insufficientAuthenticationException(InsufficientAuthenticationException e, HttpServletRequest request) {
+        ErrorCode errorCode = errorCodeAnalyzer.fromException(e);
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", new Date());
+        body.put("status", HttpStatus.FORBIDDEN);
+        body.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        body.put("exception", e.getClass().getName());
+        body.put("message", e.getMessage());
+        body.put("code", errorCode.getCode());
+        body.put("path", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
     }
 }
