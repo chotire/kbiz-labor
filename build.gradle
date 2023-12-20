@@ -29,16 +29,48 @@ dependencies {
     implementation "sdcit.prunus.biz:prunus-biz-common-code:${prunusVersion}"
     implementation "sdcit.prunus.biz:prunus-biz-acl-menu:${prunusVersion}"
     implementation "sdcit.prunus.biz:prunus-biz-acl-resource:${prunusVersion}"
-    implementation 'websquare:websquare5:5.0_2.3747B.20190731.184739_1.5'
-    implementation 'commons-fileupload:commons-fileupload:1.4'
-    implementation 'org.webjars:store.js:2.0.12'
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
+    implementation 'org.webjars:store.js:2.0.12'
     implementation 'com.h2database:h2'
-
+    
     // for JSP
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper'
     providedRuntime 'javax.servlet:jstl'
+
+    // for WebSquare, https://inswave.com/confluence/pages/viewpage.action?pageId=9668140
+    implementation 'websquare:websquare5:5.0_2.3747B.20190731.184739_1.5'
+    implementation 'websquare:websquare5_adapter:5.0_2.3288B.20180921.160532_1.5'
+	implementation 'org.antlr:antlr:3.3' // 복잡한 문자열 파싱
+	implementation 'com.kenai.nbpwr:org-apache-batik-all:1.7-201003011305' // fusion chart 관련 lib
+	implementation 'commons-fileupload:commons-fileupload:1.2' // 파일업로드시 사용
+	implementation 'commons-io:commons-io:1.4' // 파일업로드시 사용
+	implementation 'commons-logging:commons-logging:1.0.4' // 웹스퀘어 로깅
+	implementation 'dom4j:dom4j:1.6.1' // XML 처리 관련 lib
+	implementation 'org.mozilla:rhino:1.7R3' // fusion chart 관련 lib
+	implementation 'com.googlecode.json-simple:json-simple:1.1' // JSON데이터 처리
+	implementation 'net.sf.opencsv:opencsv:1.8' // csv다운로드
+	implementation 'org.apache.xmlgraphics:fop:1.0' // fusion chart PDF 다운로드
+	implementation 'org.apache.poi:poi:3.10-FINAL' // 그리드 엑셀 업/다운로드
+	implementation 'org.apache.poi:poi-excelant:3.10-FINAL' // 그리드 엑셀 업/다운로드
+	implementation 'org.apache.poi:poi-ooxml:3.10-FINAL' // 그리드 엑셀 업/다운로드
+	implementation 'org.apache.poi:poi-ooxml-schemas:3.10-FINAL' // 그리드 엑셀 업/다운로드
+	implementation 'org.apache.poi:poi-scratchpad:3.10-FINAL' // 그리드 엑셀 업/다운로드
+	implementation 'org.antlr:ST4:4.0.8' // submission all인 경우 다음페이지로 정보전달 처리
+	implementation 'xalan:xalan:2.7.0' // XML 처리 관련 lib
+	implementation 'xmlbeans:xbean_xpath:2.2.0' // XML 처리 관련 lib
+	implementation 'xbean:xbean:2.5' // XML 처리 관련 lib
+	implementation 'xerces:xercesImpl:2.7.1' // XML 처리 관련 lib
+	implementation 'xml-apis:xml-apis:1.4.01' // XML 처리 관련 lib
+	implementation 'xml-apis:xml-apis-ext:1.3.04' // XML 처리 관련 lib
+	implementation 'org.apache.xmlbeans:xmlbeans:2.3.0' // XML 처리 관련 lib
+	implementation 'org.apache.xmlbeans:xmlbeans-qname:2.3.0' // XML 처리 관련 lib
+	implementation 'org.apache.xmlbeans:xmlbeans-xmlpublic:2.5.0' // XML 처리 관련 lib
+	implementation 'commons-validator:commons-validator:1.5.0' // 데이터 유효성 검사
+	implementation 'net.rootdev:java-rdfa:0.4.2' // SAX 기반 java RDFa 파싱
+	implementation 'org.apache.jena:jena-core:2.11.2' // apache jena 관련 lib
+	implementation 'org.apache.odftoolkit:odfdom-java:0.8.11-incubating' // OpenDocument File 관련 lib
+	implementation 'org.apache.odftoolkit:simple-odf:0.8.2-incubating' // OpenDocument File 관련 lib
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
