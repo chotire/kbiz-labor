@@ -29,16 +29,59 @@ dependencies {
     implementation "sdcit.prunus.biz:prunus-biz-common-code:${prunusVersion}"
     implementation "sdcit.prunus.biz:prunus-biz-acl-menu:${prunusVersion}"
     implementation "sdcit.prunus.biz:prunus-biz-acl-resource:${prunusVersion}"
-    implementation 'websquare:websquare5:5.0_2.3747B.20190731.184739_1.5'
-    implementation 'commons-fileupload:commons-fileupload:1.4'
-    implementation 'org.webjars:store.js:2.0.12'
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
+    implementation 'org.webjars:store.js:2.0.12'
     implementation 'com.h2database:h2'
-
+    
     // for JSP
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     providedRuntime 'org.apache.tomcat.embed:tomcat-embed-jasper'
     providedRuntime 'javax.servlet:jstl'
+
+    // for WebSquare, https://inswave.com/confluence/pages/viewpage.action?pageId=20715011
+    implementation 'websquare:websquare5:5.0_2.3747B.20190731.184739_1.5'
+    implementation 'websquare:websquare5_adapter:5.0_2.3288B.20180921.160532_1.5'
+    runtimeOnly ('org.antlr:antlr-complete:3.5.2') {
+        exclude group: 'org.antlr', module: 'antlr'
+        exclude group: 'org.antlr', module: 'antlr-runtime'
+        exclude group: 'org.antlr', module: 'gunit'
+    }
+    runtimeOnly 'commons-fileupload:commons-fileupload:1.2'
+    runtimeOnly 'commons-io:commons-io:1.4'
+    runtimeOnly 'commons-logging:commons-logging:1.0.4'
+    runtimeOnly ('dom4j:dom4j:1.6.1') {
+        exclude group: 'xml-apis', module: 'xml-apis'
+    }
+    implementation 'com.googlecode.json-simple:json-simple:1.1'
+    runtimeOnly 'log4j:log4j:1.2.14'
+    runtimeOnly ('org.apache.poi:ooxml-schemas:1.1') {
+        exclude group: 'org.apache.xmlbeans', module: 'xmlbeans'
+    }
+    runtimeOnly 'net.sf.opencsv:opencsv:1.8'
+    runtimeOnly ('org.apache.poi:poi:3.10-FINAL') {
+        exclude group: 'commons-codec', module: 'commons-codec'
+    }
+    runtimeOnly 'org.apache.poi:poi-ooxml:3.10-FINAL'
+    runtimeOnly ('org.apache.poi:poi-excelant:3.10-FINAL') {
+        exclude group: 'org.apache.ant', module: 'ant'
+    }
+    runtimeOnly 'org.apache.poi:poi-scratchpad:3.10-FINAL'
+    runtimeOnly 'org.apache.poi:poi-ooxml-schemas:3.10-FINAL'
+    runtimeOnly ('org.apache.xmlbeans:xmlbeans:2.5.0') {
+        exclude group: 'stax', module: 'stax-api'
+    }
+    runtimeOnly ('org.apache.xmlbeans:xmlbeans-xpath:2.4.0') {
+        exclude group: 'net.sf.saxon', module: 'saxon'
+    }
+    runtimeOnly 'xerces:xercesImpl:2.7.1'
+    runtimeOnly 'xml-apis:xml-apis-ext:1.3.04'
+    runtimeOnly 'xml-apis:xml-apis:1.4.01'
+    runtimeOnly 'org.apache.xmlbeans:xmlbeans-qname:2.3.0'
+    runtimeOnly 'xml-apis:xml-apis:1.3.02'
+    runtimeOnly ('org.apache.xmlbeans:xmlbeans-xmlpublic:2.5.0') {
+        exclude group: 'stax', module: 'stax-api'
+    }
+    runtimeOnly 'xalan:xalan:2.7.0'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
